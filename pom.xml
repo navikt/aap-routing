@@ -6,21 +6,27 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.0.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>no.nav.aap</groupId>
 	<artifactId>routing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>routing</name>
-	<description>Demo project for Spring Boot</description>
+	<description>KRUT erstatning</description>
 	<properties>
-		<domain.version>2.0.3</domain.version>
+		<domain.version>2.0.5</domain.version>
+		<eksternvarsling.version>08271806</eksternvarsling.version>
 		<jib.version>3.3.1</jib.version>
 		<java.version>17</java.version>
-		<kotlin.version>1.7.22</kotlin.version>
+		<kotlin.version>1.8.0</kotlin.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>no.nav.teamdokumenthandtering</groupId>
+			<artifactId>teamdokumenthandtering-avro-schemas</artifactId>
+			<version>${eksternvarsling.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>no.nav.aap</groupId>
 			<artifactId>aap-domain</artifactId>
@@ -131,6 +137,7 @@
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>
+					<jvmTarget>${java.version}</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -142,5 +149,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

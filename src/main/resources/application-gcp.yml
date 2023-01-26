@@ -35,7 +35,6 @@ spring:
         security:
             protocol: SSL
         ssl:
-
             trust-store-location: file:${kafka.truststore.path}
             trust-store-type: JKS
             trust-store-password: ${kafka.credstore.password}
@@ -45,7 +44,7 @@ spring:
         consumer:
             group-id: ${spring.application.name}-${env}
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-            value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
             properties:
                 specific:
                     avro:
@@ -54,7 +53,7 @@ spring:
             acks: all
             client-id: ${spring.application.name}
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
-            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringDeserializer
 joark:
     enabled: true
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io

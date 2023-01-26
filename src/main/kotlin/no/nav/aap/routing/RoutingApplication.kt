@@ -13,6 +13,7 @@ import org.springframework.kafka.annotation.EnableKafka
 @EnableKafka
 @ConfigurationPropertiesScan
 @EnableOAuth2Client(cacheEnabled = true)
+@EnableJwtTokenValidation
 class RoutingApplication
 
 fun main(args: Array<String>) {

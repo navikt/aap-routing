@@ -64,4 +64,4 @@ jobs:
             IMAGE: ${{needs.bygg.outputs.image}}
         steps:
             - uses: actions/checkout@v3
-            - uses: nais/deploy/actions/deploy@master
+            - uses: nais/deploy/actions/deploy@v1

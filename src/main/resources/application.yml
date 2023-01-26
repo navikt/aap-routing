@@ -1,0 +1,45 @@
+server:
+    error:
+        whitelabel:
+            enabled: false
+spring:
+    application:
+        name: routing
+    main:
+        banner-mode: off
+    cloud:
+        discovery:
+            client:
+                health-indicator:
+                    enabled: false
+    jackson:
+        default-property-inclusion: non_empty
+        mapper:
+            accept-case-insensitive-enums: true
+            accept-case-insensitive-properties: true
+        deserialization:
+            accept-empty-array-as-null-object: true
+            read-unknown-enum-values-using-default-value: true
+            accept-single-value-as-array: true
+            fail-on-unknown-properties: true
+        serialization:
+            write-empty-json-arrays: true
+            fail-on-empty-beans: false
+management:
+    info:
+        os:
+            enabled: true
+        java:
+            enabled: true
+        env:
+            enabled: true
+    health:
+        ping:
+            enabled: false
+        diskspace:
+            enabled: false
+
+springdoc:
+    packagesToScan: no.nav.aap
+    swagger-ui:
+        disable-swagger-default-url: true

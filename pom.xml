@@ -14,12 +14,18 @@
 	<name>routing</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
+		<domain.version>2.0.3</domain.version>
 		<jib.version>3.3.1</jib.version>
 		<java.version>17</java.version>
 		<kotlin.version>1.7.22</kotlin.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>no.nav.aap</groupId>
+			<artifactId>aap-domain</artifactId>
+			<version>${domain.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -44,7 +50,6 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

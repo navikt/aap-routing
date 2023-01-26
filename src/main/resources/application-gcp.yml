@@ -1,0 +1,60 @@
+info:
+    nais:
+        clientid: ${nais.client.id}
+        project: ${gcp.team.project.id}
+        cluster: ${nais.cluster.name}
+        image: ${nais.app.image}
+        app: ${nais.app.name}
+        namespace: ${nais.namespace}
+spring:
+    cloud:
+        gcp:
+            project-id: ${gcp.team.project.id}
+    devtools:
+        restart:
+            enabled: false
+        add-properties: false
+        livereload:
+            enabled: false
+    kafka:
+        bootstrap-servers: ${kafka.brokers}
+        properties:
+            basic:
+                auth:
+                    user:
+                        info: ${kafka.schema.registry.user}:${kafka.schema.registry.password}
+                    credentials:
+                        source: USER_INFO
+            schema:
+                registry:
+                    url: ${kafka.schema.registry}
+            ssl:
+              endpoint:
+                identification:
+                    algorithm: ''
+        security:
+            protocol: SSL
+        ssl:
+
+            trust-store-location: file:${kafka.truststore.path}
+            trust-store-type: JKS
+            trust-store-password: ${kafka.credstore.password}
+            key-store-location: file:${kafka.keystore.path}
+            key-store-type: PKCS12
+            key-store-password: ${kafka.credstore.password}
+        consumer:
+            group-id: ${spring.application.name}-${env}
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            properties:
+                specific:
+                    avro:
+                        reader: true
+        producer:
+            acks: all
+            client-id: ${spring.application.name}
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+joark:
+    enabled: true
+    base-uri: https://dokarkiv.${env}-fss-pub.nais.io

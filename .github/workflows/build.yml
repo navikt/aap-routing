@@ -58,7 +58,7 @@ jobs:
         env:
             PRINT_PAYLOAD: true
             APIKEY: ${{secrets.NAIS_DEPLOY_APIKEY}}
-            RESOURCE: .nais/naiserator.yaml,.nais/${{matrix.cluster}}-alerts.yaml
+            RESOURCE: .nais/naiserator.yaml
             CLUSTER: ${{matrix.cluster}}
             VARS: .nais/${{matrix.cluster}}.json
             IMAGE: ${{needs.bygg.outputs.image}}

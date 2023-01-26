@@ -59,7 +59,6 @@ class ArkivBeanConfig {
             })
         }
 
-
     @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
     @Qualifier(JOARK)
     @Bean
@@ -76,7 +75,6 @@ class ArkivBeanConfig {
                         "topic-${index}" to "${value.value.name()} (${value.value.partitions().count()} partisjoner)"
                     }
                 }
-
         override fun pingEndpoint() = "${p.bootstrapServers}"
     }
 

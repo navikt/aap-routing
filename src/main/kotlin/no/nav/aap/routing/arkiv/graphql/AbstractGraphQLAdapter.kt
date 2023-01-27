@@ -1,13 +1,14 @@
 package no.nav.aap.routing.arkiv.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import io.github.resilience4j.retry.annotation.Retry
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-    //@Retry(name = "graphql")
+    @Retry(name = "graphql")
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, arg: Map<String,String>) =
         runCatching {
             graphQL.post(query, arg, T::class.java).block().also {
@@ -17,7 +18,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
             handler.handle(it)
         }
 
-    //@Retry(name = "graphql")
+    @Retry(name = "graphql")
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, vars: Map<String,List<String>>) =
         runCatching {
             graphQL.flux(query,vars, T::class.java)

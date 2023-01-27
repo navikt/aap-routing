@@ -21,6 +21,7 @@
 		<jib.version>3.3.1</jib.version>
 		<java.version>17</java.version>
 		<kotlin.version>1.8.0</kotlin.version>
+		<resilience4j.version>2.0.2</resilience4j.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<repositories>
@@ -30,6 +31,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot2</artifactId>
+			<version>${resilience4j.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>
 			<artifactId>kafka-avro-serializer</artifactId>

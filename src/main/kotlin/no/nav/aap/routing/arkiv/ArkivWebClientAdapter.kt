@@ -1,6 +1,7 @@
 package no.nav.aap.routing.arkiv
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.Constants.JOARK
@@ -13,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono
 
 @Component
-class ArkivWebClientAdapter(@Qualifier(JOARK) webClient: WebClient, @Qualifier("${JOARK}ping") pingClient: WebClient, val cf: ArkivConfig) :
+class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, @Qualifier("${JOARK}ping") pingClient: WebClient, val cf: ArkivConfig) :
     AbstractWebClientAdapter(webClient, cf,pingClient) {
 
     fun opprettJournalpost(journalpost: Journalpost) =

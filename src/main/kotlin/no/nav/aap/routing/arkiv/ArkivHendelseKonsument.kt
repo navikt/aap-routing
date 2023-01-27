@@ -11,12 +11,15 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.transaction.annotation.Transactional
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument {
+class ArkivHendelseKonsument(private val adapter: ArkivWebClientAdapter) {
     private val log = getLogger(javaClass)
 
     @Transactional
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = ARKIVHENDELSER)
-    fun listen(@Payload payload: JournalfoeringHendelseRecord)  = log.info("Payload $payload mottatt")
+    fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
+        adapter.journalpost("${payload.journalpostId}").also {
+            log.info("Payload $payload mottatt, respons $it")
+        }
 
     private fun JournalfoeringHendelseRecord.tilUTC()  = parse(hendelsesId.substringAfter('-')).toUTC()
 }

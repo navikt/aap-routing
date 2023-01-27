@@ -1,11 +1,14 @@
 package no.nav.aap.routing.arkiv
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.health.Pingable
 import no.nav.aap.routing.arkiv.ArkivConfig.Companion.ARKIVHENDELSER
 import no.nav.aap.routing.arkiv.ArkivConfig.Companion.CLIENT_CREDENTIALS_ARKIV
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.util.Constants.PDL_SYSTEM
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -22,6 +25,7 @@ import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
@@ -35,12 +39,9 @@ class ArkivBeanConfig {
             .filter(clientCredentialFilterFunction)
             .build()
 
-    @Qualifier("${JOARK}ping")
+    @Qualifier(JOARK)
     @Bean
-    fun pingWebClientArkiv(builder: Builder, cfg: ArkivConfig) =
-        builder
-            .baseUrl("${cfg.baseUri}")
-            .build()
+    fun graphQLWebClient(@Qualifier(JOARK) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(JOARK)
@@ -58,6 +59,15 @@ class ArkivBeanConfig {
                setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
             })
         }
+
+
+    @Qualifier("${JOARK}ping")
+    @Bean
+    fun pingWebClientArkiv(builder: Builder, cfg: ArkivConfig) =
+        builder
+            .baseUrl("${cfg.baseUri}")
+            .build()
+
 
     @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
     @Qualifier(JOARK)

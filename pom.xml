@@ -14,18 +14,36 @@
 	<name>routing</name>
 	<description>KRUT erstatning</description>
 	<properties>
+		<confluent.version>7.3.1</confluent.version>
 		<domain.version>2.0.5</domain.version>
-		<eksternvarsling.version>08271806</eksternvarsling.version>
+		<dokumenthåndtering.version>08271806</dokumenthåndtering.version>
+		<graphql.version>2.0.1</graphql.version>
 		<jib.version>3.3.1</jib.version>
 		<java.version>17</java.version>
 		<kotlin.version>1.8.0</kotlin.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<url>https://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>io.confluent</groupId>
+			<artifactId>kafka-avro-serializer</artifactId>
+			<version>${confluent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-webclient-spring-boot-starter</artifactId>
+			<version>${graphql.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>no.nav.teamdokumenthandtering</groupId>
 			<artifactId>teamdokumenthandtering-avro-schemas</artifactId>
-			<version>${eksternvarsling.version}</version>
+			<version>${dokumenthåndtering.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.aap</groupId>

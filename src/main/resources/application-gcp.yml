@@ -44,7 +44,7 @@ spring:
         consumer:
             group-id: ${spring.application.name}-${env}
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
             properties:
                 specific:
                     avro:
@@ -73,3 +73,4 @@ no.nav:
 joark:
     enabled: true
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io
+    saf: https://saf.${env}-fss-pub.nais.io/graphql

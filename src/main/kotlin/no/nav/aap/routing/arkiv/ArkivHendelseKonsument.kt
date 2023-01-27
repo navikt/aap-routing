@@ -16,10 +16,7 @@ class ArkivHendelseKonsument {
 
     @Transactional
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = ARKIVHENDELSER)
-    fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
-        log.info("Payload $payload mottatt")
-
-
+    fun listen(@Payload payload: JournalfoeringHendelseRecord)  = log.info("Payload $payload mottatt")
 
     private fun JournalfoeringHendelseRecord.tilUTC()  = parse(hendelsesId.substringAfter('-')).toUTC()
 }

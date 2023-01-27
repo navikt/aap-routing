@@ -15,4 +15,4 @@ saf:
 joark:
     hendelser:
         topic: teamdokumenthandtering.aapen-dok-journalfoering-q1
-    scope: api://dev-fss.teamdokumenthandtering.saf/.default
+    scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default

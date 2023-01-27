@@ -73,7 +73,6 @@ no.nav:
                     discoveryurl: ${azure.app.well.known.url}
                     accepted_audience: ${azure.app.client.id}
 
-
 joark:
     enabled: true
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io

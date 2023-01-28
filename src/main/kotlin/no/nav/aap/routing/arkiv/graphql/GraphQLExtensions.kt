@@ -1,10 +1,6 @@
 package no.nav.aap.routing.arkiv.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
-import no.nav.aap.routing.arkiv.graphql.GraphQLErrorHandler.Companion.BadRequest
-import no.nav.aap.routing.arkiv.graphql.GraphQLErrorHandler.Companion.NotFound
-import no.nav.aap.routing.arkiv.graphql.GraphQLErrorHandler.Companion.Unauthenticated
-import no.nav.aap.routing.arkiv.graphql.GraphQLErrorHandler.Companion.Unauthorized
 import no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.RecoverableGraphQL.UnhandledGraphQL
 import no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.BadGraphQL
 import no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.NotFoundGraphQL
@@ -20,10 +16,13 @@ import org.springframework.http.HttpStatus.UNAUTHORIZED
 
 object GraphQLExtensions {
 
-    private val log = LoggerUtil.getLogger(javaClass)
+    const val Ok = "ok"
+    const val Unauthorized = "unauthorized"
+    const val Unauthenticated = "unauthenticated"
+    const val BadRequest = "bad_request"
+    const val NotFound = "not_found"
 
-    const val IDENT = "ident"
-    const val IDENTER = "identer"
+    private val log = LoggerUtil.getLogger(javaClass)
 
      fun GraphQLErrorsException.oversett() = oversett(code(), message ?: "Ukjent feil").also {
          log.warn("GraphQL oppslag returnerte ${errors.size} feil. ${errors}, oversatte feilkode til ${it.javaClass.simpleName}", this)

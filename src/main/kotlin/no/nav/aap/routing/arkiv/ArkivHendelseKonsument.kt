@@ -20,6 +20,4 @@ class ArkivHendelseKonsument(private val adapter: ArkivWebClientAdapter) {
         adapter.journalpost("${payload.journalpostId}").also {
             log.info("Payload $payload mottatt, respons SAF $it")
         }
-
-    private fun JournalfoeringHendelseRecord.tilUTC()  = parse(hendelsesId.substringAfter('-')).toUTC()
 }

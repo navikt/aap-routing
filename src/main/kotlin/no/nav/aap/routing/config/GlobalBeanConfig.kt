@@ -38,11 +38,11 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private interface IgnoreUnknownMixin
+    private interface IgnoreUnknown
 
     @Bean
     fun objectMapperCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
-        it.mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknownMixin::class.java)
+        it.mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknown::class.java)
     }
     @ConditionalOnNotProd
     @Bean

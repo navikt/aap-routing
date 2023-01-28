@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 
 @ConfigurationProperties(JOARK)
 class ArkivConfig(
-        @DefaultValue(DEFAULT_DOKARKIV_PATH) val arkivPath: String,
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
         @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
@@ -21,14 +20,11 @@ class ArkivConfig(
     data class HendelseConfig(val topic: String)
 
 
-    override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,arkivPath=$arkivPath,enabled=$isEnabled,baseUri=$baseUri]"
+    override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        const val MOTTATT = "JournalpostMottatt"
-        const val ENDELIGJOURNALFØRT = "EndeligJournalført"
         const val ARKIVHENDELSER = "joarkhendelser"
         const val CLIENT_CREDENTIALS_ARKIV = "client-credentials-arkiv"
-        private const val DEFAULT_DOKARKIV_PATH = "rest/journalpostapi/v1/journalpost"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"
     }
 }

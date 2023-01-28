@@ -31,7 +31,6 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 class ArkivBeanConfig {
-    private val log = LoggerUtil.getLogger(javaClass)
 
     @Qualifier(JOARK)
     @Bean
@@ -47,7 +46,7 @@ class ArkivBeanConfig {
 
     @Bean
     @Qualifier(JOARK)
-    fun clientCredentialFilterFunctionSaf(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun clientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
             next.exchange(ClientRequest.from(req)
                 .header(AUTHORIZATION, service.bearerToken(cfgs.registration[CLIENT_CREDENTIALS_ARKIV], req.url()))

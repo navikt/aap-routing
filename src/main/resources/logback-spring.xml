@@ -21,10 +21,8 @@
         </encoder>
     </appender>
     <springProfile name="dev">
-        <logger name="no.nav.aap" level="trace" />
         <logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
         <logger name="no.nav.aap" level="trace"/>
-        <logger name="org.flywaydb" level="trace" />
         <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="trace"/>
         <logger name="secure" level="debug" additivity="false">
             <appender-ref ref="secureJson"/>
@@ -55,8 +53,6 @@
             <appender-ref ref="secureJson"/>
         </logger>
         <logger name="org.apache.kafka.clients.Metadata" level="warn" />
-        <logger name="org.apache.fontbox.ttf.CmapSubtable" level="warn" />
         <logger name="no.nav.aap" level="info"/>
-        <logger name="org.apache.pdfbox" level="error"/>
     </springProfile>
 </configuration>

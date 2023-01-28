@@ -9,7 +9,7 @@ class GraphQLDefaultErrorHandler : GraphQLErrorHandler {
 
      override fun handle(e: Throwable): Nothing {
          when (e) {
-             is GraphQLErrorsException -> { throw e.oversett() }
+             is GraphQLErrorsException ->  throw e.oversett()
              else -> throw e
          }
     }

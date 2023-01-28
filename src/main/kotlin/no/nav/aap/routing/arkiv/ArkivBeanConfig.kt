@@ -39,7 +39,7 @@ class ArkivBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(clientCredentialFilterFunction)
-            .build().also { log.info("SAF  @${cfg.baseUri}") }
+            .build().also { log.info("SAF @ ${cfg.baseUri}") }
 
     @Qualifier(JOARK)
     @Bean

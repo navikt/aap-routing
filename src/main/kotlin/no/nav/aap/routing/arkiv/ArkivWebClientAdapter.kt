@@ -20,7 +20,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
     AbstractGraphQLAdapter(webClient, cf) {
 
 
-    fun journalpost(journalpost: String) = query<Map<String,Any>>(graphQL, JOURNALPOST_QUERY, mapOf(ID to journalpost))
+    fun journalpost(journalpost: Long) = query<Map<String,Any>>(graphQL, JOURNALPOST_QUERY, mapOf(ID to "$journalpost"))
 
     companion object {
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"

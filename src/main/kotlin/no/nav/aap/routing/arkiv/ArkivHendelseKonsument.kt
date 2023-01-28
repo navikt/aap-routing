@@ -18,7 +18,7 @@ class ArkivHendelseKonsument(private val adapter: ArkivWebClientAdapter) {
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = ARKIVHENDELSER)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
         adapter.journalpost("${payload.journalpostId}").also {
-            log.info("Payload $payload mottatt, respons $it")
+            log.info("Payload $payload mottatt, respons SAF $it")
         }
 
     private fun JournalfoeringHendelseRecord.tilUTC()  = parse(hendelsesId.substringAfter('-')).toUTC()

@@ -33,7 +33,7 @@ class ArkivBeanConfig {
 
     @Qualifier(JOARK)
     @Bean
-    fun webClientArkiv(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun webClientArkivSaf(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(clientCredentialFilterFunction)
@@ -41,11 +41,11 @@ class ArkivBeanConfig {
 
     @Qualifier(JOARK)
     @Bean
-    fun graphQLWebClient(@Qualifier(JOARK) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
+    fun graphQLWebClientSaf(@Qualifier(JOARK) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(JOARK)
-    fun clientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun clientCredentialFilterFunctionSaf(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
             next.exchange(ClientRequest.from(req)
                 .header(AUTHORIZATION, service.bearerToken(cfgs.registration[CLIENT_CREDENTIALS_ARKIV], req.url()))
@@ -59,31 +59,4 @@ class ArkivBeanConfig {
                setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
             })
         }
-
-    @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
-    @Qualifier(JOARK)
-    @Bean
-    fun arkivHendelserPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: ArkivConfig)  = object : Pingable {
-        override fun isEnabled() = cfg.isEnabled
-
-        override fun name() = cfg.name
-
-        override fun ping() =
-            admin.describeTopics(cfg.hendelser.topic).entries
-                .withIndex()
-                .associate {
-                    with(it) {
-                        "topic-${index}" to "${value.value.name()} (${value.value.partitions().count()} partisjoner)"
-                    }
-                }
-        override fun pingEndpoint() = "${p.bootstrapServers}"
-    }
-
-    @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
-    @Bean
-    fun arkivHendelserHealthIndicator(@Qualifier(JOARK) pingable: Pingable) = object : AbstractPingableHealthIndicator(pingable) {}
-
-    @Bean
-    @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
-    fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

@@ -28,14 +28,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 
 @Configuration
-class GlobalConfig(@Value("\${spring.application.name}") private val applicationName: String)  {
+class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String)  {
 
     @Bean
     fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-              //  .filter(metricsWebClientFilterFunction(registry,"webclient"))
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

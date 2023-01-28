@@ -33,7 +33,7 @@ class ArkivBeanConfig {
 
     @Qualifier(JOARK)
     @Bean
-    fun webClientArkivSaf(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun webClientArkiv(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(clientCredentialFilterFunction)
@@ -59,15 +59,6 @@ class ArkivBeanConfig {
                setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
             })
         }
-
-
-    @Qualifier("${JOARK}ping")
-    @Bean
-    fun pingWebClientArkiv(builder: Builder, cfg: ArkivConfig) =
-        builder
-            .baseUrl("${cfg.baseUri}")
-            .build()
-
 
     @ConditionalOnProperty("$JOARK.enabled", havingValue = "true")
     @Qualifier(JOARK)

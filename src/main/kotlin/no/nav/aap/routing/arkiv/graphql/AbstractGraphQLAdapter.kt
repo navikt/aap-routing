@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-    @Retry(name = "graphql")
+   // @Retry(name = "graphql")
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, arg: Map<String,String>) =
         runCatching {
             graphQL.post(query, arg, T::class.java).block().also {

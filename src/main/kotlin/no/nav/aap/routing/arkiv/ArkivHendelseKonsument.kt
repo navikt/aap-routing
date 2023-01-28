@@ -6,16 +6,14 @@ import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
-import org.springframework.transaction.annotation.Transactional
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val adapter: ArkivWebClientAdapter) {
+class ArkivHendelseKonsument(private val client: ArkivClient) {
     private val log = getLogger(javaClass)
 
-    @Transactional
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = ARKIVHENDELSER)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
-        adapter.journalpost(payload.journalpostId).also {
+        client.journalpost(payload.journalpostId).also {  // map til domeneobjekt
             log.info("Payload $payload mottatt, respons SAF $it")
         }
 }

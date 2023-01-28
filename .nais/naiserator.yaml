@@ -51,4 +51,4 @@ spec:
     - name: ENV
       value: {{env}}
     - name: SAF
-      value: {{saf}}
+      value: https://{{saf}}/graphql

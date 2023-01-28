@@ -2,5 +2,5 @@
   "tenant": "trygdeetaten.no",
   "ingress": "https://aap-routing.dev.intern.nav.no",
   "env": "dev",
-  "saf": "https://saf-q1.dev.intern.nav.no/graphql"
+  "saf": "saf-q1.dev.intern.nav.no"
 }

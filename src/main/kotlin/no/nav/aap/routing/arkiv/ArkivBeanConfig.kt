@@ -33,9 +33,9 @@ class ArkivBeanConfig {
 
     @Qualifier(JOARK)
     @Bean
-    fun webClientArkiv(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun webClientArkivSaf(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) clientCredentialFilterFunction: ExchangeFilterFunction) =
         builder
-            .baseUrl("${cfg.baseUri}")
+            .baseUrl("${cfg.safUri}")
             .filter(clientCredentialFilterFunction)
             .build()
 

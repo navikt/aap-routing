@@ -76,4 +76,4 @@ no.nav:
 joark:
     enabled: true
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io
-    saf: https://saf.${env}-fss-pub.nais.io/graphql
+    saf-url: https://saf.${env}-fss-pub.nais.io/graphql

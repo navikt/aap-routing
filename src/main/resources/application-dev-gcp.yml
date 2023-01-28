@@ -9,9 +9,6 @@ management:
             show-details: always
         shutdown:
             enabled: true
-
-saf:
-    base-uri: https://safselvbetjening-q1.dev-fss-pub.nais.io
 joark:
     hendelser:
         topic: teamdokumenthandtering.aapen-dok-journalfoering-q1

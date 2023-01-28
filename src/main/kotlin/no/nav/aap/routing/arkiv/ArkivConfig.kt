@@ -15,7 +15,6 @@ class ArkivConfig(
         @DefaultValue("true") enabled: Boolean,
         @NestedConfigurationProperty private val retryCfg: RetryConfig =DEFAULT,
         @NestedConfigurationProperty val hendelser: HendelseConfig,
-        val safUri: URI,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,retryCfg) {
 
 

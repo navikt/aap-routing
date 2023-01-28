@@ -22,7 +22,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun journalpost(journalpost: String) =
         runCatching {
-            log.info("GraphQL med cfg $cf")
+            log.info("GraphQL med cfg $cf for $journalpost")
             query<String>(graphQL, JOURNALPOST_QUERY, mapOf("journalpostId" to journalpost))
         }.getOrElse {
             log.warn("GraphQL feilet",it)

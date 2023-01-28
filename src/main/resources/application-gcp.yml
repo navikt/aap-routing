@@ -6,6 +6,15 @@ info:
         image: ${nais.app.image}
         app: ${nais.app.name}
         namespace: ${nais.namespace}
+
+resilience4j:
+    retry:
+        instances:
+            graphql:
+                max-attempts: 3
+                waitDuration: 100ms
+                ignoreExceptions:
+                    - no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL
 spring:
     cloud:
         gcp:

@@ -10,10 +10,10 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 
 @ConfigurationProperties(JOARK)
 class ArkivConfig(
-        @DefaultValue(DEFAULT_OPPRETT_PATH) val arkivPath: String,
+        @DefaultValue(DEFAULT_DOKARKIV_PATH) val arkivPath: String,
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
-        @NestedConfigurationProperty private val retryCfg: RetryConfig =DEFAULT,
+        @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
         @NestedConfigurationProperty val hendelser: HendelseConfig,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,retryCfg) {
 
@@ -28,7 +28,7 @@ class ArkivConfig(
         const val ENDELIGJOURNALFØRT = "EndeligJournalført"
         const val ARKIVHENDELSER = "joarkhendelser"
         const val CLIENT_CREDENTIALS_ARKIV = "client-credentials-arkiv"
-        private const val DEFAULT_OPPRETT_PATH = "rest/journalpostapi/v1/journalpost"
+        private const val DEFAULT_DOKARKIV_PATH = "rest/journalpostapi/v1/journalpost"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"
     }
 }

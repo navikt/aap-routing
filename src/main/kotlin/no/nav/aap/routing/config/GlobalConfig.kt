@@ -1,5 +1,6 @@
 package no.nav.aap.routing.config
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.micrometer.core.instrument.MeterRegistry
 import java.time.Duration
 import java.util.function.Consumer
@@ -24,6 +25,7 @@ import reactor.util.retry.Retry.fixedDelay
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import io.netty.handler.logging.LogLevel.TRACE
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 
 @Configuration
 class GlobalConfig(@Value("\${spring.application.name}") private val applicationName: String)  {
@@ -36,6 +38,13 @@ class GlobalConfig(@Value("\${spring.application.name}") private val application
               //  .filter(metricsWebClientFilterFunction(registry,"webclient"))
         }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private interface IgnoreUnknownMixin
+
+    @Bean
+    fun objectMapperCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
+        it.mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknownMixin::class.java)
+    }
     @ConditionalOnNotProd
     @Bean
     fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)

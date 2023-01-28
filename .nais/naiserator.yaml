@@ -11,6 +11,10 @@ metadata:
   labels:
     team: aap
 spec:
+  accessPolicy:
+    outbound:
+      external:
+        -   host: {{saf}}
   secureLogs:
     enabled: true
   azure:
@@ -46,3 +50,5 @@ spec:
   env:
     - name: ENV
       value: {{env}}
+    - name: SAF
+      value: {{saf}}

@@ -9,6 +9,7 @@ import no.nav.aap.routing.arkiv.ArkivConfig.Companion.CLIENT_CREDENTIALS_ARKIV
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.Constants.PDL_SYSTEM
+import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -30,6 +31,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 class ArkivBeanConfig {
+    private val log = LoggerUtil.getLogger(javaClass)
 
     @Qualifier(JOARK)
     @Bean
@@ -37,7 +39,7 @@ class ArkivBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(clientCredentialFilterFunction)
-            .build()
+            .build().also { log.info("SAF  @${cfg.baseUri}") }
 
     @Qualifier(JOARK)
     @Bean

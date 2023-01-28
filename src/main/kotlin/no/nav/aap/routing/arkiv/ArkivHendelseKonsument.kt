@@ -1,9 +1,7 @@
 package no.nav.aap.routing.arkiv
 
-import java.time.LocalDateTime.parse
 import no.nav.aap.routing.arkiv.ArkivConfig.Companion.ARKIVHENDELSER
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.TimeExtensions.toUTC
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.KafkaListener

@@ -11,7 +11,7 @@ import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
-import org.springframework.http.HttpHeaders.*
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient

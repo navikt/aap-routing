@@ -9,13 +9,9 @@ import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
-@Component
-data class WebClients(
-        @Qualifier(PDL) val client: WebClient,
-        @Qualifier(PDL) val graphQL: GraphQLWebClient)
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
+class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL) val graphQL: GraphQLWebClient, cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
     override fun ping() :Map<String,String>{
         client

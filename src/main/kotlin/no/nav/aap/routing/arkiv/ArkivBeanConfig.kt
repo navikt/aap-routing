@@ -2,7 +2,6 @@ package no.nav.aap.routing.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import no.nav.aap.routing.arkiv.ArkivConfig.Companion.ARKIVHENDELSER
 import no.nav.aap.routing.arkiv.ArkivConfig.Companion.CLIENT_CREDENTIALS_ARKIV
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
@@ -43,7 +42,7 @@ class ArkivBeanConfig {
     fun clientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
             next.exchange(ClientRequest.from(req)
-                .header(AUTHORIZATION, service.bearerToken(cfgs.registration[CLIENT_CREDENTIALS_ARKIV], req.url()))
+                .header(AUTHORIZATION, service.bearerToken(cfgs.registration[JOARK], req.url()))
                 .build())
         }
 

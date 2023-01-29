@@ -1,6 +1,7 @@
 package no.nav.aap.routing.person
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.routing.arkiv.graphql.AbstractGraphQLAdapter
 import no.nav.aap.routing.person.PDLConfig.Companion.PDL
 import org.springframework.beans.factory.annotation.Qualifier
@@ -23,6 +24,10 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
             .block()
         return emptyMap()
     }
+
+    fun gt(fnr: Fødselsnummer) = query<Map<String,Any>>(graphQL,GT_QUERY, fnr.asIdent()) // todo map to domain
+
+    private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 
     override fun toString() =
         "${javaClass.simpleName} [webClient=$client,webClient=$client, cfg=$cfg]"

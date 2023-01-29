@@ -24,6 +24,7 @@
 		<logstash.version>7.2</logstash.version>
 		<resilience4j.version>2.0.2</resilience4j.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
+		<tjnestespesifikasjoner.version>1.2021.02.22-10.45-4201aaea72fb<</tjnestespesifikasjoner.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -32,6 +33,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>no.nav.tjenestespesifikasjoner</groupId>
+			<artifactId>arenaSakVedtakService</artifactId>
+			<version>${tjnestespesifikasjoner.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-reactor-netty</artifactId>

@@ -2,7 +2,6 @@ package no.nav.aap.routing.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import no.nav.aap.routing.arkiv.ArkivConfig.Companion.CLIENT_CREDENTIALS_ARKIV
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.TokenExtensions.bearerToken

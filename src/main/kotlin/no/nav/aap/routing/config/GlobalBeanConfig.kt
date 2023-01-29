@@ -71,7 +71,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .retrieve()
                     .bodyToMono(OAuth2AccessTokenResponse::class.java)
                     .retryWhen(retry())
-                    .onErrorMap { e -> e as? OAuth2ClientException ?: OAuth2ClientException("Uventet feil fra token endpoint",e) }
+                    .onErrorMap { e -> e as? OAuth2ClientException ?: OAuth2ClientException("Uventet feil fra token endpoint $tokenEndpointUrl",e) }
                     .doOnSuccess { log.trace("Token endpoint $tokenEndpointUrl returnerte OK") }
                     .block()
                     ?: throw OAuth2ClientException("Ingen respons (null) fra token endpoint $tokenEndpointUrl")

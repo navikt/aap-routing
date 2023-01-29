@@ -1,6 +1,6 @@
 package no.nav.aap.routing.arkiv
 
-import no.nav.aap.routing.arkiv.ArkivConfig.Companion.ARKIVHENDELSER
+import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
@@ -11,7 +11,7 @@ import org.springframework.messaging.handler.annotation.Payload
 class ArkivHendelseKonsument(private val client: ArkivClient) {
     private val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = ARKIVHENDELSER)
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
         client.journalpost(payload.journalpostId).also {  // map til domeneobjekt
             log.info("Payload $payload mottatt, respons SAF $it")

@@ -23,7 +23,6 @@ class ArkivConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        const val ARKIVHENDELSER = "joarkhendelser"
         const val CLIENT_CREDENTIALS_ARKIV = "client-credentials-arkiv"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness" //TODO
     }

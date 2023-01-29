@@ -69,7 +69,7 @@ no.nav:
         jwt:
             client:
                 registration:
-                    client-credentials-arkiv:
+                    joark:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
                         scope: ${joark.scope}

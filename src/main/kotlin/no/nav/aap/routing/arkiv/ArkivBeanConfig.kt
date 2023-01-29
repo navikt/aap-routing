@@ -47,7 +47,7 @@ class ArkivBeanConfig {
                 .build())
         }
 
-    @Bean(ARKIVHENDELSER)
+    @Bean(JOARK)
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {

@@ -24,7 +24,7 @@
 		<logstash.version>7.2</logstash.version>
 		<resilience4j.version>2.0.2</resilience4j.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
-		<tjnestespesifikasjoner.version>1.2021.02.22-10.45-4201aaea72fb<</tjnestespesifikasjoner.version>
+		<tjnestespesifikasjoner.version>1.2021.02.22-10.45-4201aaea72fb</tjnestespesifikasjoner.version>
 	</properties>
 	<repositories>
 		<repository>

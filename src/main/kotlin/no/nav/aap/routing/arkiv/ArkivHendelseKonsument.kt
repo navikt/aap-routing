@@ -11,8 +11,7 @@ import org.springframework.messaging.handler.annotation.Payload
 class ArkivHendelseKonsument(private val client: ArkivClient) {
     private val log = getLogger(javaClass)
 
-//    @KafkaListener(topics = ["#{@arkivConfig.hendelser.topic}"], containerFactory = JOARK)
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
+    @KafkaListener(topics = ["#{joark-no.nav.aap.routing.arkiv.ArkivConfig.hendelser.topic}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
         client.journalpost(payload.journalpostId).also {  // map til domeneobjekt
             log.info("Payload $payload mottatt, respons SAF $it")

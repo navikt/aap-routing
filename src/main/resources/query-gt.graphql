@@ -6,10 +6,3 @@ query($ident: ID!) {
        gtLand
     }
   }
-query($ident: ID!) {
-    hentPerson(ident: $ident)  {
-    adressebeskyttelse {
-       gradering
-    }
-  }
-}

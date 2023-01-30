@@ -7,7 +7,7 @@ query($ident: ID!) {
     }
   }
 query($ident: ID!) {
-    hentPerson(ident: $ident) @depends(on: "hentGeografiskTilknytning") {
+    hentPerson(ident: $ident)  {
     adressebeskyttelse {
        gradering
     }

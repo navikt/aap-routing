@@ -16,7 +16,7 @@ import org.springframework.kafka.annotation.EnableKafka
 class RoutingApplication
 
 fun main(args: Array<String>) {
-""	runApplication<RoutingApplication>(*args) {
+	runApplication<RoutingApplication>(*args) {
 		setAdditionalProfiles(*profiler())
 	}
 }

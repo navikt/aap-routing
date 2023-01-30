@@ -17,7 +17,7 @@ class ArkivHendelseKonsument(private val client: ArkivClient, private val pdl: P
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
         client.journalpost(payload.journalpostId).also {  // map til domeneobjekt
             log.info("Payload $payload mottatt, respons SAF $it")
-            pdl.gt(Fødselsnummer("08089403198")).also {
+            pdl.geoTilknytning(Fødselsnummer("08089403198")).also {
                 log.info("PDL respons $it")
             }
         }

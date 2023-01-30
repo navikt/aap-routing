@@ -23,7 +23,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
             .toBodilessEntity()
             .block().run { emptyMap<String,String>() }
 
-    fun gt(fnr: Fødselsnummer) = query<Map<String,Any>>(graphQL,GT_QUERY, fnr.asIdent()) // todo map to domain
+    fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL,GT_QUERY, fnr.asIdent()) // todo map to domain
 
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 

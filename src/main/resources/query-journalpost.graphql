@@ -1,7 +1,7 @@
 query journalpost($journalpostId: String!) {
   journalpost(journalpostId: $journalpostId) {
     tittel
-    journalforendeEnhet
+    journalfoerendeEnhet
     journalpostId
     avsenderMottaker {
       id
@@ -25,4 +25,3 @@ query journalpost($journalpostId: String!) {
     }
   }
 }
-

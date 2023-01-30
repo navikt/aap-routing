@@ -12,8 +12,9 @@ import org.springframework.web.reactive.function.client.WebClient
 class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, val cf: ArkivConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
+    fun journalpost(journalpost: Long) = query<Map<String,Any>>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())
 
-    fun journalpost(journalpost: Long) = query<Map<String,Any>>(graphQL, JOURNALPOST_QUERY, mapOf(ID to "$journalpost"))
+    private fun Long.asIdent() = mapOf(ID to "$this")
 
     companion object {
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"

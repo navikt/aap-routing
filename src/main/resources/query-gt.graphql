@@ -6,3 +6,10 @@ query($ident: ID!) {
        gtLand
     }
   }
+query($ident: ID!) {
+    hentPerson(ident: $ident) @depends(on: "hentGeografiskTilknytning") {
+    adressebeskyttelse {
+       gradering
+    }
+  }
+}

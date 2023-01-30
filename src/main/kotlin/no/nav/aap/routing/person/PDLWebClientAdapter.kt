@@ -14,23 +14,21 @@ import org.springframework.web.reactive.function.client.WebClient
 @Component
 class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL) val graphQL: GraphQLWebClient, cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
-    override fun ping() :Map<String,String>{
+    override fun ping() =
         client
             .options()
             .uri(baseUri)
             .accept(APPLICATION_JSON, TEXT_PLAIN)
             .retrieve()
             .toBodilessEntity()
-            .block()
-        return emptyMap()
-    }
+            .block().run { emptyMap<String,String>() }
 
     fun gt(fnr: Fødselsnummer) = query<Map<String,Any>>(graphQL,GT_QUERY, fnr.asIdent()) // todo map to domain
 
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 
     override fun toString() =
-        "${javaClass.simpleName} [webClient=$client,webClient=$client, cfg=$cfg]"
+        "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg]"
 
     companion object {
         private const val GT_QUERY = "query-gt.graphql"

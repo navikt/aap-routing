@@ -36,7 +36,7 @@ data class Journalpost(val tittel: String?,val journalfoerendeEnhet: String?, va
 
     data class DokumentInfo(val dokumentInfoId: String, val tittel: String?,val brevkode: String?)
 
-    data class Bruker(val id: Fødselsnummer, val type: AvsenderMottakerType) {
+    data class Bruker(val id: String, val type: AvsenderMottakerType) {
         enum class AvsenderMottakerType {
             FNR,
             ORGNR,
@@ -45,8 +45,5 @@ data class Journalpost(val tittel: String?,val journalfoerendeEnhet: String?, va
             NULL,
             UKJENT,
         }
-
     }
-
-
 }

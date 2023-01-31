@@ -1,6 +1,7 @@
 package no.nav.aap.routing.arkiv
 
 import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.routing.arkiv.Oppslag.OppslagResultat
 import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
 import no.nav.aap.routing.navorganisasjon.NavOrgWebClientAdapter
@@ -17,18 +18,24 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val oppslag: Oppslag) {
-    private val log = getLogger(javaClass)
+class ArkivHendelseKonsument(private val fordeler: Fordeler) {
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
-        oppslag.slåOpp(payload.journalpostId).also {
-            log.info("Oppslag $it")
-        }
+        fordeler.fordel(payload.journalpostId)
 }
 
 @Component
-class Oppslag(private val clients: Clients) {
+class Fordeler(private val oppslag: Oppslager) {
+    private val log = getLogger(javaClass)
+    fun fordel(id: Long){
+        oppslag.slåOpp(id).also {
+            log.info("Fordeler $it")
+        }
+    }
+}
+@Component
+class Oppslager(private val clients: Clients) {
     fun slåOpp(journalpost: Long) =
         with(clients) {
             OppslagResultat(arkiv.journalpost(journalpost),pdl.geoTilknytning(Fødselsnummer("08089403198")),org.bestMatch(EnhetsKriteria("030107")))

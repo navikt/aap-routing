@@ -34,3 +34,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
         private const val GT_QUERY = "query-gt.graphql"
     }
 }
+@Component
+class PDLClient(private val adapter: PDLWebClientAdapter) {
+    fun geoTilknytning(fnr: Fødselsnummer) = adapter.geoTilknytning(fnr)
+}

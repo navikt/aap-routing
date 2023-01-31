@@ -8,24 +8,28 @@ import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-   @Retry(name = "graphql")
-    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, arg: Map<String,String>) =
+   @Retry(name = GRAPHQL)
+    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,String>) =
         runCatching {
-            graphQL.post(query, arg, T::class.java).block().also {
+            graphQL.post(query, args, T::class.java).block().also {
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
             }
         }.getOrElse {
             handler.handle(it)
         }
 
-    @Retry(name = "graphql")
-    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, vars: Map<String,List<String>>) =
+    @Retry(name = GRAPHQL)
+    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,List<String>>) =
         runCatching {
-            graphQL.flux(query,vars, T::class.java)
+            graphQL.flux(query,args, T::class.java)
                 .collectList().block()?.toList().also {
                     log.trace("Slo opp ${T::class.java.simpleName} $it")
                 }  ?: emptyList()
         }.getOrElse {
             handler.handle(it)
         }
+
+    companion object {
+        private const val GRAPHQL = "graphql"
+    }
 }

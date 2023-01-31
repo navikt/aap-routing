@@ -16,11 +16,10 @@ import org.springframework.http.HttpStatus.UNAUTHORIZED
 
 object GraphQLExtensions {
 
-    const val Ok = "ok"
-    const val Unauthorized = "unauthorized"
-    const val Unauthenticated = "unauthenticated"
-    const val BadRequest = "bad_request"
-    const val NotFound = "not_found"
+    private const val NOTAUTHORIZED = "unauthorized"
+    private const val UNAUTHENTICATED = "unauthenticated"
+    private const val BADREQUEST = "bad_request"
+    private const val NOTFOUND = "not_found"
 
     private val log = LoggerUtil.getLogger(javaClass)
 
@@ -32,10 +31,10 @@ object GraphQLExtensions {
 
     private fun oversett(kode: String?, msg: String) =
         when (kode) {
-            Unauthorized -> UnauthorizedGraphQL(UNAUTHORIZED,msg)
-            Unauthenticated -> UnauthenticatedGraphQL(FORBIDDEN,msg)
-            BadRequest -> BadGraphQL(BAD_REQUEST, msg)
-            NotFound -> NotFoundGraphQL(NOT_FOUND, msg)
+            NOTAUTHORIZED -> UnauthorizedGraphQL(UNAUTHORIZED,msg)
+            UNAUTHENTICATED -> UnauthenticatedGraphQL(FORBIDDEN,msg)
+            BADREQUEST -> BadGraphQL(BAD_REQUEST, msg)
+            NOTFOUND -> NotFoundGraphQL(NOT_FOUND, msg)
             else -> UnhandledGraphQL(INTERNAL_SERVER_ERROR,msg)
         }
     abstract class UnrecoverableGraphQL(status: HttpStatus, msg: String) : Throwable("${status.value()}-$msg", null) {

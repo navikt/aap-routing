@@ -22,7 +22,7 @@ class NavOrgConfig(
 
     companion object {
         private const val DEFAULT_PING_PATH = "norg2/internal/isAlive"
-        private const val BEST_MATCH = "api/v1/arbeidsfordeling/enheter/bestmatch"
+        private const val BEST_MATCH = "/norg2/api/v1/arbeidsfordeling/enheter/bestmatch"
         public const val ORG = "navorg"
     }
 }

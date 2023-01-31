@@ -22,6 +22,7 @@ class NavOrgWebClientAdapter(@Qualifier(ORG) webClient: WebClient, val cf: NavOr
             .retrieve()
             .bodyToMono<Map<String, Any>>()
             .retryWhen(cf.retrySpec(log))
+            .contextCapture()
             .doOnError { t: Throwable -> log.warn("BestMatch feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra NORG2")
 

@@ -1,18 +1,14 @@
 package no.nav.aap.routing.arkiv
 
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.routing.arkiv.Oppslag.OppslagResultat
 import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
-import no.nav.aap.routing.navorganisasjon.NavOrgWebClientAdapter
 import no.nav.aap.routing.person.PDLClient
 import no.nav.aap.routing.person.PDLGeoTilknytning
-import no.nav.aap.routing.person.PDLWebClientAdapter
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import org.apache.coyote.http11.Constants.a
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component

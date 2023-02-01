@@ -23,7 +23,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
             .toBodilessEntity()
             .block().run { emptyMap<String,String>() }
 
-    fun beskyttelse(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent()) // todo map to domain
+    fun beskyttelse(fnr: Fødselsnummer) = query<List<String>>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent()) // todo map to domain
 
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent()) // todo map to domain
 
@@ -39,6 +39,6 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
 }
 @Component
 class PDLClient(private val adapter: PDLWebClientAdapter) {
-    fun geoTilknytning(fnr: Fødselsnummer) = adapter.geoTilknytning(fnr)?.gt()
+    fun geoTilknytning(fnr: Fødselsnummer) = adapter.geoTilknytning(fnr)
     fun beskyttelse(fnr: Fødselsnummer) = adapter.beskyttelse(fnr)
 }

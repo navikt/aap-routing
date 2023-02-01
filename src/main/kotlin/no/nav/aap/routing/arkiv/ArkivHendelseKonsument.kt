@@ -46,7 +46,7 @@ class Oppslager(private val clients: Clients) {
                 } ?: log.warn("Null fra GT oppslag")
             } ?: log.warn("Null fra journalpost oppslag")
         }
-    data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)
+    data class OppslagResultat(val journalpost: Journalpost, val gt: List<String>?, val org: Map<String,Any>)
 }
 
 @Component

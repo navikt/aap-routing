@@ -2,6 +2,10 @@ package no.nav.aap.routing.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.routing.skjerming.SkjermingConfig
+import no.nav.aap.routing.skjerming.SkjermingConfig.Companion
+import no.nav.aap.routing.skjerming.SkjermingWebClientAdapter
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.TokenExtensions.bearerToken
@@ -9,6 +13,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -52,4 +57,8 @@ class ArkivBeanConfig {
                setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
             })
         }
+
+    @Bean
+    @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
+    fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

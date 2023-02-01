@@ -13,6 +13,9 @@ metadata:
 spec:
   accessPolicy:
     outbound:
+      rules:
+        - application: skjermede-personer-pip
+          namespace: nom
       external:
         -   host: https://pdl-api.{{env}}-fss-pub.nais.io
         -   host: {{saf}}

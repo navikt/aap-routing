@@ -26,17 +26,27 @@ class Fordeler(private val oppslag: Oppslager) {
     private val log = getLogger(javaClass)
     fun fordel(id: Long){
         oppslag.slåOpp(id).also {
-            log.info("Fordeler $it")
+            log.info("Fordeler $it (snart)")
         }
     }
 }
 @Component
 class Oppslager(private val clients: Clients) {
+
+    private val log = getLogger(javaClass)
+
     fun slåOpp(journalpost: Long) =
         with(clients) {
-            OppslagResultat(arkiv.journalpost(journalpost),pdl.geoTilknytning(Fødselsnummer("08089403198")),org.bestMatch(EnhetsKriteria("030107")))
+
+            arkiv.journalpost(journalpost)?.let { jp ->
+                log.info("XX Sjekker Beskyttelse")
+                pdl.beskyttelse(jp.fnr).also { log.info("XX Beskyttelse $it") }
+                pdl.geoTilknytning(jp.fnr)?.let { g  ->
+                    OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
+                } ?: log.warn("Null fra GT oppslag")
+            } ?: log.warn("Null fra journalpost oppslag")
         }
-    data class OppslagResultat(val journalpost: Journalpost?, val geo: PDLGeoTilknytning?, val org: Map<String,Any>)
+    data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)
 }
 
 @Component

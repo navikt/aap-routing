@@ -1,6 +1,7 @@
 package no.nav.aap.routing.navorganisasjon
 
 import no.nav.aap.routing.navorganisasjon.EnhetsKriteria.Diskresjonskode.ANY
+import no.nav.aap.routing.navorganisasjon.EnhetsKriteria.Diskresjonskode.values
 import no.nav.aap.util.Constants.AAP
 
 data class EnhetsKriteria(val geografiskOmraade: String,
@@ -8,7 +9,12 @@ data class EnhetsKriteria(val geografiskOmraade: String,
                           val diskresjonskode: Diskresjonskode = ANY,
                           val tema: String = AAP) {
 
-    enum class Diskresjonskode {
-        SPFO, SPSF, ANY
+    enum class Diskresjonskode(vararg val koder: String) {
+
+        SPFO("FORTROLIG"), SPSF("FORTROLIG","STRENGT_FORTROLIG_UTLAND"), ANY
+    }
+
+    companion object{
+        fun of(kode: String) = values().first { kode in it.koder }
     }
 }

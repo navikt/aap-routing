@@ -12,7 +12,10 @@ import org.springframework.web.reactive.function.client.WebClient
 class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, val cf: ArkivConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
-    fun journalpost(journalpost: Long) = query<Journalpost>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())
+    fun journalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
+
+    fun finalizeJournalpost(journalpostId: String): Nothing = TODO()
+    fun updateJournalpost(journalpost: Journalpost): Nothing = TODO()
 
     private fun Long.asIdent() = mapOf(ID to "$this")
 

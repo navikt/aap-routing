@@ -25,7 +25,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
 
     fun beskyttelse(fnr: Fødselsnummer) = query<List<String>>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent()) // todo map to domain
 
-    fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent()) // todo map to domain
+    fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
 
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 

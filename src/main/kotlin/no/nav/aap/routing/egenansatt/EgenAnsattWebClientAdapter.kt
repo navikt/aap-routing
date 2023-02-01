@@ -1,13 +1,9 @@
-package no.nav.aap.routing.skjerming
+package no.nav.aap.routing.egenansatt
 
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
-import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ORG
-import no.nav.aap.routing.navorganisasjon.NavOrgWebClientAdapter
-import no.nav.aap.routing.person.PDLWebClientAdapter
-import no.nav.aap.routing.skjerming.SkjermingConfig.Companion.SKJERMING
+import no.nav.aap.routing.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -16,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class SkjermingWebClientAdapter(@Qualifier(SKJERMING) webClient: WebClient, val cf: SkjermingConfig) :
+class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, val cf: EgenAnsattConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
         fun erSkjermet(fnr: Fødselsnummer) = webClient.post()
@@ -32,6 +28,6 @@ class SkjermingWebClientAdapter(@Qualifier(SKJERMING) webClient: WebClient, val 
 }
 
 @Component
-class SkjermingClient(private val adapter: SkjermingWebClientAdapter) {
+class EgenAnsattWebClientAdapterClient(private val adapter: EgenAnsattWebClientAdapter) {
     fun erSkjermet(fnr: Fødselsnummer) = adapter.erSkjermet(fnr)
 }

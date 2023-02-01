@@ -3,9 +3,6 @@ package no.nav.aap.routing.arkiv
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.routing.skjerming.SkjermingConfig
-import no.nav.aap.routing.skjerming.SkjermingConfig.Companion
-import no.nav.aap.routing.skjerming.SkjermingWebClientAdapter
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.TokenExtensions.bearerToken

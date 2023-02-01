@@ -98,7 +98,7 @@ no.nav:
                     discoveryurl: ${azure.app.well.known.url}
                     accepted_audience: ${azure.app.client.id}
 
-skjerming:
+egenansatt:
     enabled: true
     base-uri: http://skjermede-personer-pip.nom
     scope: api://skjermede-personer-pip.nom/.default

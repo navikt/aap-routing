@@ -24,6 +24,6 @@ class SkjermingBeanConfig {
 
     @Bean
     @ConditionalOnProperty("$SKJERMING.enabled", havingValue = "true")
-    fun orgHealthIndicator(adapter: SkjermingWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun skjermingHealthIndicator(adapter: SkjermingWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
 }

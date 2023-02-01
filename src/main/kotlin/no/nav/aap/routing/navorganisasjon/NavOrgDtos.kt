@@ -7,7 +7,7 @@ import no.nav.aap.util.Constants.AAP
 data class EnhetsKriteria(val geografiskOmraade: String,
                           val skjermet: Boolean = false,
                           val diskresjonskode: Diskresjonskode = ANY,
-                          val tema: String = AAP) {
+                          val tema: String = AAP.uppercase()) {
 
     enum class Diskresjonskode(vararg val koder: String) {
 

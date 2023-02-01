@@ -17,7 +17,7 @@ class SkjermingBeanConfig {
 
     @Qualifier(SKJERMING)
     @Bean
-    fun navOrgWebClient(builder: Builder, cfg: SkjermingConfig) =
+    fun skjermingWebClient(builder: Builder, cfg: SkjermingConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
             .build()

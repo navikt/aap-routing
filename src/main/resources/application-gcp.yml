@@ -69,6 +69,14 @@ no.nav:
         jwt:
             client:
                 registration:
+                    skjerming:
+                        token-endpoint-url: ${azure.openid.config.token.endpoint}
+                        grant-type: client_credentials
+                        scope: ${skjerming.scope}
+                        authentication:
+                            client-id: ${azure.app.client.id}
+                            client-jwk: ${azure.app.jwk}
+                            client-auth-method: private_key_jwt
                     pdl:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
@@ -90,6 +98,10 @@ no.nav:
                     discoveryurl: ${azure.app.well.known.url}
                     accepted_audience: ${azure.app.client.id}
 
+skjerming:
+    enabled: true
+    base-uri: http://skjermede-personer-pip.nom
+    scope: api://skjermede-personer-pip.nom/.default
 joark:
     enabled: true
     base-uri: ${saf}

@@ -1,10 +1,8 @@
 package no.nav.aap.routing.arkiv
 
-import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
 import no.nav.aap.routing.person.PDLClient
-import no.nav.aap.routing.person.PDLGeoTilknytning
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -17,8 +15,7 @@ import org.springframework.stereotype.Component
 class ArkivHendelseKonsument(private val fordeler: Fordeler) {
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    fun listen(@Payload payload: JournalfoeringHendelseRecord)  =
-        fordeler.fordel(payload.journalpostId)
+    fun listen(@Payload payload: JournalfoeringHendelseRecord)  = fordeler.fordel(payload.journalpostId)
 }
 
 @Component
@@ -37,10 +34,8 @@ class Oppslager(private val clients: Clients) {
 
     fun slåOpp(journalpost: Long) =
         with(clients) {
-
             arkiv.journalpost(journalpost)?.let { jp ->
-                log.info("XX Sjekker Beskyttelse")
-                pdl.beskyttelse(jp.fnr).also { log.info("XX Beskyttelse $it") }
+                pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                 pdl.geoTilknytning(jp.fnr)?.let { g  ->
                     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
                 } ?: log.warn("Null fra GT oppslag")

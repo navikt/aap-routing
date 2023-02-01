@@ -11,10 +11,11 @@ data class EnhetsKriteria(val geografiskOmraade: String,
 
     enum class Diskresjonskode(vararg val koder: String) {
 
-        SPFO("FORTROLIG"), SPSF("FORTROLIG","STRENGT_FORTROLIG_UTLAND"), ANY
+        SPFO("FORTROLIG"), SPSF("FORTROLIG","STRENGT_FORTROLIG_UTLAND"), ANY;
+        companion object{
+            fun of(kode: String) = values().firstOrNull { kode in it.koder }
+        }
     }
 
-    companion object{
-        fun of(kode: String) = values().first { kode in it.koder }
-    }
+
 }

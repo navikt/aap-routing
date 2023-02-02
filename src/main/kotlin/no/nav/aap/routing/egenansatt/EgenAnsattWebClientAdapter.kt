@@ -25,7 +25,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
             .doOnError { t: Throwable -> log.warn("Skjerming oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra Skjerming")
 
-    private data class Ident(val personIdent: String)
+    private data class Ident(val personident: String)
 
 }
 

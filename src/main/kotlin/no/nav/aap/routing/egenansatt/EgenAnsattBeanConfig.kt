@@ -30,7 +30,7 @@ class EgenAnsattBeanConfig {
 
     @Bean
     @Qualifier(EGENANSATT)
-    fun pdlClientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun egenAnsattClientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
             next.exchange(ClientRequest.from(req).header(HttpHeaders.AUTHORIZATION, service.bearerToken(cfgs.registration[EGENANSATT], req.url())).build())
         }

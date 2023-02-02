@@ -101,7 +101,7 @@ no.nav:
 egenansatt:
     enabled: true
     base-uri: http://skjermede-personer-pip.nom
-    scope: api://skjermede-personer-pip.nom/.default
+    scope: api://dev-gcp:nom:nom-api/.default
 joark:
     enabled: true
     base-uri: ${saf}

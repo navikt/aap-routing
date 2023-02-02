@@ -20,7 +20,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
             .contentType(APPLICATION_JSON)
             .bodyValue(Ident(id))
             .retrieve()
-            .bodyToMono<String>()
+            .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
             .doOnError { t: Throwable -> log.warn("Skjerming oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra Skjerming")

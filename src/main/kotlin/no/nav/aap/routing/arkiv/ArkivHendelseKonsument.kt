@@ -36,8 +36,8 @@ class Oppslager(private val clients: Clients) {
     fun slåOpp(journalpost: Long) =
         with(clients) {
             arkiv.journalpost(journalpost)?.let { jp ->
-                egen.erSkjermet(jp.fnr)
-               // pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
+                egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
+                pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                // pdl.geoTilknytning(jp.fnr)?.let { g  ->
                //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
                // } ?: log.warn("Null fra GT oppslag")

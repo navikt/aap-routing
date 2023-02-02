@@ -44,6 +44,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun objectMapperCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
         it.mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknown::class.java)
     }
+
     @ConditionalOnNotProd
     @Bean
     fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)

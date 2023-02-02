@@ -30,11 +30,6 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
 }
 
 @Component
-class EgenAnsattWebClientAdapterClient(private val adapter: EgenAnsattWebClientAdapter) {
-    fun erSkjermet(id: String) = adapter.erSkjermet(id)
-}
-
-@Component
-class EgenAnsattClient(private val a: EgenAnsattWebClientAdapterClient) {
+class EgenAnsattClient(private val a: EgenAnsattWebClientAdapter) {
     fun erSkjermet(fnr:Fødselsnummer) = a.erSkjermet(fnr.fnr)
 }

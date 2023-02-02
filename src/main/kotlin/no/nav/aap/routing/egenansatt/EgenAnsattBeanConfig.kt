@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpHeaders.*
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -32,7 +33,7 @@ class EgenAnsattBeanConfig {
     @Qualifier(EGENANSATT)
     fun egenAnsattClientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
-            next.exchange(ClientRequest.from(req).header(HttpHeaders.AUTHORIZATION, service.bearerToken(cfgs.registration[EGENANSATT], req.url())).build())
+            next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(cfgs.registration[EGENANSATT], req.url())).build())
         }
 
     @Bean

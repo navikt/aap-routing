@@ -37,10 +37,10 @@ class Oppslager(private val clients: Clients) {
         with(clients) {
             arkiv.journalpost(journalpost)?.let { jp ->
                 egen.erSkjermet(jp.fnr)
-                pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
-                pdl.geoTilknytning(jp.fnr)?.let { g  ->
-                    OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
-                } ?: log.warn("Null fra GT oppslag")
+               // pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
+               // pdl.geoTilknytning(jp.fnr)?.let { g  ->
+               //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
+               // } ?: log.warn("Null fra GT oppslag")
             } ?: log.warn("Null fra journalpost oppslag")
         }
     data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)

@@ -22,6 +22,6 @@ class EgenAnsattConfig(
     companion object {
         private const val DEFAULT_PING_PATH = "internal/health/liveness"
         private const val SKJERMING_PATH = "skjermet"
-        const val EGENANSATT = "skjerming"
+        const val EGENANSATT = "egenansatt"
     }
 }

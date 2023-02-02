@@ -1,5 +1,6 @@
 package no.nav.aap.routing.arkiv
 
+import no.nav.aap.routing.egenansatt.EgenAnsattClient
 import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
 import no.nav.aap.routing.person.PDLClient
@@ -35,6 +36,7 @@ class Oppslager(private val clients: Clients) {
     fun slåOpp(journalpost: Long) =
         with(clients) {
             arkiv.journalpost(journalpost)?.let { jp ->
+                egen.erSkjermet(jp.fnr)
                 pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                 pdl.geoTilknytning(jp.fnr)?.let { g  ->
                     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
@@ -45,4 +47,4 @@ class Oppslager(private val clients: Clients) {
 }
 
 @Component
-class Clients(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient)
+class Clients(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient, val egen: EgenAnsattClient)

@@ -34,16 +34,18 @@ class Oppslager(private val clients: Clients) {
     private val log = getLogger(javaClass)
 
     fun slåOpp(journalpost: Long) =
-        with(clients) {
-            arkiv.journalpost(journalpost)?.let { jp ->
-                egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
-                pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
-                pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }
+        kotlin.runCatching {
+            with(clients) {
+                arkiv.journalpost(journalpost)?.let { jp ->
+                    egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
+                    pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
+                    pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }
                     //?.let { g  ->
-               //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
-               // } ?: log.warn("Null fra GT oppslag")
-            } ?: log.warn("Null fra journalpost oppslag")
-        }
+                    //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
+                    // } ?: log.warn("Null fra GT oppslag")
+                } ?: log.warn("Null fra journalpost oppslag")
+            }
+        }.getOrElse { log.warn("OOPS",it) }
     data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)
 }
 

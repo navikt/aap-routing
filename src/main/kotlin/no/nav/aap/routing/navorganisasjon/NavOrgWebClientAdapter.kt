@@ -2,7 +2,7 @@ package no.nav.aap.routing.navorganisasjon
 
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ORG
+import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.routing.person.Diskresjonskode
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
@@ -12,11 +12,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class NavOrgWebClientAdapter(@Qualifier(ORG) webClient: WebClient, val cf: NavOrgConfig) :
+class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: NavOrgConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
         fun bestMatch(kriteria: EnhetsKriteria) = webClient.post()
-            .uri { b -> b.path(cf.bestMatch).build() }
+            .uri { b -> b.path(cf.enhet).build() }
             .contentType(APPLICATION_JSON)
             .bodyValue(kriteria)
             .retrieve()

@@ -1,7 +1,7 @@
 package no.nav.aap.routing.navorganisasjon
 
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ORG
+import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 class NavOrgBeanConfig {
 
-    @Qualifier(ORG)
+    @Qualifier(NAVORG)
     @Bean
     fun navOrgWebClient(builder: Builder, cfg: NavOrgConfig) =
         builder
@@ -20,7 +20,7 @@ class NavOrgBeanConfig {
             .build()
 
     @Bean
-    @ConditionalOnProperty("$ORG.enabled", havingValue = "true")
+    @ConditionalOnProperty("$NAVORG.enabled", havingValue = "true")
     fun orgHealthIndicator(adapter: NavOrgWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
 }

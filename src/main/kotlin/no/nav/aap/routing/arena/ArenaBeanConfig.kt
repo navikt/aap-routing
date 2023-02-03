@@ -37,5 +37,5 @@ class ArenaBeanConfig {
 
     @Bean
     @ConditionalOnProperty("$ARENA.enabled", havingValue = "true")
-    fun arenaHealthIndicator(adapter: EgenAnsattWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun arenaHealthIndicator(adapter: ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

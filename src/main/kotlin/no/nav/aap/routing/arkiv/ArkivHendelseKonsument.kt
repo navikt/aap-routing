@@ -37,7 +37,7 @@ class Oppslager(private val clients: Clients) {
         with(clients) {
             arkiv.journalpost(journalpost)?.let { jp ->
                 egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
-                //pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
+                pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                 pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }
                     //?.let { g  ->
                //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))

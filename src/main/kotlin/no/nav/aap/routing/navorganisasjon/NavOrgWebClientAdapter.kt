@@ -2,6 +2,8 @@ package no.nav.aap.routing.navorganisasjon
 
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.AKTIV
+import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.routing.person.Diskresjonskode
 import org.springframework.beans.factory.annotation.Qualifier
@@ -22,13 +24,26 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .retrieve()
             .bodyToMono<List<NavOrg>>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t: Throwable -> log.warn("BestMatch oppslag feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra NORG2")
+            .doOnError { t: Throwable -> log.warn("best match oppslag feilet", t) }
+            .block() ?: throw IntegrationException("Null respons fra best match NORG2")
 
+
+    fun aktiveEnheter() = webClient.get()
+        .uri { b -> b.path(cf.aktive)
+            .queryParam(ENHETSLISTE, AKTIV)
+            .build()}
+        .accept(APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono<List<NavOrg>>()
+        .retryWhen(cf.retrySpec(log))
+        .doOnError { t: Throwable -> log.warn("Aktive enheter oppslag feilet", t) }
+        .block() ?: throw IntegrationException("Null respons fra aktive enheter NORG2")
 }
 
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
+
+    fun aktiveEnheter() = adapter.aktiveEnheter()
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
         adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode)).first().tilNavEnhet()
 }

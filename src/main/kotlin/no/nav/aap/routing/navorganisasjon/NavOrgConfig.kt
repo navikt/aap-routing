@@ -15,14 +15,17 @@ class NavOrgConfig(
         @DefaultValue("true") enabled: Boolean,
         @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
         @DefaultValue(ENHET_PATH) val enhet: String,
+        @DefaultValue(AKTIVE_PATH) val aktive: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,retryCfg) {
-
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
+        const val NAVORG = "navorg"
+        const  val ENHETSLISTE = "enhetStatusListe"
+        const val AKTIV = "Aktiv"
+        private const val AKTIVE_PATH = "norg2/api/v1/enhet"
         private const val DEFAULT_PING_PATH = "norg2/internal/isAlive"
         private const val ENHET_PATH = "norg2/api/v1/arbeidsfordeling/enheter/bestmatch"
-        const val NAVORG = "navorg"
     }
 }

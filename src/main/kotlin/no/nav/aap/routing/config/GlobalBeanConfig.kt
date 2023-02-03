@@ -39,19 +39,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 .filter(correlatingFilterFunction(applicationName))
         }
 
-    @Bean
-    fun customizer() = Jackson2ObjectMapperBuilderCustomizer { b ->
-        b.modules(
-                JavaTimeModule(),
-                KotlinModule.Builder().build())
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
 
     @Bean
     fun objectMapperCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
-        it.mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknown::class.java)
+        it.apply {
+            mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknown::class.java)
+            modules(JavaTimeModule(), KotlinModule.Builder().build()) }
     }
 
     @ConditionalOnNotProd

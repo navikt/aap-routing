@@ -1,6 +1,7 @@
 package no.nav.aap.routing.arkiv
 
 import no.nav.aap.routing.egenansatt.EgenAnsattClient
+import no.nav.aap.routing.navorganisasjon.NavEnhet
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
 import no.nav.aap.routing.person.PDLClient
 import no.nav.aap.util.Constants.JOARK
@@ -33,18 +34,17 @@ class Oppslager(private val clients: Clients) {
     private val log = getLogger(javaClass)
 
     fun slåOpp(journalpost: Long) =
-        kotlin.runCatching {
+        runCatching {
             with(clients) {
                 arkiv.journalpost(journalpost)?.let { jp ->
-                    val skjermet = egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
-                    val d = pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
-                    pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }?.let {
-                        val enhet = org.navEnhet(it,skjermet,d).also { log.info("Nav enhet $it") }
-                    } ?: log.warn("Ingen GEO")
-                }
+                    with(pdl.geoTilknytning(jp.fnr))  {
+                        OppslagResultat(jp, this, org.navEnhet(this, egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)))
+                    }
+                } ?: log.warn("Ingen Journalpost")
             }
-        }.getOrElse { log.warn("OOPS",it) }
-    data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)
+        }.getOrThrow()
+
+    data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val enhet: NavEnhet)
 }
 
 @Component

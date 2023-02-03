@@ -7,12 +7,12 @@ import no.nav.aap.routing.navorganisasjon.EnhetsKriteria.Status.*
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NavOrg(val enhetNr: String, val status: String) {
     fun tilNavEnhet() =
-        when (status)  {
-            "Aktiv" -> NavEnhet(enhetNr,AKTIV)
-            "Under etablering" -> NavEnhet(enhetNr,UNDER_ETABLERING)
-            "Under avvikling" -> NavEnhet(enhetNr,UNDER_AVVIKLING)
-            "Nedlagt" -> NavEnhet(enhetNr,NEDLAGT)
+        NavEnhet(enhetNr,when (status)  {
+            "Aktiv" -> AKTIV
+            "Under etablering" -> UNDER_ETABLERING
+            "Under avvikling" -> UNDER_AVVIKLING
+            "Nedlagt" -> NEDLAGT
             else -> throw IllegalArgumentException("Status $status fra Norg2 er ukjent")
-        }
+        })
 }
 data class NavEnhet(val enhetNr: String, val status: Status)

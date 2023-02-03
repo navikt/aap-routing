@@ -2,5 +2,6 @@
   "tenant": "trygdeetaten.no",
   "ingress": "https://aap-routing.dev.intern.nav.no",
   "env": "dev",
+  "arena": "arena-rest-facade-q1.dev.intern.nav.no",
   "saf": "saf.dev-fss-pub.nais.io"
 }

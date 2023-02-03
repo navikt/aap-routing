@@ -19,6 +19,7 @@ spec:
       external:
         -   host: https://pdl-api.{{env}}-fss-pub.nais.io
         -   host: {{saf}}
+        -   host: {{arena}}
   secureLogs:
     enabled: true
   azure:
@@ -56,3 +57,5 @@ spec:
       value: {{env}}
     - name: SAF
       value: https://{{saf}}/graphql
+    - name: ARENA
+      value: https://{{arena}}

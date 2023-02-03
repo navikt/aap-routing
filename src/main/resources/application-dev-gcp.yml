@@ -18,5 +18,5 @@ navorg:
     enabled: true
 arena:
     enabled: true
-    base-uri: ${arena}
+    base-uri: ${arenafacade}
     scope:  api://dev-fss.isa.arena-rest-facade-q1/.default

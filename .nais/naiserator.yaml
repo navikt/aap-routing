@@ -57,5 +57,5 @@ spec:
       value: {{env}}
     - name: SAF
       value: https://{{saf}}/graphql
-    - name: ARENA
+    - name: ARENAFACADE
       value: https://{{arena}}

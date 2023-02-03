@@ -47,6 +47,7 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
     data class Bruker(val id: String, val type: AvsenderMottakerType) {
         enum class AvsenderMottakerType {
             FNR,
+            AKTOERID,
             ORGNR,
             HPRNR,
             UTL_ORG,

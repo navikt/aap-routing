@@ -24,7 +24,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
             .toBodilessEntity()
             .block().run { emptyMap<String,String>() }
 
-    fun diskresjonskode(fnr: Fødselsnummer) = query<PDLDiskresjonskoder>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
+    fun diskresjonskode(fnr: Fødselsnummer) = query<Map<String,Any>>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())//?.tilDiskresjonskode() ?: ANY
 
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)

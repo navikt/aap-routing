@@ -48,4 +48,4 @@ class Integrator(private val clients: Clients) {
 }
 
 @Component
-class Clients(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient, val egen: EgenAnsattClient)
+data class Clients(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient, val egen: EgenAnsattClient)

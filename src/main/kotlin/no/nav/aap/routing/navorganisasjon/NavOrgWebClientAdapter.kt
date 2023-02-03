@@ -1,8 +1,10 @@
 package no.nav.aap.routing.navorganisasjon
 
+import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ORG
+import no.nav.aap.routing.person.Diskresjonskode
 import no.nav.aap.routing.person.PDLWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
@@ -15,10 +17,10 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class NavOrgWebClientAdapter(@Qualifier(ORG) webClient: WebClient, val cf: NavOrgConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-        fun bestMatch(enhetKriteria: EnhetsKriteria) = webClient.post()
+        fun bestMatch(kriteria: EnhetsKriteria) = webClient.post()
             .uri { b -> b.path(cf.bestMatch).build() }
             .contentType(APPLICATION_JSON)
-            .bodyValue(enhetKriteria)
+            .bodyValue(kriteria)
             .retrieve()
             .bodyToMono<Map<String, Any>>()
             .retryWhen(cf.retrySpec(log))
@@ -29,5 +31,5 @@ class NavOrgWebClientAdapter(@Qualifier(ORG) webClient: WebClient, val cf: NavOr
 
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
-    fun bestMatch(enhetsKriteria: EnhetsKriteria) = adapter.bestMatch(enhetsKriteria)
+    fun bestMatch(område: String, skjermet: Boolean,diskresjonskode: Diskresjonskode) = adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode))
 }

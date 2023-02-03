@@ -37,13 +37,12 @@ class Oppslager(private val clients: Clients) {
         kotlin.runCatching {
             with(clients) {
                 arkiv.journalpost(journalpost)?.let { jp ->
-                    egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
-                    pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
-                    pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }
-                    //?.let { g  ->
-                    //     OppslagResultat(jp,g, org.bestMatch(EnhetsKriteria(g)))
-                    // } ?: log.warn("Null fra GT oppslag")
-                } ?: log.warn("Null fra journalpost oppslag")
+                    val skjermet = egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
+                    val d = pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
+                    pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }?.let {
+                        val bm = org.bestMatch(it,skjermet,d)
+                    } ?: log.warn("inegn GEO")
+                }
             }
         }.getOrElse { log.warn("OOPS",it) }
     data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val org: Map<String,Any>)

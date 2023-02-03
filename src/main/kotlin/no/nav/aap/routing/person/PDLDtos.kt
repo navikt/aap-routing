@@ -23,11 +23,11 @@ data class PDLGeoTilknytning(val gtType: PDLGeoType?, val gtKommune: String?, va
 
 enum class Diskresjonskode { SPFO, SPSF, ANY}
 
-data class PDLDiskresjonskoder(val adressebeskyttelse: PDLKoder)  {
-    fun tilDiskresjonskode() = adressebeskyttelse.tilDiskresjonskode()
-    data class PDLKoder(val gradering: List<PDLDiskresjonskode>)  {
-        fun tilDiskresjonskode() = gradering.firstOrNull()?.tilDiskresjonskode() ?: ANY
-        enum class PDLDiskresjonskode() {
+data class PDLAdressebeskyttelse(val adressebeskyttelse: List<PDLGradering>)  {
+    fun tilDiskresjonskode() = adressebeskyttelse.firstOrNull() ?.tilDiskresjonskode() ?: ANY
+    data class PDLGradering(val gradering: PDLDiskresjonskode)  {
+        fun tilDiskresjonskode() = gradering.tilDiskresjonskode() ?: ANY
+        enum class PDLDiskresjonskode {
             FORTROLIG,STRENGT_FORTROLIG,STRENGT_FORTROLIG_UTLAND;
 
             fun tilDiskresjonskode() =

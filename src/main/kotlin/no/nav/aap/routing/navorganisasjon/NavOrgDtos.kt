@@ -9,4 +9,10 @@ data class EnhetsKriteria(val geografiskOmraade: String,
                           val diskresjonskode: Diskresjonskode = ANY,
                           val tema: String = AAP.uppercase()) {
 
+    enum class Status {
+        AKTIV, UNDER_ETABLERING,
+        UNDER_AVVIKLING,
+        NEDLAGT
+    }
+
 }

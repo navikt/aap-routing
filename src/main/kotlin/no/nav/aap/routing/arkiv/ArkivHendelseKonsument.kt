@@ -1,7 +1,6 @@
 package no.nav.aap.routing.arkiv
 
 import no.nav.aap.routing.egenansatt.EgenAnsattClient
-import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
 import no.nav.aap.routing.person.PDLClient
 import no.nav.aap.util.Constants.JOARK
@@ -40,7 +39,7 @@ class Oppslager(private val clients: Clients) {
                     val skjermet = egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
                     val d = pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                     pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }?.let {
-                        val bm = org.bestMatch(it,skjermet,d).also { log.info("Best match $it") }
+                        val enhet = org.navEnhet(it,skjermet,d).also { log.info("Best match $it") }
                     } ?: log.warn("Ingen GEO")
                 }
             }

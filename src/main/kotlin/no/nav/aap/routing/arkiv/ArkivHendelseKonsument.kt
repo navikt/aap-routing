@@ -20,16 +20,16 @@ class ArkivHendelseKonsument(private val fordeler: Fordeler) {
 }
 
 @Component
-class Fordeler(private val oppslag: Oppslager) {
+class Fordeler(private val integrator: Integrator) {
     private val log = getLogger(javaClass)
     fun fordel(id: Long){
-        oppslag.slåOpp(id).also {
+        integrator.slåOpp(id).also {
             log.info("Fordeler $it (snart)")
         }
     }
 }
 @Component
-class Oppslager(private val clients: Clients) {
+class Integrator(private val clients: Clients) {
 
     private val log = getLogger(javaClass)
 

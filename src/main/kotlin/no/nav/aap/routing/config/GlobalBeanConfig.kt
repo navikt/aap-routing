@@ -1,6 +1,8 @@
 package no.nav.aap.routing.config
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
 import java.time.Duration
 import java.util.function.Consumer
@@ -36,6 +38,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
         }
+
+    @Bean
+    fun customizer() = Jackson2ObjectMapperBuilderCustomizer { b ->
+        b.modules(
+                JavaTimeModule(),
+                KotlinModule.Builder().build())
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown

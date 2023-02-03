@@ -3,8 +3,7 @@ package no.nav.aap.routing.person
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.routing.arkiv.graphql.AbstractGraphQLAdapter
-import no.nav.aap.routing.navorganisasjon.EnhetsKriteria.Diskresjonskode
-import no.nav.aap.routing.navorganisasjon.EnhetsKriteria.Diskresjonskode.*
+import no.nav.aap.routing.person.Diskresjonskode.ANY
 import no.nav.aap.routing.person.PDLConfig.Companion.PDL
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -25,10 +24,9 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
             .toBodilessEntity()
             .block().run { emptyMap<String,String>() }
 
-    fun diskresjonskode(fnr: Fødselsnummer) = query<List<String>>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.diskresjonskode()
+    fun diskresjonskode(fnr: Fødselsnummer) = query<PDLDiskresjonskoder>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
-    private fun List<String>.diskresjonskode() = firstOrNull { Diskresjonskode.of(it) != null }?.let { Diskresjonskode.of(it) } ?: ANY
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 
     override fun toString() =

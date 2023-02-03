@@ -26,7 +26,6 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
             .block() ?: throw IntegrationException("Null respons fra Skjerming")
 
     private data class Ident(val personident: String)
-
 }
 
 @Component

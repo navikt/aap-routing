@@ -22,9 +22,12 @@ data class PDLGeoTilknytning(val gtType: PDLGeoType?, val gtKommune: String?, va
 }
 
 enum class Diskresjonskode { SPFO, SPSF, ANY}
-data class PDLDiskresjonskoder(val gradering: List<PDLDiskresjonskode>) {
-    fun tilDiskresjonskode() = gradering.firstOrNull()?.tilDiskresjonskode() ?: ANY
+
+data class PDLDiskresjonskoder(val hentPerson: PDLKoder) {
+    fun tilDiskresjonskode() = hentPerson.gradering.firstOrNull()?.tilDiskresjonskode() ?: ANY
 }
+
+data class PDLKoder(val gradering: List<PDLDiskresjonskode>)
 
 
 enum class PDLDiskresjonskode() {

@@ -16,3 +16,7 @@ joark:
 navorg:
     base-uri: https://norg2.dev-fss-pub.nais.io
     enabled: true
+arena:
+    enabled: true
+    base-uri: https://arena-rest-facade-q1.dev.intern.nav.no
+    scope:  api://dev-fss.isa.arena-rest-facade-q1/.default

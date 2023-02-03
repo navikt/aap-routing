@@ -69,6 +69,14 @@ no.nav:
         jwt:
             client:
                 registration:
+                    arena:
+                        token-endpoint-url: ${azure.openid.config.token.endpoint}
+                        grant-type: client_credentials
+                        scope: ${arena.scope}
+                        authentication:
+                            client-id: ${azure.app.client.id}
+                            client-jwk: ${azure.app.jwk}
+                            client-auth-method: private_key_jwt
                     egenansatt:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
@@ -101,7 +109,7 @@ no.nav:
 egenansatt:
     enabled: true
     base-uri: http://skjermede-personer-pip.nom
-    scope: api://dev-gcp.nom.skjermede-personer-pip/.default
+    scope: api://${env}-gcp.nom.skjermede-personer-pip/.default
 joark:
     enabled: true
     base-uri: ${saf}

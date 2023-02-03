@@ -40,8 +40,8 @@ class Oppslager(private val clients: Clients) {
                     val skjermet = egen.erSkjermet(jp.fnr).also{ log.info("Skjerming status $it") }
                     val d = pdl.diskresjonskode(jp.fnr).also { log.info("Diskresjonskode $it") }
                     pdl.geoTilknytning(jp.fnr).also{ log.info("GEO status $it") }?.let {
-                        val bm = org.bestMatch(it,skjermet,d)
-                    } ?: log.warn("inegn GEO")
+                        val bm = org.bestMatch(it,skjermet,d).also { log.info("Best match $it") }
+                    } ?: log.warn("Ingen GEO")
                 }
             }
         }.getOrElse { log.warn("OOPS",it) }

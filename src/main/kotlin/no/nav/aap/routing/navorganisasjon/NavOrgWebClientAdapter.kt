@@ -7,6 +7,7 @@ import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.routing.person.Diskresjonskode
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
@@ -43,6 +44,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
 
+    @Cacheable(NAVORG)
     fun aktiveEnheter() = adapter.aktiveEnheter()
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
         adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode)).first().tilNavEnhet()

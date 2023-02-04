@@ -16,6 +16,10 @@ resilience4j:
                 ignoreExceptions:
                     - no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL
 spring:
+    cache:
+        cache-names: navorg
+        caffeine:
+          spec: maximumSize=10,expireAfterAccess=3600s
     cloud:
         gcp:
             project-id: ${gcp.team.project.id}

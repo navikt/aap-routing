@@ -23,7 +23,7 @@ class NavOrgConfig(
     companion object {
         const val NAVORG = "navorg"
         const  val ENHETSLISTE = "enhetStatusListe"
-        const val AKTIV = "Aktiv"
+        const val AKTIV = "AKTIV"
         private const val AKTIVE_PATH = "norg2/api/v1/enhet"
         private const val DEFAULT_PING_PATH = "norg2/internal/isAlive"
         private const val ENHET_PATH = "norg2/api/v1/arbeidsfordeling/enheter/bestmatch"

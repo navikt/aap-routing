@@ -7,6 +7,8 @@ import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.routing.person.Diskresjonskode
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -43,7 +45,6 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
         ?: throw IntegrationException("Kunne ikke hente aktive enheter")
-
 
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")

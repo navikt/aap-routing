@@ -19,7 +19,7 @@ spring:
     cache:
         cache-names: navorg
         caffeine:
-          spec: maximumSize=100,expireAfterAccess=3600s
+          spec: maximumSize=1,expireAfterAccess=3600s
     cloud:
         gcp:
             project-id: ${gcp.team.project.id}

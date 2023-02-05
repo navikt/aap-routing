@@ -18,30 +18,31 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: NavOrgConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-        fun bestMatch(kriteria: EnhetsKriteria) = webClient.post()
+        fun navEnhet(kriterium: EnhetsKriteria) = webClient.post()
             .uri { b -> b.path(cf.enhet).build() }
             .contentType(APPLICATION_JSON)
-            .bodyValue(kriteria)
+            .bodyValue(kriterium)
             .retrieve()
             .bodyToMono<List<NavOrg>>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t: Throwable -> log.warn("best match oppslag feilet", t) }
+            .doOnError { t: Throwable -> log.warn("Nav enhet oppslag NORG2 feilet", t) }
             .block()
-            ?.firstOrNull { aktiveEnheter().find { it.enhetNr == it.enhetNr}  != null }
+            ?.firstOrNull { erAktiv(it) }
             ?.tilNavEnhet()
-            ?: throw IntegrationException("Ingen best match Nav enhet fra NORG2")
+            ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
 
     @Cacheable(NAVORG)
-    fun aktiveEnheter() = webClient.get()
-        .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build()}
+    fun erAktiv(org: NavOrg) = webClient.get()
+        .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
         .accept(APPLICATION_JSON)
         .retrieve()
         .bodyToMono<List<NavOrg>>()
         .retryWhen(cf.retrySpec(log))
         .doOnError { t: Throwable -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
-        ?.filterNot {  it.enhetNr in UNTATTE_ENHETER }
+        ?.filterNot { it.enhetNr in UNTATTE_ENHETER }
+        ?.any { it.enhetNr == org.enhetNr }
         ?: throw IntegrationException("Null respons fra aktive enheter NORG2")
 
     companion object {
@@ -53,5 +54,5 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
-        adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode))
+        adapter.navEnhet(EnhetsKriteria(område,skjermet,diskresjonskode))
 }

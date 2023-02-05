@@ -42,7 +42,7 @@ class Integrator(private val clients: Clients) {
                             log.info("Enhet er $it")
                         }
                         org.erAktiv(enhet).also {
-                            log.info("Enhet $org status $it")
+                            log.info("Enhet status $org er $it")
                         }
                         OppslagResultat(jp, this, enhet)
                     }

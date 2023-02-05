@@ -27,13 +27,14 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .retryWhen(cf.retrySpec(log))
             .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
             .block()
-            ?.firstOrNull(::erAktiv)
+            ?.filterNot(::untatt)
+            ?.find { it in aktiveEnheter() }
             ?.tilNavEnhet()
             ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
 
     @Cacheable(NAVORG)
-    fun erAktiv(org: NavOrg) = webClient.get()
+    fun aktiveEnheter() = webClient.get()
         .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
         .accept(APPLICATION_JSON)
         .retrieve()
@@ -41,8 +42,6 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         .retryWhen(cf.retrySpec(log))
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
-        ?.filterNot(::untatt)
-        ?.any { it.enhetNr == org.enhetNr }
         ?: throw IntegrationException("Kunne ikke avgjøre om $org er aktiv")
 
 

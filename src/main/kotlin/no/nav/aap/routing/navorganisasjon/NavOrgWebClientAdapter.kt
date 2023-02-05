@@ -18,7 +18,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: NavOrgConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-        fun navEnhet(kriterium: EnhetsKriteria) = webClient.post()
+        fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
             .uri { b -> b.path(cf.enhet).build() }
             .contentType(APPLICATION_JSON)
             .bodyValue(kriterium)
@@ -28,13 +28,13 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
             .block()
             ?.filterNot(::untatt)
-            ?.firstOrNull { it in aktiveEnheter() }
+            ?.firstOrNull { it in enheter }
             ?.tilNavEnhet()
             ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
 
     @Cacheable(NAVORG)
-    fun aktiveEnheter() = webClient.get()
+    fun enheter() = webClient.get()
         .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
         .accept(APPLICATION_JSON)
         .retrieve()
@@ -48,11 +48,10 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         private val UNTATTE_ENHETER = listOf("1891", "1893")
         private fun untatt(it: NavOrg) = it.enhetNr in UNTATTE_ENHETER
     }
-
 }
 
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
-        adapter.navEnhet(EnhetsKriteria(område,skjermet,diskresjonskode))
+        adapter.navEnhet(EnhetsKriteria(område,skjermet,diskresjonskode),adapter.enheter())
 }

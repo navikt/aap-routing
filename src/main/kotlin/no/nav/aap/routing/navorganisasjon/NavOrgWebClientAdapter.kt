@@ -28,7 +28,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
             .block()
             ?.filterNot(::untatt)
-            ?.find { it in aktiveEnheter() }
+            ?.firstOrNull { it in aktiveEnheter() }
             ?.tilNavEnhet()
             ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
@@ -42,7 +42,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         .retryWhen(cf.retrySpec(log))
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
-        ?: throw IntegrationException("Kunne ikke avgjøre om $org er aktiv")
+        ?: throw IntegrationException("Kunne ikke hente aktive enheter")
 
 
     companion object {

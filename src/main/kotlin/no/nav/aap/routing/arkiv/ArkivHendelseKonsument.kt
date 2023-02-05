@@ -36,10 +36,15 @@ class Integrator(private val clients: Clients) {
     fun slåOpp(journalpost: Long) =
         runCatching {
             with(clients) {
-                org.aktiveEnheter().also {log.info("Aktive enheter $it")}
                 arkiv.journalpost(journalpost)?.let { jp ->
                     with(pdl.geoTilknytning(jp.fnr))  {
-                        OppslagResultat(jp, this, org.navEnhet(this, egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)))
+                        val enhet = org.navEnhet(this, egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)).also {
+                            log.info("Enhet er $it")
+                        }
+                        org.erAktiv(enhet).also {
+                            log.info("Enhet $org status $it")
+                        }
+                        OppslagResultat(jp, this, enhet)
                     }
                 } ?: log.warn("Ingen Journalpost")
             }

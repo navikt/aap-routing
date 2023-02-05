@@ -45,7 +45,12 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
 
     @Cacheable(NAVORG)
-    fun aktiveEnheter() = adapter.aktiveEnheter()
+    fun erAktiv(org: NavEnhet) = adapter.aktiveEnheter()
+        .map { it.enhetNr }
+        .filterNot {  it in listOf("1891", "1893") }
+        .contains(org.enhetNr)
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
         adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode)).first().tilNavEnhet()
 }
+
+//return aktiveNavEnheter.contains(enhetId) && !UNTAKSENHETER.contains(enhetId);

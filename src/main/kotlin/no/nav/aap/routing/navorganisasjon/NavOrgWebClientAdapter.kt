@@ -26,31 +26,32 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .bodyToMono<List<NavOrg>>()
             .retryWhen(cf.retrySpec(log))
             .doOnError { t: Throwable -> log.warn("best match oppslag feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra best match NORG2")
+            .block()
+            ?.firstOrNull { aktiveEnheter().find { it.enhetNr == it.enhetNr}  != null }
+            ?.tilNavEnhet()
+            ?: throw IntegrationException("Ingen best match Nav enhet fra NORG2")
 
 
+    @Cacheable(NAVORG)
     fun aktiveEnheter() = webClient.get()
-        .uri { b -> b.path(cf.aktive)
-            .queryParam(ENHETSLISTE, AKTIV)
-            .build()}
+        .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build()}
         .accept(APPLICATION_JSON)
         .retrieve()
         .bodyToMono<List<NavOrg>>()
         .retryWhen(cf.retrySpec(log))
         .doOnError { t: Throwable -> log.warn("Aktive enheter oppslag feilet", t) }
-        .block() ?: throw IntegrationException("Null respons fra aktive enheter NORG2")
+        .block()
+        ?.filterNot {  it.enhetNr in UNTATTE_ENHETER }
+        ?: throw IntegrationException("Null respons fra aktive enheter NORG2")
+
+    companion object {
+        private val UNTATTE_ENHETER = listOf("1891", "1893")
+    }
+
 }
 
 @Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
-
-    @Cacheable(NAVORG)
-    fun erAktiv(org: NavEnhet) = adapter.aktiveEnheter()
-        .map { it.enhetNr }
-        .filterNot {  it in listOf("1891", "1893") }
-        .contains(org.enhetNr)
     fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
-        adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode)).first().tilNavEnhet()
+        adapter.bestMatch(EnhetsKriteria(område,skjermet,diskresjonskode))
 }
-
-//return aktiveNavEnheter.contains(enhetId) && !UNTAKSENHETER.contains(enhetId);

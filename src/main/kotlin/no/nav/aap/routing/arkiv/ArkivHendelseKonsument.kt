@@ -41,9 +41,6 @@ class Integrator(private val clients: Clients) {
                         val enhet = org.navEnhet(this, egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)).also {
                             log.info("Enhet er $it")
                         }
-                        org.erAktiv(enhet).also {
-                            log.info("Enhet aktiv status $enhet er $it")
-                        }
                         OppslagResultat(jp, this, enhet)
                     }
                 } ?: log.warn("Ingen Journalpost")

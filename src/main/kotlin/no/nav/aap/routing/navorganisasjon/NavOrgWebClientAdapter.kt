@@ -25,7 +25,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .retrieve()
             .bodyToMono<List<NavOrg>>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t -> log.warn("Nav enhet oppslag NORG2 feilet", t) }
+            .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
             .block()
             ?.firstOrNull(::erAktiv)
             ?.tilNavEnhet()

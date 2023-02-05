@@ -23,6 +23,8 @@ spring:
     cloud:
         gcp:
             project-id: ${gcp.team.project.id}
+    codec:
+        max-in-memory-size: 50MB
     devtools:
         restart:
             enabled: false

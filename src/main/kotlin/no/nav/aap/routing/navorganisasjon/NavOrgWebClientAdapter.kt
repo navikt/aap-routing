@@ -41,12 +41,14 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         .retryWhen(cf.retrySpec(log))
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
-        ?.filterNot { it.enhetNr in UNTATTE_ENHETER }
+        ?.filterNot(::erUntatt)
         ?.any { it.enhetNr == org.enhetNr }
-        ?: throw IntegrationException("Null respons fra aktive enheter NORG2")
+        ?: throw IntegrationException("Kunne ikke avgjøre om $org er aktiv")
+
 
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")
+        private fun erUntatt(it: NavOrg) = it.enhetNr in UNTATTE_ENHETER
     }
 
 }

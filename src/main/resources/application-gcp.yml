@@ -127,6 +127,9 @@ pdl:
 fordeling:
     routing:
        aap:
+          mode: legacy
+          statuser:
+              - MOTTATT
           brevkoder:
              - 'NAV 11-13.05'
              - 'NAVe 11-13.05'

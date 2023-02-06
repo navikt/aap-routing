@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.api.felles.SkjemaType
 import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.routing.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.routing.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.routing.egenansatt.EgenAnsattClient
 import no.nav.aap.routing.navorganisasjon.NavEnhet
@@ -46,7 +47,7 @@ class Fordeler(private val integrator: Integrator) {
 @ConfigurationProperties("fordeling")
 data class FordelingConfigurationProperties(val routing: @NotEmpty Map<String, FordelingProperties>) {
 
-    data class FordelingProperties(val brevkoder: List<String>)
+    data class FordelingProperties(val mode: String, val statuser: List<JournalStatus>,val brevkoder: List<String>)
 
 }
 @Component

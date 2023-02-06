@@ -1,5 +1,7 @@
 package no.nav.aap.routing.arkiv
 
+import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.routing.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.routing.egenansatt.EgenAnsattClient
 import no.nav.aap.routing.navorganisasjon.NavEnhet
 import no.nav.aap.routing.navorganisasjon.NavOrgClient
@@ -24,31 +26,28 @@ class Fordeler(private val integrator: Integrator) {
     private val log = getLogger(javaClass)
     fun fordel(id: Long){
         integrator.slåOpp(id).also {
-            log.info("Fordeler $it (snart)")
+            if (MOTTATT == it.journalpost.journalstatus) {
+                log.info("Håndterer $it (snart)")
+            }
+            else  {
+                log.info("Ignorerer ${it.journalpost.journalstatus}")
+            }
         }
     }
 }
 @Component
-class Integrator(private val clients: Clients) {
-
-    private val log = getLogger(javaClass)
-
+class Integrator(private val integrasjoner: Integrasjoner) {
     fun slåOpp(journalpost: Long) =
         runCatching {
-            with(clients) {
+            with(integrasjoner) {
                 arkiv.journalpost(journalpost)?.let { jp ->
-                    with(pdl.geoTilknytning(jp.fnr))  {
-                        val enhet = org.navEnhet(this, egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)).also {
-                            log.info("Enhet er $it")
-                        }
-                        OppslagResultat(jp, this, enhet)
-                    }
-                } ?: log.warn("Ingen Journalpost")
+                    OppslagResultat(jp, org.navEnhet(pdl.geoTilknytning(jp.fnr), egen.erSkjermet(jp.fnr), pdl.diskresjonskode(jp.fnr)))
+                } ?: throw IntegrationException("Ingen journalpost")
             }
         }.getOrThrow()
 
-    data class OppslagResultat(val journalpost: Journalpost, val gt: String?, val enhet: NavEnhet)
+    data class OppslagResultat(val journalpost: Journalpost,  val enhet: NavEnhet)
 }
 
 @Component
-data class Clients(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient, val egen: EgenAnsattClient)
+data class Integrasjoner(val arkiv: ArkivClient, val pdl: PDLClient, val org: NavOrgClient, val egen: EgenAnsattClient)

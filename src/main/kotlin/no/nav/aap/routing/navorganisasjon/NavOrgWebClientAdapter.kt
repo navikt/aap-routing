@@ -5,7 +5,6 @@ import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.AKTIV
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
-import no.nav.aap.routing.person.Diskresjonskode
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus.*
@@ -34,7 +33,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
 
 
     @Cacheable(NAVORG)
-    fun enheter() = webClient.get()
+    fun aktiveEnheter() = webClient.get()
         .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
         .accept(APPLICATION_JSON)
         .retrieve()
@@ -46,12 +45,6 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
 
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")
-        private fun untatt(it: NavOrg) = it.enhetNr in UNTATTE_ENHETER
+        private fun untatt(org: NavOrg) = org.enhetNr in UNTATTE_ENHETER
     }
-}
-
-@Component
-class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
-    fun navEnhet(område: String, skjermet: Boolean, diskresjonskode: Diskresjonskode) =
-        adapter.navEnhet(EnhetsKriteria(område,skjermet,diskresjonskode),adapter.enheter())
 }

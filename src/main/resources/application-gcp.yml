@@ -125,7 +125,8 @@ pdl:
     scope: api://${env}-fss.pdl.pdl-api/.default
 
 fordeling:
-    aap:
-        brevkoder:
-            - 'NAV 11-13.05'
-            - 'NAVe 11-13.05'
+    routing:
+       aap:
+          brevkoder:
+             - 'NAV 11-13.05'
+             - 'NAVe 11-13.05'

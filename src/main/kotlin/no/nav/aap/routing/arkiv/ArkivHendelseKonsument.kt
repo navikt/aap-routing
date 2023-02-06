@@ -44,7 +44,7 @@ class Fordeler(private val integrator: Integrator) {
 }
 
 @ConfigurationProperties("fordeling")
-data class FordelingConfigurationProperties(val registration: @NotEmpty Map<String, FordelingProperties>) {
+data class FordelingConfigurationProperties(val routing: @NotEmpty Map<String, FordelingProperties>) {
 
     data class FordelingProperties(val brevkoder: List<String>)
 

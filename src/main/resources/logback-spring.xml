@@ -22,7 +22,7 @@
     </appender>
     <springProfile name="dev">
         <logger name="no.nav.aap" level="trace"/>
-        <logger name="org.springframework.kafka level="trace"/>
+        <logger name="org.springframework.kafka" level="trace"/>
         <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="trace"/>
         <logger name="secure" level="debug" additivity="false">
             <appender-ref ref="secureJson"/>

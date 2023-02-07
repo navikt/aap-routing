@@ -15,27 +15,31 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val delegator: RutingDelegator) {
+class ArkivHendelseKonsument(private val delegator: FordelingsDelegator) {
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  = delegator.deleger(payload.journalpostId, payload.temaNytt)
 }
 
+fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String, fordelere: List<Fordeler>):Fordeler?  {
+    val log = getLogger(javaClass)
+    return routing[tema.lowercase()]?.let { c ->
+        if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
+            fordelere.find { it.mode() == c.mode }
+        } else {
+            log.info("Journalpost $jp for $tema rutes ikke")
+            null
+        }
+    } ?: null
+}
+
 @Component
-class RutingDelegator(private val cfg: FordelingConfigurationProperties, val arkiv: ArkivClient,private val fordeler: List<Fordeler>) {
+class FordelingsDelegator(private val cfg: FordelingConfigurationProperties, val arkiv: ArkivClient, private val fordeler: List<Fordeler>) {
     private val log = getLogger(javaClass)
     fun deleger(id: Long, tema: String) =
         arkiv.journalpost(id)?.let {jp ->
-            cfg.routing[tema.lowercase()]?.let { c ->
-                if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder})  {
-                    fordeler.find { it.mode() == c.mode }
-                        ?.fordel(jp) ?: log.warn("Fant ingen ruter for tema $tema og mode ${c.mode}")
-                }
-                else {
-                    log.info("Journalpost $jp for $tema rutes ikke")
-                }
-            } ?: log.info("Fant ingen konfigurasjon for $tema, kjenner kun til følgende:  ${cfg.routing.keys}")
-        } ?: log.info("Ingen journalpost for id $id")
+            cfg.finnFordeler(jp,tema,fordeler)?.fordel(jp)?: log.warn("Fant ingen ruter for tema $tema")
+                }?: log.info("Ingen journalpost for id $id")
 }
 
 

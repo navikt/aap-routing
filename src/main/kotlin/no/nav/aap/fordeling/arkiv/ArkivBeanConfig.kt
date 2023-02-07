@@ -13,6 +13,7 @@ import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -63,6 +64,8 @@ class ArkivBeanConfig {
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
+                put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+
             }))
    @Bean
     fun deadLetterPublishingRecoverer(operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =

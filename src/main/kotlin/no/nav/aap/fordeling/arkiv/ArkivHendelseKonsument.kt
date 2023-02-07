@@ -27,7 +27,7 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
     val log = getLogger(javaClass)
 
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], errorHandler = "errorHandler", containerFactory = JOARK)
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  {
         delegator.deleger(payload.journalpostId, payload.temaNytt)
     }
@@ -40,18 +40,6 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
                   @Header(EXCEPTION_MESSAGE) errorMessage: String)   {
         log.info("OOPS, DEAD LETTER $payload")
     }
-}
-
-fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String, fordelere: List<Fordeler>):Fordeler?  {
-    val log = getLogger(javaClass)
-    return routing[tema.lowercase()]?.let { c ->
-        if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
-            fordelere.find { it.tema().equals(tema, ignoreCase = true) }
-        } else {
-            log.info("Journalpost $jp for $tema rutes ikke")
-            null
-        }
-    } ?: null
 }
 
 @Component

@@ -10,7 +10,6 @@ import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringSerializer
@@ -25,6 +24,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaOperations
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.listener.CommonErrorHandler
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -77,11 +77,11 @@ class ArkivBeanConfig {
     @Bean
     fun errorHandler(recoverer: DeadLetterPublishingRecoverer) = DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L))
     @Bean(JOARK)
-    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: DeadLetterPublishingRecoverer) =
+    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, errorHandler: CommonErrorHandler) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                //setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L)))
+                setCommonErrorHandler(errorHandler)
             })
         }
 

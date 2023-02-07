@@ -27,7 +27,7 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
     val log = getLogger(javaClass)
 
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], errorHandler = "deadLetterPublishingRecoverer", containerFactory = JOARK)
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], errorHandler = "errorHandler", containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  {
         delegator.deleger(payload.journalpostId, payload.temaNytt)
     }

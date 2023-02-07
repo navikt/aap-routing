@@ -73,6 +73,9 @@ class ArkivBeanConfig {
    @Bean
     fun deadLetterPublishingRecoverer(@Qualifier("dlt") operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =
         DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", 0) }
+
+    @Bean
+    fun errorHandler(recoverer: DeadLetterPublishingRecoverer) = DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L))
     @Bean(JOARK)
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: DeadLetterPublishingRecoverer) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {

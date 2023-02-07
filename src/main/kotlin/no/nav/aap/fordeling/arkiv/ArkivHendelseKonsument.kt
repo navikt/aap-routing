@@ -28,7 +28,6 @@ class RutingDelegator(private val cfg: FordelingConfigurationProperties, val ark
         arkiv.journalpost(id)?.let {jp ->
             cfg.routing[tema.lowercase()]?.let { c ->
                 if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder})  {
-                    log.info("Fordeler $this (snart)")
                     fordeler.find { it.mode() == c.mode }
                         ?.fordel(jp) ?: log.warn("Fant ingen ruter for tema $tema og mode ${c.mode}")
                 }
@@ -42,9 +41,13 @@ class RutingDelegator(private val cfg: FordelingConfigurationProperties, val ark
 
 @Component
 class LegacyAAPFordeler(private val integrator: Integrator) : Fordeler {
+
+    private val log = getLogger(javaClass)
+
     override fun mode() = "legacy"
     override fun fordel(journalpost: Journalpost): FordelingResultat {
            integrator.slåOpp(journalpost)
+        log.info("Fordeler $journalpost")
         return FordelingResultat("OK")
     }
 }

@@ -58,7 +58,8 @@ class AAPFordeler(private val integrator: Integrator) : Fordeler {
     override fun fordel(journalpost: Journalpost): FordelingResultat {
            integrator.slåOpp(journalpost)
         log.info("Fordeler $journalpost")
-        return FordelingResultat("OK")
+        throw (IllegalArgumentException("TESTING 123"))
+        //return FordelingResultat("OK")
     }
 }
 

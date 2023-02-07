@@ -11,6 +11,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.TopicPartition
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -60,7 +61,7 @@ class ArkivBeanConfig {
     fun dltOperations(p: KafkaProperties) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
-                put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
+                put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }))
    @Bean
     fun deadLetterPublishingRecoverer(operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =

@@ -67,16 +67,18 @@ class ArkivBeanConfig {
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
 
-            }))
+            })).apply {
+                defaultTopic = "aap.routingdlt"
+        }
    @Bean
     fun deadLetterPublishingRecoverer(@Qualifier("dlt") operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =
-        DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", r.partition()) }
+        DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", 0) }
     @Bean(JOARK)
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: DeadLetterPublishingRecoverer) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L)))
+                //setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L)))
             })
         }
 

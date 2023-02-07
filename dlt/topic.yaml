@@ -3,7 +3,7 @@ kind: Topic
 metadata:
     annotations:
         kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
-    name: routing-dlt
+    name: routingdlt
     namespace: aap
     labels:
         team: aap

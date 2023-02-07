@@ -33,7 +33,7 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
     }
 
     @DltHandler
-    @KafkaListener(topics = ["aap.routing-dlt"], containerFactory = JOARK)
+    @KafkaListener(topics = ["routingdlt"], containerFactory = JOARK)
     fun dltHander(@Payload payload: JournalfoeringHendelseRecord,
                   @Header(ORIGINAL_OFFSET) offset:  ByteArray,
                   @Header(EXCEPTION_FQCN) descException: String,

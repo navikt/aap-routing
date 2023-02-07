@@ -13,6 +13,7 @@ import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
@@ -23,12 +24,13 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
 
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
+    @RetryableTopic(attempts = "1")
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  {
         delegator.deleger(payload.journalpostId, payload.temaNytt)
     }
 
     @DltHandler
-    fun dlt(payload: JournalfoeringHendelseRecord)   {
+    fun dltHander(payload: JournalfoeringHendelseRecord)   {
         log.info("OOPS, DEAD LETTER $payload")
     }
 }
@@ -63,7 +65,7 @@ class AAPFordeler(private val integrator: Integrator) : Fordeler {
     override fun fordel(journalpost: Journalpost): FordelingResultat {
            integrator.slåOpp(journalpost)
         log.info("Fordeler $journalpost")
-        throw (IllegalArgumentException("TESTING 123"))
+        throw IntegrationException("TESTING 123")
         //return FordelingResultat("OK")
     }
 }

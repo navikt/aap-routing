@@ -28,12 +28,12 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
 
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "1")
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  {
         delegator.deleger(payload.journalpostId, payload.temaNytt)
     }
 
     @DltHandler
+    @KafkaListener(topics = ["aap.routing-dlt"], containerFactory = JOARK)
     fun dltHander(msg: Message,
                   @Header(ORIGINAL_OFFSET) offset:  ByteArray,
                   @Header(EXCEPTION_FQCN) descException: String,

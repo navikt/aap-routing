@@ -127,7 +127,6 @@ pdl:
 fordeling:
     routing:
        aap:
-          mode: legacy
           statuser:
               - MOTTATT
           brevkoder:

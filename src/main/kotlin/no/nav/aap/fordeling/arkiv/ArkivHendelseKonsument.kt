@@ -6,6 +6,7 @@ import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
 import no.nav.aap.fordeling.person.PDLClient
+import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -15,7 +16,7 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val delegator: FordelingsDelegator) {
+class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  = delegator.deleger(payload.journalpostId, payload.temaNytt)
@@ -25,7 +26,7 @@ fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String,
     val log = getLogger(javaClass)
     return routing[tema.lowercase()]?.let { c ->
         if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
-            fordelere.find { it.mode() == c.mode }
+            fordelere.find { it.tema().equals(tema, ignoreCase = true) }
         } else {
             log.info("Journalpost $jp for $tema rutes ikke")
             null
@@ -34,21 +35,20 @@ fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String,
 }
 
 @Component
-class FordelingsDelegator(private val cfg: FordelingConfigurationProperties, val arkiv: ArkivClient, private val fordeler: List<Fordeler>) {
+class DelegerendeFordeler(private val cfg: FordelingConfigurationProperties, val arkiv: ArkivClient, private val fordelere: List<Fordeler>) {
     private val log = getLogger(javaClass)
     fun deleger(id: Long, tema: String) =
         arkiv.journalpost(id)?.let {jp ->
-            cfg.finnFordeler(jp,tema,fordeler)?.fordel(jp)?: log.warn("Fant ingen ruter for tema $tema")
+            cfg.finnFordeler(jp,tema,fordelere)?.fordel(jp)?: log.warn("Fant ingen ruter for tema $tema")
                 }?: log.info("Ingen journalpost for id $id")
 }
 
 
 @Component
-class LegacyAAPFordeler(private val integrator: Integrator) : Fordeler {
+class AAPFordeler(private val integrator: Integrator) : Fordeler {
 
     private val log = getLogger(javaClass)
-
-    override fun mode() = "legacy"
+    override fun tema() = AAP
     override fun fordel(journalpost: Journalpost): FordelingResultat {
            integrator.slåOpp(journalpost)
         log.info("Fordeler $journalpost")
@@ -58,7 +58,7 @@ class LegacyAAPFordeler(private val integrator: Integrator) : Fordeler {
 
 
 interface Fordeler {
-    fun mode(): String
+    fun tema(): String
     fun fordel(journalpost: Journalpost) : FordelingResultat
     data class FordelingResultat(val status: String)
 }

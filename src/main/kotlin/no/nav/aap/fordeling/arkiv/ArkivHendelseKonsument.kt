@@ -11,9 +11,13 @@ import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import org.apache.avro.Protocol.Message
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
+import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.kafka.support.KafkaHeaders.*
+import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
@@ -30,8 +34,12 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
     }
 
     @DltHandler
-    fun dltHander(payload: JournalfoeringHendelseRecord)   {
-        log.info("OOPS, DEAD LETTER $payload")
+    fun dltHander(msg: Message,
+                  @Header(ORIGINAL_OFFSET) offset:  ByteArray,
+                  @Header(EXCEPTION_FQCN) descException: String,
+                  @Header(EXCEPTION_STACKTRACE) stacktrace: String,
+                  @Header(EXCEPTION_MESSAGE) errorMessage: String)   {
+        log.info("OOPS, DEAD LETTER $msg")
     }
 }
 

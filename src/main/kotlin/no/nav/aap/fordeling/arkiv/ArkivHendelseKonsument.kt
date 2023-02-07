@@ -25,7 +25,7 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
     fun listen(@Payload payload: JournalfoeringHendelseRecord)  = delegator.deleger(payload.journalpostId, payload.temaNytt)
 
     @KafkaListener(topics = ["aap.routing-dlt"], containerFactory = JOARK)
-    fun dlt(@Payload payload: JournalfoeringHendelseRecord)  = log.warn("OOPS, DEAD LETTER $payload")
+    fun dlt(@Payload payload: Any)  = log.info("OOPS, DEAD LETTER $payload")
 }
 
 fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String, fordelere: List<Fordeler>):Fordeler?  {

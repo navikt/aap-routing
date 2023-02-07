@@ -34,12 +34,12 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
 
     @DltHandler
     @KafkaListener(topics = ["aap.routing-dlt"], containerFactory = JOARK)
-    fun dltHander(msg: Message,
+    fun dltHander(@Payload payload: JournalfoeringHendelseRecord,
                   @Header(ORIGINAL_OFFSET) offset:  ByteArray,
                   @Header(EXCEPTION_FQCN) descException: String,
                   @Header(EXCEPTION_STACKTRACE) stacktrace: String,
                   @Header(EXCEPTION_MESSAGE) errorMessage: String)   {
-        log.info("OOPS, DEAD LETTER $msg")
+        log.info("OOPS, DEAD LETTER $payload")
     }
 }
 

@@ -1,10 +1,10 @@
-package no.nav.aap.routing.person
+package no.nav.aap.fordeling.person
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.routing.arkiv.graphql.AbstractGraphQLAdapter
-import no.nav.aap.routing.person.Diskresjonskode.ANY
-import no.nav.aap.routing.person.PDLConfig.Companion.PDL
+import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
+import no.nav.aap.fordeling.person.Diskresjonskode.ANY
+import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN

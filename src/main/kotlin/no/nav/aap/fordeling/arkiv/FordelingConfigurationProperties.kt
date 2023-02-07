@@ -1,8 +1,8 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import jakarta.validation.constraints.NotEmpty
-import no.nav.aap.routing.arkiv.FordelingConfigurationProperties.Companion.FORDELING
-import no.nav.aap.routing.arkiv.JournalpostDTO.JournalStatus
+import no.nav.aap.fordeling.arkiv.FordelingConfigurationProperties.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)

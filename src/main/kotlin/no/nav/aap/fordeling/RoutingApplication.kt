@@ -1,4 +1,4 @@
-package no.nav.aap.routing
+package no.nav.aap.fordeling
 
 import no.nav.boot.conditionals.Cluster.Companion.profiler
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client

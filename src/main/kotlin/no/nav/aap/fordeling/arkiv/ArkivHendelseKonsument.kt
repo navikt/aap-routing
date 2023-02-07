@@ -1,11 +1,11 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.api.felles.error.IntegrationException
-import no.nav.aap.routing.arkiv.Fordeler.FordelingResultat
-import no.nav.aap.routing.egenansatt.EgenAnsattClient
-import no.nav.aap.routing.navorganisasjon.NavEnhet
-import no.nav.aap.routing.navorganisasjon.NavOrgClient
-import no.nav.aap.routing.person.PDLClient
+import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.navorganisasjon.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
+import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP

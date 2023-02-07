@@ -1,12 +1,12 @@
-package no.nav.aap.routing.arena
+package no.nav.aap.fordeling.arena
 
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.routing.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.routing.arena.ArenaConfig.Companion.ENHET
-import no.nav.aap.routing.arena.ArenaDTOs.ArenaSakForespørsel
-import no.nav.aap.routing.arkiv.Journalpost
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ENHET
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaSakForespørsel
+import no.nav.aap.fordeling.arkiv.Journalpost
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*

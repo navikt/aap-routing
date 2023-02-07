@@ -1,9 +1,8 @@
-package no.nav.aap.routing.arena
+package no.nav.aap.fordeling.arena
 
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.routing.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.routing.egenansatt.EgenAnsattConfig
-import no.nav.aap.routing.egenansatt.EgenAnsattWebClientAdapter
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
+import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties

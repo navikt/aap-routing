@@ -1,4 +1,4 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import java.net.URI
 import no.nav.aap.rest.AbstractRestConfig

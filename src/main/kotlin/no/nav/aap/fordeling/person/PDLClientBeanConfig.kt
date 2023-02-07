@@ -1,10 +1,10 @@
-package no.nav.aap.routing.person
+package no.nav.aap.fordeling.person
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.temaFilterFunction
-import no.nav.aap.routing.person.PDLConfig.Companion.PDL
+import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties

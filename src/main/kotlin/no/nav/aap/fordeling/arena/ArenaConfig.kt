@@ -1,12 +1,9 @@
-package no.nav.aap.routing.arena
+package no.nav.aap.fordeling.arena
 
 import java.net.URI
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
-import no.nav.aap.routing.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.routing.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
-import no.nav.aap.routing.navorganisasjon.EnhetsKriteria
-import no.nav.aap.routing.person.PDLConfig.Companion.DEFAULT_PING_PATH
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.context.properties.bind.DefaultValue

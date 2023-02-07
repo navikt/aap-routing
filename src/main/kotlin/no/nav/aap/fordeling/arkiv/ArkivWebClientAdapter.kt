@@ -1,7 +1,7 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import no.nav.aap.routing.arkiv.graphql.AbstractGraphQLAdapter
+import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*

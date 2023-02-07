@@ -1,6 +1,6 @@
-package no.nav.aap.routing.navorganisasjon
+package no.nav.aap.fordeling.navorganisasjon
 
-import no.nav.aap.routing.person.Diskresjonskode
+import no.nav.aap.fordeling.person.Diskresjonskode
 import org.springframework.stereotype.Component
 
 @Component

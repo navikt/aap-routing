@@ -1,7 +1,7 @@
-package no.nav.aap.routing.arkiv.graphql
+package no.nav.aap.fordeling.arkiv.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
-import no.nav.aap.routing.arkiv.graphql.GraphQLExtensions.oversett
+import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.oversett
 import org.springframework.stereotype.Component
 
 @Component

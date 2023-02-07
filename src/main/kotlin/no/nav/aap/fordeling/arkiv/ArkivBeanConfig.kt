@@ -1,4 +1,4 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient

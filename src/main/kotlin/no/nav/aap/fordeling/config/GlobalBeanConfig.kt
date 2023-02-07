@@ -1,4 +1,4 @@
-package no.nav.aap.routing.config
+package no.nav.aap.fordeling.config
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule

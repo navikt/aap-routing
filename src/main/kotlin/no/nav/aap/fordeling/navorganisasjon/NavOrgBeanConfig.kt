@@ -1,19 +1,12 @@
-package no.nav.aap.routing.navorganisasjon
+package no.nav.aap.fordeling.navorganisasjon
 
-import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.benmanes.caffeine.cache.RemovalCause
 import com.github.benmanes.caffeine.cache.RemovalListener
-import java.util.concurrent.TimeUnit.MINUTES
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.routing.egenansatt.EgenAnsattConfig
-import no.nav.aap.routing.egenansatt.EgenAnsattConfig.Companion
-import no.nav.aap.routing.egenansatt.EgenAnsattWebClientAdapter
-import no.nav.aap.routing.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.util.LoggerUtil
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cache.annotation.EnableCaching
-import org.springframework.cache.caffeine.CaffeineCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*

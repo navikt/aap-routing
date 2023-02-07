@@ -1,6 +1,6 @@
-package no.nav.aap.routing.arena
+package no.nav.aap.fordeling.arena
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.routing.arena.ArenaConfig.Companion.PERSON
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.PERSON
 import no.nav.aap.util.Constants.AAP
 
 class ArenaDTOs {

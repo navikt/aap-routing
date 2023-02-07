@@ -1,6 +1,5 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
-import org.apache.coyote.http11.Constants.a
 import org.springframework.stereotype.Component
 
 @Component

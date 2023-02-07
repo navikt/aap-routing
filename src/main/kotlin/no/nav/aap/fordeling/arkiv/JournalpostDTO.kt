@@ -1,10 +1,10 @@
-package no.nav.aap.routing.arkiv
+package no.nav.aap.fordeling.arkiv
 
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.routing.arkiv.JournalpostDTO.DokumentInfo
-import no.nav.aap.routing.arkiv.JournalpostDTO.JournalStatus
-import no.nav.aap.routing.arkiv.JournalpostDTO.RelevantDato
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.DokumentInfo
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.RelevantDato
 
 data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?, val journalpostId: String, val journalstatus: JournalStatus,
                           val tema: String, val behandlingstema: String?, val bruker: Bruker, val avsenderMottaker: Bruker,

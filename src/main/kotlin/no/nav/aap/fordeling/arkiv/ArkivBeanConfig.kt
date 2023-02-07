@@ -28,6 +28,7 @@ import org.springframework.kafka.listener.DeadLetterPublishingRecoverer
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.util.backoff.FixedBackOff
+import org.springframework.util.backoff.FixedBackOff.DEFAULT_INTERVAL
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
@@ -71,7 +72,7 @@ class ArkivBeanConfig {
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(0L, 1L)))
+                setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L)))
             })
         }
 

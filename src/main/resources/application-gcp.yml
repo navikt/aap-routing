@@ -68,7 +68,7 @@ spring:
             acks: all
             client-id: ${spring.application.name}
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
-            value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
 no.nav:
     security:

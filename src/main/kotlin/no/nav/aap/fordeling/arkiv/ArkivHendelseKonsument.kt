@@ -23,11 +23,15 @@ class ArkivHendelseKonsument(private val delegator: DelegerendeFordeler) {
 
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    fun listen(@Payload payload: JournalfoeringHendelseRecord)  = delegator.deleger(payload.journalpostId, payload.temaNytt)
+    fun listen(@Payload payload: JournalfoeringHendelseRecord)  {
+        delegator.deleger(payload.journalpostId, payload.temaNytt)
+    }
 
     //@KafkaListener(topics = ["aap.routing-dlt"], containerFactory = JOARK)
     @DltHandler
-    fun dlt(@Payload payload: JournalfoeringHendelseRecord)  = log.info("OOPS, DEAD LETTER $payload")
+    fun dlt(@Payload payload: JournalfoeringHendelseRecord)   {
+        log.info("OOPS, DEAD LETTER $payload")
+    }
 }
 
 fun FordelingConfigurationProperties.finnFordeler(jp: Journalpost, tema: String, fordelere: List<Fordeler>):Fordeler?  {

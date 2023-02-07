@@ -60,6 +60,7 @@ class ArkivBeanConfig {
         }
 
     @Bean
+    @Qualifier("dlt")
     fun dltOperations(p: KafkaProperties) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
@@ -68,7 +69,7 @@ class ArkivBeanConfig {
 
             }))
    @Bean
-    fun deadLetterPublishingRecoverer(operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =
+    fun deadLetterPublishingRecoverer(@Qualifier("dlt") operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =
         DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", r.partition()) }
     @Bean(JOARK)
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: DeadLetterPublishingRecoverer) =

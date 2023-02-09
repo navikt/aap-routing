@@ -12,12 +12,14 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
 
     val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK, errorHandler = "errorHandler")
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(payload: JournalfoeringHendelseRecord)  {
+        throw RuntimeException()
+        /*
         arkiv.journalpost(payload.journalpostId)?.let {
             log.info("Fordeler $it")
             fordeler.fordel(it).also { log.info("Fordelt $it") }
-        }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")
+        }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}") */
     }
 
     @KafkaListener(topics = ["aap.routingdlt"])

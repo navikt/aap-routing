@@ -12,7 +12,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
 
     val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK, errorHandler = "errorHandøer")
     fun listen(payload: JournalfoeringHendelseRecord)  {
         arkiv.journalpost(payload.journalpostId)?.let {
             log.info("Fordeler $it")
@@ -20,7 +20,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
         }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")
     }
 
-    @DltHandler
+    @KafkaListener(topics = ["aap.routingdlt"])
     fun dltHander(payload: JournalfoeringHendelseRecord)   {
         log.info("OOPS, DEAD LETTER $payload")  // TODO til manuell
     }

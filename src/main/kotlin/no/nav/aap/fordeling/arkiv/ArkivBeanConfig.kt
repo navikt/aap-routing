@@ -81,7 +81,7 @@ class ArkivBeanConfig {
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                setCommonErrorHandler(errorHandler)
+             //   setCommonErrorHandler(errorHandler)
             })
         }
 

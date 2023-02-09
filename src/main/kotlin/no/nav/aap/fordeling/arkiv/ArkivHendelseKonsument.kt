@@ -23,7 +23,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
     }
 
     @KafkaListener(topics = ["aap.routingdlt"])
-    fun dltHander(payload: JournalfoeringHendelseRecord)   {
+    fun dltHander(payload: Any)   {
         log.info("OOPS, DEAD LETTER $payload")  // TODO til manuell
     }
 }

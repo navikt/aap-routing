@@ -65,7 +65,6 @@ spring:
                     avro:
                         reader: true
         producer:
-            acks: all
             client-id: ${spring.application.name}
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer

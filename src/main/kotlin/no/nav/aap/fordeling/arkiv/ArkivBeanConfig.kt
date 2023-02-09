@@ -79,9 +79,10 @@ class ArkivBeanConfig {
     @Bean(JOARK)
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties, errorHandler: DefaultErrorHandler) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
+           setCommonErrorHandler(errorHandler)
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                setCommonErrorHandler(errorHandler)
+               // setCommonErrorHandler(errorHandler)
             })
         }
 

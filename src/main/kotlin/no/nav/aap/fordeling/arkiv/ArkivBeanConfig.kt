@@ -28,6 +28,7 @@ import org.springframework.kafka.listener.CommonErrorHandler
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.util.backoff.FixedBackOff
 import org.springframework.util.backoff.FixedBackOff.DEFAULT_INTERVAL
 import org.springframework.web.reactive.function.client.ClientRequest
@@ -36,6 +37,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
+@EnableScheduling
 class ArkivBeanConfig {
 
     @Qualifier(JOARK)

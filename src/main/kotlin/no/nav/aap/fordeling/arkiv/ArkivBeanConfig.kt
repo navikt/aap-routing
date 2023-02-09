@@ -62,7 +62,7 @@ class ArkivBeanConfig {
     @Bean
     @Qualifier("dlt")
     fun dltOperations(p: KafkaProperties) =
-        KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
+        KafkaTemplate(DefaultKafkaProducerFactory<Any, Any>(p.buildProducerProperties()
             .apply {
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
@@ -71,7 +71,7 @@ class ArkivBeanConfig {
                 defaultTopic = "aap.routingdlt"
         }
    @Bean
-    fun deadLetterPublishingRecoverer(@Qualifier("dlt") operations: KafkaOperations<String,JournalfoeringHendelseRecord>) =
+    fun deadLetterPublishingRecoverer(@Qualifier("dlt") operations: KafkaOperations<Any,Any>) =
         DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", 0) }
 
     @Bean

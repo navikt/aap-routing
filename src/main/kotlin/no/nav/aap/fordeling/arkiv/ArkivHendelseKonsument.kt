@@ -12,7 +12,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
 
     val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK, errorHandler = "errorHandøer")
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK, errorHandler = "errorHandler")
     fun listen(payload: JournalfoeringHendelseRecord)  {
         arkiv.journalpost(payload.journalpostId)?.let {
             log.info("Fordeler $it")

@@ -13,9 +13,9 @@ class AAPFordeler(private val integrator: Integrator) : Fordeler {
     private val log = LoggerUtil.getLogger(javaClass)
     override fun tema() = listOf(aap)
     override fun fordel(journalpost: Journalpost): FordelingResultat {
-           integrator.slåOpp(journalpost).also {
-               log.info("Slo opp $it")
-           }
+         //  integrator.slåOpp(journalpost).also {
+         //      log.info("Slo opp $it")
+         //  }
         log.info("Fordeler $journalpost")  // TOOO gammel krut logikk
         throw IntegrationException("TESTING 123")
         //return FordelingResultat("OK")

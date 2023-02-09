@@ -6,12 +6,14 @@ import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.annotation.RetryableTopic
 
 @ConditionalOnGCP
 class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arkiv: ArkivClient) {
 
     val log = getLogger(javaClass)
 
+    @RetryableTopic(kafkaTemplate = "dltOperations")
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(payload: JournalfoeringHendelseRecord)  {
         throw RuntimeException()
@@ -22,7 +24,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
         }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}") */
     }
 
-    @KafkaListener(topics = ["aap.routingdlt"])
+    @DltHandler
     fun dltHander(payload: Any)   {
         log.info("OOPS, DEAD LETTER $payload")  // TODO til manuell
     }

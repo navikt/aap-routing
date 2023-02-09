@@ -7,9 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.kafka.annotation.EnableKafka
+import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 
 @SpringBootApplication
-@EnableKafka
+@EnableKafkaRetryTopic
 @ConfigurationPropertiesScan
 @EnableOAuth2Client(cacheEnabled = true)
 @EnableJwtTokenValidation

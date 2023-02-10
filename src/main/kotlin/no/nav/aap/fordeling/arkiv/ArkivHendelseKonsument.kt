@@ -15,16 +15,11 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(payload: JournalfoeringHendelseRecord)  {
-        throw RuntimeException()
-        /*
-        arkiv.journalpost(payload.journalpostId)?.let {
-            log.info("Fordeler $it")
-            fordeler.fordel(it).also { log.info("Fordelt $it") }
-        }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}") */
-    }
-
-    @DltHandler
-    fun dltHander(payload: Any)   {
-        log.info("OOPS, DEAD LETTER $payload")  // TODO til manuell
+        kotlin.runCatching {
+            arkiv.journalpost(payload.journalpostId)?.let {
+                log.info("Fordeler $it")
+                fordeler.fordel(it).also { log.info("Fordelt $it") }
+            }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")  // TODO hva gjør vi her?
+        }.getOrElse { throw FordelingException(cause =  it) }
     }
 }

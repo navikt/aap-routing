@@ -3,13 +3,16 @@ package no.nav.aap.fordeling.arkiv
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import java.lang.Exception
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringSerializer
@@ -25,6 +28,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaOperations
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.listener.CommonErrorHandler
+import org.springframework.kafka.listener.ConsumerRecordRecoverer
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -65,7 +69,14 @@ class ArkivBeanConfig {
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 1L)))
+                val cr = object: ConsumerRecordRecoverer   {
+                    override fun accept(t: ConsumerRecord<*, *>?, u: Exception?) {
+                        val log = LoggerUtil.getLogger(javaClass)
+                        log.warn("OOOOPPPPSSSS $t")
+                    }
+
+                }
+                setCommonErrorHandler(DefaultErrorHandler(cr,FixedBackOff(1000L, 1L)))
             })
         }
 

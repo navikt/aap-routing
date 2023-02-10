@@ -12,7 +12,7 @@ data class FordelingConfiguration(val routing: @NotEmpty Map<String, FordelingPr
     val log = getLogger(javaClass)
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
-        routing[jp.tema.name]?.let { c ->
+        routing[jp.tema]?.let { c ->
             if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
                 fordelere.firstOrNull { jp.tema in it.tema() }
             } else {

@@ -12,7 +12,7 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
 
 
     fun tilJournalpost() =
-        Journalpost(tittel,journalfoerendeEnhet,journalpostId,journalstatus,Tema.valueOf(tema.lowercase()),behandlingstema,
+        Journalpost(tittel,journalfoerendeEnhet,journalpostId,journalstatus,tema,behandlingstema,
                 Fødselsnummer(bruker.id),relevanteDatoer,dokumenter)
 
 
@@ -61,7 +61,7 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
 
 
 data class Journalpost(val tittel: String?, val journalfoerendeEnhet: String?, val journalpostId: String, val journalstatus: JournalStatus,
-                       val tema: Tema, val behandlingstema: String?, val fnr: Fødselsnummer,
+                       val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer,
                        val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>)
 
 enum class Tema {

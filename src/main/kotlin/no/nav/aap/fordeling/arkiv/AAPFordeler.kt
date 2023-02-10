@@ -4,6 +4,7 @@ import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.Tema.aap
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
+import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component
 class AAPFordeler(private val integrator: Integrator) : Fordeler {
 
     private val log = LoggerUtil.getLogger(javaClass)
-    override fun tema() = listOf(aap)
+    override fun tema() = listOf(AAP)
     override fun fordel(journalpost: Journalpost): FordelingResultat {
         integrator.slåOpp(journalpost).also {
             log.info("Slo opp $it")

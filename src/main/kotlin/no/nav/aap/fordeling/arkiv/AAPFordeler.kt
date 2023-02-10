@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.api.felles.SkjemaType
 import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
@@ -21,18 +19,22 @@ class AAPFordeler(private val integrasjoner: Integrasjoner) : Fordeler {
         var brevkode = jp.dokumenter.first().brevkode // alltid først
         with(integrasjoner) {
             when (brevkode)  {
-                STANDARD.kode -> {
-                    if (arena.harArenaSak(jp,navEnhet)) {
-                        arena.opprettStartVedtak()
+                STANDARD.kode -> { // 2c
+                    if (arena.harArenaSak(jp,navEnhet)) { // 2c-1
+                        val sak = arena.opprettStartVedtak()  // 2c-2
+                        arkiv.oppdaterOgFerdigstill(jp,sak) // 3a/b
+                    }
+                    else {
+                        throw FordelingException("Har arenasak",jp)
                     }
                 }
-                STANDARD_ETTERSENDING.kode -> {
-                    arena.hentNyesteAktiveSak()
+                STANDARD_ETTERSENDING.kode -> { // 2d
+                     arena.hentNyesteAktiveSak()?.let {
+                         arkiv.oppdaterOgFerdigstill(jp,it) // 3a/b
+                     }
                 }
                 else -> throw FordelingException("Ukjent brekode $brevkode")
             }
-            arkiv.oppdaterJournalpost(jp,navEnhet)
-            arkiv.ferdigstillJournalpost(jp)
             //throw FordelingException("TESTING 123",jp)
             return FordelingResultat("OK")
         }

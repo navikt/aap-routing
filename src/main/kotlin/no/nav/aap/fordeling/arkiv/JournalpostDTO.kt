@@ -2,9 +2,6 @@ package no.nav.aap.fordeling.arkiv
 
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.DokumentInfo
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.RelevantDato
 
 data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?, val journalpostId: String, val journalstatus: JournalStatus,
                           val tema: String, val behandlingstema: String?, val bruker: Bruker, val avsenderMottaker: Bruker,
@@ -56,14 +53,4 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
             UKJENT,
         }
     }
-}
-
-
-
-data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,
-                       val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer,
-                       val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>)
-
-enum class Tema {
-    aap
 }

@@ -65,18 +65,10 @@ class ArkivBeanConfig {
                 .build())
         }
     @Bean(JOARK)
-    fun arkivHendelserListenerContainerFactory(p: KafkaProperties) =
+    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: ConsumerRecordRecoverer) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-                val cr = object: ConsumerRecordRecoverer   {
-                    override fun accept(t: ConsumerRecord<*, *>?, u: Exception?) {
-                        val log = LoggerUtil.getLogger(javaClass)
-                        log.warn("OOOOPPPPSSSS $t",u)
-                    }
-
-                }
-                setCommonErrorHandler(DefaultErrorHandler(cr,FixedBackOff(1000L, 1L)))
+                setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(1000L, 1L)))
             })
         }
 

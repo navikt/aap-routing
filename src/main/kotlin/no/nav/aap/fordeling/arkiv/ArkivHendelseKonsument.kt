@@ -13,7 +13,6 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
 
     val log = getLogger(javaClass)
 
-    @RetryableTopic(kafkaTemplate = "dltOperations")
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(payload: JournalfoeringHendelseRecord)  {
         throw RuntimeException()

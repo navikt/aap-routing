@@ -60,33 +60,12 @@ class ArkivBeanConfig {
                 .header(AUTHORIZATION, service.bearerToken(cfgs.registration[JOARK], req.url()))
                 .build())
         }
-
-    @Bean
-    @Qualifier("dlt")
-    fun dltOperations(p: KafkaProperties) =
-        KafkaTemplate(DefaultKafkaProducerFactory<Any, Any>(p.buildProducerProperties()
-            .apply {
-                put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-                put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-
-            })).apply {
-                defaultTopic = "aap.routingdlt"
-        }
-   @Bean
-    fun deadLetterPublishingRecoverer(operations: KafkaOperations<Any,Any>) =
-        DeadLetterPublishingRecoverer(operations) { r , _ -> TopicPartition("aap.routingdlt", 0) }
-
-    @Bean
-    fun errorHandler(recoverer: DeadLetterPublishingRecoverer) = DefaultErrorHandler(recoverer,FixedBackOff(DEFAULT_INTERVAL, 1L)).apply {
-        setCommitRecovered(true)
-    }
     @Bean(JOARK)
-    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, errorHandler: DefaultErrorHandler) =
+    fun arkivHendelserListenerContainerFactory(p: KafkaProperties) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
-           setCommonErrorHandler(errorHandler)
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
-               // setCommonErrorHandler(errorHandler)
+                setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 1L))
             })
         }
 

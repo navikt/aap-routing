@@ -72,7 +72,7 @@ class ArkivBeanConfig {
                 val cr = object: ConsumerRecordRecoverer   {
                     override fun accept(t: ConsumerRecord<*, *>?, u: Exception?) {
                         val log = LoggerUtil.getLogger(javaClass)
-                        log.warn("OOOOPPPPSSSS $t")
+                        log.warn("OOOOPPPPSSSS $t",u)
                     }
 
                 }

@@ -12,7 +12,7 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
 
 
     fun tilJournalpost() =
-        Journalpost(tittel,journalfoerendeEnhet,journalpostId,journalstatus,tema,behandlingstema,
+        Journalpost(tittel,journalfoerendeEnhet,journalpostId,journalstatus,tema.lowercase(),behandlingstema,
                 Fødselsnummer(bruker.id),relevanteDatoer,dokumenter)
 
 

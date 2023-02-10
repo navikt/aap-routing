@@ -2,13 +2,13 @@ package no.nav.aap.fordeling.arkiv
 
 import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.fordeling.arkiv.Fordeler.Companion.INGEN_FORDELER
-import no.nav.aap.fordeling.arkiv.FordelingConfiguration.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.FordelerConfiguration.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)
-data class FordelingConfiguration(val routing: @NotEmpty Map<String, FordelingProperties>) {
+data class FordelerConfiguration(val routing: @NotEmpty Map<String, FordelingProperties>) {
     val log = getLogger(javaClass)
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =

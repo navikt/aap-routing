@@ -7,7 +7,7 @@ import org.springframework.kafka.listener.ConsumerRecordRecoverer
 import org.springframework.stereotype.Component
 
 @Component
-class ManuellFordelerRecoverer(private val fordeler: DelegerendeManuellFordeler) : ConsumerRecordRecoverer {
+class ManuellFordeling(private val fordeler: DelegerendeManuellFordeler) : ConsumerRecordRecoverer {
     val log = getLogger(javaClass)
 
     override fun accept(r: ConsumerRecord<*, *>, e: Exception) {

@@ -65,13 +65,14 @@ class ArkivBeanConfig {
                 .build())
         }
     @Bean(JOARK)
-    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, recoverer: ConsumerRecordRecoverer) =
+    fun arkivHendelserListenerContainerFactory(p: KafkaProperties, rec: ConsumerRecordRecoverer,props: FordelerKonfig) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(1000L, 5L)).apply {
+                setCommonErrorHandler(DefaultErrorHandler(rec,FixedBackOff(1000L, 5L)).apply {
                     addNotRetryableExceptions(FordelingException::class.java)
                     setResetStateOnRecoveryFailure(false)
-                    setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
+                    setRecordFilterStrategy {
+                        it.value().temaNytt.lowercase() !in props.routing.keys }
                 })
             })
         }

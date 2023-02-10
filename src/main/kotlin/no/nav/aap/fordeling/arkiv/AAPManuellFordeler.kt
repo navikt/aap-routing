@@ -16,8 +16,8 @@ class AAPManuellFordeler : ConsumerRecordRecoverer, Fordeler {
         when (e) {
             is FordelingException -> e.journalpost?.let {
                 fordel(it)
-            } ?: log.trace("Ingen fordeling til manuell")
-            else ->  log.trace("Ingen fordeling til manuell")
+            } ?: log.trace("Ingen fordeling til manuell siden vi ikke har en journalpost")
+            else ->  log.trace("Ingen fordeling til manuell",e)
         }
     }
 

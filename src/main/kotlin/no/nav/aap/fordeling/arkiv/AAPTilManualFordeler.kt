@@ -7,10 +7,10 @@ import org.springframework.kafka.listener.ConsumerRecordRecoverer
 import org.springframework.stereotype.Component
 
 @Component
-class AAPTilManualFordelingErrorHandler : ConsumerRecordRecoverer {
+class AAPTilManualFordeler : ConsumerRecordRecoverer {
     val log = getLogger(javaClass)
 
     override fun accept(t: ConsumerRecord<*, *>, u: Exception) {
-        log.warn("OOOOPPPPSSSS ${t.key().javaClass}  ${t.value().javaClass}",u)
+        log.warn("OOOOPPPPSSSS ${t.key().javaClass}  ${t.value().javaClass}")
     }
 }

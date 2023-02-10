@@ -7,4 +7,6 @@ import org.springframework.stereotype.Component
 class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
     fun navEnhet(område: String, skjermet: Boolean, kode: Diskresjonskode) =
         adapter.navEnhet(EnhetsKriteria(område, skjermet, kode),adapter.aktiveEnheter())
+
+    fun erAktiv(enhetNr: String) = adapter.aktiveEnheter().any { it.enhetNr == enhetNr }
 }

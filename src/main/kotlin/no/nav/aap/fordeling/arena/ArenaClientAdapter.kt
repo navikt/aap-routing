@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ENHET
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaSakForespørsel
 import no.nav.aap.fordeling.arkiv.Journalpost
+import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*
@@ -33,5 +34,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
 
 @Component
 class ArenaClient(private val adapter: ArenaWebClientAdapter) {
-    fun harArenaSak(journalpost: Journalpost, enhetNr: String) = adapter.hentSaker(journalpost.fnr,enhetNr) != null // TODO
+    fun harArenaSak(journalpost: Journalpost, enhet: NavEnhet) = adapter.hentSaker(journalpost.fnr,enhet.enhetNr) != null // TODO
+    fun opprettStartVedtak() = Unit // TODO
+    fun hentNyesteAktiveSak()  = Unit // TODO
 }

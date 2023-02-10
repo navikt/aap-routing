@@ -13,7 +13,7 @@ data class FordelerKonfig(val routing: @NotEmpty Map<String, FordelingProperties
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
         routing[jp.tema]?.let { c ->
-            if (jp.journalstatus in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
+            if (jp.status in c.statuser && jp.dokumenter.any { it.brevkode in c.brevkoder }) {
                 fordelere.firstOrNull { jp.tema in it.tema() }
             } else {
                 INGEN_FORDELER.also {

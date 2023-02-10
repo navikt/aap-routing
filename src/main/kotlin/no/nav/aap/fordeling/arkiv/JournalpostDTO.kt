@@ -60,7 +60,7 @@ data class JournalpostDTO(val tittel: String?, val journalfoerendeEnhet: String?
 
 
 
-data class Journalpost(val tittel: String?, val journalfoerendeEnhet: String?, val journalpostId: String, val journalstatus: JournalStatus,
+data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer,
                        val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>)
 

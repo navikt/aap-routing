@@ -71,6 +71,7 @@ class ArkivBeanConfig {
                 setCommonErrorHandler(DefaultErrorHandler(recoverer,FixedBackOff(1000L, 5L)).apply {
                     addNotRetryableExceptions(FordelingException::class.java)
                     setResetStateOnRecoveryFailure(false)
+                    setRecordFilterStrategy { AAP != it.value().temaNytt.lowercase() }
                 })
             })
         }

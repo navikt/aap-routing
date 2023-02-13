@@ -18,5 +18,4 @@ navorg:
     enabled: true
 arena:
     enabled: true
-    base-uri: ${arenafacade}
-    scope:  api://dev-fss.isa.arena-rest-facade-q1/.default
+    base-uri: https://aap-fss-proxy.${dev}-fss-pub.nais.io

@@ -21,18 +21,10 @@ class ArenaBeanConfig {
 
     @Qualifier(ARENA)
     @Bean
-    fun arenaWebClient(builder: Builder, cfg: EgenAnsattConfig, @Qualifier(ARENA) arenaClientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun arenaWebClient(builder: Builder, cfg: ArenaConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
-            .filter(arenaClientCredentialFilterFunction)
             .build()
-
-    @Bean
-    @Qualifier(ARENA)
-    fun arenaClientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
-        ExchangeFilterFunction { req, next ->
-            next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(cfgs.registration[ARENA], req.url())).build())
-        }
 
     @Bean
     @ConditionalOnProperty("$ARENA.enabled", havingValue = "true")

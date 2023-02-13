@@ -123,7 +123,9 @@ pdl:
     enabled: true
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql
     scope: api://${env}-fss.pdl.pdl-api/.default
-
+arena:
+    enabled: true
+    base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 fordeling:
     routing:
        aap:

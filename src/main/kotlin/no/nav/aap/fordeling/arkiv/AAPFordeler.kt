@@ -20,7 +20,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner) : Fordeler {
         with(integrasjoner) {
             when (brevkode)  {
                 STANDARD.kode -> { // 2c
-                    if (arena.harArenaSak(jp,navEnhet)) { // 2c-1
+                    if (arena.harAktivSak(jp)) { // 2c-1
                         val sak = arena.opprettStartVedtak()  // 2c-2
                         arkiv.oppdaterOgFerdigstill(jp,sak) // 3a/b
                     }

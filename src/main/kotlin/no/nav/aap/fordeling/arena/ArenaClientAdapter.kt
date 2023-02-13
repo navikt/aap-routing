@@ -6,7 +6,6 @@ import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ENHET
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaSakForespørsel
-import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
@@ -19,22 +18,27 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun hentSaker(fnr: Fødselsnummer, enhetNr: String) =
+    fun hentSaker(fnr: Fødselsnummer, enhet: NavEnhet) =
         webClient.post()
-            .uri { b -> b.path(cf.sakerPath).build() }
+            .uri { b -> b.path(cf.sakerPath).build(fnr.fnr) }
             .contentType(APPLICATION_JSON)
             .bodyValue(ArenaSakForespørsel(fnr))
-            .header(ENHET,enhetNr)
+            .header(ENHET,enhet.enhetNr)
             .retrieve()
             .bodyToMono<List<Map<String,Any>>>()
             .retryWhen(cf.retrySpec(log))
             .doOnError { t: Throwable -> log.warn("Arena sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena sak")
-}
 
-@Component
-class ArenaClient(private val adapter: ArenaWebClientAdapter) {
-    fun harArenaSak(journalpost: Journalpost, enhet: NavEnhet) = adapter.hentSaker(journalpost.fnr,enhet.enhetNr) != null // TODO
-    fun opprettStartVedtak() = Unit // TODO
-    fun hentNyesteAktiveSak()  = Unit // TODO
+    fun harAktivSak(fnr: Fødselsnummer) =
+        webClient.get()
+            .uri { b -> b.path(cf.aktivSakPath).build(fnr.fnr) }
+            .retrieve()
+            .bodyToMono<Boolean>()
+            .retryWhen(cf.retrySpec(log))
+            .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
+            .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
+
+
+
 }

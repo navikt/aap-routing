@@ -20,7 +20,7 @@
 		<graphql.version>2.0.1</graphql.version>
 		<jib.version>3.3.1</jib.version>
 		<java.version>17</java.version>
-		<kotlin.version>1.8.1</kotlin.version>
+		<kotlin.version>1.8.0</kotlin.version>
 		<logstash.version>7.2</logstash.version>
 		<resilience4j.version>2.0.2</resilience4j.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
@@ -95,10 +95,12 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>

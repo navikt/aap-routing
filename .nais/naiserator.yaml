@@ -17,9 +17,9 @@ spec:
         - application: skjermede-personer-pip
           namespace: nom
       external:
-        -   host: https://pdl-api.{{env}}-fss-pub.nais.io
-        -   host: {{saf}}
-        -   host: {{arena}}
+        -   host: aap-fss-proxy.{{env}}-fss-pub.nais.io
+        -   host: pdl-api.{{env}}-fss-pub.nais.io
+        -   host: saf.dev-{{env}-pub.nais.io
   secureLogs:
     enabled: true
   azure:
@@ -57,5 +57,3 @@ spec:
       value: {{env}}
     - name: SAF
       value: https://{{saf}}/graphql
-    - name: ARENAFACADE
-      value: https://{{arena}}

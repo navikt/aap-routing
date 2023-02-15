@@ -20,10 +20,9 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
         with(integrasjoner) {
             when (brevkode)  {
                 STANDARD.kode -> { // 2c
-                    log.info("Slår opp aktiv sak")
                     if (!arena.harAktivSak(jp)) { // 2c-1
                         val sak = arena.opprettStartVedtak()  // 2c-2
-                        arkiv.oppdaterOgFerdigstill(jp,sak) // 3a/b
+                        arkiv.oppdaterOgFerdigstill(jp,sak,navEnhet) // 3a/b
                     }
                     else {
                         manuell.fordel(jp)
@@ -31,10 +30,10 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
                 }
                 STANDARD_ETTERSENDING.kode -> { // 2d
                      arena.hentNyesteAktiveSak()?.let {
-                         arkiv.oppdaterOgFerdigstill(jp,it) // 3a/b
+                         arkiv.oppdaterOgFerdigstill(jp,it,navEnhet) // 3a/b
                      }
                 }
-                else -> throw FordelingException("Ukjent brekode $brevkode")
+                else ->  log.info("Fordeler ikke brevkode $brevkode")
             }
             return FordelingResultat("OK")
         }

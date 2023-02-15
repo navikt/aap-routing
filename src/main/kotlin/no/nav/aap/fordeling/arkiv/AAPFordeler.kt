@@ -21,7 +21,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
             when (brevkode)  {
                 STANDARD.kode -> { // 2c
                     log.info("Slår opp aktiv sak")
-                    if (arena.harAktivSak(jp)) { // 2c-1
+                    if (!arena.harAktivSak(jp)) { // 2c-1
                         val sak = arena.opprettStartVedtak()  // 2c-2
                         arkiv.oppdaterOgFerdigstill(jp,sak) // 3a/b
                     }

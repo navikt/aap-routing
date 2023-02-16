@@ -5,8 +5,8 @@ import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import org.springframework.stereotype.Component
 
 @Component
-class ArenaClient(private val adapter: ArenaWebClientAdapter) {
-    fun harAktivSak(journalpost: Journalpost) = adapter.harAktivSak(journalpost.fnr)
-    fun opprettStartVedtak() = Unit // TODO
+class ArenaClient(private val a: ArenaWebClientAdapter) {
+    fun harAktivSak(jp: Journalpost) = a.harAktivSak(jp.fnr)
+    fun opprettStartVedtak(jp: Journalpost,enhet: NavEnhet) = a.opprettArenaSak(jp)
     fun hentNyesteAktiveSak()  = Unit // TODO
 }

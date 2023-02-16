@@ -6,6 +6,7 @@ import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ENHET
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaSakForespørsel
+import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
@@ -39,6 +40,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
-
-
+    fun opprettArenaSak(jp:Journalpost): Nothing {
+        TODO()
+    }
 }

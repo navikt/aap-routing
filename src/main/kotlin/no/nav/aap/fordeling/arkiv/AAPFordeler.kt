@@ -25,8 +25,9 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
     private fun fordelStandard(jp: Journalpost) =
         with(integrasjoner) {
             if (!arena.harAktivSak(jp)) { // 2c-1
-                val sak = arena.opprettStartVedtak()  // 2c-2
-                arkiv.oppdaterOgFerdigstill(jp, sak, navEnhet(jp)) // 3a/b
+                val enhet = navEnhet(jp)
+                val sak = arena.opprettStartVedtak(jp,enhet)  // 2c-2
+                arkiv.oppdaterOgFerdigstill(jp, sak, enhet) // 3a/b
                 FordelingResultat("OK")
             }
             else {

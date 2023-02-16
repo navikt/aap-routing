@@ -40,7 +40,16 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
-    fun opprettArenaSak(jp:Journalpost,enhet: NavEnhet): Nothing {
-        TODO()
-    }
+    fun opprettArenaSak(jp:Journalpost,enhet: NavEnhet) =
+        webClient.post()
+            .uri { b -> b.path(cf.oppgavePath).build() }
+            .contentType(APPLICATION_JSON)
+            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel,
+                    jp.dokumenter.drop(1).mapNotNull { it.tittel }))
+            .retrieve()
+            .bodyToMono<Any>()
+            .doOnError { t: Throwable -> log.warn("Arena opprett sak  feilet", t) }
+            .block() ?: throw IntegrationException("Null respons fra arena opprett sak")
 }
+
+private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String?, val titler: List<String>)

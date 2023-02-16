@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component
 class ArenaClient(private val a: ArenaWebClientAdapter) {
     fun harAktivSak(jp: Journalpost) = a.harAktivSak(jp.fnr)
     fun opprettStartVedtak(jp: Journalpost,enhet: NavEnhet): Nothing = a.opprettArenaSak(jp,enhet)
-    fun hentNyesteAktiveSak(: Nothing  =  TODO()
+    fun hentNyesteAktiveSak(): Nothing  =  TODO()
 }

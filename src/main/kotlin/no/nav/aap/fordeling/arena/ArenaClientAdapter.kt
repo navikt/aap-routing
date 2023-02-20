@@ -1,6 +1,8 @@
 package no.nav.aap.fordeling.arena
 
 import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.api.felles.SkjemaType
+import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
@@ -45,8 +47,8 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
         webClient.post()
             .uri { b -> b.path(cf.oppgavePath).build() }
             .contentType(APPLICATION_JSON)
-            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: "Søknad",
-                    jp.dokumenter.drop(0).mapNotNull { it.tittel }))
+            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: STANDARD.tittel,
+                    jp.dokumenter.drop(1).mapNotNull { it.tittel }))
             .retrieve()
             .bodyToMono<Any>()
             .doOnError { t: Throwable -> log.warn("Arena opprett sak  feilet", t) }

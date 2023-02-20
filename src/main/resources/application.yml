@@ -49,3 +49,5 @@ springdoc:
     packagesToScan: no.nav.aap
     swagger-ui:
         disable-swagger-default-url: true
+    show-actuator: true
+    enable-spring-security: false

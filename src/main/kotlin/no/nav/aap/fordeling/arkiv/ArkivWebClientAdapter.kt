@@ -21,7 +21,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
         oppdater(jp,saksNr,enhetNr)
         ferdigstill(jp)
     }
-    private fun oppdater(jp: Journalpost, saksNr: String,enhetNr: String) =
+    fun oppdater(jp: Journalpost, saksNr: String,enhetNr: String) =
         webClient.post()
             .uri { b -> b.path(cf.oppdaterPath).build(jp.journalpostId) }
             .contentType(APPLICATION_JSON)

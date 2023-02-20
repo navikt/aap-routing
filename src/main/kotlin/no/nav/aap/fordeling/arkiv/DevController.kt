@@ -1,7 +1,5 @@
-package no.nav.aap.proxy.arena
+package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.security.token.support.spring.UnprotectedRestController
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

@@ -41,7 +41,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
-    fun opprettArenaSak(jp:Journalpost,enhet: NavEnhet) =
+    fun opprettArenaOppave(jp:Journalpost, enhet: NavEnhet) =
         webClient.post()
             .uri { b -> b.path(cf.oppgavePath).build() }
             .contentType(APPLICATION_JSON)

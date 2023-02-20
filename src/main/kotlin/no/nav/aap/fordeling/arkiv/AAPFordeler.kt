@@ -26,7 +26,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
         with(integrasjoner) {
             if (!arena.harAktivSak(jp)) { // 2c-1
                 val enhet = navEnhet(jp)
-                val sak = arena.opprettStartVedtak(jp,enhet)  // 2c-2
+                val sak = arena.opprettArenaOppgave(jp,enhet)  // 2c-2
                 arkiv.oppdaterOgFerdigstill(jp, sak, enhet) // 3a/b
                 FordelingResultat("OK")
             }

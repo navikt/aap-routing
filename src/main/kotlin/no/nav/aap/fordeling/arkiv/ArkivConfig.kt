@@ -12,9 +12,11 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 class ArkivConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
-        @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
+        val dokarkiv: URI,
+        @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
+
         @NestedConfigurationProperty val hendelser: TopicConfig,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,retryCfg) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,DEFAULT) {
 
 
     data class TopicConfig(val topic: String)
@@ -22,6 +24,7 @@ class ArkivConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
+        private const val DEFAULT_OPPDATER_PATH = "/rest/journalpostapi/v1/journalpost/{journalpostid}"
         private const val DEFAULT_PING_PATH = "isAlive"
     }
 }

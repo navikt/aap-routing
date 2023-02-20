@@ -10,6 +10,7 @@ management:
         shutdown:
             enabled: true
 joark:
+    dokarkiv: https://dokarkiv.${env}-fss-pub.nais.io
     hendelser:
         topic: teamdokumenthandtering.aapen-dok-journalfoering-q1
     scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default

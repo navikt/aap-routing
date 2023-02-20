@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arena
 
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.api.felles.SkjemaType
 import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
@@ -33,7 +32,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnError { t: Throwable -> log.warn("Arena sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena sak")
 
-    fun harAktivSak(fnr: Fødselsnummer) =
+    fun harAktivArenaSak(fnr: Fødselsnummer) =
         webClient.get()
             .uri { b -> b.path(cf.aktivSakPath).build(fnr.fnr) }
             .retrieve()
@@ -43,16 +42,16 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
-    fun opprettArenaOppave(jp:Journalpost, enhet: NavEnhet) =
+    fun opprettArenaOppgave(jp:Journalpost, enhet: NavEnhet) =
         webClient.post()
             .uri { b -> b.path(cf.oppgavePath).build() }
             .contentType(APPLICATION_JSON)
             .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: STANDARD.tittel,
                     jp.dokumenter.drop(1).mapNotNull { it.tittel }))
             .retrieve()
-            .bodyToMono<Any>()
+            .toBodilessEntity()
             .doOnError { t: Throwable -> log.warn("Arena opprett sak  feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra arena opprett sak")
+            .block().run { }
 }
 
 private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String> = emptyList())

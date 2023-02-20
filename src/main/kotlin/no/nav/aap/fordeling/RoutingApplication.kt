@@ -13,7 +13,7 @@ import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 @EnableKafkaRetryTopic
 @ConfigurationPropertiesScan
 @EnableOAuth2Client(cacheEnabled = true)
-@EnableJwtTokenValidation
+@EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
 class RoutingApplication
 
 fun main(args: Array<String>) {

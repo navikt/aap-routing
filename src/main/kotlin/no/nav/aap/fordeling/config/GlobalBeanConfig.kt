@@ -38,8 +38,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()
             .info(Info()
-                .title("AAP fss proxy")
-                .description("Proxy mot tjenester som ikke støtter AAD/TokenX")
+                .title("AAP routng")
+                .description("Routing ala KRUT")
                 .version(p.version)
                 .license(License()
                     .name("MIT")

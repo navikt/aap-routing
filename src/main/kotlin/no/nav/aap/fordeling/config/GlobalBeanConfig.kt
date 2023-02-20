@@ -26,7 +26,9 @@ import reactor.netty.http.client.HttpClient
 import reactor.util.retry.Retry.fixedDelay
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import io.netty.handler.logging.LogLevel.TRACE
-import io.swagger.v3.oas.annotations.info.License
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.info.License
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties

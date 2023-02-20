@@ -45,7 +45,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
         webClient.post()
             .uri { b -> b.path(cf.oppgavePath).build() }
             .contentType(APPLICATION_JSON)
-            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel,
+            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: "Søknad",
                     jp.dokumenter.drop(1).mapNotNull { it.tittel }))
             .retrieve()
             .bodyToMono<Any>()

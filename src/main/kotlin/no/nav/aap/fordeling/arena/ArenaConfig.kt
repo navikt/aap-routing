@@ -23,7 +23,7 @@ class ArenaConfig(
     companion object {
         private const val SAKER_PATH = "arena/saker/{fnr}"
         private const val AKTIV_SAK_PATH = "arena/haraktivsak/{fnr}"
-        private const val OPPGAVE_PATH = "arena/oprettoppgave"
+        private const val OPPGAVE_PATH = "arena/opprettoppgave"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"
         const val ARENA = "arena"
         const val ENHET = "Enhet"

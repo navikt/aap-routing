@@ -37,6 +37,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .retrieve()
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
+            .doOnSuccess { log.info("Aktiv sak status for $fnr er $it") }
             .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 

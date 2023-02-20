@@ -53,4 +53,4 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .block() ?: throw IntegrationException("Null respons fra arena opprett sak")
 }
 
-private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String?, val titler: List<String>)
+private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String>)

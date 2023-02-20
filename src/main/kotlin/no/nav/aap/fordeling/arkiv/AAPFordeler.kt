@@ -1,6 +1,9 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.api.felles.SkjemaType.*
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.TIL_MANUELL
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
@@ -27,6 +30,9 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
             if (!arena.harAktivSak(jp)) { // 2c-1
                 val enhet = navEnhet(jp)
                 val sak = arena.opprettArenaOppgave(jp,enhet)  // 2c-2
+                if (TIL_MANUELL == sak) {
+                    return manuell.fordel(jp)
+                }
                 arkiv.oppdaterOgFerdigstill(jp, sak, enhet) // 3a/b
                 FordelingResultat("OK")
             }

@@ -46,11 +46,11 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .uri { b -> b.path(cf.oppgavePath).build() }
             .contentType(APPLICATION_JSON)
             .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: "Søknad",
-                    jp.dokumenter.drop(1).mapNotNull { it.tittel }))
+                    jp.dokumenter.drop(0).mapNotNull { it.tittel }))
             .retrieve()
             .bodyToMono<Any>()
             .doOnError { t: Throwable -> log.warn("Arena opprett sak  feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena opprett sak")
 }
 
-private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String>)
+private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String> = emptyList())

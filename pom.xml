@@ -23,6 +23,7 @@
 		<kotlin.version>1.8.0</kotlin.version>
 		<logstash.version>7.2</logstash.version>
 		<resilience4j.version>2.0.2</resilience4j.version>
+		<springdoc.version>2.0.2</springdoc.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<tokensupport.version>3.0.3</tokensupport.version>
 	</properties>
@@ -33,6 +34,16 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-common</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>no.nav.security</groupId>
 			<artifactId>token-client-spring</artifactId>

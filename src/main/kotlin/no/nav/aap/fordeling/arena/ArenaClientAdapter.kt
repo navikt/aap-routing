@@ -15,6 +15,7 @@ import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
+import no.nav.aap.fordeling.arena.ArenaDTOs.*
 
 @Component
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
@@ -29,7 +30,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .retrieve()
             .bodyToMono<List<Map<String,Any>>>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t: Throwable -> log.warn("Arena sak oppslag feilet", t) }
+            .doOnError { t -> log.warn("Arena sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena sak")
 
     fun harAktivArenaSak(fnr: Fødselsnummer) =
@@ -39,19 +40,21 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
             .doOnSuccess { log.info("Aktiv sak status for $fnr er $it") }
-            .doOnError { t: Throwable -> log.warn("Arena aktiv sak oppslag feilet", t) }
+            .doOnError { t -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
-    fun opprettArenaOppgave(jp:Journalpost, enhet: NavEnhet) =
-        webClient.post()
-            .uri { b -> b.path(cf.oppgavePath).build() }
-            .contentType(APPLICATION_JSON)
-            .bodyValue(ArenaOpprettOppgaveParams(jp.fnr,enhet.enhetNr,jp.dokumenter.first().tittel ?: STANDARD.tittel,
-                    jp.dokumenter.drop(1).mapNotNull { it.tittel }))
-            .retrieve()
-            .toBodilessEntity()
-            .doOnError { t: Throwable -> log.warn("Arena opprett sak  feilet", t) }
-            .block().run { }
-}
+    fun opprettArenaOppgave(journalpost: Journalpost, enhet: NavEnhet) =
+        with(journalpost) {
+            webClient.post()
+                .uri { b -> b.path(cf.oppgavePath).build() }
+                .contentType(APPLICATION_JSON)
+                .bodyValue(ArenaOpprettOppgave(fnr,enhet.enhetNr,dokumenter.first().tittel ?: STANDARD.tittel,
+                        dokumenter.drop(1).mapNotNull { it.tittel }))
+                .retrieve()
+                .bodyToMono<ArenaOpprettetOppgave>()
+                .doOnSuccess { log.info("Arena opprettet oppgave er $it") }
+                .doOnError { t -> log.warn("Arena opprett oppgave feilet", t) }
+                .block() ?: throw IntegrationException("Null respons for opprettelse av oppgave")
+        }
 
-private data class ArenaOpprettOppgaveParams(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String> = emptyList())
+}

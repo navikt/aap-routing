@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv
 
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter.Companion
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.util.Constants
@@ -56,7 +55,7 @@ data class JournalpostDTO(
     data class OppdateringData(val tittel: String?,val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak,val tema: String = Constants.AAP.uppercase()) {
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }
-    data class Bruker(val id: String, val type: BrukerType = FNR)
+    data class Bruker(val id: String, val idType: BrukerType = FNR)
 
     data class DokumentInfo(val dokumentInfoId: String, val tittel: String?,val brevkode: String?)
 

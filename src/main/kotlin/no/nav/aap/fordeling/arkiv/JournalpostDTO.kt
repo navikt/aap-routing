@@ -73,6 +73,6 @@ data class JournalpostDTO(
 
     companion object  {
         private const val FAGSAK = "FAGSAK"
-        private const val FAGSAKSYSTEM = "A001"
+        private const val FAGSAKSYSTEM = "AO11"
     }
 }

@@ -21,17 +21,15 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.*
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun hentSaker(fnr: Fødselsnummer, enhet: NavEnhet) =
-        webClient.post()
-            .uri { b -> b.path(cf.sakerPath).build(fnr.fnr) }
-            .contentType(APPLICATION_JSON)
-            .bodyValue(ArenaSakForespørsel(fnr))
-            .header(ENHET,enhet.enhetNr)
+    fun nyesteSak(fnr: Fødselsnummer) =
+        webClient.get()
+            .uri { b -> b.path(cf.nyesteSakPath).build(fnr.fnr) }
             .retrieve()
-            .bodyToMono<List<Map<String,Any>>>()
+            .bodyToMono<String>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t -> log.warn("Arena sak oppslag feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra arena sak")
+            .doOnSuccess { log.info("Arena nyeste aktive sak for $fnr er $it") }
+            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet", t) }
+            .block()
 
     fun harAktivArenaSak(fnr: Fødselsnummer) =
         webClient.get()
@@ -39,7 +37,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .retrieve()
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Aktiv sak status for $fnr er $it") }
+            .doOnSuccess { log.info("Arena aktiv sak status for $fnr er $it") }
             .doOnError { t -> log.warn("Arena aktiv sak oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
@@ -56,5 +54,4 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet", t) }
                 .block() ?: throw IntegrationException("Null respons for opprettelse av oppgave")
         }
-
 }

@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 class ArenaConfig(
     @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
     @DefaultValue("true") enabled: Boolean,
-    @DefaultValue(SAKER_PATH) val sakerPath: String,
+    @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
     @DefaultValue(AKTIV_SAK_PATH) val aktivSakPath: String,
     @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
 
@@ -21,7 +21,7 @@ class ArenaConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        private const val SAKER_PATH = "arena/saker/{fnr}"
+        private const val NYESTE_PATH = "arena/nyesteaktivesak/{fnr}"
         private const val AKTIV_SAK_PATH = "arena/haraktivsak/{fnr}"
         private const val OPPGAVE_PATH = "arena/opprettoppgave"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"

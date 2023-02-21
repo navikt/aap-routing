@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestParam
 @UnprotectedRestController(value = ["/dev"])
 class DevController(private val arkiv: ArkivWebClientAdapter) {
     @PostMapping("ferdigstill")
-    fun sisteVedtak(@RequestBody  jp: Journalpost, @RequestParam enhetNr: String,@RequestParam saksNr: String) = arkiv.oppdater(jp,saksNr,enhetNr)
+    fun ferdigstill(@RequestBody  jp: Journalpost, @RequestParam enhetNr: String,@RequestParam saksNr: String) = arkiv.oppdater(jp.oppdateringsData(saksNr,enhetNr))
 }

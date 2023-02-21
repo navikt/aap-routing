@@ -53,7 +53,7 @@ data class JournalpostDTO(
         }
     }
 
-    data class OppdateringData(val tittel: String?,val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak,val tema: String = Constants.AAP.uppercase()) {
+    data class OppdateringData(val id: String,val tittel: String?,val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak,val tema: String = Constants.AAP.uppercase()) {
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }
     data class Bruker(val id: String, val type: BrukerType = FNR)

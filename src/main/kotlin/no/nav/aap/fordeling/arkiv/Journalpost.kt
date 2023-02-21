@@ -12,7 +12,7 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer, val bruker: Bruker?, val avsenderMottager: Bruker?,
                        val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>) {
 
-    fun oppdateringsData(saksNr: String, enhetNr: String) = OppdateringData(tittel,avsenderMottager,bruker, Sak(saksNr))
+    fun oppdateringsData(saksNr: String, enhetNr: String) = OppdateringData(journalpostId,tittel,avsenderMottager,bruker, Sak(saksNr))
 
 
 }

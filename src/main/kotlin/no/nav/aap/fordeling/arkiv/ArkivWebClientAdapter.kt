@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
@@ -18,14 +19,14 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     private fun Long.asIdent() = mapOf(ID to "$this")
     fun oppdaterOgFerdigstill(jp: Journalpost, saksNr: String, enhetNr: String)  {
-        oppdater(jp,saksNr,enhetNr)
+        oppdater(jp.oppdateringsData(saksNr,enhetNr))
         ferdigstill(jp)
     }
-    fun oppdater(jp: Journalpost, saksNr: String,enhetNr: String) =
+    fun oppdater(data: OppdateringData) =
         webClient.post()
-            .uri { b -> b.path(cf.oppdaterPath).build(jp.journalpostId) }
+            .uri { b -> b.path(cf.oppdaterPath).build(data.id) }
             .contentType(APPLICATION_JSON)
-            .bodyValue(jp.oppdateringsData(saksNr,enhetNr))
+            .bodyValue(data)
             .retrieve()
             .bodyToMono<Any>()
             .retryWhen(cf.retrySpec(log))

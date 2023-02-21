@@ -14,4 +14,5 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
 
     fun oppdateringsData(saksNr: String) = OppdaterJournalpostForespørsel(tittel, avsenderMottager ?: bruker,bruker, Sak(saksNr))
 
+    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Brevkode ikke satt"
 }

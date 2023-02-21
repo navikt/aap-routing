@@ -17,7 +17,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
     override fun tema() = listOf(AAP)
     override fun fordel(journalpost: Journalpost) =
         runCatching {
-            when (val brevkode = journalpost.dokumenter.first().brevkode) {
+            when (val brevkode = journalpost.hovedDokumentBrevkode) {
                 STANDARD.kode -> fordelStandard(journalpost)
                 STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost)
                 else -> FordelingResultat(msg="$brevkode ikke konfigurert for fordeling for ${tema()}").also {

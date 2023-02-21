@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.api.felles.SkjemaType.*
-import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.TIL_MANUELL
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet

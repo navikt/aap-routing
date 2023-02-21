@@ -107,7 +107,7 @@ egenansatt:
 joark:
     enabled: true
     base-uri: ${saf}
-    scope: api://dokarkiv.${env}-fss-pub.nais.io/.default
+    scope: api://${env}-fss.teamdokumenthandtering.dokarkiv-q1/.default
 
 pdl:
     enabled: true

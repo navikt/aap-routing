@@ -27,7 +27,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .contentType(APPLICATION_JSON)
             .bodyValue(data)
             .retrieve()
-            .bodyToMono<Any>()
+            .bodyToMono<Pair<String,String>>()
             .retryWhen(cf.retrySpec(log))
             .doOnSuccess { log.info("Oppdatering av journalpost OK ($it)") }
             .doOnError { t -> log.warn("Oppdatering av journalpost $data feilet", t) }

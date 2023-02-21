@@ -44,7 +44,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
 
     private fun fordelEttersending(journalpost: Journalpost) =
         with(integrasjoner) {
-            arena.nyesteAktiveSak(journalpost)?.run {
+            arena.nyesteAktiveArenaSak(journalpost)?.run {
                 arkiv.oppdaterOgFerdigstill(journalpost, this) // 3a/b
             } ?: manuell.fordel(journalpost)
         }

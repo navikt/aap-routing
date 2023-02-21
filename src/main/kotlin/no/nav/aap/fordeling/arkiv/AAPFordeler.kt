@@ -25,14 +25,16 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
 
     private fun fordelStandard(journalpost: Journalpost) =
         with(integrasjoner) {
-            if (!arena.harAktivSak(journalpost)) { // 2c-1
-                val sak = arena.opprettArenaOppgave(journalpost, navEnhet(journalpost))  // 2c-2
-                if (TIL_MANUELL == sak) {
-                    return manuell.fordel(journalpost)
+            runCatching {
+                if (!arena.harAktivSak(journalpost)) { // 2c-1
+                    val sak = arena.opprettArenaOppgave(journalpost, navEnhet(journalpost))  // 2c-2
+                    arkiv.oppdaterOgFerdigstill(journalpost, sak) // 3a/b
                 }
-                arkiv.oppdaterOgFerdigstill(journalpost, sak) // 3a/b
-            }
-            else {
+                else {
+                    manuell.fordel(journalpost)
+                }
+            }.getOrElse {
+                log.warn("Noe gikk galt under fordeling, går til manuell",it)
                 manuell.fordel(journalpost)
             }
         }

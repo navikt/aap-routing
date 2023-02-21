@@ -4,7 +4,6 @@ import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.Companion.NONE
 
 interface Fordeler {
 
-    //fun kanFordele(vararg brevkoder: String) =
     fun tema(): List<String>
     fun fordel(journalpost: Journalpost) : FordelingResultat
     companion object {
@@ -14,9 +13,9 @@ interface Fordeler {
         }
     }
 
-    data class FordelingResultat(val status: String) {
+    data class FordelingResultat(val journalpostId: String = "0", val msg: String) {
         companion object {
-            val NONE = FordelingResultat("Shit happens") // TODO
+            val NONE = FordelingResultat(msg ="Shit happens")
         }
     }
 }

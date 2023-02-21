@@ -3,8 +3,8 @@ package no.nav.aap.fordeling.arkiv
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostRespons
 import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,20 +20,20 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun hentJournalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    fun oppdaterOgFerdigstill(journalpostId: String,data: OppdaterForespørsel) : FordelingResultat  {
-        oppdater(journalpostId, data)
-        ferdigstill(journalpostId)
-        return FordelingResultat("OK")
-    }
+    fun oppdaterOgFerdigstill(journalpostId: String,data: OppdaterJournalpostForespørsel) =
+        with(journalpostId) {
+            oppdater(this, data)
+            ferdigstill(this)
+            FordelingResultat(this,"OK")
+        }
 
-
-    private fun oppdater(journalpostId: String, data: OppdaterForespørsel) =
+    private fun oppdater(journalpostId: String, data: OppdaterJournalpostForespørsel) =
         webClient.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
             .bodyValue(data)
             .retrieve()
-            .bodyToMono<OppdaterRespons>()
+            .bodyToMono<OppdaterJournalpostRespons>()
             .retryWhen(cf.retrySpec(log))
             .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId med $data OK (respons $it)") }
             .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId med $data feilet", t) }

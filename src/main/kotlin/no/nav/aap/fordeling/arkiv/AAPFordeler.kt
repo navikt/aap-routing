@@ -18,8 +18,8 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
         when (val brevkode = journalpost.dokumenter.first().brevkode) {
             STANDARD.kode -> fordelStandard(journalpost) // 2c
             STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost) // 2d
-            else -> FordelingResultat("$brevkode Ikke fordelt").also {
-                log.info("$brevkode ikke fordelt")
+            else -> FordelingResultat(msg="$brevkode ikke konfigurert for fordeling for ${tema()}").also {
+                log.info("$brevkode ikke konfigurert for fordeling for ${tema()}")
             }
         }
 

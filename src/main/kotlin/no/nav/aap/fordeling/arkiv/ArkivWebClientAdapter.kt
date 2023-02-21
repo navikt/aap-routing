@@ -18,15 +18,16 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, val cf: ArkivConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
-    fun journalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
+    fun hentJournalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String)  =
-        with(journalpost) {
-            oppdater(journalpostId, oppdateringsData(saksNr))
-            ferdigstill(journalpostId)
-            FordelingResultat("OK")
-        }
-    fun oppdater(journalpostId: String, data: OppdaterForespørsel) =
+    fun oppdaterOgFerdigstill(journalpostId: String,data: OppdaterForespørsel) : FordelingResultat  {
+        oppdater(journalpostId, data)
+        ferdigstill(journalpostId)
+        return FordelingResultat("OK")
+    }
+
+
+    private fun oppdater(journalpostId: String, data: OppdaterForespørsel) =
         webClient.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
@@ -34,12 +35,12 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .retrieve()
             .bodyToMono<OppdaterRespons>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Oppdatering av journalpost OK ($it)") }
-            .doOnError { t -> log.warn("Oppdatering av journalpost $data feilet", t) }
+            .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId med $data OK (respons $it)") }
+            .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId med $data feilet", t) }
             .block()
 
 
-     fun ferdigstill(journalpostId: String) =
+     private fun ferdigstill(journalpostId: String) =
         webClient.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
@@ -47,7 +48,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .retrieve()
             .bodyToMono<Any>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Ferdigstilling av journalpost OK ($it)") }
+            .doOnSuccess { log.info("Ferdigstilling av journalpost OK (respons $it)") }
             .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
             .block()
 

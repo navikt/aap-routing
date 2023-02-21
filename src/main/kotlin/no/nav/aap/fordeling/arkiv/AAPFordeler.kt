@@ -26,8 +26,9 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
         with(integrasjoner) {
             runCatching {
                 if (!arena.harAktivSak(journalpost)) { // 2c-1
-                    val sak = arena.opprettArenaOppgave(journalpost, navEnhet(journalpost))  // 2c-2
-                    arkiv.oppdaterOgFerdigstill(journalpost, sak) // 3a/b
+                     arena.opprettArenaOppgave(journalpost, navEnhet(journalpost)).run {
+                        arkiv.oppdaterOgFerdigstill(journalpost, arenaSakId) // 3a/b
+                    }  // 2c-2
                 }
                 else {
                     manuell.fordel(journalpost)
@@ -40,8 +41,8 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
 
     private fun fordelEttersending(journalpost: Journalpost) =
         with(integrasjoner) {
-            arena.hentNyesteAktiveSak().let {
-                arkiv.oppdaterOgFerdigstill(journalpost, it) // 3a/b
+            arena.hentNyesteAktiveSak().run {
+                arkiv.oppdaterOgFerdigstill(journalpost, fagsakId) // 3a/b
             }
         }
 

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 @Component
 class ArkivClient(private val a: ArkivWebClientAdapter) {
     fun journalpost(id: Long)  = a.hentJournalpost(id)
-    fun oppdaterOgFerdigstill(jp: Journalpost, sak: ArenaOpprettetOppgave) = a.oppdaterOgFerdigstill(jp.journalpostId,jp.oppdateringsData(sak.arenaSakId))
+    fun oppdaterOgFerdigstill(jp: Journalpost, sakNr: String) = a.oppdaterOgFerdigstill(jp.journalpostId,jp.oppdateringsData(sakNr))
 }

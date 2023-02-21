@@ -5,8 +5,6 @@ import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ENHET
-import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaSakForespørsel
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import org.springframework.beans.factory.annotation.Qualifier
@@ -21,7 +19,7 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.*
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun nyesteSak(fnr: Fødselsnummer) =
+    fun nyesteArenaSak(fnr: Fødselsnummer) =
         webClient.get()
             .uri { b -> b.path(cf.nyesteSakPath).build(fnr.fnr) }
             .retrieve()
@@ -30,16 +28,6 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .doOnSuccess { log.info("Arena nyeste aktive sak for $fnr er $it") }
             .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet", t) }
             .block()
-
-    fun harAktivArenaSak(fnr: Fødselsnummer) =
-        webClient.get()
-            .uri { b -> b.path(cf.aktivSakPath).build(fnr.fnr) }
-            .retrieve()
-            .bodyToMono<Boolean>()
-            .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Arena aktiv sak status for $fnr er $it") }
-            .doOnError { t -> log.warn("Arena aktiv sak oppslag feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra arena aktiv sak")
 
     fun opprettArenaOppgave(journalpost: Journalpost, enhet: NavEnhet) =
         with(journalpost) {

@@ -17,10 +17,9 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun journalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    private fun Long.asIdent() = mapOf(ID to "$this")
-    fun oppdaterOgFerdigstill(jp: Journalpost, saksNr: String, enhetNr: String)  {
-        oppdater(jp.oppdateringsData(saksNr,enhetNr))
-        ferdigstill(jp)
+    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String, enhetNr: String)  {
+        oppdater(journalpost.oppdateringsData(saksNr,enhetNr))
+        ferdigstill(journalpost)
     }
     fun oppdater(data: OppdateringData) =
         webClient.post()
@@ -30,13 +29,14 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .retrieve()
             .bodyToMono<Any>()
             .retryWhen(cf.retrySpec(log))
-            .doOnError { t -> log.warn("Oppdatering av journalpost feilet", t) }
+            .doOnError { t -> log.warn("Oppdatering av journalpost $data feilet", t) }
             .block()
 
 
     private fun ferdigstill(jp: Journalpost) = Unit
 
     companion object {
+        private fun Long.asIdent() = mapOf(ID to "$this")
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"
         private const val ID = "journalpostId"
     }

@@ -21,6 +21,7 @@ spec:
         -   host: pdl-api.{{env}}-fss-pub.nais.io
         -   host: saf.{{env}}-fss-pub.nais.io
         -   host: dokarkiv.{{env}}-fss-pub.nais.io
+        -   host: oppgave.{{env}}-fss-pub.nais.io
   secureLogs:
     enabled: true
   azure:

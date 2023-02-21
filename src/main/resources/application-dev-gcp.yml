@@ -20,3 +20,6 @@ navorg:
 arena:
     enabled: true
     base-uri: https://aap-fss-proxy.${dev}-fss-pub.nais.io
+oppgave:
+    base-uri: https://oppgave-q1.${env}-fss-pub.nais.io
+    scope: api://${env}-fss.oppgavehandtering.oppgave-q1/.default

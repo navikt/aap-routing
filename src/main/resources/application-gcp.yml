@@ -83,6 +83,14 @@ no.nav:
                             client-id: ${azure.app.client.id}
                             client-jwk: ${azure.app.jwk}
                             client-auth-method: private_key_jwt
+                    oppgave:
+                        token-endpoint-url: ${azure.openid.config.token.endpoint}
+                        grant-type: client_credentials
+                        scope: ${oppgave.scope}
+                        authentication:
+                            client-id: ${azure.app.client.id}
+                            client-jwk: ${azure.app.jwk}
+                            client-auth-method: private_key_jwt
                     pdl:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
@@ -108,6 +116,8 @@ joark:
     enabled: true
     base-uri: ${saf}
     scope: api://${env}-fss.teamdokumenthandtering.dokarkiv-q1/.default
+oppgave:
+    enabled: true
 
 pdl:
     enabled: true

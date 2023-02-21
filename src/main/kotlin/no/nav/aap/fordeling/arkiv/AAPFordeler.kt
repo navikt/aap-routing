@@ -29,8 +29,6 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
             manuell.fordel(journalpost)
         }
 
-
-
     private fun fordelStandard(journalpost: Journalpost) =
         with(integrasjoner) {
             if (!arena.harAktivArenaSak(journalpost)) {
@@ -60,7 +58,6 @@ class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: 
                 }
             }?: enhetFor(fnr).also { log.info("Enhet ikke satt, fra GT er den $it") }
         }
-
 
     private fun enhetFor(fnr: Fødselsnummer) =
         with(integrasjoner)  {

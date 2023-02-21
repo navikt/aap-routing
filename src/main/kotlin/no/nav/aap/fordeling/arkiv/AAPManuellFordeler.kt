@@ -13,6 +13,6 @@ class AAPManuellFordeler : ManuellFordeler{
 
     override fun fordel(journalpost: Journalpost): FordelingResultat {
         log.info("Fordeler manuelt for  ${journalpost.tema}")
-        return FordelingResultat("Manuell")
+        return FordelingResultat(msg ="Manuell")
     }
 }

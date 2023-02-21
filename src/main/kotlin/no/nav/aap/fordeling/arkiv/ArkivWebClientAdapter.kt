@@ -21,7 +21,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String, enhetNr: String)  =
         with(journalpost) {
-            oppdater(journalpostId, journalpost.oppdateringsData(saksNr,enhetNr))
+            oppdater(journalpostId, oppdateringsData(saksNr,enhetNr))
             ferdigstill(journalpostId)
         }
     fun oppdater(journalpostId: String, data: OppdaterForespørsel) =

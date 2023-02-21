@@ -6,7 +6,7 @@ import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeler : ManuellFordeler{
+class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFordeler{
     val log = LoggerUtil.getLogger(javaClass)
 
     override fun tema() = listOf(AAP)

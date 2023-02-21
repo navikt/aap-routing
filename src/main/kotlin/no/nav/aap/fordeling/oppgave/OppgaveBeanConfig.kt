@@ -21,7 +21,7 @@ class OppgaveBeanConfig {
 
     @Qualifier(OPPGAVE)
     @Bean
-    fun egenAnsattWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveClientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveClientCredentialFilterFunction: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveClientCredentialFilterFunction)

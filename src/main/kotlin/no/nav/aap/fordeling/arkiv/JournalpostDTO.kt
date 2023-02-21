@@ -56,6 +56,13 @@ data class JournalpostDTO(
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }
 
+    data class JournalførendeEnhet(val journalfoerendeEnhet: String) {
+
+        companion object {
+            private const val AUTO_ENHET = "9999"
+            val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
+        }
+    }
     data class OppdaterRespons(val journalpostId: String)
 
     data class Bruker(val id: String, val idType: BrukerType = FNR)

@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
 import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
@@ -18,10 +19,11 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun journalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String, enhetNr: String)  {
-        oppdater(journalpost.journalpostId, journalpost.oppdateringsData(saksNr,enhetNr))
-        ferdigstill(journalpost)
-    }
+    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String, enhetNr: String)  =
+        with(journalpost) {
+            oppdater(journalpostId, journalpost.oppdateringsData(saksNr,enhetNr))
+            ferdigstill(journalpostId)
+        }
     fun oppdater(journalpostId: String, data: OppdaterForespørsel) =
         webClient.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
@@ -35,7 +37,18 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .block()
 
 
-    private fun ferdigstill(jp: Journalpost) = Unit
+     fun ferdigstill(journalpostId: String) =
+        webClient.patch()
+            .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
+            .contentType(APPLICATION_JSON)
+            .bodyValue(AUTOMATISK_JOURNALFØRING)
+            .retrieve()
+            .bodyToMono<Any>()
+            .retryWhen(cf.retrySpec(log))
+            .doOnSuccess { log.info("Ferdigstilling av journalpost OK ($it)") }
+            .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
+            .block()
+
 
     companion object {
         private fun Long.asIdent() = mapOf(ID to "$this")

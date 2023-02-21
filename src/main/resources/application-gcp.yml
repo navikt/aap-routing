@@ -107,6 +107,8 @@ egenansatt:
 joark:
     enabled: true
     base-uri: ${saf}
+    scope: api://dokarkiv.${env}-fss-pub.nais.io/.default
+
 pdl:
     enabled: true
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql

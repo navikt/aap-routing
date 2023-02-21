@@ -17,6 +17,6 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
             arkiv.hentJournalpost(payload.journalpostId)?.let {
                 fordeler.fordel(it)
             }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")  // TODO hva gjør vi her?
-        }.getOrElse { throw FordelingException(cause =  it) }
+        }.getOrElse { throw FordelingException(cause =  it) } // TODO tenke gjennom denne,er vel bare om manuell fordeling også feiler?
     }
 }

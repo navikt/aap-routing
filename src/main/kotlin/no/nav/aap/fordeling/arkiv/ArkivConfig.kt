@@ -25,8 +25,9 @@ class ArkivConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        private const val DEFAULT_FERDIGSTILL_PATH = "/rest/journalpostapi/v1/journalpost/{journalpostid}/ferdigstill"
-        private const val DEFAULT_OPPDATER_PATH = "/rest/journalpostapi/v1/journalpost/{journalpostid}"
+        private const val PATH_PREFIX = "/rest/journalpostapi/v1/journalpost/"
+        private const val DEFAULT_FERDIGSTILL_PATH = "$PATH_PREFIX{journalpostid}/ferdigstill"
+        private const val DEFAULT_OPPDATER_PATH = "$PATH_PREFIX{journalpostid}"
         private const val DEFAULT_PING_PATH = "isAlive"
     }
 }

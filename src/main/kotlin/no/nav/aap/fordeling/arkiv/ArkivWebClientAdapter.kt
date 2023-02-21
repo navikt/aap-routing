@@ -20,14 +20,14 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun hentJournalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    fun oppdaterOgFerdigstill(journalpostId: String,data: OppdaterJournalpostForespørsel) =
+    fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdaterJournalpostForespørsel) =
         with(journalpostId) {
-            oppdater(this, data)
-            ferdigstill(this)
+            oppdaterJournalpost(this, data)
+            ferdigstillJournalpost(this)
             FordelingResultat(this,"OK")
         }
 
-    private fun oppdater(journalpostId: String, data: OppdaterJournalpostForespørsel) =
+    private fun oppdaterJournalpost(journalpostId: String, data: OppdaterJournalpostForespørsel) =
         webClient.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
@@ -40,7 +40,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .block()
 
 
-     private fun ferdigstill(journalpostId: String) =
+     private fun ferdigstillJournalpost(journalpostId: String) =
         webClient.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)

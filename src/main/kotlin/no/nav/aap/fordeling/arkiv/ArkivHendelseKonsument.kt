@@ -14,7 +14,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val arki
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     fun listen(payload: JournalfoeringHendelseRecord)  {
         runCatching {
-            arkiv.journalpost(payload.journalpostId)?.let {
+            arkiv.hentJournalpost(payload.journalpostId)?.let {
                 fordeler.fordel(it)
             }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")  // TODO hva gjør vi her?
         }.getOrElse { throw FordelingException(cause =  it) }

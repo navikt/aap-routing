@@ -19,9 +19,9 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
     fun journalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
 
-    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String, enhetNr: String)  =
+    fun oppdaterOgFerdigstill(journalpost: Journalpost, saksNr: String)  =
         with(journalpost) {
-            oppdater(journalpostId, oppdateringsData(saksNr,enhetNr))
+            oppdater(journalpostId, oppdateringsData(saksNr))
             ferdigstill(journalpostId)
         }
     fun oppdater(journalpostId: String, data: OppdaterForespørsel) =

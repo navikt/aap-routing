@@ -5,6 +5,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.util.Constants
+import no.nav.aap.util.Constants.AAP
 
 data class JournalpostDTO(
         val tittel: String?,
@@ -52,7 +53,7 @@ data class JournalpostDTO(
         }
     }
 
-    data class OppdaterForespørsel(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak, val tema: String = Constants.AAP.uppercase()) {
+    data class OppdaterForespørsel(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak, val tema: String = AAP.uppercase()) {
 
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }

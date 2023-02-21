@@ -1,8 +1,8 @@
 package no.nav.aap.fordeling.navorganisasjon
 
 import com.github.benmanes.caffeine.cache.RemovalListener
-import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.LoggerUtil
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.egenansatt
 
-import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
+import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties

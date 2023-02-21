@@ -1,9 +1,9 @@
 package no.nav.aap.fordeling.navorganisasjon
 
 import java.net.URI
+import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty

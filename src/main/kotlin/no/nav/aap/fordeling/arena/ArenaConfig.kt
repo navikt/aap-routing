@@ -1,9 +1,9 @@
 package no.nav.aap.fordeling.arena
 
 import java.net.URI
+import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
-import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.context.properties.bind.DefaultValue

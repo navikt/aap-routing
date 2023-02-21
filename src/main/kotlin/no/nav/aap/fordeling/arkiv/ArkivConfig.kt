@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
 import java.net.URI
-import no.nav.aap.fordeling.person.PDLConfig.Companion.DEFAULT_PING_PATH
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import no.nav.aap.util.Constants.JOARK

@@ -2,10 +2,10 @@ package no.nav.aap.fordeling.navorganisasjon
 
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.arkiv.FordelingException
-import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus.*

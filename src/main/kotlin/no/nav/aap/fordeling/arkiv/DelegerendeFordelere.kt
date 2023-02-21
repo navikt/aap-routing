@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.fordeling.arkiv.Fordeler.Companion
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import org.springframework.stereotype.Component
 

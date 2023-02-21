@@ -6,7 +6,6 @@ import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
-import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 
 @SpringBootApplication

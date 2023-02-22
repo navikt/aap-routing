@@ -21,15 +21,17 @@ object OppgaveDTOs {
 }
 
 fun Journalpost.tilOpprettOppgave(enhetNr: String) =
-    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,"TODO", JOURNALFØRINGSOPPGAVE,enhetNr,"TODO")
+    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel)
+
+
 data class OpprettOppgaveData(
         val aktoerId: String,
         val journalpostId: String,
         val behandlingstema: String?,
-        val behandlingstype: String,
-        val oppgavetype: String,
         val tildeltEnhetsnr: String,
-        val beskrivelse: String,
+        val beskrivelse: String?,
+        val oppgavetype: String = JOURNALFØRINGSOPPGAVE,
+        val behandlingstype: String? = null,
         val tema: String = AAP.uppercase(),
         val prioritet: String = NORMAL_PRIORITET,
         val fristFerdigstillelse: String = frist(),

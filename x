@@ -1,4 +1,4 @@
-Name:         skjermede-personer-pip
+ame:         skjermede-personer-pip
 Namespace:    nom
 Labels:       team=nom
 Annotations:  deploy.nais.io/client-version: 2023-01-25-b8772a4

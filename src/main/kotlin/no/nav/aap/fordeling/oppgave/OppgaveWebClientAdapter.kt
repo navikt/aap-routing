@@ -18,7 +18,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         .retrieve()
         .bodyToMono<Boolean>()
         .retryWhen(cf.retrySpec(log))
-        .doOnSuccess { log.info("Opgave oppslag $it") }
+        .doOnSuccess { log.info("Oppgave oppslag $it") }
         .doOnError { t: Throwable -> log.warn("Oppgave oppslag feilet", t) }
         .block() ?: throw IntegrationException("Null respons fra oppslag oppgave")
 }

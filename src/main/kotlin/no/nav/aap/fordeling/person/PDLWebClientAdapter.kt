@@ -37,8 +37,3 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
         private const val GT_QUERY = "query-gt.graphql"
     }
 }
-@Component
-class PDLClient(private val adapter: PDLWebClientAdapter) {
-    fun geoTilknytning(fnr: Fødselsnummer) = adapter.geoTilknytning(fnr) ?: throw IllegalArgumentException("Ingen GT")
-    fun diskresjonskode(fnr: Fødselsnummer) = adapter.diskresjonskode(fnr)
-}

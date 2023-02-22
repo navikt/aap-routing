@@ -22,9 +22,3 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         .doOnError { t: Throwable -> log.warn("Oppgave oppslag feilet", t) }
         .block() ?: throw IntegrationException("Null respons fra oppslag oppgave")
 }
-
-@Component
-class OppgaveClient(private val a: OppgaveWebClientAdapter) {
-    fun harOppgave(journalpostId: String) = a.harOppgave(journalpostId)
-
-}

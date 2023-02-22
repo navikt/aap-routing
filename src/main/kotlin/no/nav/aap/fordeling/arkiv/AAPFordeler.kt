@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.arkiv
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
+import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
@@ -11,7 +12,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPFordeler(private val integrasjoner: Integrasjoner,private val manuell: AAPManuellFordeler) : Fordeler {
+class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeler) : Fordeler {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)

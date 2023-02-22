@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArenaClient(private val a: ArenaWebClientAdapter) {
-    fun harAktivSak(jp: Journalpost) = nyesteAktiveSak(jp) != null
-    fun opprettOppgave(jp: Journalpost, enhet: NavEnhet) = a.opprettArenaOppgave(jp,enhet)
-    fun nyesteAktiveSak(jp: Journalpost) = a.nyesteArenaSak(jp.fnr)
+    fun harAktivSak(journalpost: Journalpost) = nyesteAktiveSak(journalpost) != null
+    fun opprettOppgave(journalpost: Journalpost, enhet: NavEnhet) = a.opprettArenaOppgave(journalpost,enhet)
+    fun nyesteAktiveSak(journalpost: Journalpost) = a.nyesteArenaSak(journalpost.fnr)
 }

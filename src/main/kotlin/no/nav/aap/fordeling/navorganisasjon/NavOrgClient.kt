@@ -4,9 +4,9 @@ import no.nav.aap.fordeling.person.Diskresjonskode
 import org.springframework.stereotype.Component
 
 @Component
-class NavOrgClient(private val adapter: NavOrgWebClientAdapter) {
+class NavOrgClient(private val a: NavOrgWebClientAdapter) {
     fun navEnhet(område: String, skjermet: Boolean, kode: Diskresjonskode) =
-        adapter.navEnhet(EnhetsKriteria(område, skjermet, kode),adapter.aktiveEnheter())
+        a.navEnhet(EnhetsKriteria(område, skjermet, kode),a.aktiveEnheter())
 
-    fun erAktiv(enhetNr: String) = adapter.aktiveEnheter().any { it.enhetNr == enhetNr }
+    fun erAktiv(enhetNr: String) = a.aktiveEnheter().any { it.enhetNr == enhetNr }
 }

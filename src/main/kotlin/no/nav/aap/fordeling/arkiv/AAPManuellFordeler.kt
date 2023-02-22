@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
+import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil

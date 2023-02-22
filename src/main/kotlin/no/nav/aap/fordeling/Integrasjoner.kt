@@ -1,6 +1,7 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling
 
 import no.nav.aap.fordeling.arena.ArenaClient
+import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient

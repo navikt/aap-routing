@@ -18,7 +18,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, val cf: ArkivConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
-    fun hentJournalpost(journalpost: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpost.asIdent())?.tilJournalpost()
+    fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdaterJournalpostForespørsel) =
         with(journalpostId) {

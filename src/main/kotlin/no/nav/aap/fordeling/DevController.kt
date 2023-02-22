@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.Integrasjoner
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
 import no.nav.security.token.support.spring.UnprotectedRestController
 import org.springframework.web.bind.annotation.GetMapping

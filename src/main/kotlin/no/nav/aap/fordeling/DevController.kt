@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam
 @UnprotectedRestController(value = ["/dev"])
 class DevController(private val arkiv: ArkivWebClientAdapter, private val integrassjoner: Integrasjoner) {
     @PostMapping("oppdaterogferdigstill")
-    fun oppdaterOgFerdigstill(@RequestBody  data: OppdaterJournalpostForespørsel, @RequestParam id: String) = arkiv.oppdaterOgFerdigstillJournalpost(id,data)
+    fun oppdaterOgFerdigstill(@RequestBody  data: OppdaterJournalpostForespørsel, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
 
     @GetMapping("haroppgave")
-    fun harOppgave(@RequestParam id: String) = integrassjoner.oppgave.harOppgave(id)
+    fun harOppgave(@RequestParam journalpostId: String) = integrassjoner.oppgave.harOppgave(journalpostId)
 }

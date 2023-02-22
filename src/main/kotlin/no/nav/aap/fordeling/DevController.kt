@@ -20,9 +20,6 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val oppgav
     @GetMapping("haroppgave")
     fun harOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
 
-    @GetMapping("idnter")
-    fun identer(@RequestParam fnr: Fødselsnummer) = pdl.aktørId(fnr)
-
     @PostMapping("opprettpppgave")
     fun tilManuellJournalføring(@RequestBody data: OpprettOppgaveData) = oppgave.opprettManuellJournalføringsOppgave(data)
 }

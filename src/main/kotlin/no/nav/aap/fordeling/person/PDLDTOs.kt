@@ -22,8 +22,6 @@ data class PDLGeoTilknytning(val gtType: PDLGeoType?, val gtKommune: String?, va
     }
 }
 
-data class AktørId(@JsonValue val aktoerId: String)
-
 enum class Diskresjonskode { SPFO, SPSF, ANY}
 
 data class PDLAdressebeskyttelse(val adressebeskyttelse: List<PDLGradering>)  {

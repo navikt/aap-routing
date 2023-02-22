@@ -25,7 +25,7 @@ fun Journalpost.tilOpprettOppgave(enhetNr: String) =
 
 
 data class OpprettOppgaveData(
-        val aktoerId: String,
+        val personident: String,
         val journalpostId: String,
         val behandlingstema: String?,
         val tildeltEnhetsnr: String,

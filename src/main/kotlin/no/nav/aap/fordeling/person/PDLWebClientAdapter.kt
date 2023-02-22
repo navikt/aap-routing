@@ -26,6 +26,8 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
 
     fun diskresjonskode(fnr: Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
+    fun identer(fnr: Fødselsnummer) = query<Any>(graphQL, IDENT_QUERY, fnr.asIdent())
+
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf("ident" to fnr)
 
@@ -35,5 +37,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
     companion object {
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
+        private const val IDENT_QUERY = "query-ident.graphql"
+
     }
 }

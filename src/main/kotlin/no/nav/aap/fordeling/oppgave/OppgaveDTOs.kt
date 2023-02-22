@@ -21,9 +21,8 @@ object OppgaveDTOs {
 }
 
 fun Journalpost.tilOpprettOppgave(enhetNr: String) =
-    OpprettOppgaveData(fnr,fnr.fnr,journalpostId, behandlingstema,"TODO", JOURNALFØRINGSOPPGAVE,enhetNr,"TODO")
+    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,"TODO", JOURNALFØRINGSOPPGAVE,enhetNr,"TODO")
 data class OpprettOppgaveData(
-        val id: Fødselsnummer,
         val aktoerId: String,
         val journalpostId: String,
         val behandlingstema: String?,
@@ -33,7 +32,6 @@ data class OpprettOppgaveData(
         val beskrivelse: String,
         val tema: String = AAP.uppercase(),
         val prioritet: String = NORMAL_PRIORITET,
-        val isPerson: Boolean = true,
         val fristFerdigstillelse: String = frist(),
         val aktivDato: String = LocalDate.now().toString(),
         val opprettetAvEnhetsnr: String = AUTO_ENHET) {

@@ -42,12 +42,12 @@ data class OpprettOppgaveData(
     companion object {
         private const val NORMAL_PRIORITET = "NORM"
         private const val SISTE_ARBEIDSTIME = 12
-        private fun dagerTilFrist(time: Long) = if (time < SISTE_ARBEIDSTIME) 1 else 2
+        private fun dagerTilFrist(time: Int) = if (time < SISTE_ARBEIDSTIME) 1 else 2
 
         private fun frist() =
             with(now()) {
                  addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
-                        dagerTilFrist(hour.toLong())).toInstant()
+                        dagerTilFrist(hour)).toInstant()
                     .atZone(systemDefault()).toLocalDate()
             }
     }

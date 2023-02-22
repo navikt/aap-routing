@@ -14,7 +14,7 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
 
     override fun tema() = listOf(AAP)
 
-    override fun fordel(journalpost: Journalpost, enhet: NavEnhet): FordelingResultat {
+    override fun fordel(journalpost: Journalpost, enhet: NavEnhet): FordelingResultat =
         with(integrasjoner)  {
             if (oppgave.harOppgave(journalpost.journalpostId)) {
                 log.info("Journalpost ${journalpost.journalpostId} har allerede en oppgave, avslutter manuell fordeling")
@@ -23,10 +23,9 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                 runCatching {
                     oppgave.opprettManuellJournalføringOppgave(journalpost,enhet)
                 }.getOrElse {
-                    oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler
+                    oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
                 }
             }
-            return FordelingResultat(msg ="Manuell")
+             FordelingResultat(msg ="Manuell")
         }
-    }
 }

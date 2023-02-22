@@ -29,10 +29,10 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
             .contentType(APPLICATION_JSON)
             .bodyValue(data)
             .retrieve()
-            .bodyToMono<Any>()// TODO
+            .bodyToMono<Any>()// TODO?
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Opprett manuell journalføringsoppgave $it") }
-            .doOnError { t -> log.warn("Opprett manuell journalføringsoppgave feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra =pprett manuell journalføringsoppgave")
+            .doOnSuccess { log.info("Opprett oppgave $it") }
+            .doOnError { t -> log.warn("Opprett opprett  feilet", t) }
+            .block() ?: throw IntegrationException("Null respons fra opprett oppgave")
 
 }

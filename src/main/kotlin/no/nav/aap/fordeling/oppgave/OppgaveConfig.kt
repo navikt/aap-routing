@@ -31,7 +31,7 @@ class OppgaveConfig(
         private const val OPPGAVETYPE = "oppgavetype"
         private const val JOURNALPOSTID = "journalpostId"
         private const val ÅPEN = "AAPEN"
-        private const val JOURNALFØRINGSOPPGAVE = "JFR"
-        private const val FORDELINGSOPPGAVE = "FDR"
+        const val JOURNALFØRINGSOPPGAVE = "JFR"
+        const val FORDELINGSOPPGAVE = "FDR"
     }
 }

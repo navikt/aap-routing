@@ -22,7 +22,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
             .doOnSuccess { log.info("Skjerming oppslag $it") }
-            .doOnError { t: Throwable -> log.warn("Skjerming oppslag feilet", t) }
+            .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra Skjerming")
 
     private data class Ident(val personident: String)

@@ -14,6 +14,7 @@
 	<name>routing</name>
 	<description>KRUT erstatning</description>
 	<properties>
+		<bekk-nocommons.version>0.12.0</bekk-nocommons.version>
 		<confluent.version>7.3.1</confluent.version>
 		<domain.version>2.0.9</domain.version>
 		<dokumenthåndtering.version>08271806</dokumenthåndtering.version>
@@ -34,6 +35,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>no.bekk.bekkopen</groupId>
+			<artifactId>nocommons</artifactId>
+			<version>${bekk-nocommons.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-common</artifactId>

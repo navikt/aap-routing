@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.oppgave
 
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.TokenExtensions.bearerToken

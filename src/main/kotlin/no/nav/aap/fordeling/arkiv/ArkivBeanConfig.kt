@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
-import org.springframework.kafka.listener.ConsumerRecordRecoverer
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.scheduling.annotation.EnableScheduling

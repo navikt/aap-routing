@@ -1,6 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.arkiv.Fordeler.Companion.INGEN_FORDELER
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,7 +13,7 @@ class DelegerendeFordeler(private val cfg: FordelerKonfig, private val fordelere
 @Component
 class DelegerendeManuellFordeler(private val fordelere: List<ManuellFordeler>) : ManuellFordeler {
     override fun tema() = fordelere.map(Fordeler::tema).flatten()
-    override fun fordel(journalpost: Journalpost): FordelingResultat = fordelere.find { journalpost.tema in it.tema() }?.let {
+    override fun fordel(journalpost: Journalpost) = fordelere.find { journalpost.tema in it.tema() }?.let {
         it.fordel(journalpost)
-    } ?: Fordeler.INGEN_FORDELER.fordel(journalpost)
+    } ?: INGEN_FORDELER.fordel(journalpost)
 }

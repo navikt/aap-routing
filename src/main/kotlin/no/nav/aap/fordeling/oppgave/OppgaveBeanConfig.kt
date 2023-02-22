@@ -29,9 +29,9 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveClientCredentialFilterFunction(cfgs: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun oppgaveClientCredentialFilterFunction(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         ExchangeFilterFunction { req, next ->
-            next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(cfgs.registration[OPPGAVE], req.url())).build())
+            next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(cfg.registration[OPPGAVE], req.url())).build())
         }
 
     @Bean

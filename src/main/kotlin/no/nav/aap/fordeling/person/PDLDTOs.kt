@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.person
 
+import com.fasterxml.jackson.annotation.JsonValue
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.Diskresjonskode.SPFO
 import no.nav.aap.fordeling.person.Diskresjonskode.SPSF
@@ -20,6 +21,8 @@ data class PDLGeoTilknytning(val gtType: PDLGeoType?, val gtKommune: String?, va
         else -> gtType?.name
     }
 }
+
+data class AktørId(@JsonValue val aktoerId: String)
 
 enum class Diskresjonskode { SPFO, SPSF, ANY}
 

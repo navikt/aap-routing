@@ -3,7 +3,6 @@ package no.nav.aap.fordeling
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
-import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OpprettOppgaveData
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
@@ -22,7 +21,7 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val oppgav
     fun harOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
 
     @GetMapping("idnter")
-    fun identer(@RequestParam fnr: Fødselsnummer) = pdl.identer(fnr)
+    fun identer(@RequestParam fnr: Fødselsnummer) = pdl.aktørId(fnr)
 
     @PostMapping("opprettpppgave")
     fun tilManuellJournalføring(@RequestBody data: OpprettOppgaveData) = oppgave.opprettManuellJournalføringsOppgave(data)

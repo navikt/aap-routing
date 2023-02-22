@@ -23,7 +23,7 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                 runCatching {
                     oppgave.opprettManuellJournalføringOppgave(journalpost,enhet)
                 }.getOrElse {
-                    oppgave.opprettFordelingoppgave(journalpost)
+                    oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler
                 }
             }
             return FordelingResultat(msg ="Manuell")

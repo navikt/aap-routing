@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.oppgave
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalDateTime.*
 import java.time.ZoneId.*
 import java.util.*
 import no.bekk.bekkopen.date.NorwegianDateUtil.*
@@ -20,22 +21,22 @@ object OppgaveDTOs {
     }
 }
 
-fun Journalpost.tilOpprettOppgave(enhetNr: String) =
-    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel)
+fun Journalpost.tilOpprettOppgave(oppgaveType: String,enhetNr: String? = null) =
+    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel,oppgaveType)
 
 
 data class OpprettOppgaveData(
         val personident: String,
         val journalpostId: String,
         val behandlingstema: String?,
-        val tildeltEnhetsnr: String,
+        val tildeltEnhetsnr: String?,
         val beskrivelse: String?,
-        val oppgavetype: String = JOURNALFØRINGSOPPGAVE,
+        val oppgavetype: String,
         val behandlingstype: String? = null,
         val tema: String = AAP.uppercase(),
         val prioritet: String = NORMAL_PRIORITET,
-        val fristFerdigstillelse: String = frist(),
-        val aktivDato: String = LocalDate.now().toString(),
+        val fristFerdigstillelse: LocalDate = frist(),
+        val aktivDato: LocalDate = LocalDate.now(),
         val opprettetAvEnhetsnr: String = AUTO_ENHET) {
 
     companion object {
@@ -44,10 +45,10 @@ data class OpprettOppgaveData(
         private fun dagerTilFrist(time: Long) = if (time < SISTE_ARBEIDSTIME) 1 else 2
 
         private fun frist() =
-            with(LocalDateTime.now()) {
+            with(now()) {
                  addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
                         dagerTilFrist(hour.toLong())).toInstant()
-                    .atZone(systemDefault()).toLocalDate().toString()
+                    .atZone(systemDefault()).toLocalDate()
             }
     }
 }

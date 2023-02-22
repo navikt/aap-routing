@@ -2,11 +2,14 @@ package no.nav.aap.fordeling.oppgave
 
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
+import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.FORDELINGSOPPGAVE
+import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.JOURNALFØRINGSOPPGAVE
 import org.springframework.stereotype.Component
 
 @Component
 class OppgaveClient(private val a: OppgaveWebClientAdapter) {
     fun harOppgave(journalpostId: String) = a.harOppgave(journalpostId)
-    fun opprettManuellJournalføringOppgave(journalpost: Journalpost, navEnhet: NavEnhet) = a.opprettManuellJournalføringsOppgave(journalpost.tilOpprettOppgave(navEnhet.enhetNr))
+    fun opprettManuellJournalføringOppgave(journalpost: Journalpost, navEnhet: NavEnhet) = a.opprettOppgave(journalpost.tilOpprettOppgave(JOURNALFØRINGSOPPGAVE,navEnhet.enhetNr))
+    fun opprettFordelingOppgave(journalpost: Journalpost) = a.opprettOppgave(journalpost.tilOpprettOppgave(FORDELINGSOPPGAVE))
 
 }

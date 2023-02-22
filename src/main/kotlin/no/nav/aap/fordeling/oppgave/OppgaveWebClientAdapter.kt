@@ -23,7 +23,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         .doOnError { t -> log.warn("Oppgave oppslag feilet", t) }
         .block()?.antallTreffTotalt?.let { it > 0 } ?: throw IntegrationException("Null respons fra opslag oppgave")
 
-    fun opprettManuellJournalføringsOppgave(data: OpprettOppgaveData)  =
+    fun opprettOppgave(data: OpprettOppgaveData)  =
         webClient.post()
             .uri{b -> b.path(cf.oppgavePath).build()}
             .contentType(APPLICATION_JSON)

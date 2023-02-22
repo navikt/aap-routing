@@ -16,52 +16,38 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)
-    override fun fordel(journalpost: Journalpost) =
+    override fun fordel(journalpost: Journalpost, enhet: NavEnhet) =
         runCatching {
             when (val brevkode = journalpost.hovedDokumentBrevkode) {
-                STANDARD.kode -> fordelStandard(journalpost)
-                STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost)
+                STANDARD.kode -> fordelStandard(journalpost,enhet)
+                STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost,enhet)
                 else -> FordelingResultat(msg="$brevkode ikke konfigurert for fordeling for ${tema()}").also {
                     log.info("$brevkode ikke konfigurert for fordeling for ${tema()}")
                 }
             }
         }.getOrElse {
             log.warn("Noe gikk galt under fordeling, prøver manuell",it)
-            manuell.fordel(journalpost)
+            manuell.fordel(journalpost,enhet)
         }
 
-    private fun fordelStandard(journalpost: Journalpost) =
+    private fun fordelStandard(journalpost: Journalpost, enhet: NavEnhet) =
         with(integrasjoner) {
             if (!arena.harAktivSak(journalpost)) {
-                arena.opprettOppgave(journalpost, navEnhet(journalpost)).run {
+                arena.opprettOppgave(journalpost, enhet).run {
                     arkiv.oppdaterOgFerdigstillJournalpost(journalpost, arenaSakId)
                 }
             }
             else {
-                manuell.fordel(journalpost)
+                manuell.fordel(journalpost,enhet)
             }
         }
 
-    private fun fordelEttersending(journalpost: Journalpost) =
+    private fun fordelEttersending(journalpost: Journalpost, enhet: NavEnhet) =
         with(integrasjoner) {
             arena.nyesteAktiveSak(journalpost)?.run {
                 arkiv.oppdaterOgFerdigstillJournalpost(journalpost, this) // 3a/b
-            } ?: manuell.fordel(journalpost)
+            } ?: manuell.fordel(journalpost,enhet)
         }
 
-    private fun navEnhet(journalpost: Journalpost) =
-        with(journalpost) {
-            journalførendeEnhet?.let { enhet ->
-                if (integrasjoner.org.erAktiv(enhet))
-                    NavEnhet(enhet, AKTIV).also { log.info("Journalførende enhet $it er aktiv") }
-                else {
-                    enhetFor(fnr).also { log.info("Enhet ikke aktiv fra GT er $it") }
-                }
-            }?: enhetFor(fnr).also { log.info("Enhet ikke satt, fra GT er den $it") }
-        }
 
-    private fun enhetFor(fnr: Fødselsnummer) =
-        with(integrasjoner)  {
-            org.navEnhet(pdl.geoTilknytning(fnr), egen.erSkjermet(fnr), pdl.diskresjonskode(fnr))
-        }
 }

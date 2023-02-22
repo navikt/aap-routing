@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling
 
-import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
 import no.nav.aap.fordeling.oppgave.OppgaveWebClientAdapter
@@ -21,5 +20,5 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val oppgav
     fun harOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
 
     @PostMapping("opprettpppgave")
-    fun tilManuellJournalføring(@RequestBody data: OpprettOppgaveData) = oppgave.opprettManuellJournalføringsOppgave(data)
+    fun tilManuellJournalføring(@RequestBody data: OpprettOppgaveData) = oppgave.opprettOppgave(data)
 }

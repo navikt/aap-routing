@@ -58,8 +58,11 @@ class ArkivBeanConfig {
             })
         }
 
-    @QualifiedBean(JOARK)
+    @QualifiedBean("XXX")
     fun jalla() = "JALLA"
+
+    @Bean
+    fun jalla1(@Qualifier("XXX") j: String) = j
 
     @Bean
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")

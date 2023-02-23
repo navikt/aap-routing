@@ -58,20 +58,7 @@ class ArkivBeanConfig {
             })
         }
 
-    @QualifiedBean("XXX")
-    fun jalla() = "JALLA"
-
-    @Bean
-    fun jalla1(@Qualifier("XXX") j: String) = j
-
     @Bean
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }
-
-@MustBeDocumented
-@Target(ANNOTATION_CLASS, CLASS, AnnotationTarget.FUNCTION)
-@Retention(RUNTIME)
-@Bean
-@Qualifier
-annotation class QualifiedBean(@get: AliasFor(annotation = Qualifier::class, attribute = "value") val value: String)

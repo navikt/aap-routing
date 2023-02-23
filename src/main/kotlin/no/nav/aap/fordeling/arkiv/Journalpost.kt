@@ -5,14 +5,13 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel.Sak
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.RelevantDato
 
 data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer, val bruker: Bruker?, val avsenderMottager: Bruker?,
                        val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>) {
 
-    fun oppdateringsData(saksNr: String) = OppdaterJournalpostForespørsel(tittel, avsenderMottager ?: bruker,bruker, Sak(saksNr))
+    fun oppdateringsData(saksNr: String) = OppdaterJournalpostForespørsel(tittel, avsenderMottager ?: bruker)
 
     val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Brevkode ikke satt"
 }

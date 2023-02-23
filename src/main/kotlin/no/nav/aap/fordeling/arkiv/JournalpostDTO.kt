@@ -52,7 +52,7 @@ data class JournalpostDTO(
         }
     }
 
-    data class OppdaterJournalpostForespørsel(val tittel: String?, val avsenderMottaker: Bruker) {
+    data class OppdaterJournalpostForespørsel(val tittel: String?, val avsenderMottaker: Bruker, val tema: String  = AAP.uppercase()) {
 
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }

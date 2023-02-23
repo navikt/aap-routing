@@ -1,6 +1,9 @@
 package no.nav.aap.fordeling.oppgave
 
+import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
+import no.nav.aap.fordeling.person.PDLConfig
+import no.nav.aap.fordeling.person.PDLConfig.Companion
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -20,18 +23,16 @@ class OppgaveBeanConfig {
 
     @Qualifier(OPPGAVE)
     @Bean
-    fun oppgaveWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveClientCredentialFilterFunction: ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
-            .filter(oppgaveClientCredentialFilterFunction)
+            .filter(oppgaveClientCredentialFlow)
             .build()
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveClientCredentialFilterFunction(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
-        ExchangeFilterFunction { req, next ->
-            next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(cfg.registration[OPPGAVE], req.url())).build())
-        }
+    fun oppgaveClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+        cfg.clientCredentialFlow(service, OPPGAVE)
 
     @Bean
     @ConditionalOnProperty("$OPPGAVE.enabled", havingValue = "true")

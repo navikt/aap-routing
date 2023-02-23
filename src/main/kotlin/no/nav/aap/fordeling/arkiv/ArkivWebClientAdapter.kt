@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterJournalpostForespørsel
@@ -15,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, val cf: ArkivConfig) :
+class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, @Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: ArkivConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
     fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
@@ -28,7 +29,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
         }
 
     private fun oppdaterJournalpost(journalpostId: String, data: OppdaterJournalpostForespørsel) =
-        webClient.put()
+        dokarkiv.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
             .bodyValue(data)
@@ -41,7 +42,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
 
 
      private fun ferdigstillJournalpost(journalpostId: String) =
-        webClient.patch()
+        dokarkiv.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
             .bodyValue(AUTOMATISK_JOURNALFØRING)

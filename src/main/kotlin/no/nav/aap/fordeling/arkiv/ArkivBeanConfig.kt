@@ -5,6 +5,7 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
 import kotlin.annotation.AnnotationTarget.CLASS
+import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.JOARK
@@ -36,7 +37,15 @@ class ArkivBeanConfig {
 
     @Qualifier(JOARK)
     @Bean
-    fun arkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) arkivClientCredentialFlow: ExchangeFilterFunction) =
+    fun arkivGraphQLWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) arkivClientCredentialFlow: ExchangeFilterFunction) =
+        builder
+            .baseUrl("${cfg.baseUri}")
+            .filter(arkivClientCredentialFlow)
+            .build()
+
+    @Qualifier(DOKARKIV)
+    @Bean
+    fun dokarkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) arkivClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.dokarkiv}")
             .filter(arkivClientCredentialFlow)

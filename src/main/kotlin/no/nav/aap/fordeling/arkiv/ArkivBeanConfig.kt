@@ -23,6 +23,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.util.backoff.FixedBackOff
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -30,6 +31,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
+@EnableScheduling
 class ArkivBeanConfig {
 
     @Qualifier(JOARK)

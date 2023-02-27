@@ -21,13 +21,14 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val integr
 
     @PostMapping("ferdigstill")
     fun ferdigstill( @RequestParam journalpostId: String): Any? {
-        kotlin.runCatching {
+        runCatching {
             log.info("Ferdigstilling journalpost $journalpostId")
             return arkiv.ferdigstillJournalpost(journalpostId)
         }.getOrElse{
             log.info("Ferdigstilling feilet")
             throw it
         }
+    }
 
     @GetMapping("haroppgave")
     fun harOppgave(@RequestParam journalpostId: String) = integrassjoner.oppgave.harOppgave(journalpostId)

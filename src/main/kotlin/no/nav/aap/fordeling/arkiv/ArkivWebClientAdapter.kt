@@ -47,8 +47,8 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .contentType(APPLICATION_JSON)
             .bodyValue(AUTOMATISK_JOURNALFØRING)
             .retrieve()
-            .bodyToMono<Any>()
-            .retryWhen(cf.retrySpec(log))
+            .bodyToMono<String>()
+            //.retryWhen(cf.retrySpec(log))
             .doOnSuccess { log.info("Ferdigstilling av journalpost OK (respons $it)") }
             .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
             .block()

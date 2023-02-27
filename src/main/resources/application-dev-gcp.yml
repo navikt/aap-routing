@@ -10,16 +10,10 @@ management:
         shutdown:
             enabled: true
 joark:
-    dokarkiv: https://dokarkiv.${env}-fss-pub.nais.io
     hendelser:
         topic: teamdokumenthandtering.aapen-dok-journalfoering-q1
     scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
-navorg:
-    base-uri: https://norg2.dev-fss-pub.nais.io
-    enabled: true
-arena:
-    enabled: true
-    base-uri: https://aap-fss-proxy.${dev}-fss-pub.nais.io
+
 oppgave:
-    base-uri: https://oppgave-q1.${env}-fss-pub.nais.io
-    scope: api://${env}-fss.oppgavehandtering.oppgave-q1/.default
+    base-uri: https://oppgave-q1.dev-fss-pub.nais.io
+    scope: api://dev-fss.oppgavehandtering.oppgave-q1/.default

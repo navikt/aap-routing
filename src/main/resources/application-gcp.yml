@@ -108,17 +108,19 @@ no.nav:
                             client-jwk: ${azure.app.jwk}
                             client-auth-method: private_key_jwt
 
+navorg:
+    base-uri: https://norg2.${env}-fss-pub.nais.io
+    enabled: true
 egenansatt:
     enabled: true
     base-uri: http://skjermede-personer-pip.nom
     scope: api://${env}-gcp.nom.skjermede-personer-pip/.default
 joark:
+    dokarkiv: https://dokarkiv.${env}-fss-pub.nais.io
     enabled: true
     base-uri: ${saf}
-    scope: api://${env}-fss.teamdokumenthandtering.dokarkiv-q1/.default
 oppgave:
     enabled: true
-
 pdl:
     enabled: true
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql

@@ -27,7 +27,7 @@ enum class Diskresjonskode { SPFO, SPSF, ANY}
 data class PDLAdressebeskyttelse(val adressebeskyttelse: List<PDLGradering>)  {
     fun tilDiskresjonskode() = adressebeskyttelse.firstOrNull() ?.tilDiskresjonskode() ?: ANY
     data class PDLGradering(val gradering: PDLDiskresjonskode)  {
-        fun tilDiskresjonskode() = gradering.tilDiskresjonskode() ?: ANY
+        fun tilDiskresjonskode() = gradering.tilDiskresjonskode()
         enum class PDLDiskresjonskode {
             FORTROLIG,STRENGT_FORTROLIG,STRENGT_FORTROLIG_UTLAND;
 

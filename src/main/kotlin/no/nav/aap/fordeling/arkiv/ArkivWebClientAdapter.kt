@@ -46,7 +46,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
         dokarkiv.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON, TEXT_PLAIN)
+            .accept(APPLICATION_JSON)
             .bodyValue(AUTOMATISK_JOURNALFØRING)
             .retrieve()
             .bodyToMono<String>()

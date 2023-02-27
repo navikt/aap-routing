@@ -28,7 +28,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             FordelingResultat(this,"OK")
         }
 
-    private fun oppdaterJournalpost(journalpostId: String, data: OppdaterForespørsel) =
+     fun oppdaterJournalpost(journalpostId: String, data: OppdaterForespørsel) =
         dokarkiv.put()
             .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)

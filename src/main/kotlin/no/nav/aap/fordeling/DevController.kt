@@ -13,6 +13,8 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val integr
     @PostMapping("oppdaterogferdigstill")
     fun oppdaterOgFerdigstill(@RequestBody  data: OppdaterForespørsel, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
 
+    @PostMapping
+    fun oppdater( @RequestParam journalpostId: String,@RequestBody  data: OppdaterForespørsel) = arkiv.oppdaterJournalpost(journalpostId,data)
     @GetMapping("haroppgave")
     fun harOppgave(@RequestParam journalpostId: String) = integrassjoner.oppgave.harOppgave(journalpostId)
 }

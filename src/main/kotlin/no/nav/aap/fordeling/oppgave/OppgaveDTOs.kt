@@ -26,7 +26,7 @@ fun Journalpost.tilOpprettOppgave(oppgaveType: String,enhetNr: String? = null) =
 data class OpprettOppgaveData(
         val personident: String,
         val journalpostId: String,
-        val behandlingstema: String?, // ab0014
+        val behandlingstema: String?,
         val tildeltEnhetsnr: String?,
         val beskrivelse: String?,
         val oppgavetype: String,

@@ -13,7 +13,7 @@ data class FordelerKonfig(val routing: @NotEmpty Map<String, FordelingProperties
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
         routing[jp.tema]?.let { c ->
-            if (jp.dokumenter.any { it.brevkode in c.brevkoder }) {  //2b kandidat for automatisk jurnalføring
+            if (jp.dokumenter.any { it.brevkode in c.brevkoder }) {  //2b kandidat for automatisk journalføring
                 fordelere.firstOrNull { jp.tema in it.tema() }
             } else {
                 INGEN_FORDELER.also {// 2a TODO må vel kaste exception her?

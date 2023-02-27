@@ -22,6 +22,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
     fun nyesteArenaSak(fnr: Fødselsnummer) =
         webClient.get()
             .uri { b -> b.path(cf.nyesteSakPath).build(fnr.fnr) }
+            .accept(APPLICATION_JSON)
             .retrieve()
             .bodyToMono<String>()
             .retryWhen(cf.retrySpec(log))
@@ -34,8 +35,8 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             webClient.post()
                 .uri { b -> b.path(cf.oppgavePath).build() }
                 .contentType(APPLICATION_JSON)
-                .bodyValue(ArenaOpprettOppgave(fnr,enhet.enhetNr,dokumenter.first().tittel ?: STANDARD.tittel,
-                        dokumenter.drop(1).mapNotNull { it.tittel }))
+                .accept(APPLICATION_JSON)
+                .bodyValue(ArenaOpprettOppgave(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler))
                 .retrieve()
                 .bodyToMono<ArenaOpprettetOppgave>()
                 .doOnSuccess { log.info("Arena opprettet oppgave OK er $it") }

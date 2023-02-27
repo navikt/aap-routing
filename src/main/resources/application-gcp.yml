@@ -118,7 +118,7 @@ egenansatt:
 joark:
     dokarkiv: https://dokarkiv.${env}-fss-pub.nais.io
     enabled: true
-    base-uri: https://saf.${env}-fss-pub.nais.io
+    base-uri: https://saf.${env}-fss-pub.nais.io/graphql
 oppgave:
     enabled: true
 pdl:

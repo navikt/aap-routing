@@ -129,8 +129,6 @@ arena:
 fordeling:
     routing:
        aap:
-          statuser:
-              - MOTTATT
           brevkoder:
              - 'NAV 11-13.05'
              - 'NAVe 11-13.05'

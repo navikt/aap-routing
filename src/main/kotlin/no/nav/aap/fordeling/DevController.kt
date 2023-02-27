@@ -6,6 +6,9 @@ import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.security.token.support.spring.UnprotectedRestController
+import org.springframework.http.MediaType
+import org.springframework.http.MediaType.TEXT_PLAIN
+import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,7 +23,7 @@ class DevController(private val arkiv: ArkivWebClientAdapter, private val oppgav
 
     @PostMapping("oppdater")
     fun oppdater( @RequestParam journalpostId: String,@RequestBody  data: OppdaterForespørsel) = arkiv.oppdaterJournalpost(journalpostId,data)
-    @PostMapping("ferdigstill")
+    @PostMapping("ferdigstill", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstill( @RequestParam journalpostId: String) =
          arkiv.ferdigstillJournalpost(journalpostId)
 

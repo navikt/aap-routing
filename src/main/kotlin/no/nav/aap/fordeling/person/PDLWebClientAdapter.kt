@@ -36,7 +36,5 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
         private const val IDENT = "ident"
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
-        private const val IDENT_QUERY = "query-ident.graphql"
-
     }
 }

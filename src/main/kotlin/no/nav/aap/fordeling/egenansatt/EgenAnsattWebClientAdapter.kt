@@ -21,7 +21,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
             .retrieve()
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Skjerming oppslag $it") }
+            .doOnSuccess { log.info("Skjerming oppslag OK $it") }
             .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra Skjerming")
 

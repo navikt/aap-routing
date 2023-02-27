@@ -19,7 +19,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         .retrieve()
         .bodyToMono<OppgaveRespons>()
         .retryWhen(cf.retrySpec(log))
-        .doOnSuccess { log.info("Oppgave oppslag $it") }
+        .doOnSuccess { log.info("Oppgave oppslag OK $it") }
         .doOnError { t -> log.warn("Oppgave oppslag feilet", t) }
         .block()?.antallTreffTotalt?.let { it > 0 } ?: throw IntegrationException("Null respons fra opslag oppgave")
 
@@ -31,7 +31,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
             .retrieve()
             .bodyToMono<Any>()// TODO?
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Opprett oppgave $it") }
+            .doOnSuccess { log.info("Opprett oppgave OK  $it") }
             .doOnError { t -> log.warn("Opprett opprett  feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra opprett oppgave")
 

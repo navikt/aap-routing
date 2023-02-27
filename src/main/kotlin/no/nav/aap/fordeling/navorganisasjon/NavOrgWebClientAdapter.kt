@@ -26,6 +26,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             .bodyToMono<List<NavOrg>>()
             .retryWhen(cf.retrySpec(log))
             .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
+            .doOnSuccess {log.info("Nav enhet oppslag med $kriterium mot NORG2 OK er $it") }
             .block()
             ?.filterNot(::untatt)
             ?.firstOrNull { it in enheter }
@@ -40,6 +41,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
         .retrieve()
         .bodyToMono<List<NavOrg>>()
         .retryWhen(cf.retrySpec(log))
+        .doOnSuccess {log.info("Aktive enheter oppslag  NORG2 OK fant  ${it.size} innsøag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
         ?: throw IntegrationException("Kunne ikke hente aktive enheter")

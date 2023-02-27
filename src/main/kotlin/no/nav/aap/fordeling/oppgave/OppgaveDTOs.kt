@@ -7,10 +7,8 @@ import java.time.LocalDateTime.*
 import java.time.ZoneId.*
 import java.util.*
 import no.bekk.bekkopen.date.NorwegianDateUtil.*
-import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTO_ENHET
-import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.JOURNALFØRINGSOPPGAVE
 import no.nav.aap.util.Constants.AAP
 
 object OppgaveDTOs {

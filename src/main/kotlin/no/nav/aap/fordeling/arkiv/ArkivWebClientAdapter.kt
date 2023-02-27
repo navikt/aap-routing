@@ -41,7 +41,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .block()
 
 
-     private fun ferdigstillJournalpost(journalpostId: String) =
+    fun ferdigstillJournalpost(journalpostId: String) =
         dokarkiv.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)

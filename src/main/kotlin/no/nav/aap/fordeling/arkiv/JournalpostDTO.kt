@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType.FNR
+import no.nav.aap.util.Constants
 import no.nav.aap.util.Constants.AAP
 
 data class JournalpostDTO(
@@ -52,18 +53,18 @@ data class JournalpostDTO(
         }
     }
 
-    data class OppdaterJournalpostForespørsel(val tittel: String?, val avsenderMottaker: Bruker, val tema: String  = AAP.uppercase()) {
+    data class OppdaterForespørsel(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak, val tema: String = AAP.uppercase()) {
 
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }
 
     data class JournalførendeEnhet private constructor(val journalfoerendeEnhet: String) {
         companion object {
-            const val AUTO_ENHET = "9999"
+            private const val AUTO_ENHET = "9999"
             val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
         }
     }
-    data class OppdaterJournalpostRespons(val journalpostId: String)
+    data class OppdaterRespons(val journalpostId: String)
 
     data class Bruker(val id: String, val idType: BrukerType = FNR)
 

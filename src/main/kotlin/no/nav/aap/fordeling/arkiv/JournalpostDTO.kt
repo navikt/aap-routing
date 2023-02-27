@@ -60,7 +60,7 @@ data class JournalpostDTO(
 
     data class JournalførendeEnhet private constructor(val journalfoerendeEnhet: String) {
         companion object {
-            private const val AUTO_ENHET = "9999"
+            const val AUTO_ENHET = "9999"
             val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
         }
     }

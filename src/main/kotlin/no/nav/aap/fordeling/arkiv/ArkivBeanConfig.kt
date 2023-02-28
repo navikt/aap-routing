@@ -113,13 +113,18 @@ class ArkivBeanConfig {
         override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
             return if (properties.isMainEndpoint) {
                 log.info("IS MAIN")
-                SuffixingRetryTopicNamesProvider(properties)
+                object : SuffixingRetryTopicNamesProvider(properties) {
+                    override fun getTopicName(topic: String): String {
+                        log.info("IS MAIN ${super.getTopicName(topic)}")
+                        return "aap.routing-retry"
+                    }
+                }
             }
             else {
                 object : SuffixingRetryTopicNamesProvider(properties) {
                     override fun getTopicName(topic: String): String {
                         log.info("NOT IS MAIN ${super.getTopicName(topic)}")
-                        return "my-prefix-" + super.getTopicName(topic)
+                        return "aap.routingdlt"
                     }
                 }
             }

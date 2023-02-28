@@ -82,29 +82,6 @@ class ArkivBeanConfig {
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
-    fun retryTopicNamesProvider() = object : RetryTopicNamesProvider {
-        override fun getEndpointId(p0: KafkaListenerEndpoint): String {
-            TODO("Not yet implemented")
-        }
-
-        override fun getGroupId(p0: KafkaListenerEndpoint): String {
-            TODO("Not yet implemented")
-        }
-
-        override fun getClientIdPrefix(p0: KafkaListenerEndpoint): String {
-            TODO("Not yet implemented")
-        }
-
-        override fun getGroup(p0: KafkaListenerEndpoint): String {
-            TODO("Not yet implemented")
-        }
-
-        override fun getTopicName(p0: String): String {
-            TODO("Not yet implemented")
-        }
-    }
-
-
     @Component
     class CustomRetryTopicNamesProviderFactory : RetryTopicNamesProviderFactory {
 

@@ -13,6 +13,8 @@ joark:
     hendelser:
         topic: teamdokumenthandtering.aapen-dok-journalfoering-q1
     scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
+    dokarkivscope: api://dev-fss.dokarkiv-q1/.default
+
 
 oppgave:
     base-uri: https://oppgave-q1.dev-fss-pub.nais.io

@@ -49,7 +49,7 @@ class ArkivBeanConfig {
 
     @Qualifier(DOKARKIV)
     @Bean
-    fun dokarkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(JOARK) arkivClientCredentialFlow: ExchangeFilterFunction) =
+    fun dokarkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(DOKARKIV) arkivClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.dokarkiv}")
             .filter(arkivClientCredentialFlow)
@@ -58,6 +58,10 @@ class ArkivBeanConfig {
     @Qualifier(JOARK)
     @Bean
     fun arkivGraphQLClient(@Qualifier(JOARK) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
+
+    @Bean
+    @Qualifier(DOKARKIV)
+    fun dokarkivClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, DOKARKIV)
 
     @Bean
     @Qualifier(JOARK)

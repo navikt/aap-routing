@@ -36,6 +36,10 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>no.bekk.bekkopen</groupId>
 			<artifactId>nocommons</artifactId>
 			<version>${bekk-nocommons.version}</version>

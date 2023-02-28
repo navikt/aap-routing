@@ -17,7 +17,6 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
     val log = getLogger(javaClass)
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @KafkaHandler
     @RetryableTopic(backoff = Backoff(value = 3000L),
             attempts = "5",
             autoCreateTopics = "true",

@@ -7,6 +7,8 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.util.LoggerUtil
+import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -17,10 +19,16 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+import org.springframework.kafka.config.KafkaListenerEndpoint
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.DefaultErrorHandler
+import org.springframework.kafka.retrytopic.DestinationTopic.Properties
+import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
+import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider
+import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.stereotype.Component
 import org.springframework.util.backoff.FixedBackOff
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
@@ -73,4 +81,48 @@ class ArkivBeanConfig {
     @Bean
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+
+    fun retryTopicNamesProvider() = object : RetryTopicNamesProvider {
+        override fun getEndpointId(p0: KafkaListenerEndpoint): String {
+            TODO("Not yet implemented")
+        }
+
+        override fun getGroupId(p0: KafkaListenerEndpoint): String {
+            TODO("Not yet implemented")
+        }
+
+        override fun getClientIdPrefix(p0: KafkaListenerEndpoint): String {
+            TODO("Not yet implemented")
+        }
+
+        override fun getGroup(p0: KafkaListenerEndpoint): String {
+            TODO("Not yet implemented")
+        }
+
+        override fun getTopicName(p0: String): String {
+            TODO("Not yet implemented")
+        }
+    }
+
+
+    @Component
+    class CustomRetryTopicNamesProviderFactory : RetryTopicNamesProviderFactory {
+
+        val log = getLogger(javaClass)
+
+        override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
+            return if (properties.isMainEndpoint) {
+                log.info("IS MAIN")
+                SuffixingRetryTopicNamesProvider(properties)
+            }
+            else {
+                object : SuffixingRetryTopicNamesProvider(properties) {
+                    override fun getTopicName(topic: String): String {
+                        log.info("NOT IS MAIN ${super.getTopicName(topic)}")
+                        return "my-prefix-" + super.getTopicName(topic)
+                    }
+                }
+            }
+        }
+    }
 }

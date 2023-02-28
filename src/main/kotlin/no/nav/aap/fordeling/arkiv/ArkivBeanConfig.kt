@@ -49,10 +49,10 @@ class ArkivBeanConfig {
 
     @Qualifier(DOKARKIV)
     @Bean
-    fun dokarkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(DOKARKIV) arkivClientCredentialFlow: ExchangeFilterFunction) =
+    fun dokarkivWebClient(builder: Builder, cfg: ArkivConfig, @Qualifier(DOKARKIV) dokarkivClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.dokarkiv}")
-            .filter(arkivClientCredentialFlow)
+            .filter(dokarkivClientCredentialFlow)
             .build()
 
     @Qualifier(JOARK)

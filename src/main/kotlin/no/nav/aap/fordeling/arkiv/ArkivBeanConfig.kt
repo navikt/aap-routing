@@ -92,7 +92,7 @@ class ArkivBeanConfig {
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean
-    fun providerFactory(): RetryTopicNamesProviderFactory? {
+    fun providerFactory(): RetryTopicNamesProviderFactory {
         return object : SuffixingRetryTopicNamesProviderFactory() {
             override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
                 return if (properties.isDltTopic) {

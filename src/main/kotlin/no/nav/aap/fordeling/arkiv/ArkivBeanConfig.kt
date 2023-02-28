@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
@@ -29,11 +28,10 @@ import org.springframework.kafka.retrytopic.RetryTopicConfiguration
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationBuilder
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider
-import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
+import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.stereotype.Component
 import org.springframework.util.backoff.FixedBackOff
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
@@ -93,44 +91,19 @@ class ArkivBeanConfig {
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
-
-}
-@Component
-class MyTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
-
-    override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-        if (p.isDltTopic) {
-            return object : SuffixingRetryTopicNamesProvider(p) {
-                override fun getTopicName(topic: String): String {
-                    return "aap.routing.dlt"
+    @Bean
+    fun providerFactory(): RetryTopicNamesProviderFactory? {
+        return object : SuffixingRetryTopicNamesProviderFactory() {
+            override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
+                return if (properties.isDltTopic) {
+                    object : SuffixingRetryTopicNamesProvider(properties) {
+                        override fun getTopicName(topic: String): String {
+                            return "aap.routing.dlt"
+                        }
+                    }
                 }
+                else super.createRetryTopicNamesProvider(properties)
             }
         }
-        if (!p.isMainEndpoint && !p.isDltTopic)
-            return object : SuffixingRetryTopicNamesProvider(p) {
-                override fun getTopicName(topic: String): String {
-                    return "aap.routing.retry"
-                }
-            }
-        return SuffixingRetryTopicNamesProvider(p)
     }
-}
-
-@Bean
-fun myRetryTopicConfig(props: KafkaProperties, factory: ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>, template: KafkaTemplate<String, JournalfoeringHendelseRecord>): RetryTopicConfiguration?{
-    val cfg = props.retry.topic
-    val backoff = FixedBackOff(cfg.delay.toMillis(), cfg.attempts.toLong())
-    return RetryTopicConfigurationBuilder
-        .newInstance()
-        // .autoCreateTopics(false,2,2)
-        .doNotAutoCreateRetryTopics()
-        .fixedBackOff(backoff.interval)
-        .maxAttempts(Math.toIntExact(backoff.maxAttempts))
-        .useSingleTopicForFixedDelays()
-        // .retryTopicSuffix(".retry")
-        //.dltSuffix(".dlt")
-
-        .doNotRetryOnDltFailure()
-        .listenerFactory(factory)
-        .create(template)
 }

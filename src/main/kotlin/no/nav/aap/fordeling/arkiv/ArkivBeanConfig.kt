@@ -7,7 +7,6 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.JOARK
-import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -27,6 +26,7 @@ import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider
 import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
+import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
 import org.springframework.util.backoff.FixedBackOff
@@ -36,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 @EnableScheduling
+@EnableRetry
 class ArkivBeanConfig {
 
     @Qualifier(JOARK)
@@ -88,23 +89,18 @@ class ArkivBeanConfig {
         val log = getLogger(javaClass)
 
         override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
-            return if (properties.isMainEndpoint) {
-                log.info("IS MAIN")
-                object : SuffixingRetryTopicNamesProvider(properties) {
-                    override fun getTopicName(topic: String): String {
-                        log.info("IS MAIN ${super.getTopicName(topic)}")
-                        return "aap.routing-retry"
-                    }
-                }
-            }
-            else {
-                object : SuffixingRetryTopicNamesProvider(properties) {
-                    override fun getTopicName(topic: String): String {
-                        log.info("NOT IS MAIN ${super.getTopicName(topic)}")
-                        return "aap.routingdlt"
-                    }
-                }
-            }
+            return MyTopicNameProvider()
         }
+    }
+    class MyTopicNameProvider : RetryTopicNamesProvider {
+        override fun getEndpointId(endpoint: KafkaListenerEndpoint) = endpoint.id!!
+
+        override fun getGroupId(endpoint: KafkaListenerEndpoint) = endpoint.groupId!!
+
+        override fun getClientIdPrefix(endpoint: KafkaListenerEndpoint) = endpoint.clientIdPrefix!!
+
+        override fun getGroup(endpoint: KafkaListenerEndpoint) = endpoint.group!!
+
+        override fun getTopicName(endpoint: String) = "aap.jalla"
     }
 }

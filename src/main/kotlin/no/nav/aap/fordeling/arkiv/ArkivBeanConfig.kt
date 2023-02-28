@@ -91,43 +91,43 @@ class ArkivBeanConfig {
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
-    @Component
-    class TopicNamingProviderFactory : RetryTopicNamesProviderFactory {
 
-        override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-            if (p.isMainEndpoint) {
-                return SuffixingRetryTopicNamesProvider(p)
-            }
-            if (p.isDltTopic) {
-                return object : SuffixingRetryTopicNamesProvider(p) {
-                    override fun getTopicName(topic: String): String {
-                        return "aap.routing.dlt"
-                    }
+}
+@Component
+class MyTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
+
+    override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+        if (p.isDltTopic) {
+            return object : SuffixingRetryTopicNamesProvider(p) {
+                override fun getTopicName(topic: String): String {
+                    return "aap.routing.dlt"
                 }
             }
+        }
+        if (!p.isMainEndpoint && !p.isDltTopic)
             return object : SuffixingRetryTopicNamesProvider(p) {
                 override fun getTopicName(topic: String): String {
                     return "aap.routing.retry"
                 }
             }
-        }
     }
+}
 
-    @Bean
-    fun retryTopicConfig(props: KafkaProperties, factory: ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>, template: KafkaTemplate<String, JournalfoeringHendelseRecord>): RetryTopicConfiguration?{
-        val cfg = props.retry.topic
-        val backoff = FixedBackOff(cfg.delay.toMillis(), cfg.attempts.toLong())
-        return RetryTopicConfigurationBuilder
-            .newInstance()
-           // .autoCreateTopics(false,2,2)
-            .doNotAutoCreateRetryTopics()
-            .fixedBackOff(backoff.interval)
-            .maxAttempts(Math.toIntExact(backoff.maxAttempts))
-            .useSingleTopicForFixedDelays()
-           // .retryTopicSuffix(".retry")
-            //.dltSuffix(".dlt")
-            .doNotRetryOnDltFailure()
-            .listenerFactory(factory)
-            .create(template)
-    }
+@Bean
+fun myRetryTopicConfig(props: KafkaProperties, factory: ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>, template: KafkaTemplate<String, JournalfoeringHendelseRecord>): RetryTopicConfiguration?{
+    val cfg = props.retry.topic
+    val backoff = FixedBackOff(cfg.delay.toMillis(), cfg.attempts.toLong())
+    return RetryTopicConfigurationBuilder
+        .newInstance()
+        // .autoCreateTopics(false,2,2)
+        .doNotAutoCreateRetryTopics()
+        .fixedBackOff(backoff.interval)
+        .maxAttempts(Math.toIntExact(backoff.maxAttempts))
+        .useSingleTopicForFixedDelays()
+        // .retryTopicSuffix(".retry")
+        //.dltSuffix(".dlt")
+
+        .doNotRetryOnDltFailure()
+        .listenerFactory(factory)
+        .create(template)
 }

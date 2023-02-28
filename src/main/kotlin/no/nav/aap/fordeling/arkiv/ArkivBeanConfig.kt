@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -41,6 +42,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 @EnableScheduling
 @EnableRetry
+@EnableKafkaRetryTopic
 class ArkivBeanConfig {
 
     @Qualifier(JOARK)

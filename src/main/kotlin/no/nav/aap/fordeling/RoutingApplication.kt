@@ -9,7 +9,6 @@ import org.springframework.boot.runApplication
 import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 
 @SpringBootApplication
-@EnableKafkaRetryTopic
 @ConfigurationPropertiesScan
 @EnableOAuth2Client(cacheEnabled = true)
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])

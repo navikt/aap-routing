@@ -33,6 +33,11 @@ spring:
             enabled: false
     kafka:
         bootstrap-servers: ${kafka.brokers}
+        retry:
+            topic:
+                enabled: true
+                attempts: 3
+                delay: 2000
         properties:
             basic:
                 auth:

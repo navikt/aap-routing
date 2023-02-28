@@ -13,7 +13,9 @@ jobs:
     strategy:
       matrix:
         cluster: [ dev-gcp, prod-gcp ]
-    name: Deploy DLT til ${{matrix.cluster}}
+        topic: [ dlt,retry ]
+
+    name: Deploy ${{matrix.topic}} til ${{matrix.cluster}}
     runs-on: ubuntu-latest
     environment: ${{matrix.cluster}}:aap
     env:
@@ -21,11 +23,11 @@ jobs:
       APIKEY: ${{secrets.NAIS_DEPLOY_APIKEY}}
     steps:
       -   uses: actions/checkout@v3
-      -   name: deploy dlt to ${{matrix.cluster}}
+      -   name: deploy ${{matrix.topic} to ${{matrix.cluster}}
           uses: nais/deploy/actions/deploy@v1
           env:
             APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
             CLUSTER: ${{matrix.cluster}}
-            RESOURCE: dlt/topic.yaml
-            VARS: dlt/${{matrix.cluster}}.yaml
+            RESOURCE: ${{matrix.topic}/topic.yaml
+            VARS: ${{matrix.topic}/${{matrix.cluster}}.yaml
             PRINT_PAYLOAD: true

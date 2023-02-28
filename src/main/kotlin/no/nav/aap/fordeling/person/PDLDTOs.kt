@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.person
 
-import com.fasterxml.jackson.annotation.JsonValue
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.Diskresjonskode.SPFO
 import no.nav.aap.fordeling.person.Diskresjonskode.SPSF

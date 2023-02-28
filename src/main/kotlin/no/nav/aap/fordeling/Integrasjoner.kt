@@ -10,7 +10,6 @@ import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLClient
-import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 

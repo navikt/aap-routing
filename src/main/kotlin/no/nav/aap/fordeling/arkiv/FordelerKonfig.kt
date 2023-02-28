@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.arkiv
 import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.fordeling.arkiv.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.FordelerKonfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 

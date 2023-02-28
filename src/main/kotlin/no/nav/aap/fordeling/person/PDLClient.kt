@@ -4,7 +4,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 import org.springframework.stereotype.Component
 
 @Component
-class PDLClient(private val adapter: PDLWebClientAdapter) {
-    fun geoTilknytning(fnr: Fødselsnummer) = adapter.geoTilknytning(fnr) ?: throw IllegalArgumentException("Ingen GT")
-    fun diskresjonskode(fnr: Fødselsnummer) = adapter.diskresjonskode(fnr)
+class PDLClient(private val a: PDLWebClientAdapter) {
+    fun geoTilknytning(fnr: Fødselsnummer) = a.geoTilknytning(fnr) ?: throw IllegalArgumentException("Ingen GT")
+    fun diskresjonskode(fnr: Fødselsnummer) = a.diskresjonskode(fnr)
 }

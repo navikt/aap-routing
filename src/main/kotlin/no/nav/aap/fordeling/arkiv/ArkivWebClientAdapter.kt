@@ -9,7 +9,6 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
 import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient

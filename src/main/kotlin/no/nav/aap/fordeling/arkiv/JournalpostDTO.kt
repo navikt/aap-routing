@@ -4,7 +4,6 @@ import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.BrukerDTO.BrukerType.FNR
-import no.nav.aap.util.Constants
 import no.nav.aap.util.Constants.AAP
 
 data class JournalpostDTO(

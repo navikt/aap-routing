@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.*
-import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration

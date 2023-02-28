@@ -2,11 +2,10 @@ package no.nav.aap.fordeling.oppgave
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalDateTime.*
-import java.time.ZoneId.*
+import java.time.LocalDateTime.now
+import java.time.ZoneId.systemDefault
 import java.util.*
-import no.bekk.bekkopen.date.NorwegianDateUtil.*
+import no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTO_ENHET
 import no.nav.aap.util.Constants.AAP

@@ -3,12 +3,9 @@ package no.nav.aap.fordeling.person
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
-import no.nav.aap.fordeling.oppgave.OppgaveConfig
-import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.temaFilterFunction
-import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.springframework.beans.factory.annotation.Qualifier

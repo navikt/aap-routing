@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import org.springframework.stereotype.Component
 
 @Component

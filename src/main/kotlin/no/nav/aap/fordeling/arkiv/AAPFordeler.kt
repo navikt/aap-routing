@@ -1,11 +1,9 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger

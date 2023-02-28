@@ -4,7 +4,6 @@ import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.util.Constants.AAP
-import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 

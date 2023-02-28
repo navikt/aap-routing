@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam
 class DevController(private val pdl: PDLWebClientAdapter, private val egen: EgenAnsattClient, private val arkiv: ArkivWebClientAdapter, private val oppgave: OppgaveClient, private val arena: ArenaWebClientAdapter, private val org: NavOrgWebClientAdapter) {
 
     private val log = getLogger(javaClass)
-    @PostMapping("oppdaterogferdigstillJournalpost")
+    @PostMapping("oppdaterogferdigstilljournalpost")
     fun oppdaterOgFerdigstillJournalpost(@RequestBody  data: OppdaterForespørsel, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
 
-    @PostMapping("oppdater")
+    @PostMapping("oppdaterjournalpost")
     fun oppdaterJournalpost( @RequestParam journalpostId: String,@RequestBody  data: OppdaterForespørsel) = arkiv.oppdaterJournalpost(journalpostId,data)
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost( @RequestParam journalpostId: String) =
@@ -50,5 +50,4 @@ class DevController(private val pdl: PDLWebClientAdapter, private val egen: Egen
 
     @PostMapping("opprettarenaoppgave")
     fun arenaOpprettOppgave(@RequestBody  data: ArenaOpprettOppgaveData) = arena.opprettArenaOppgave(data)
-
 }

@@ -110,6 +110,7 @@ class MyTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
                     return "aap.routing.retry"
                 }
             }
+        return SuffixingRetryTopicNamesProvider(p)
     }
 }
 

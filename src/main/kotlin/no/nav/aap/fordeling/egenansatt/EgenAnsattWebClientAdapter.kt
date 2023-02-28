@@ -17,11 +17,12 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
         fun erSkjermet(fnr: String) = webClient.post()
             .uri { b -> b.path(cf.path).build() }
             .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
             .bodyValue(Ident(fnr))
             .retrieve()
             .bodyToMono<Boolean>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Skjerming oppslag OK $it") }
+            .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
             .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
             .block() ?: throw IntegrationException("Null respons fra Skjerming")
 

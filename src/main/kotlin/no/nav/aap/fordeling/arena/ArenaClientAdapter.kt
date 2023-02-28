@@ -26,7 +26,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .retrieve()
             .bodyToMono<String>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Arena oppslag OK. nyeste aktive sak for $fnr er $it") }
+            .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
             .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet", t) }
             .block()
 
@@ -39,7 +39,8 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .bodyValue(ArenaOpprettOppgave(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler))
                 .retrieve()
                 .bodyToMono<ArenaOpprettetOppgave>()
-                .doOnSuccess { log.info("Arena opprettet oppgave OK er $it") }
+                .retryWhen(cf.retrySpec(log))
+                .doOnSuccess { log.info("Arena opprettet oppgave OK. Respons $it") }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet", t) }
                 .block() ?: throw IntegrationException("Null respons for opprettelse av oppgave")
         }

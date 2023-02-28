@@ -37,7 +37,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .retrieve()
             .bodyToMono<OppdaterRespons>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId med $data OK (respons $it)") }
+            .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId med $data OK. Respons $it") }
             .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId med $data feilet", t) }
             .block()
 
@@ -51,7 +51,7 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             .retrieve()
             .bodyToMono<String>()
             .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Ferdigstilling av journalpost OK (respons $it)") }
+            .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
             .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
             .block()
 

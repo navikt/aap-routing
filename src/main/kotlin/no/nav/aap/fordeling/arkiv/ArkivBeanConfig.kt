@@ -72,7 +72,7 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties,props: FordelerKonfig) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)))
+               // setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)))
                 setRecordFilterStrategy {
                     with (it.value()) {
                          !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)

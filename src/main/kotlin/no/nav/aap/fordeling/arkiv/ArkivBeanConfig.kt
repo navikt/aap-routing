@@ -74,10 +74,7 @@ class ArkivBeanConfig {
                 setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)))
                 setRecordFilterStrategy {
                     with (it.value()) {
-                        log.info("Filter mottok $this")
-                        val status = !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
-                        log.info("Filter status $status")
-                        return@with status
+                         !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
                     }
                 }
             })

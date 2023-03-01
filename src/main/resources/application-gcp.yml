@@ -16,6 +16,8 @@ resilience4j:
                 ignoreExceptions:
                     - no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL
 spring:
+    main:
+        allow-bean-definition-overriding: true
     cache:
         cache-names: navorg
         caffeine:

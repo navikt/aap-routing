@@ -89,6 +89,6 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
-        override fun retryTopicNamesProviderFactory() = CustomTopicNamingProviderFactory()
+        override fun retryTopicNamesProviderFactory() = MyNamespaceTopicNamingProviderFactory()
     }
 }

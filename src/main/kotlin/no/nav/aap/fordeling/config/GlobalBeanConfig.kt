@@ -48,7 +48,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         return OpenAPI()
             .info(Info()
                 .title("AAP routng")
-                .description("Routing ala KRUT")
+                .description("Routing ala KRUT (bare bedre)")
                 .version(p.version)
                 .license(License()
                     .name("MIT")

@@ -26,7 +26,7 @@
 		<resilience4j.version>2.0.2</resilience4j.version>
 		<springdoc.version>2.0.2</springdoc.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
-		<tokensupport.version>3.0.3</tokensupport.version>
+		<tokensupport.version>3.0.4</tokensupport.version>
 	</properties>
 	<repositories>
 		<repository>

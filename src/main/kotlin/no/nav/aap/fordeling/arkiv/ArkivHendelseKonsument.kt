@@ -17,11 +17,12 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
 
     val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}","aap.routing.main"], containerFactory = JOARK)
+    @RetryableTopic(attempts = "3", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(payload: JournalfoeringHendelseRecord)  {
         runCatching {
             log.trace("Mottok hendelse $payload")
+            throw IllegalArgumentException("OOPS TEST")
             with(integrasjoner) {
                 arkiv.hentJournalpost(payload.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
@@ -30,7 +31,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
         }.getOrElse { throw FordelingException(cause =  it) } // TODO tenke gjennom denne
     }
 
-   //@DltHandler
+   @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord)  {
             log.info("Mottok hendelse retry $payload")
     }

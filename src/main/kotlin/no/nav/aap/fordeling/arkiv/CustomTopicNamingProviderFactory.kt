@@ -30,6 +30,4 @@ import org.springframework.stereotype.Component
             override fun getTopicName(topic: String) = "aap.routing.main"
         }
     }
-
-
 }

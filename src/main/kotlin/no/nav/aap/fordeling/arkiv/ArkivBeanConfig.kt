@@ -18,18 +18,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.kafka.annotation.EnableKafkaRetryTopic
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.util.backoff.FixedBackOff
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
@@ -72,7 +69,6 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties,props: FordelerKonfig) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-               // setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)))
                 setRecordFilterStrategy {
                     with (it.value()) {
                          !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
@@ -89,6 +85,6 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
-        override fun retryTopicNamesProviderFactory() = MyNamespaceTopicNamingProviderFactory()
+        override fun retryTopicNamesProviderFactory() = AAPNamespaceTopicNamingProviderFactory()
     }
 }

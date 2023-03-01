@@ -29,7 +29,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
             with(integrasjoner) {
                 arkiv.hentJournalpost(payload.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
-                }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")  // TODO hva gjør vi her?
+                }?: log.warn("Ingen journalpost kunne hentes for id ${payload.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrThrow()
     }

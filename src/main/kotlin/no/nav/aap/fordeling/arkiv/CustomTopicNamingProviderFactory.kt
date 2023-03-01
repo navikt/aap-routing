@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
       override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
           if (p.isDltTopic) {
               return object : SuffixingRetryTopicNamesProvider(p) {
-                  override fun getTopicName(topic: String) = "aap.routing-dlt"
+                  override fun getTopicName(topic: String) = "aap.routing.dlt"
               }
           }
           if (p.isMainEndpoint) {
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component
               }
           }
           return object : SuffixingRetryTopicNamesProvider(p) { // retry
-              override fun getTopicName(topic: String) = "aap.routing-retry"
+              override fun getTopicName(topic: String) = "aap.routing.retry"
           }
       }
 }

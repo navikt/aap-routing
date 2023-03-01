@@ -93,7 +93,7 @@ class ArkivBeanConfig {
 
 
    @Component
-    class TopicNamingProviderFactory : RetryTopicNamesProviderFactory {
+    class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
 
        val log = LoggerUtil.getLogger(javaClass)
 

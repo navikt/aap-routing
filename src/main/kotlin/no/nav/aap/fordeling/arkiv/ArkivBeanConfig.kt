@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.util.LoggerUtil
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -36,6 +37,8 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @EnableRetry
 @EnableKafkaRetryTopic
 class ArkivBeanConfig {
+
+    private val log = LoggerUtil.getLogger(ArkivBeanConfig::class.java)
 
     @Qualifier(JOARK)
     @Bean
@@ -71,7 +74,10 @@ class ArkivBeanConfig {
                 setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)).apply {
                     setRecordFilterStrategy {
                         with (it.value()) {
-                            !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
+                            log.info("Filter mottok $this")
+                           val status = !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
+                            log.info("Filter status $status")
+                            return@with status
                         }
                     }
                 })

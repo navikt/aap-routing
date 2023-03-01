@@ -7,7 +7,7 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons.Companion.EMPTY
-import no.nav.aap.fordeling.arkiv.graphql.AbstractGraphQLAdapter
+import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*

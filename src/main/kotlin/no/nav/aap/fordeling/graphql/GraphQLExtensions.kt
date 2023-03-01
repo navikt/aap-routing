@@ -1,11 +1,11 @@
-package no.nav.aap.fordeling.arkiv.graphql
+package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
-import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.RecoverableGraphQL.UnhandledGraphQL
-import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.BadGraphQL
-import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.NotFoundGraphQL
-import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.UnauthenticatedGraphQL
-import no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL.UnauthorizedGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQL.UnhandledGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQL.BadGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQL.NotFoundGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQL.UnauthenticatedGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQL.UnauthorizedGraphQL
 import no.nav.aap.util.LoggerUtil
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST

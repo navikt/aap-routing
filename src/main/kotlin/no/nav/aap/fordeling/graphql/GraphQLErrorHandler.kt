@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.arkiv.graphql
+package no.nav.aap.fordeling.graphql
 
 interface GraphQLErrorHandler {
     fun handle(e: Throwable): Nothing

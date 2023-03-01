@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.arkiv.graphql
+package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry

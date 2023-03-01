@@ -2,6 +2,8 @@ package no.nav.aap.fordeling.oppgave
 
 import java.net.URI
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
+import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
+import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -22,8 +24,8 @@ class OppgaveConfig(
         const val OPPGAVE = "oppgave"
         private val OPPGAVE_PARAMS = LinkedMultiValueMap<String,String>().apply {
             add(STATUSKATEGORI, ÅPEN)
-            add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE)
-            add(OPPGAVETYPE, FORDELINGSOPPGAVE)
+            add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE.verdi)
+            add(OPPGAVETYPE, FORDELINGSOPPGAVE.verdi)
         }
         private const val DEFAULT_PING_PATH = "TODO"
         private const val DEFAULT_OPPGAVE_PATH = "/api/v1/oppgaver"
@@ -31,7 +33,6 @@ class OppgaveConfig(
         private const val OPPGAVETYPE = "oppgavetype"
         private const val JOURNALPOSTID = "journalpostId"
         private const val ÅPEN = "AAPEN"
-        const val JOURNALFØRINGSOPPGAVE = "JFR"
-        const val FORDELINGSOPPGAVE = "FDR"
+
     }
 }

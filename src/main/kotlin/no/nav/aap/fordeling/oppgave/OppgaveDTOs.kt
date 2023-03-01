@@ -18,9 +18,13 @@ object OppgaveDTOs {
     }
 }
 
-fun Journalpost.tilOpprettOppgave(oppgaveType: String,enhetNr: String? = null) =
-    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel,oppgaveType)
+fun Journalpost.tilOpprettOppgave(oppgaveType: OppgaveType,enhetNr: String? = null) =
+    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel,oppgaveType.verdi)
 
+enum class OppgaveType(val verdi: String) {
+    JOURNALFØRINGSOPPGAVE("JFR"),
+    FORDELINGSOPPGAVE("FDR")
+}
 
 data class OpprettOppgaveData(
         val personident: String,

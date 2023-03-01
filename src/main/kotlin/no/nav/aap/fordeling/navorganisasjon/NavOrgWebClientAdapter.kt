@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.navorganisasjon
 
 import no.nav.aap.api.felles.error.IntegrationException
-import no.nav.aap.fordeling.arkiv.FordelingException
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
@@ -32,7 +31,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             ?.filterNot(::untatt)
             ?.firstOrNull { it in enheter }
             ?.tilNavEnhet()
-            ?: throw FordelingException("Ingen Nav enhet for $kriterium fra NORG2")
+            ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
 
     @Cacheable(NAVORG)

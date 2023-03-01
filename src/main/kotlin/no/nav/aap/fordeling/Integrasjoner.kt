@@ -5,8 +5,8 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
-import no.nav.aap.fordeling.navorganisasjon.NavEnhet
 import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLClient

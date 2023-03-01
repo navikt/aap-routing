@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel.Sak
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.RelevantDato
-import no.nav.aap.fordeling.navorganisasjon.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
 
 data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer, val bruker: Bruker?, val avsenderMottager: Bruker?,

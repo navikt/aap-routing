@@ -1,6 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
-import no.nav.aap.fordeling.navorganisasjon.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
 import org.springframework.stereotype.Component
 
 @Component

@@ -18,7 +18,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
     val log = getLogger(javaClass)
 
     @KafkaListener(topics = ["teamdokumenthandtering.aapen-dok-journalfoering"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC)
+    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(payload: JournalfoeringHendelseRecord)  {
         runCatching {
             log.trace("Mottok hendelse $payload")

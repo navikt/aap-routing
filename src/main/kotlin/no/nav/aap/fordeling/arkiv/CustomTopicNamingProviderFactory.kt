@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component
             }
         }
         return object : SuffixingRetryTopicNamesProvider(p) {
-            override fun getTopicName(topic: String) = "aap.routing.main"
+            override fun getTopicName(topic: String) = "teamdokumenthandtering.aapen-dok-journalfoering"
         }
     }
 }

@@ -24,14 +24,13 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.retrytopic.DestinationTopic.Properties
-import org.springframework.kafka.retrytopic.RetryTopicConfiguration
-import org.springframework.kafka.retrytopic.RetryTopicConfigurationBuilder
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider
-import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory
+import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.stereotype.Component
 import org.springframework.util.backoff.FixedBackOff
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
@@ -91,19 +90,30 @@ class ArkivBeanConfig {
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
-    @Bean
-    fun providerFactory(): RetryTopicNamesProviderFactory {
-        return object : SuffixingRetryTopicNamesProviderFactory() {
-            override fun createRetryTopicNamesProvider(properties: Properties): RetryTopicNamesProvider {
-                return if (properties.isDltTopic) {
-                    object : SuffixingRetryTopicNamesProvider(properties) {
+
+   @Component
+    class TopicNamingProviderFactory : RetryTopicNamesProviderFactory {
+
+            override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+                if (p.isMainEndpoint) {
+                    return object : SuffixingRetryTopicNamesProvider(p) {
+                        override fun getTopicName(topic: String): String {
+                            return "aap.routing.main"
+                        }
+                    }
+                }
+                if (p.isDltTopic) {
+                    return object : SuffixingRetryTopicNamesProvider(p) {
                         override fun getTopicName(topic: String): String {
                             return "aap.routing.dlt"
                         }
                     }
                 }
-                else super.createRetryTopicNamesProvider(properties)
+                return object : SuffixingRetryTopicNamesProvider(p) {
+                    override fun getTopicName(topic: String): String {
+                        return "aap.routing.retry"
+                    }
+                }
             }
-        }
     }
 }

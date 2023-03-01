@@ -8,6 +8,8 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
+import org.springframework.kafka.retrytopic.FixedDelayStrategy
+import org.springframework.kafka.retrytopic.FixedDelayStrategy.*
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
@@ -15,8 +17,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
 
     val log = getLogger(javaClass)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000))
+    @KafkaListener(topics = ["teamdokumenthandtering.aapen-dok-journalfoering","aap.main"], containerFactory = JOARK)
+    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC)
     fun listen(payload: JournalfoeringHendelseRecord)  {
         runCatching {
             log.trace("Mottok hendelse $payload")

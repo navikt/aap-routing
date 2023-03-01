@@ -11,7 +11,7 @@ import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.Retry
 import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
 import org.springframework.stereotype.Component
 
-private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
+  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
 
     val log = getLogger(javaClass)
 
@@ -31,10 +31,5 @@ private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory
         }
     }
 
-
-    @Component
-    class  CustomRetryTopicComponentFactory : RetryTopicComponentFactory() {
-        override fun retryTopicNamesProviderFactory() = CustomTopicNamingProviderFactory()
-    }
 
 }

@@ -24,6 +24,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.listener.DefaultErrorHandler
+import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
+import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -35,8 +37,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 @EnableScheduling
 @EnableRetry
-@EnableKafkaRetryTopic
-class ArkivBeanConfig {
+class ArkivBeanConfig : RetryTopicConfigurationSupport() {
 
     private val log = LoggerUtil.getLogger(ArkivBeanConfig::class.java)
 
@@ -87,4 +88,7 @@ class ArkivBeanConfig {
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
+    override fun createComponentFactory() = object : RetryTopicComponentFactory() {
+        override fun retryTopicNamesProviderFactory() = CustomTopicNamingProviderFactory()
+    }
 }

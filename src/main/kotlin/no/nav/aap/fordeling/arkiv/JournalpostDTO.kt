@@ -63,7 +63,11 @@ data class JournalpostDTO(
             val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
         }
     }
-    data class OppdaterRespons(val journalpostId: String)
+    data class OppdaterRespons(val journalpostId: String) {
+        companion object {
+            val EMPTY = OppdaterRespons("0")
+        }
+    }
 
     data class Bruker(val id: String, val idType: BrukerType = FNR)
 

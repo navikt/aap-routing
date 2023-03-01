@@ -11,23 +11,23 @@ import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.Retry
 import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFactory.SuffixingRetryTopicNamesProvider
 import org.springframework.stereotype.Component
 
-  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
+  class MyNamespaceTopicNamingProviderFactory : RetryTopicNamesProviderFactory {
 
     val log = getLogger(javaClass)
 
-    override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-        if (p.isDltTopic) {
-            return object : SuffixingRetryTopicNamesProvider(p) {
-                override fun getTopicName(topic: String) = "aap.routing.dlt"
-            }
-        }
-        if (!p.isDltTopic && !p.isMainEndpoint) {
-            return object : SuffixingRetryTopicNamesProvider(p) {
-                override fun getTopicName(topic: String) = "aap.routing.retry"
-            }
-        }
-        return object : SuffixingRetryTopicNamesProvider(p) {
-            override fun getTopicName(topic: String) = "teamdokumenthandtering.aapen-dok-journalfoering"
-        }
-    }
+      override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+          if (p.isDltTopic) {
+              return object : SuffixingRetryTopicNamesProvider(p) {
+                  override fun getTopicName(topic: String) = "aap.routing-dlt"
+              }
+          }
+          if (p.isMainEndpoint) {
+              return object : SuffixingRetryTopicNamesProvider(p) {
+                  override fun getTopicName(topic: String) = topic
+              }
+          }
+          return object : SuffixingRetryTopicNamesProvider(p) { // retry
+              override fun getTopicName(topic: String) = "aap.routing-retry"
+          }
+      }
 }

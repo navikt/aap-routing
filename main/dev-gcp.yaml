@@ -9,4 +9,4 @@ config:
 acl:
   -   team: aap
       application: routing
-      access: read, write
+      access: readwrite

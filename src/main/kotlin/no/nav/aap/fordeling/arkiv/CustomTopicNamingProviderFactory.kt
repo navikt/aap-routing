@@ -15,7 +15,6 @@ private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory
     val log = getLogger(javaClass)
 
     override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-        log.info("XXXXXXXXXXXXXXXXXX")
         if (p.isDltTopic) {
             return object : SuffixingRetryTopicNamesProvider(p) {
                 override fun getTopicName(topic: String) = "aap.routing.dlt"
@@ -27,7 +26,7 @@ private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory
             }
         }
         return object : SuffixingRetryTopicNamesProvider(p) {
-            override fun getTopicName(topic: String) = "aap.routing.main"
+            override fun getTopicName(topic: String) = "teamdokumenthandtering.aapen-dok-journalfoering"
         }
     }
 

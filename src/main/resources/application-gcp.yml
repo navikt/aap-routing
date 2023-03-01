@@ -16,8 +16,6 @@ resilience4j:
                 ignoreExceptions:
                     - no.nav.aap.fordeling.arkiv.graphql.GraphQLExtensions.UnrecoverableGraphQL
 spring:
-    main:
-        allow-bean-definition-overriding: true
     cache:
         cache-names: navorg
         caffeine:
@@ -35,11 +33,6 @@ spring:
             enabled: false
     kafka:
         bootstrap-servers: ${kafka.brokers}
-        retry:
-            topic:
-                enabled: true
-                attempts: 3
-                delay: 2000
         properties:
             basic:
                 auth:

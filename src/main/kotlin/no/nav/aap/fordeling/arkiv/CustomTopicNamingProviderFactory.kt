@@ -15,29 +15,28 @@ private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory
     val log = getLogger(javaClass)
 
     override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-             log.info("XXXXXXXXXXXXXXXXXX")
-             if (p.isMainEndpoint) {
-                 return object : SuffixingRetryTopicNamesProvider(p) {
-                     override fun getTopicName(topic: String) = "aap.routing.main"
-                 }
-             }
-             if (p.isDltTopic) {
-                 return object : SuffixingRetryTopicNamesProvider(p) {
-                     override fun getTopicName(topic: String) = "aap.routing.dlt"
+        log.info("XXXXXXXXXXXXXXXXXX")
+        if (p.isDltTopic) {
+            return object : SuffixingRetryTopicNamesProvider(p) {
+                override fun getTopicName(topic: String) = "aap.routing.dlt"
+            }
+        }
+        if (!p.isDltTopic && !p.isMainEndpoint) {
+            return object : SuffixingRetryTopicNamesProvider(p) {
+                override fun getTopicName(topic: String) = "aap.routing.retry"
+            }
+        }
+        return object : SuffixingRetryTopicNamesProvider(p) {
+            override fun getTopicName(topic: String) = "aap.routing.main"
+        }
+    }
 
-                 }
-             }
-             return object : SuffixingRetryTopicNamesProvider(p) {
-                 override fun getTopicName(topic: String) = "aap.routing.retry"
-             }
-         }
- }
-
-@Component
-@Primary
-class CustomRetryTopicConfigurationSupport : RetryTopicConfigurationSupport() {
-    override fun createComponentFactory(): RetryTopicComponentFactory = object : RetryTopicComponentFactory() {
-        override fun retryTopicNamesProviderFactory(): RetryTopicNamesProviderFactory =
-            CustomTopicNamingProviderFactory()
+    @Component
+    @Primary
+    class CustomRetryTopicConfigurationSupport : RetryTopicConfigurationSupport() {
+        override fun createComponentFactory() = object : RetryTopicComponentFactory() {
+            override fun retryTopicNamesProviderFactory() =
+                CustomTopicNamingProviderFactory()
+        }
     }
 }

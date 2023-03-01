@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.util.LoggerUtil
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -94,25 +95,24 @@ class ArkivBeanConfig {
    @Component
     class TopicNamingProviderFactory : RetryTopicNamesProviderFactory {
 
-            override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+       val log = LoggerUtil.getLogger(javaClass)
+
+
+       override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+                log.info("XXXXXXXXXXXXXXXXXX")
                 if (p.isMainEndpoint) {
                     return object : SuffixingRetryTopicNamesProvider(p) {
-                        override fun getTopicName(topic: String): String {
-                            return "aap.routing.main"
-                        }
+                        override fun getTopicName(topic: String) = "aap.routing.main"
                     }
                 }
                 if (p.isDltTopic) {
                     return object : SuffixingRetryTopicNamesProvider(p) {
-                        override fun getTopicName(topic: String): String {
-                            return "aap.routing.dlt"
-                        }
+                        override fun getTopicName(topic: String) = "aap.routing.dlt"
+
                     }
                 }
                 return object : SuffixingRetryTopicNamesProvider(p) {
-                    override fun getTopicName(topic: String): String {
-                        return "aap.routing.retry"
-                    }
+                    override fun getTopicName(topic: String) = "aap.routing.retry"
                 }
             }
     }

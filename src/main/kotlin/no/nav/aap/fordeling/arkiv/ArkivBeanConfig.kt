@@ -71,16 +71,15 @@ class ArkivBeanConfig {
     fun arkivHendelserListenerContainerFactory(p: KafkaProperties,props: FordelerKonfig) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)).apply {
-                    setRecordFilterStrategy {
-                        with (it.value()) {
-                            log.info("Filter mottok $this")
-                           val status = !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
-                            log.info("Filter status $status")
-                            return@with status
-                        }
+                setCommonErrorHandler(DefaultErrorHandler(FixedBackOff(1000L, 5L)))
+                setRecordFilterStrategy {
+                    with (it.value()) {
+                        log.info("Filter mottok $this")
+                        val status = !(temaNytt.lowercase() in props.routing.keys && journalpostStatus == MOTTATT.name)
+                        log.info("Filter status $status")
+                        return@with status
                     }
-                })
+                }
             })
         }
 

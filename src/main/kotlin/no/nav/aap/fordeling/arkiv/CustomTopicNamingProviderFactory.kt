@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.util.LoggerUtil.getLogger
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.kafka.retrytopic.DestinationTopic.Properties
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
@@ -30,12 +31,10 @@ private  class CustomTopicNamingProviderFactory : RetryTopicNamesProviderFactory
         }
     }
 
+
     @Component
-    @Primary
-    class CustomRetryTopicConfigurationSupport : RetryTopicConfigurationSupport() {
-        override fun createComponentFactory() = object : RetryTopicComponentFactory() {
-            override fun retryTopicNamesProviderFactory() =
-                CustomTopicNamingProviderFactory()
-        }
+    class  CustomRetryTopicComponentFactory : RetryTopicComponentFactory() {
+        override fun retryTopicNamesProviderFactory() = CustomTopicNamingProviderFactory()
     }
+
 }

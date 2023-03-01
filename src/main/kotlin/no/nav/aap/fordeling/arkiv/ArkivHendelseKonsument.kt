@@ -18,8 +18,6 @@ import org.springframework.retry.annotation.Backoff
 @ConditionalOnGCP
 class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val integrasjoner: Integrasjoner) {
 
-   var counter = 0
-
     val log = getLogger(javaClass)
 
 
@@ -28,17 +26,12 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
     fun listen(payload: JournalfoeringHendelseRecord, @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
             log.trace("Mottok hendelse $payload på topic $topic")
-            if (counter++ < 3) {
-                log.info("Kaster exception")
-                throw IllegalArgumentException("OOPS TEST")
-            }
-            log.info("Fordeler")
             with(integrasjoner) {
                 arkiv.hentJournalpost(payload.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne slås opp for id ${payload.journalpostId}")  // TODO hva gjør vi her?
             }
-        }.getOrElse { throw FordelingException(cause =  it) } // TODO tenke gjennom denne
+        }.getOrThrow()
     }
 
    @DltHandler

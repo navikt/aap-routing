@@ -39,7 +39,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
-          //  log.warn("Behandling av $hendelse feilet ${forsøk?.let { " for $it. gang" }}",e)
+            log.warn("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang")
             throw e
         }
     }

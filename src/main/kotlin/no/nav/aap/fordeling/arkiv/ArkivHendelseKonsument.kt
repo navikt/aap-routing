@@ -44,7 +44,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
+            @Header(DELIVERY_ATTEMPT) forsøk: String?,
             @Header(EXCEPTION_STACKTRACE) trace: String?)  {
-        log.warn("Mottok DLT hendelse  med trace $trace for $payload")
+        log.warn("Gir opp behandling av $payload $trace etter $forsøk forsøk")
     }
 }

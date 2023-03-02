@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
+import kotlin.random.Random
+import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -8,9 +10,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
-import org.springframework.kafka.retrytopic.FixedDelayStrategy
 import org.springframework.kafka.retrytopic.FixedDelayStrategy.*
-import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
@@ -27,6 +27,10 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
         runCatching {
             log.trace("Mottok hendelse $payload på topic $topic")
             with(integrasjoner) {
+                if (nextBoolean())  {
+                    log.info("Tvinger fram en feil")
+                    throw IllegalStateException("Dette er en tvunget feil")
+                }
                 arkiv.hentJournalpost(payload.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${payload.journalpostId}")  // TODO hva gjør vi her?
@@ -35,7 +39,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
     }
 
    @DltHandler
-    fun dlt(payload: JournalfoeringHendelseRecord,@Header(RECEIVED_TOPIC) topic: String)  {
-            log.info("Mottok DLT hendelse på $topic  $payload")
+    fun dlt(payload: JournalfoeringHendelseRecord,@Header(RECEIVED_TOPIC) topic: String,@Header(DLT_EXCEPTION_MESSAGE) msg: String,@Header(
+           DLT_EXCEPTION_STACKTRACE) trace: String)  {
+            log.info("Mottok DLT hendelse $msg på $topic med trace $trace  for $payload")
     }
 }

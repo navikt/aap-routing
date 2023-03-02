@@ -31,11 +31,11 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("$topic behandler $hendelse  ${forsøk?.let { "for $it.gang" } ?: " initielt"}")
+            log.info("Behandler $hendelse  ${forsøk?.let { "for $it.gang" }}")
             //log.info("Behandler $hendelse på $topic")
             with(integrasjoner) {
               //  if (nextBoolean() && isDevOrLocal(env))  {
-                    log.info("Tvinger fram en feil i dev for å teste retry")
+                    log.info("Tvinger fram en feil i dev for å teste retry $topic")
                     throw IntegrationException("Dette er en tvunget feil i dev")
            //     }
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {

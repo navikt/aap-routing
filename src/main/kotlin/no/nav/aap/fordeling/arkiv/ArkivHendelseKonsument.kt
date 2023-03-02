@@ -22,8 +22,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     val log = getLogger(javaClass)
 
 
-    @KafkaListener(topics = ["teamdokumenthandtering.aapen-dok-journalfoering"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "3", backoff = Backoff(delay=1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
+    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,/* @Header(DELIVERY_ATTEMPT) forsøk: String?*/)  {
         runCatching {
            // log.info("Behandler $hendelse${forsøk?.let { " for $it. gang" }}")

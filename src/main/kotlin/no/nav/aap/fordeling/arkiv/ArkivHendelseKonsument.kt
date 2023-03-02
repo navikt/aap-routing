@@ -28,10 +28,10 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
-               @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int,
+               @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("Behandler $hendelse  ${forsøk?.let { "for $it.gang" }}")
+            log.info("Behandler $hendelse for $forsøk gang")
             //log.info("Behandler $hendelse på $topic")
             with(integrasjoner) {
               //  if (nextBoolean() && isDevOrLocal(env))  {

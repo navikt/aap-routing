@@ -26,7 +26,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.backoff}'}"),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DELIVERY_ATTEMPT) attempt: String?)  {
         runCatching {
-            log.info("Behandler $hendelse" + attempt?.let { "for $it. gang" } ?: "")
+            log.info("Behandler $hendelse" + attempt?.let { " for $it. gang" } ?: "")
             with(integrasjoner) {
                 if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry")

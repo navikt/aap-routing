@@ -19,13 +19,18 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             when (val brevkode = journalpost.hovedDokumentBrevkode) {
                 STANDARD.kode -> fordelStandard(journalpost,enhet)
                 STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost,enhet)
-                else -> FordelingResultat(msg="$brevkode ikke konfigurert for fordeling for ${tema()}").also {
+                else -> FordelingResultat(msg="Brevkode $brevkode ikke konfigurert for fordeling for ${tema()}").also {
                     log.info("Brevkode $brevkode ikke konfigurert for fordeling for ${tema()}")
                 }
             }
         }.getOrElse {
-            log.warn("Noe gikk galt under fordeling, prøver manuell",it)
-            manuell.fordel(journalpost,enhet)
+            runCatching {
+                log.warn("Noe gikk galt under automatisk fordeling, prøver manuell",it)
+                manuell.fordel(journalpost,enhet)
+            }.getOrElse {
+                log.warn("Noe gikk galt under manuell fordeling",it)
+                throw it
+            }
         }
 
     private fun fordelStandard(journalpost: Journalpost, enhet: NavEnhet) =
@@ -36,6 +41,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 }
             }
             else {
+                log.info("Har aktiv sak, fordeler manuelt")
                 manuell.fordel(journalpost,enhet)
             }
         }

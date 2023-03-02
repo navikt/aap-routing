@@ -35,7 +35,10 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, val inte
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${payload.journalpostId}")  // TODO hva gjør vi her?
             }
-        }.getOrThrow()
+        }.getOrElse {
+            log.warn("Behandling av $payload feilet",it)
+            throw it
+        }
     }
 
    @DltHandler

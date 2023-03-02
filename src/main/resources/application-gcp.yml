@@ -142,7 +142,7 @@ arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 fordeling:
     retries: 10
-    backoff: 30000
+    backoff: 3000
     routing:
        aap:
           brevkoder:

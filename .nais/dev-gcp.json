@@ -1,6 +1,6 @@
 {
   "tenant": "trygdeetaten.no",
-  "ingress": "https://aap-routing.dev.intern.nav.no",
+  "ingress": "https://aap-routing.intern.dev.nav.no",
   "env": "dev",
   "saf": "saf.dev-fss-pub.nais.io"
 }

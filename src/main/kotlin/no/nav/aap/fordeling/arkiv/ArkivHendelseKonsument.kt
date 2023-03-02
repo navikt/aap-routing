@@ -1,19 +1,16 @@
 package no.nav.aap.fordeling.arkiv
 
-import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.kafka.retrytopic.FixedDelayStrategy.*
-import org.springframework.kafka.retrytopic.RetryTopicHeaders
 import org.springframework.kafka.retrytopic.RetryTopicHeaders.*
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
@@ -31,8 +28,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("Behandler $hendelse for $forsøk gang")
-            //log.info("Behandler $hendelse på $topic")
+            log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
               //  if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry $topic")

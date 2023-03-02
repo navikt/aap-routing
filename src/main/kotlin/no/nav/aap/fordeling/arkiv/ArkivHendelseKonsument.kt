@@ -22,11 +22,13 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     val log = getLogger(javaClass)
 
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
-    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(RECEIVED_TOPIC) topic: String)  {
+    @KafkaListener(topics = ["teamdokumenthandtering.aapen-dok-journalfoering"], containerFactory = JOARK)
+    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.backoff}'}"),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DELIVERY_ATTEMPT) attempt: String?)  {
         runCatching {
-            log.info("Mottok hendelse $hendelse på topic $topic")
+            attempt?.let {
+                log.info("Behandler $hendelse for $attempt. gang")
+            } ?: log.info("Behandler  hendelse $hendelse")
             with(integrasjoner) {
                 if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev")
@@ -44,9 +46,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
-            @Header(RECEIVED_TOPIC) topic: String?,
-            @Header(EXCEPTION_MESSAGE) msg: String?,
             @Header(EXCEPTION_STACKTRACE) trace: String?)  {
-        log.info("Mottok DLT hendelse $msg på $topic med trace $trace for $payload")
+        log.warn("Mottok DLT hendelse  med trace $trace for $payload")
     }
 }

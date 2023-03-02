@@ -24,9 +24,9 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     @KafkaListener(topics = ["teamdokumenthandtering.aapen-dok-journalfoering"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.backoff}'}"),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
-    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DELIVERY_ATTEMPT) attempt: String?)  {
+    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DELIVERY_ATTEMPT) forsøk: String?)  {
         runCatching {
-            log.info("Behandler $hendelse" + attempt?.let { " for $it. gang" } ?: "")
+            log.info("Behandler $hendelse${forsøk?.let { " for $it. gang" }}")
             with(integrasjoner) {
                 if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry")
@@ -36,9 +36,9 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
-        }.getOrElse {
-            log.warn("Behandling av $hendelse feilet",it)
-            throw it
+        }.getOrElse { e ->
+            log.warn("Behandling av $hendelse feilet ${forsøk?.let { " for $it. gang" }}",e)
+            throw e
         }
     }
 

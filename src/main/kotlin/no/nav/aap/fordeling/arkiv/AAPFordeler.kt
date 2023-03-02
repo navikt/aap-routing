@@ -20,7 +20,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 STANDARD.kode -> fordelStandard(journalpost,enhet)
                 STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost,enhet)
                 else -> FordelingResultat(msg="$brevkode ikke konfigurert for fordeling for ${tema()}").also {
-                    log.info("$brevkode ikke konfigurert for fordeling for ${tema()}")
+                    log.info("Brevkode $brevkode ikke konfigurert for fordeling for ${tema()}")
                 }
             }
         }.getOrElse {

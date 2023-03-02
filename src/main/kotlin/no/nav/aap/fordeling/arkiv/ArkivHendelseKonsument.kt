@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import kotlin.random.Random.Default.nextBoolean
+import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -31,7 +32,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             with(integrasjoner) {
               //  if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry")
-                    throw IllegalStateException("Dette er en tvunget feil i dev")
+                    throw IntegrationException("Dette er en tvunget feil i dev")
            //     }
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))

@@ -22,7 +22,12 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                 runCatching {
                     oppgave.opprettManuellJournalføringOppgave(journalpost,enhet)
                 }.getOrElse {
-                    oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
+                    runCatching {
+                        oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
+                    }.getOrElse {
+                        log.warn("Opprettelse av fordelingsoppgave for $journalpost feilet også",it)
+                        throw it
+                    }
                 }
             }
              FordelingResultat(msg ="Manuell")

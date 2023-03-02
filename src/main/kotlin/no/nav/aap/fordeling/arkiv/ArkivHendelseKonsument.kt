@@ -1,12 +1,10 @@
 package no.nav.aap.fordeling.arkiv
 
-import kotlin.random.Random
 import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
@@ -25,21 +23,21 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "1", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
-    fun listen(payload: JournalfoeringHendelseRecord, @Header(RECEIVED_TOPIC) topic: String)  {
+    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("Mottok hendelse $payload på topic $topic")
+            log.info("Mottok hendelse $hendelse på topic $topic")
             with(integrasjoner) {
                 if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev")
                     throw IllegalStateException("Dette er en tvunget feil i dev")
                 }
-                arkiv.hentJournalpost(payload.journalpostId)?.let {
+                arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
-                }?: log.warn("Ingen journalpost kunne hentes for id ${payload.journalpostId}")  // TODO hva gjør vi her?
+                }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse {
-            log.warn("Behandling av $payload feilet",it)
+            log.warn("Behandling av $hendelse feilet",it)
             throw it
         }
     }

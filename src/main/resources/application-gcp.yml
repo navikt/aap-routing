@@ -137,6 +137,8 @@ arena:
     enabled: true
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 fordeling:
+    retries: 1
+    backoff: 1000
     routing:
        aap:
           brevkoder:

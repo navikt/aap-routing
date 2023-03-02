@@ -23,6 +23,7 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                     oppgave.opprettManuellJournalføringOppgave(journalpost,enhet)
                 }.getOrElse {
                     runCatching {
+                        log.warn("Opprettelse av manuell journalføringsopgave for $journalpost feilet",it)
                         oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
                     }.getOrElse {
                         log.warn("Opprettelse av fordelingsoppgave for $journalpost feilet også",it)

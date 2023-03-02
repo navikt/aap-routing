@@ -25,10 +25,20 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }.getOrElse {
             runCatching {
-                log.warn("Noe gikk galt under automatisk fordeling, prøver manuell",it)
-                manuell.fordel(journalpost,enhet)
+                when(it)  {
+                    is ManuellException -> {
+                        log.warn("Manuell exception fra automatisk fordeling, gir opp",it)
+                        throw it
+                    }
+                    else ->  {
+                        log.warn("Noe annet gikk galt under automatisk fordeling, prøver manuell",it)
+                        manuell.fordel(journalpost,enhet)
+                    }
+                }
             }.getOrElse {
-                log.warn("Noe gikk galt under manuell fordeling",it)
+                if (it !is  ManuellException) {
+                    log.warn("Noe annet gikk galt under manuell fordeling",it)
+                }
                 throw it
             }
         }

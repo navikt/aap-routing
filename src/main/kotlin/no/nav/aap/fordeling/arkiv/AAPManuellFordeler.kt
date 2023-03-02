@@ -28,10 +28,11 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                         oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
                     }.getOrElse {
                         log.warn("Opprettelse av fordelingsoppgave for $journalpost feilet også",it)
-                        throw it
+                        throw ManuellException(it)
                     }
                 }
             }
             FordelingResultat(msg ="Manuell")
         }
 }
+class ManuellException(cause: Throwable): RuntimeException(cause)

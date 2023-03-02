@@ -45,8 +45,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
             @Header(RECEIVED_TOPIC) topic: String?,
-            @Header(DLT_EXCEPTION_MESSAGE) msg: String?,
-            @Header(DLT_EXCEPTION_STACKTRACE) trace: String?)  {
+            @Header(EXCEPTION_MESSAGE) msg: String?,
+            @Header(EXCEPTION_STACKTRACE) trace: String?)  {
         log.info("Mottok DLT hendelse $msg på $topic med trace $trace for $payload")
     }
 }

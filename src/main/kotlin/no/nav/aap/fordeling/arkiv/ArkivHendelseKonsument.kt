@@ -13,6 +13,8 @@ import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.kafka.retrytopic.FixedDelayStrategy.*
+import org.springframework.kafka.retrytopic.RetryTopicHeaders
+import org.springframework.kafka.retrytopic.RetryTopicHeaders.*
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
@@ -25,7 +27,8 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
-    fun listen(hendelse: JournalfoeringHendelseRecord,@Header(DELIVERY_ATTEMPT, required = false) forsøk: String?,
+    fun listen(hendelse: JournalfoeringHendelseRecord,
+               @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
             log.info("$topic behandler $hendelse  ${forsøk?.let { "for $it.gang" } ?: " initielt"}")

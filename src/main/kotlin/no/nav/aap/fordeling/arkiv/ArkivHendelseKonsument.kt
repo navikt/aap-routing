@@ -28,7 +28,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     fun listen(hendelse: JournalfoeringHendelseRecord,@Header(DELIVERY_ATTEMPT, required = false) forsøk: String?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("Behandler $hendelse ${forsøk?.let { "for $it.gang" } ?: " initielt"}")
+            log.info("$topic behandler $hendelse  ${forsøk?.let { "for $it.gang" } ?: " initielt"}")
             //log.info("Behandler $hendelse på $topic")
             with(integrasjoner) {
               //  if (nextBoolean() && isDevOrLocal(env))  {

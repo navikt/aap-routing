@@ -29,10 +29,10 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             //log.info("Behandler $hendelse${forsøk?.let { " for $it.gang" } ?: " initielt"}")
             log.info("Behandler $hendelse på $topic")
             with(integrasjoner) {
-                if (nextBoolean() && isDevOrLocal(env))  {
+              //  if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry")
                     throw IllegalStateException("Dette er en tvunget feil i dev")
-                }
+           //     }
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?

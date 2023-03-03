@@ -73,6 +73,9 @@ spring:
               max:
                 request:
                     size: 2000000
+    jms:
+        listener:
+            acknowledge-mode:
 
 no.nav:
     security:
@@ -139,7 +142,8 @@ pdl:
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
     enabled: true
-    base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
+slack:
+    enabled: true
 fordeling:
     retries: 10
     backoff: 3000

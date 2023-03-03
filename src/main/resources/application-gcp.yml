@@ -145,6 +145,8 @@ arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 slack:
     enabled: true
+kelvin:
+    enabled: true
 fordeling:
     retries: 10
     backoff: 3000

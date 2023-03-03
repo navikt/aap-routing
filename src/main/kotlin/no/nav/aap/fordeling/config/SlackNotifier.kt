@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.config
 
 import com.slack.api.Slack
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
@@ -15,7 +15,7 @@ class SlackNotifier(private val cfg: SlackConfig) {
                         it.channel(kanal).text(message)
                     }) {
                         if (!isOk) {
-                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
+                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $message")
                         }
                     }
                 }.getOrElse{
@@ -23,12 +23,12 @@ class SlackNotifier(private val cfg: SlackConfig) {
                 }
             }
             else {
-                log.warn("Sending til slack ikke aktivert, set slack.enabled: true for aktivering")
+                log.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
             }
         }
 
     companion object {
-        private val log = LoggerFactory.getLogger(SlackNotifier::class.java)
+        private val log = getLogger(SlackNotifier::class.java)
         private val slack = Slack.getInstance()
     }
 }

@@ -1,5 +1,7 @@
 {
   "tenant": "trygdeetaten.no",
   "ingress": "https://aap-routing.intern.dev.nav.no",
-  "env": "dev"
+  "env": "dev",
+  "retry" : "aap.routing.retry",
+  "dlt" : "aap.routing.dlt"
 }

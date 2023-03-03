@@ -7,11 +7,11 @@ import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 interface Fordeler {
 
     fun tema(): List<String>
-    fun fordel(journalpost: Journalpost, enhet: NAVEnhet) : FordelingResultat
+    fun fordel(jp: Journalpost, enhet: NAVEnhet) : FordelingResultat
     companion object {
         val INGEN_FORDELER =  object : Fordeler {
             override fun tema() = emptyList<String>()
-            override fun fordel(journalpost: Journalpost, enhet: NAVEnhet) = NONE
+            override fun fordel(jp: Journalpost, enhet: NAVEnhet) = NONE
         }
     }
 

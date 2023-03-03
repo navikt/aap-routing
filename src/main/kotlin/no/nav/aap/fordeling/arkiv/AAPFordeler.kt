@@ -24,7 +24,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 }
                 STANDARD_ETTERSENDING.kode -> {
                     log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
-                    fordelEttersending(jp,enhet)
+                    fordelEttersending(jp)
                 }
                 else -> {
                     log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
@@ -57,7 +57,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }
 
-    private fun fordelEttersending(jp: Journalpost, enhet: NAVEnhet) =
+    private fun fordelEttersending(jp: Journalpost) =
         with(integrasjoner) {
             arena.nyesteAktiveSak(jp.fnr)?.run {
                 arkiv.oppdaterOgFerdigstillJournalpost(jp, this) // 3a/b

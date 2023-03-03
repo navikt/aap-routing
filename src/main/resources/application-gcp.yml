@@ -154,8 +154,11 @@ kelvin:
         topic: aap.utland-soknad-sendt.v1
     enabled: true
 fordeling:
-    retries: 10
-    backoff: 3000
+    topics:
+       retry: 'aap.routing.retry'
+       dlt: 'aap.routing.dlt'
+       retries: 10
+       backoff: 3000
     routing:
        aap:
           brevkoder:

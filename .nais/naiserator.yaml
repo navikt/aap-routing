@@ -55,10 +55,6 @@ spec:
       cpu: 250m
       memory: 1536Mi
   env:
-    - name: ROUTING_RETRY
-      value: {{retry}}
-    - name: ROUTING_DLT
-      value: {{dlt}}
     - name: ENV
       value: {{env}}
   envFrom:

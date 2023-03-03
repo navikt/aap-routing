@@ -23,6 +23,8 @@
     <springProfile name="dev">
         <logger name="no.nav.aap" level="trace"/>
         <logger name="org.springframework.kafka" level="info"/>
+        <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer" level="warn"/>
+        <logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
         <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info"/>
         <logger name="secure" level="debug" additivity="false">
             <appender-ref ref="secureJson"/>

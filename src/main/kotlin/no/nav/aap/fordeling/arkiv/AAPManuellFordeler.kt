@@ -25,14 +25,10 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
                 }.getOrElse {
                     runCatching {
                         log.warn("Opprettelse av manuell journalføringsopgave for $journalpost feilet, prøver fordelingsoppgave",it)
-                        oppgave.opprettFordelingOppgave(journalpost)  // TODO hva hvis denne feiler, fjerne id ???
-                    }.getOrElse {
-                        log.warn("Opprettelse av fordelingsoppgave for $journalpost feilet også",it)
-                        throw ManuellException(it)
-                    }
+                        oppgave.opprettFordelingOppgave(journalpost)
+                    }.getOrThrow()
                 }
             }
             FordelingResultat(msg ="Manuell")
         }
 }
-class ManuellException(cause: Throwable): RuntimeException(cause)

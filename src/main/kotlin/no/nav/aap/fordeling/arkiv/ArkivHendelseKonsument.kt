@@ -1,10 +1,12 @@
 package no.nav.aap.fordeling.arkiv
 
+import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
+import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
@@ -21,7 +23,6 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     val log = getLogger(javaClass)
 
-
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
@@ -30,16 +31,16 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
         runCatching {
             log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
-              //  if (nextBoolean() && isDevOrLocal(env))  {
+                if (nextBoolean() && isDevOrLocal(env))  {
                     log.info("Tvinger fram en feil i dev for å teste retry $topic")
                     throw IntegrationException("Dette er en tvunget feil i dev")
-           //     }
+                }
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
-            log.warn("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang")
+            log.warn("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang",e)
             throw e
         }
     }

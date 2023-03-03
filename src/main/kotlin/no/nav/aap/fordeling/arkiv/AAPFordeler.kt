@@ -25,21 +25,11 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }.getOrElse {
             runCatching {
-                when(it)  {
-                    is ManuellException -> {
-                        log.warn("Manuell exception fra automatisk fordeling, gir opp",it)
-                        throw it
-                    }
-                    else ->  {
-                        log.warn("Noe annet gikk galt under automatisk fordeling, prøver manuell",it)
-                        manuell.fordel(journalpost,enhet)
-                    }
-                }
-            }.getOrElse {
-                if (it !is  ManuellException) {
-                    log.warn("Noe annet gikk galt under manuell fordeling",it)
-                }
-                throw it
+                log.warn("Kunne ikke automatisk fordele, prøver manuell",it)
+                manuell.fordel(journalpost,enhet)
+            }.getOrElse {e ->
+                log.warn("Noe gikk galt under manuell fordeling",e)
+                throw e
             }
         }
 
@@ -51,8 +41,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 }
             }
             else {
-                log.info("Har aktiv sak, fordeler manuelt")
-                manuell.fordel(journalpost,enhet)
+                throw ArenaAktivSakException("Journalpost ${journalpost.journalpostId} har aktiv sak for ${journalpost.fnr}, kan ikke opprett sak i Arena")
             }
         }
 
@@ -62,6 +51,6 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 arkiv.oppdaterOgFerdigstillJournalpost(journalpost, this) // 3a/b
             } ?: manuell.fordel(journalpost,enhet)
         }
-
-
 }
+
+class ArenaAktivSakException(msg: String) : RuntimeException(msg)

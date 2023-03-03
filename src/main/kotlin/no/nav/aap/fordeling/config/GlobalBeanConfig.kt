@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.util.function.Consumer
 import kotlin.random.Random
+import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -18,6 +19,7 @@ import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
 import no.nav.boot.conditionals.EnvUtil
+import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
 import no.nav.security.token.support.client.core.http.OAuth2HttpRequest
@@ -121,11 +123,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         fun inject(component: Any) = env.maybeInjectFault(component)
         companion object {
             private fun Environment.maybeInjectFault(component: Any) =
-                if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {
-                    log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
-                    throw IntegrationException("Dette er en tvunget feil i dev")
-                }
-                else Unit
+                if (isDevOrLocal(this)) {
+                    if (nextBoolean())  {
+                        log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
+                        throw IntegrationException("Dette er en tvunget feil i dev")
+                    } else Unit
+                }   else Unit
         }
     }
 

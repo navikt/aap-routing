@@ -36,7 +36,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                 env.maybeInjectFault(this@ArkivHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r ->
-                        log.info("${r.type} ${r.journalpostId} ${r.msg}")
+                        log.info("${r.formattertMelding()}")
                     }
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }

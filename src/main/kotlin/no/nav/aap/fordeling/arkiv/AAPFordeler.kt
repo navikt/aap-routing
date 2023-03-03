@@ -45,15 +45,14 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
     private fun fordelStandard(jp: Journalpost, enhet: NavEnhet) =
         with(integrasjoner) {
             if (!arena.harAktivSak(jp.fnr)) {
+                log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
                 arena.opprettOppgave(jp, enhet).run {
                     arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
-                    FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK).also {
-                        log.info("${it.type} ${it.msg} for journalpost ${it.journalpostId}")
-                    }
+                    FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK)
                 }
             }
             else {
-                log.warn("Arena har aktiv sak for ${jp.fnr}")
+                log.warn("Arena HAR aktiv sak for ${jp.fnr}")
                 throw ArenaSakException(jp.journalpostId,"Har aktiv sak for ${jp.fnr}, kan ikke opprett oppgave i Arena")
             }
         }
@@ -62,9 +61,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
         with(integrasjoner) {
             arena.nyesteAktiveSak(jp.fnr)?.run {
                 arkiv.oppdaterOgFerdigstillJournalpost(jp, this) // 3a/b
-                FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK).also {
-                    log.info("${it.type} ${it.msg} for journalpost ${it.journalpostId}")
-                }
+                FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK)
             } ?: throw ArenaSakException(jp.journalpostId,"Har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
         }
 }

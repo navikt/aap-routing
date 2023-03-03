@@ -17,6 +17,8 @@ interface Fordeler {
 
     data class FordelingResultat(val journalpostId: String = "0", val msg: String, val type: FordelingType) {
 
+         fun formattertMelding() = "${msg} for journalpost $journalpostId og fordelingstype $type"
+
         enum class FordelingType  {
             AUTOMATISK,MANUELL_JOURNALFØRING,MANUELL_FORDELING,INGEN
         }

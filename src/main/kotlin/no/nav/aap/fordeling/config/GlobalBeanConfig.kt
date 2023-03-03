@@ -120,6 +120,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Component
     class FaultInjecter(private val env: Environment)  {
+
+        private val log = getLogger(FaultInjecter::class.java)
+
         fun inject(component: Any) = env.maybeInjectFault(component)
         companion object {
             private fun Environment.maybeInjectFault(component: Any) =

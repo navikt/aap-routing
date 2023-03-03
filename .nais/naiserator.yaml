@@ -57,3 +57,5 @@ spec:
   env:
     - name: ENV
       value: {{env}}
+  envFrom:
+    -   secret: slack

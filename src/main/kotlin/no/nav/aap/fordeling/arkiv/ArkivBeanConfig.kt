@@ -78,7 +78,7 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
         }
 
     @Bean
-    fun retryingKafkaOperations(p: KafkaProperties) =
+    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()))
     @Bean
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")

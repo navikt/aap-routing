@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environment) : ManuellFordeler {
-    val log = getLogger(javaClass)
+    val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)
 

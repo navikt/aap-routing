@@ -19,8 +19,9 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             when (jp.hovedDokumentBrevkode) {
                 STANDARD.kode -> fordelStandard(jp,enhet)
                 STANDARD_ETTERSENDING.kode -> fordelEttersending(jp,enhet)
-                else -> FordelingResultat(jp.journalpostId,"Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for fordeling for ${tema()}").also {
-                    log.trace("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for fordeling for ${tema()}")
+                else -> {
+                    log.trace("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, fordeler manuelt")
+                    manuell.fordel(jp,enhet)
                 }
             }
         }.getOrElse {

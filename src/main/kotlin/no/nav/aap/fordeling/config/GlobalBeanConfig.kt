@@ -120,7 +120,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         fun Environment.maybeInjectFault(component: Any) =
             if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {
-                log.info("${component.javaClass.simpleName}) Tvinger fram en feil i dev for å teste retry")
+                log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
                 throw IntegrationException("Dette er en tvunget feil i dev")
             }
             else Unit

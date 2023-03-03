@@ -13,22 +13,24 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFord
 
     override fun tema() = listOf(AAP)
 
-    override fun fordel(journalpost: Journalpost, enhet: NavEnhet): FordelingResultat =
+    override fun fordel(jp: Journalpost, enhet: NavEnhet) =
         with(integrasjoner)  {
-            if (oppgave.harOppgave(journalpost.journalpostId)) {
-                log.warn("Journalpost ${journalpost.journalpostId} har allerede en oppgave, avslutter manuell fordeling")
+            if (oppgave.harOppgave(jp.journalpostId)) {
+                log.warn("Journalpost ${jp.journalpostId} har allerede journalføringsoppgave, avslutter manuell fordeling")
+                FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave")
             }
             else {
                 runCatching {
-                    log.info("Oppretter manuell journalføringsoppgave for $journalpost")
-                    oppgave.opprettManuellJournalføringOppgave(journalpost,enhet)
+                    log.info("Oppretter manuell journalføringsoppgave for ${jp.journalpostId}")
+                    oppgave.opprettManuellJournalføringOppgave(jp,enhet)
+                    FordelingResultat(jp.journalpostId,"Manuell journalføringsoppgave opprettet")
                 }.getOrElse {
-                    runCatching {
-                        log.warn("Opprettelse av manuell journalføringsopgave for $journalpost feilet, prøver fordelingsoppgave",it)
-                        oppgave.opprettFordelingOppgave(journalpost)
-                    }.getOrThrow()
+                    run {
+                        log.warn("Opprettelse av manuell journalføringsopgave for ${jp.journalpostId} feilet, oppretter fordelingsoppgave", it)
+                        oppgave.opprettFordelingOppgave(jp)
+                        FordelingResultat(jp.journalpostId, "Manuell fordelingsoppgave oprettet")
+                    }
                 }
             }
-            FordelingResultat(msg ="Manuell")
         }
 }

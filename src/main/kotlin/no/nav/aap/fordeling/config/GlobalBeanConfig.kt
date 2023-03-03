@@ -10,11 +10,14 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.util.function.Consumer
+import kotlin.random.Random
+import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
+import no.nav.boot.conditionals.EnvUtil
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
 import no.nav.security.token.support.client.core.http.OAuth2HttpRequest
@@ -28,6 +31,7 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -112,6 +116,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     companion object {
+        private val log = getLogger(javaClass)
+
+        fun Environment.maybeInjectFault(component: Any) =
+            if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {
+                log.info("${component.javaClass.simpleName}) Tvinger fram en feil i dev for å teste retry")
+                throw IntegrationException("Dette er en tvunget feil i dev")
+            }
+            else Unit
         fun ClientConfigurationProperties.clientCredentialFlow( service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key], req.url())).build()) }

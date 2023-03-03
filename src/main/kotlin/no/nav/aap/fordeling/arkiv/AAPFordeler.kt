@@ -14,43 +14,44 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)
-    override fun fordel(journalpost: Journalpost, enhet: NavEnhet) =
+    override fun fordel(jp: Journalpost, enhet: NavEnhet) =
         runCatching {
-            when (val brevkode = journalpost.hovedDokumentBrevkode) {
-                STANDARD.kode -> fordelStandard(journalpost,enhet)
-                STANDARD_ETTERSENDING.kode -> fordelEttersending(journalpost,enhet)
-                else -> FordelingResultat(msg="Brevkode $brevkode ikke konfigurert for fordeling for ${tema()}").also {
-                    log.info("Brevkode $brevkode ikke konfigurert for fordeling for ${tema()}")
+            when (jp.hovedDokumentBrevkode) {
+                STANDARD.kode -> fordelStandard(jp,enhet)
+                STANDARD_ETTERSENDING.kode -> fordelEttersending(jp,enhet)
+                else -> FordelingResultat(jp.journalpostId,"Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for fordeling for ${tema()}").also {
+                    log.trace("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for fordeling for ${tema()}")
                 }
             }
         }.getOrElse {
             runCatching {
-                log.warn("Kunne ikke automatisk fordele, prøver manuell",it)
-                manuell.fordel(journalpost,enhet)
+                log.warn("Kunne ikke automatisk fordele ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), prøver manuell",it)
+                manuell.fordel(jp,enhet)
             }.getOrElse {e ->
-                log.warn("Noe gikk galt under manuell fordeling",e)
+                log.warn("Noe gikk galt under manuell fordeling av ${jp.journalpostId}",e)
                 throw e
             }
         }
 
-    private fun fordelStandard(journalpost: Journalpost, enhet: NavEnhet) =
+    private fun fordelStandard(jp: Journalpost, enhet: NavEnhet) =
         with(integrasjoner) {
-            if (!arena.harAktivSak(journalpost)) {
-                arena.opprettOppgave(journalpost, enhet).run {
-                    arkiv.oppdaterOgFerdigstillJournalpost(journalpost, arenaSakId)
+            if (!arena.harAktivSak(jp.fnr)) {
+                arena.opprettOppgave(jp, enhet).run {
+                    arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
                 }
             }
             else {
-                throw ArenaAktivSakException("Journalpost ${journalpost.journalpostId} har aktiv sak for ${journalpost.fnr}, kan ikke opprett sak i Arena")
+                log.warn("Arena har aktiv sak for ${jp.fnr}")
+                throw ArenaSakException(jp.journalpostId,"Har aktiv sak for ${jp.fnr}, kan ikke opprett oppgave i Arena")
             }
         }
 
-    private fun fordelEttersending(journalpost: Journalpost, enhet: NavEnhet) =
+    private fun fordelEttersending(jp: Journalpost, enhet: NavEnhet) =
         with(integrasjoner) {
-            arena.nyesteAktiveSak(journalpost)?.run {
-                arkiv.oppdaterOgFerdigstillJournalpost(journalpost, this) // 3a/b
-            } ?: manuell.fordel(journalpost,enhet)
+            arena.nyesteAktiveSak(jp.fnr)?.run {
+                arkiv.oppdaterOgFerdigstillJournalpost(jp, this) // 3a/b
+            } ?: throw ArenaSakException(jp.journalpostId,"Har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
         }
 }
 
-class ArenaAktivSakException(msg: String) : RuntimeException(msg)
+class ArenaSakException(val journalpostId: String, msg: String) : RuntimeException(msg)

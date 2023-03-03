@@ -1,12 +1,10 @@
 package no.nav.aap.fordeling.arkiv
 
-import kotlin.random.Random.Default.nextBoolean
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.Integrasjoner
+import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.maybeInjectFault
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
@@ -31,10 +29,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
         runCatching {
             log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
-                if (nextBoolean() && isDevOrLocal(env))  {
-                    log.info("Tvinger fram en feil i dev for å teste retry $topic")
-                    throw IntegrationException("Dette er en tvunget feil i dev")
-                }
+                env.maybeInjectFault(this@ArkivHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it))
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
@@ -44,6 +39,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             throw e
         }
     }
+
 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,

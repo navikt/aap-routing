@@ -21,8 +21,8 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .retrieve()
                 .bodyToMono<OppgaveRespons>()
                 .retryWhen(cf.retrySpec(log))
-                .doOnSuccess { log.info("Oppgave oppslag  $journalpostId OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppgave oppslag  $journalpostId feilet", t) }
+                .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
+                .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet", t) }
                 .block()?.antallTreffTotalt?.let { it > 0 } ?: throw IntegrationException("Null respons fra opslag oppgave $journalpostId")
 
 

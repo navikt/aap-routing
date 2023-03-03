@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.maybeInjectFault
+import no.nav.aap.fordeling.config.SlackNotifier
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -17,7 +18,7 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private val integrasjoner: Integrasjoner, private val env: Environment) {
+class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private val integrasjoner: Integrasjoner, private val slack: SlackNotifier,private val env: Environment) {
 
     val log = getLogger(javaClass)
 
@@ -36,6 +37,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             }
         }.getOrElse { e ->
             log.warn("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang",e)
+            slack.sendMessage("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang",e)
             throw e
         }
     }

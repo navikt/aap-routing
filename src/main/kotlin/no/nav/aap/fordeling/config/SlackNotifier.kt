@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class SlackNotifier(private val cfg: SlackConfig) {
-
     fun sendMessage(message: String) =
         with(cfg) {
             if (enabled) {
@@ -16,15 +15,15 @@ class SlackNotifier(private val cfg: SlackConfig) {
                         it.channel(kanal).text(message)
                     }) {
                         if (!isOk) {
-                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Skulle sendt melding: '$message'", errors.joinToString("\n"))
+                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
                         }
                     }
                 }.getOrElse{
-                    log.warn("Fikk ikke kontakt med Slack sitt API. Skulle ha sendt melding: '$message'", it)
+                    log.warn("Fikk ikke kontakt med Slack-API", it)
                 }
             }
             else {
-                log.warn("Sending til slack ikke aktivert, set 'slack.enabled: true for aktivering")
+                log.warn("Sending til slack ikke aktivert, set slack.enabled: true for aktivering")
             }
         }
 

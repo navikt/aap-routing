@@ -17,20 +17,26 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
     override fun fordel(jp: Journalpost, enhet: NavEnhet) =
         runCatching {
             when (jp.hovedDokumentBrevkode) {
-                STANDARD.kode -> fordelStandard(jp,enhet)
-                STANDARD_ETTERSENDING.kode -> fordelEttersending(jp,enhet)
+                STANDARD.kode -> {
+                    log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+                    fordelStandard(jp,enhet)
+                }
+                STANDARD_ETTERSENDING.kode -> {
+                    log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+                    fordelEttersending(jp,enhet)
+                }
                 else -> {
-                    log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, fordeler manuelt")
+                    log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
                     manuell.fordel(jp,enhet)
                 }
             }
         }.getOrElse {
             if (it !is ManuellException) {
-                log.warn("Kunne ikke fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), fordeler manuell",it)
+                log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt",it)
                 manuell.fordel(jp,enhet)
             }
             else {
-                log.info("Hopper over nytt manuelt forsøk siden den akkurat feilet",it)
+                log.info("Gjør ikke umiddebart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet",it)
                 throw it
             }
         }

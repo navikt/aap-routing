@@ -23,9 +23,9 @@ data class Integrasjoner(val oppgave: OppgaveClient, val pdl: PDLClient, val org
                 if (org.erAktiv(enhet))
                     NavEnhet(enhet, AKTIV).also { log.info("Journalførende enhet $it er aktiv") }
                 else {
-                    enhetFor(fnr).also { log.info("Enhet ikke aktiv fra GT er $it") }
+                    enhetFor(fnr).also { log.info("Enhet ikke aktiv, fra GT er $it") }
                 }
-            }?: enhetFor(fnr).also { log.info("Enhet ikke satt, fra GT er den $it") }
+            }?: enhetFor(fnr).also { log.info("Enhet ikke satt på journalposten, fra GT er den $it") }
         }
     private fun enhetFor(fnr: Fødselsnummer) = org.navEnhet(pdl.geoTilknytning(fnr), egen.erSkjermet(fnr), pdl.diskresjonskode(fnr))
 }

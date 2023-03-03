@@ -5,25 +5,21 @@ import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
-import org.slf4j.LoggerFactory
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environment) : ManuellFordeler {
-    val log = LoggerFactory.getLogger(AAPManuellFordeler::class.java)
+class AAPManuellFordeler(private val integrasjoner: Integrasjoner) : ManuellFordeler {
+    val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)
 
-    override fun fordel(jp: Journalpost, enhet: NavEnhet) =
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         with(integrasjoner)  {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave", INGEN).also {
-                    log.info("${it.type} ${it.journalpostId} ${it.msg}")
-                }
+                FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave", INGEN)
             }
             else {
                 runCatching {

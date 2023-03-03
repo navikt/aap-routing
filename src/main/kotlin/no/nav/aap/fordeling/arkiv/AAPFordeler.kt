@@ -5,7 +5,7 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
@@ -15,7 +15,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)
-    override fun fordel(jp: Journalpost, enhet: NavEnhet) =
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         runCatching {
             when (jp.hovedDokumentBrevkode) {
                 STANDARD.kode -> {
@@ -42,7 +42,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }
 
-    private fun fordelStandard(jp: Journalpost, enhet: NavEnhet) =
+    private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
         with(integrasjoner) {
             if (!arena.harAktivSak(jp.fnr)) {
                 log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
@@ -57,7 +57,7 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }
 
-    private fun fordelEttersending(jp: Journalpost, enhet: NavEnhet) =
+    private fun fordelEttersending(jp: Journalpost, enhet: NAVEnhet) =
         with(integrasjoner) {
             arena.nyesteAktiveSak(jp.fnr)?.run {
                 arkiv.oppdaterOgFerdigstillJournalpost(jp, this) // 3a/b

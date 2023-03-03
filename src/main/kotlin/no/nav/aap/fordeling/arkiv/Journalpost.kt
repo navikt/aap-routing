@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel.Sak
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.RelevantDato
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 
 data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer, val bruker: Bruker?, val avsenderMottager: Bruker?,
@@ -22,7 +22,7 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
     val vedleggTitler =  dokumenter.drop(1).mapNotNull { it.tittel }
 
 
-    fun opprettArenaOppgaveData(enhet: NavEnhet)  = ArenaOpprettOppgaveData(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler)
+    fun opprettArenaOppgaveData(enhet: NAVEnhet)  = ArenaOpprettOppgaveData(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler)
 
 
     fun oppdateringsData(saksNr: String) = OppdaterForespørsel(tittel, avsenderMottager ?: bruker,bruker, Sak(saksNr))

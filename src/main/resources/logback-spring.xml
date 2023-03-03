@@ -22,6 +22,7 @@
     </appender>
     <springProfile name="dev">
         <logger name="no.nav.aap" level="trace"/>
+        <logger name="org.apache.kafka.clients.NetworkClient" level="warn" />
         <logger name="org.springframework.kafka" level="info"/>
         <logger name="org.apache.kafka.clients.Metadata" level="warn" />
         <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer" level="warn"/>

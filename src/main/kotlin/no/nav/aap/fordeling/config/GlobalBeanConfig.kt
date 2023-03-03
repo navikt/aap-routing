@@ -129,7 +129,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 if (isDevOrLocal(this)) {
                     if (nextBoolean())  {
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
-                            log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
+                            log.info(it.message)
                         }
                     } else {
                         Unit

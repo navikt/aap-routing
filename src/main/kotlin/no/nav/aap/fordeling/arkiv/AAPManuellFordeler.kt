@@ -31,6 +31,7 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environm
                         oppgave.opprettFordelingOppgave(jp)
                         FordelingResultat(jp.journalpostId, "Manuell fordelingsoppgave oprettet")
                     }.getOrElse {
+                        log.warn("Journalpost ${jp.journalpostId} feilet ved opprettelse av manuell fordelingsoppgave")
                         throw ManuellException(jp.journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
                     }
                 }

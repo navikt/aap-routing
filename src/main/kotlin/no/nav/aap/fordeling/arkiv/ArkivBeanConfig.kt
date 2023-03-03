@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalStatus.MOTTATT
@@ -13,6 +14,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerConfig.*
+import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -25,6 +27,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
+import org.springframework.kafka.support.serializer.JsonSerializer
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -79,7 +82,10 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
 
     @Bean
     fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
-        KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()))
+        KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties().apply {
+            put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+            put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
+        }))
     @Bean
     @ConditionalOnProperty("${JOARK}.enabled", havingValue = "true")
     fun arkivHealthIndicator(adapter: ArkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}

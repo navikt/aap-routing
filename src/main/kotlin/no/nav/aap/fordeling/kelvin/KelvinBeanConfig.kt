@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.kelvin.KelvinFordelingConfig.Companion.KELVIN
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.health.Pingable
 import no.nav.aap.util.LoggerUtil.getLogger
+import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -35,6 +36,7 @@ class KelvinBeanConfig {
     @Qualifier(KELVIN)
     fun kelvinFordelingOperations(p: KafkaProperties, mapper: ObjectMapper) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, Any>(p.buildProducerProperties()).apply {
+            keySerializer = StringSerializer()
             setValueSerializer(JsonSerializer(mapper.copy()
                 .setDefaultPropertyInclusion(ALWAYS)))
         })

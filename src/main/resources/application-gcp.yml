@@ -146,6 +146,12 @@ arena:
 slack:
     enabled: true
 kelvin:
+    standard:
+        topic: aap.soknad-sendt.v1
+    ettersending:
+        topic: aap.soknad-ettersendt.v1
+    utland:
+        topic: aap.utland-soknad-sendt.v1
     enabled: true
 fordeling:
     retries: 10

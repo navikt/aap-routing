@@ -1,8 +1,5 @@
 {
     "tenant": "trygdeetaten.no",
-    "ingress": "https://aap-soknad-api.intern.nav.no",
-    "env": "prod",
-    "vedlegg-varighet": "14",
-    "mellomlagring-varighet": "14",
-    "saf" : "https://safselvbetjening.prod-fss-pub.nais.io"
+    "ingress": "https://aap-routing.nav.no",
+    "env": "prod"
 }

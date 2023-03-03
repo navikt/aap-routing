@@ -92,7 +92,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     class RetryingWebClientOAuth2HttpClient(private val client: WebClient) : OAuth2HttpClient {
 
-        private val log = getLogger(javaClass)
+        private val log = getLogger(GlobalBeanConfig::class.java)
 
         override fun post(req: OAuth2HttpRequest) =
             with(req) {

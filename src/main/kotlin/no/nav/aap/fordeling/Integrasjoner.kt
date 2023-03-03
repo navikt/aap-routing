@@ -5,7 +5,7 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
+import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navorganisasjon.NavOrgClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
@@ -21,7 +21,7 @@ data class Integrasjoner(val oppgave: OppgaveClient, val pdl: PDLClient, val org
         with(journalpost) {
             journalførendeEnhet?.let { enhet ->
                 if (org.erAktiv(enhet))
-                    NavEnhet(enhet, AKTIV).also { log.info("Journalførende enhet $it er aktiv") }
+                    NAVEnhet(enhet, AKTIV).also { log.info("Journalførende enhet $it er aktiv") }
                 else {
                     enhetFor(fnr).also { log.info("Enhet ikke aktiv, fra GT er $it") }
                 }

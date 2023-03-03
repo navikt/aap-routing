@@ -26,7 +26,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
     val log = getLogger(javaClass)
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 1000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 10000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
                @Header(RECEIVED_TOPIC) topic: String)  {
@@ -35,7 +35,9 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             with(integrasjoner) {
                 env.maybeInjectFault(this@ArkivHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
-                    fordeler.fordel(it,navEnhet(it))
+                    fordeler.fordel(it,navEnhet(it)).also { r ->
+                        log.info("${r.type} ${r.journalpostId} ${r.msg}")
+                    }
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->

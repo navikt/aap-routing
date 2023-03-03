@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
@@ -25,7 +24,6 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
         with(journalpostId) {
             oppdaterJournalpost(this, data)
             ferdigstillJournalpost(this)
-            FordelingResultat(this,"OK")
         }
 
     fun oppdaterJournalpost(journalpostId: String, data: OppdaterForespørsel) =

@@ -21,7 +21,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
 
     val log = getLogger(ArkivHendelseKonsument::class.java)
 
-    @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
+    @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression =  "#{'\${fordeling.topics.backoff}'}"),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,

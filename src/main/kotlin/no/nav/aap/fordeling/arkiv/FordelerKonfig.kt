@@ -24,7 +24,7 @@ data class FordelerKonfig(val topics: FordelerTopics,val routing: @NotEmpty Map<
         }
 
 
-    data class FordelerTopics(val retry: String, val dlt: String, val backoff: Int, val retries: Int)
+    data class FordelerTopics(val main: String,val retry: String, val dlt: String, val backoff: Int, val retries: Int)
     data class FordelingProperties(val brevkoder: List<String>)
 
     companion object {

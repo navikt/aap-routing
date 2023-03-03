@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
 import java.net.URI
-import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.ROUTING
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import no.nav.aap.util.Constants.JOARK
@@ -25,7 +24,6 @@ class ArkivConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        const val ROUTING = "routing"
         const val DOKARKIV = "dokarkiv"
         private const val PATH_PREFIX = "/rest/journalpostapi/v1/journalpost/"
         private const val DEFAULT_FERDIGSTILL_PATH = "$PATH_PREFIX{journalpostid}/ferdigstill"
@@ -33,5 +31,3 @@ class ArkivConfig(
         private const val DEFAULT_PING_PATH = "isAlive"
     }
 }
-@ConfigurationProperties(ROUTING)
-data class RoutingConfig(val retry: String, val dlt: String)

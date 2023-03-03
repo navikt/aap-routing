@@ -9,14 +9,14 @@ import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFact
 import org.springframework.stereotype.Component
 
 @Component
-class AAPRetryTopicNamingProviderFactory(private val cf: RoutingConfig) : RetryTopicNamesProviderFactory {
+class AAPRetryTopicNamingProviderFactory(private val cf: FordelerKonfig) : RetryTopicNamesProviderFactory {
 
     val log = getLogger(javaClass)
 
       override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
           if (p.isDltTopic) {
               return object : SuffixingRetryTopicNamesProvider(p) {
-                  override fun getTopicName(topic: String) = cf.dlt
+                  override fun getTopicName(topic: String) = cf.topic.dlt
               }
           }
           if (p.isMainEndpoint) {
@@ -25,7 +25,7 @@ class AAPRetryTopicNamingProviderFactory(private val cf: RoutingConfig) : RetryT
               }
           }
           return object : SuffixingRetryTopicNamesProvider(p) { // retry
-              override fun getTopicName(topic: String) = cf.retry
+              override fun getTopicName(topic: String) = cf.topic.retry
           }
       }
 }

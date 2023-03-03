@@ -31,9 +31,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
             with(integrasjoner) {
                 faultInjecter.inject(this@ArkivHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
-                    fordeler.fordel(it,navEnhet(it)).also { r ->
-                        log.info("${r.formattertMelding()}")
-                    }
+                    fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
@@ -41,7 +39,7 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                 log.warn(this,e)
                 slack.sendMessage(this)
             }
-             throw e
+            throw e
         }
     }
 

@@ -35,6 +35,7 @@ import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -115,15 +116,21 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 .onRetryExhaustedThrow { _, spec ->  spec.failure().also { log.warn("Retry mot token endpoint gir opp etter ${spec.totalRetriesInARow()} forsøk") } }
     }
 
+    @Component
+    class FaultInjecter(private val env: Environment)  {
+        fun inject(component: Any) = env.maybeInjectFault(component)
+        companion object {
+            private fun Environment.maybeInjectFault(component: Any) =
+                if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {
+                    log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
+                    throw IntegrationException("Dette er en tvunget feil i dev")
+                }
+                else Unit
+        }
+    }
+
     companion object {
         private val log = getLogger(GlobalBeanConfig::class.java)
-
-        fun Environment.maybeInjectFault(component: Any) =
-            if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {
-                log.info("${component.javaClass.simpleName} tvinger fram en feil i dev for å teste retry")
-                throw IntegrationException("Dette er en tvunget feil i dev")
-            }
-            else Unit
         fun ClientConfigurationProperties.clientCredentialFlow( service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key], req.url())).build()) }

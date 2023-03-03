@@ -24,6 +24,9 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.listener.ContainerProperties
+import org.springframework.kafka.listener.ContainerProperties.*
+import org.springframework.kafka.listener.ContainerProperties.AckMode.*
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -78,6 +81,7 @@ class ArkivBeanConfig : RetryTopicConfigurationSupport() {
                     }
                 }
             })
+            containerProperties.ackMode = RECORD;
         }
 
     @Bean

@@ -1,16 +1,12 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.fordeling.Integrasjoner
-import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.maybeInjectFault
+import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.SlackNotifier
 import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster
-import no.nav.boot.conditionals.Cluster.Companion
-import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -21,19 +17,19 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private val integrasjoner: Integrasjoner, private val slack: SlackNotifier,private val env: Environment) {
+class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private val integrasjoner: Integrasjoner, private val slack: SlackNotifier,private val faultInjecter: FaultInjecter) {
 
     val log = getLogger(javaClass)
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
-    @RetryableTopic(attempts = "#{'\${fordeling.retries:3}'}", backoff = Backoff(delay = 10000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
+    @RetryableTopic(attempts = "#{'\${fordeling.retries}'}", backoff = Backoff(delay = 10000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
             log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
-                env.maybeInjectFault(this@ArkivHendelseKonsument)
+                faultInjecter.inject(this@ArkivHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r ->
                         log.info("${r.formattertMelding()}")

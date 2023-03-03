@@ -18,8 +18,7 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environm
         with(integrasjoner)  {
             if (oppgave.harOppgave(jp.journalpostId)) {
                 FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave").also {
-                    log.info(" ${it.journalpostId} ${it.msg}")
-
+                    log.info("${it.journalpostId} ${it.msg}")
                 }
             }
             else {

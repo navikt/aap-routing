@@ -4,9 +4,7 @@ import java.io.IOException
 import com.slack.api.Slack
 import org.slf4j.LoggerFactory
 
-class SlackNotifierImpl(private val token: String, private val channel: String, private val enabled: Boolean) {
-    private val log = LoggerFactory.getLogger(javaClass)
-    private val slack = Slack.getInstance()
+class SlackNotifier(private val token: String, private val channel: String, private val enabled: Boolean) {
 
     init {
         log.info("Initierer SlackNotifier for kanal: $channel")
@@ -28,5 +26,10 @@ class SlackNotifierImpl(private val token: String, private val channel: String, 
         } catch (e: IOException) {
             log.warn("Fikk ikke kontakt med Slack sitt API. Skulle ha sendt melding: '$message'", e)
         }
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(SlackNotifier::class.java)
+        private val slack = Slack.getInstance()
     }
 }

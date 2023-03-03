@@ -15,7 +15,7 @@ class SlackNotifier(private val cfg: SlackConfig) {
                         it.channel(kanal).text(message)
                     }) {
                         if (!isOk) {
-                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $message")
+                            log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
                         }
                     }
                 }.getOrElse{

@@ -25,10 +25,10 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
             }
         }.getOrElse {
             runCatching {
-                log.warn("Kunne ikke automatisk fordele ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), prøver manuell",it)
+                log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), prøver manuell",it)
                 manuell.fordel(jp,enhet)
             }.getOrElse {e ->
-                log.warn("Noe gikk galt under manuell fordeling av ${jp.journalpostId}",e)
+                log.warn("Noe gikk galt under manuell fordeling av journalpost ${jp.journalpostId}",e)
                 throw e
             }
         }

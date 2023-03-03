@@ -22,12 +22,12 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environm
             }
             else {
                 runCatching {
-                    log.info("Oppretter manuell journalføringsoppgave for ${jp.journalpostId}")
+                    log.info("Oppretter manuell journalføringsoppgave for journalpost ${jp.journalpostId}")
                     oppgave.opprettManuellJournalføringOppgave(jp,enhet)
                     FordelingResultat(jp.journalpostId,"Manuell journalføringsoppgave opprettet")
                 }.getOrElse {
                     run {
-                        log.warn("Opprettelse av manuell journalføringsopgave for ${jp.journalpostId} feilet, oppretter fordelingsoppgave", it)
+                        log.warn("Opprettelse av manuell journalføringsopgave for journalpost ${jp.journalpostId} feilet, oppretter fordelingsoppgave", it)
                         oppgave.opprettFordelingOppgave(jp)
                         FordelingResultat(jp.journalpostId, "Manuell fordelingsoppgave oprettet")
                     }

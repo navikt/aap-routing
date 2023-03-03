@@ -17,8 +17,10 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environm
     override fun fordel(jp: Journalpost, enhet: NavEnhet) =
         with(integrasjoner)  {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                log.warn("Journalpost ${jp.journalpostId} har allerede journalføringsoppgave, avslutter manuell fordeling")
-                FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave")
+                FordelingResultat(jp.journalpostId,"Har allerede journalføringsoppgave").also {
+                    log.info(" ${it.journalpostId} ${it.msg}")
+
+                }
             }
             else {
                 runCatching {

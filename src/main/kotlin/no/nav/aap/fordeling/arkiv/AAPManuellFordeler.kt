@@ -8,12 +8,13 @@ import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.MANUE
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
+import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environment) : ManuellFordeler {
-    val log = getLogger(AAPManuellFordeler::class.java)
+    val log = LoggerFactory.getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)
 

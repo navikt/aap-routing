@@ -19,7 +19,7 @@ import org.springframework.retry.annotation.Backoff
 @ConditionalOnGCP
 class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private val integrasjoner: Integrasjoner, private val slack: SlackNotifier,private val faultInjecter: FaultInjecter) {
 
-    val log = getLogger(javaClass)
+    val log = getLogger(ArkivHendelseKonsument::class.java)
 
     @KafkaListener(topics = ["#{'\${joark.hendelser.topic:teamdokumenthandtering.aapen-dok-journalfoering}'}"], containerFactory = JOARK)
     @RetryableTopic(attempts = "#{'\${fordeling.retries}'}", backoff = Backoff(delay = 10000),fixedDelayTopicStrategy = SINGLE_TOPIC, autoCreateTopics = "false")

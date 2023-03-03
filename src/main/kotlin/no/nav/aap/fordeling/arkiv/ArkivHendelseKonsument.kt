@@ -7,6 +7,7 @@ import no.nav.aap.util.Constants.JOARK
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion
+import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
@@ -38,9 +39,11 @@ class ArkivHendelseKonsument(private val fordeler: DelegerendeFordeler, private 
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
-            log.warn("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang",e)
-            slack.sendMessage("Behandling av $hendelse på $topic feilet i ${Cluster.currentCluster()} for ${forsøk?.let { "$it." } ?: "1."} gang",e)
-            throw e
+            with("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
+                log.warn(this,e)
+                slack.sendMessage(this)
+            }
+             throw e
         }
     }
 

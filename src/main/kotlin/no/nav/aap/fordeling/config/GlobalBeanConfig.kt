@@ -116,7 +116,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     companion object {
-        private val log = getLogger(javaClass)
+        private val log = getLogger(GlobalBeanConfig::class.java)
 
         fun Environment.maybeInjectFault(component: Any) =
             if (Random.nextBoolean() && EnvUtil.isDevOrLocal(this))  {

@@ -24,6 +24,7 @@
 		<kotlin.version>1.8.0</kotlin.version>
 		<logstash.version>7.2</logstash.version>
 		<resilience4j.version>2.0.2</resilience4j.version>
+		<slack.version>1.27.3</slack.version>
 		<springdoc.version>2.0.2</springdoc.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<tokensupport.version>3.0.4</tokensupport.version>
@@ -35,6 +36,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>com.slack.api</groupId>
+			<artifactId>slack-api-client</artifactId>
+			<version>${slack.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>

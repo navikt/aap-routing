@@ -26,12 +26,15 @@ class AAPManuellFordeler(private val integrasjoner: Integrasjoner, env: Environm
                     oppgave.opprettManuellJournalføringOppgave(jp,enhet)
                     FordelingResultat(jp.journalpostId,"Manuell journalføringsoppgave opprettet")
                 }.getOrElse {
-                    run {
+                    runCatching {
                         log.warn("Opprettelse av manuell journalføringsopgave for journalpost ${jp.journalpostId} feilet, oppretter fordelingsoppgave", it)
                         oppgave.opprettFordelingOppgave(jp)
                         FordelingResultat(jp.journalpostId, "Manuell fordelingsoppgave oprettet")
+                    }.getOrElse {
+                        throw ManuellException(jp.journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
                     }
                 }
             }
         }
 }
+class ManuellException(val journalpostId: String, msg: String, cause: Throwable? = null) : RuntimeException(msg,cause)

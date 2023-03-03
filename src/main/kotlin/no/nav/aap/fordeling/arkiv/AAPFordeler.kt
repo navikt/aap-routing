@@ -25,12 +25,18 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
                 }
             }
         }.getOrElse {
-            runCatching {
-                log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), prøver manuell",it)
-                manuell.fordel(jp,enhet)
-            }.getOrElse {e ->
-                log.warn("Noe gikk galt under manuell fordeling av journalpost ${jp.journalpostId}",e)
-                throw e
+            if (it !is ManuellException) {
+                log.warn("Kunne ikke fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), prøver manuell",it)
+                runCatching {
+                    manuell.fordel(jp,enhet)
+                }.getOrElse {e ->
+                    log.warn("Noe gikk galt under manuell fordeling av journalpost ${jp.journalpostId}",e)
+                    throw e
+                }
+            }
+            else {
+                log.info("Hopper over nytt manuelt forsøk siden den akkurat feilet",it)
+                throw it
             }
         }
 

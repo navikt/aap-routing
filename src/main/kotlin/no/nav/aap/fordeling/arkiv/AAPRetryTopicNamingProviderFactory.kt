@@ -16,7 +16,7 @@ class AAPRetryTopicNamingProviderFactory(private val cf: FordelerKonfig) : Retry
       override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
           if (p.isDltTopic) {
               return object : SuffixingRetryTopicNamesProvider(p) {
-                  override fun getTopicName(topic: String) = cf.topic.dlt
+                  override fun getTopicName(topic: String) = cf.topics.dlt
               }
           }
           if (p.isMainEndpoint) {
@@ -25,7 +25,7 @@ class AAPRetryTopicNamingProviderFactory(private val cf: FordelerKonfig) : Retry
               }
           }
           return object : SuffixingRetryTopicNamesProvider(p) { // retry
-              override fun getTopicName(topic: String) = cf.topic.retry
+              override fun getTopicName(topic: String) = cf.topics.retry
           }
       }
 }

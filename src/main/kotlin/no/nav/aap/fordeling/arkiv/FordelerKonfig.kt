@@ -7,7 +7,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)
-data class FordelerKonfig(val topic: FordelerTopics,val routing: @NotEmpty Map<String, FordelingProperties>) {
+data class FordelerKonfig(val topics: FordelerTopics,val routing: @NotEmpty Map<String, FordelingProperties>) {
     val log = getLogger(javaClass)
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =

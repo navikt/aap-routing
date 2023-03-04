@@ -14,7 +14,7 @@ class SafGraphQLAdapter(@Qualifier(SAF) private val graphQL: GraphQLWebClient, @
     AbstractGraphQLAdapter(webClient, cf) {
 
     fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
-    
+
     companion object {
         private fun Long.asIdent() = mapOf(ID to "$this")
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"

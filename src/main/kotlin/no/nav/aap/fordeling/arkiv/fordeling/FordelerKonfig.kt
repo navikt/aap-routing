@@ -14,20 +14,17 @@ data class FordelerKonfig(val topics: FordelerTopics, val routing: @NotEmpty Map
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
         if (enabled) {
-            routing[jp.tema]?.let { c ->
-                if (jp.dokumenter.any { it.brevkode in c.brevkoder }) {  //2b kandidat for automatisk journalføring
-                    fordelere.firstOrNull { jp.tema in it.tema() }
-                } else {
-                    INGEN_FORDELER.also {// 2a TODO må vel kaste exception her?
-                        log.info("Journalpost $jp med ${jp.tema} fordeles ikke")
-                    }
-                }
+            routing[jp.tema]?.let {
+                fordelere.firstOrNull { jp.tema in it.tema() }
             } ?: INGEN_FORDELER.also {
-                log.info("Ingen konfigurasjon for ${jp.tema}")
+                log.info("Ingen konfigurasjon for tema ${jp.tema}")
             }
         }
-        else INGEN_FORDELER
-
+        else {
+            INGEN_FORDELER.also {
+                log.info("Fordeling ikke aktivert, sett fordeling.enabled=true for å aktivere")
+            }
+        }
 
     data class FordelerTopics(val main: String,val retry: String, val dlt: String, val backoff: Int, val retries: Int)
     data class FordelingProperties(val brevkoder: List<String>)
@@ -36,5 +33,8 @@ data class FordelerKonfig(val topics: FordelerTopics, val routing: @NotEmpty Map
         const val FORDELING = "fordeling"
     }
 
-    override fun topics(): List<String> = listOf(topics.main,topics.retry,topics.dlt)
+    override fun topics(): List<String> =
+        with(topics) {
+            listOf(main,retry,dlt)
+        }
 }

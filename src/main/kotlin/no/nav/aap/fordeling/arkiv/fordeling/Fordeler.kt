@@ -1,7 +1,7 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.Companion.NONE
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.NONE
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 
 interface Fordeler {

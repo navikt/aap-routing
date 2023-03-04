@@ -7,7 +7,6 @@ import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaDTOs.*
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
-import org.checkerframework.checker.units.qual.t
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*

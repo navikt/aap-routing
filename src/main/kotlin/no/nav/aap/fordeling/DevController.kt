@@ -3,10 +3,10 @@ package no.nav.aap.fordeling
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
-import no.nav.aap.fordeling.arkiv.AAPFordeler
-import no.nav.aap.fordeling.arkiv.ArkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.Journalpost
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
+import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
+import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class DevController(private val fordeler: AAPFordeler,
                     private val pdl: PDLWebClientAdapter,
                     private val egen: EgenAnsattClient,
-                    private val arkiv: ArkivWebClientAdapter,
+                    private val arkiv: DokarkivWebClientAdapter,
                     private val oppgave: OppgaveClient,
                     private val arena: ArenaWebClientAdapter,
                     private val org: NavOrgWebClientAdapter) {
@@ -42,7 +42,7 @@ class DevController(private val fordeler: AAPFordeler,
 
 
     @PostMapping("fordel")
-    fun fordelSøknad(@RequestBody  journalpost: Journalpost,@RequestParam enhetNr: String) =
+    fun fordelSøknad(@RequestBody  journalpost: Journalpost, @RequestParam enhetNr: String) =
         fordeler.fordel(journalpost, NAVEnhet(enhetNr,AKTIV))
     @GetMapping("hargosysoppgave")
     fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)

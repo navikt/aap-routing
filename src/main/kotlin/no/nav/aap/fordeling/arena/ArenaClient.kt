@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.arena
 
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arkiv.Journalpost
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import org.springframework.stereotype.Component
 

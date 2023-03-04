@@ -1,10 +1,10 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling.arkiv.dokarkiv
 
-import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterRespons
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterRespons.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArkivWebClientAdapter( @Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: ArkivConfig) :
+class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: DokarkivConfig) :
     AbstractWebClientAdapter(dokarkiv, cf) {
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdaterForespørsel) =

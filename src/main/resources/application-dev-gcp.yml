@@ -9,14 +9,13 @@ management:
             show-details: always
         shutdown:
             enabled: true
-joark:
-    scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
-    dokarkivscope: api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default
-
+saf:
+   scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
+dokarkiv:
+    scope: api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default
 fordeling:
     topics:
         main: teamdokumenthandtering.aapen-dok-journalfoering-q1
-
 oppgave:
     base-uri: https://oppgave-q1.dev-fss-pub.nais.io
     scope: api://dev-fss.oppgavehandtering.oppgave-q1/.default

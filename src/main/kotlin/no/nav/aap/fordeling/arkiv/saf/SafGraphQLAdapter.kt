@@ -1,21 +1,16 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling.arkiv.saf
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
-import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO
+import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
-import no.nav.aap.util.Constants.JOARK
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArkivGraphQLAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, cf: ArkivConfig) :
+class SafGraphQLAdapter(@Qualifier(SAF) private val graphQL: GraphQLWebClient, @Qualifier(SAF) webClient: WebClient, cf: SafConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
     fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()

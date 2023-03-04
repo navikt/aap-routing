@@ -15,15 +15,6 @@ import org.springframework.web.reactive.function.client.WebClient
 @Component
 class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL) val graphQL: GraphQLWebClient, cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
-    override fun ping() =
-        client
-            .options()
-            .uri(baseUri)
-            .accept(APPLICATION_JSON, TEXT_PLAIN)
-            .retrieve()
-            .toBodilessEntity()
-            .block().run { emptyMap<String,String>() }
-
     fun diskresjonskode(fnr: Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()

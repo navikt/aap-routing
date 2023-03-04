@@ -1,7 +1,6 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.util.LoggerUtil.getLogger
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.kafka.retrytopic.DestinationTopic.Properties
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider

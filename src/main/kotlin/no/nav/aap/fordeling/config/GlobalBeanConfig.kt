@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
-import io.netty.handler.logging.LogLevel.TRACE
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.util.function.Consumer
-import kotlin.random.Random
 import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
@@ -18,7 +16,6 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
@@ -43,7 +40,6 @@ import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
@@ -121,14 +117,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Component
     class FaultInjecter(private val env: Environment)  {
 
-
         fun inject(component: Any) = env.maybeInjectFault(component)
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.maybeInjectFault(component: Any) =
                 if (isDevOrLocal(this)) {
                     if (nextBoolean())  {
-                        log.info("Injiserer fault")
+                        log.info("Injiserer feil")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.info(it.message)
                         }

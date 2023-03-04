@@ -3,8 +3,8 @@ package no.nav.aap.fordeling
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
+import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient

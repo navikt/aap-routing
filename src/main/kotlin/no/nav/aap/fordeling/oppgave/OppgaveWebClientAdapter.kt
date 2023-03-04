@@ -4,7 +4,6 @@ import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons
 import no.nav.aap.rest.AbstractWebClientAdapter
-import org.checkerframework.checker.units.qual.t
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component

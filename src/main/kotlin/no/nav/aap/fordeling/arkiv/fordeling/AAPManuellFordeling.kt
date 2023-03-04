@@ -33,10 +33,10 @@ class AAPManuellFordeling(private val oppgave: OppgaveClient) : ManuellFordeling
                         FordelingResultat(journalpostId, "Fordelingsoppgave oprettet",MANUELL_FORDELING)
                     }.getOrElse {
                         log.warn("Feil ved opprettelse av manuell fordelingsoppgave for journalpost $journalpostId")
-                        throw ManuellException(journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
+                        throw ManuellFordelingException(journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
                     }
                 }
             }
         }
 }
-class ManuellException(val journalpostId: String, msg: String, cause: Throwable? = null) : RuntimeException(msg,cause)
+class ManuellFordelingException(val journalpostId: String, msg: String, cause: Throwable? = null) : RuntimeException(msg,cause)

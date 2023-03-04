@@ -32,7 +32,7 @@ class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell
                 }
             }
         }.getOrElse {
-            if (it !is ManuellException) {
+            if (it !is ManuellFordelingException) {
                 log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt",it)
                 manuell.fordel(jp,enhet)
             }

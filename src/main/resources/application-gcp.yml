@@ -146,7 +146,7 @@ arena:
     enabled: true
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 slack:
-    enabled: false
+    enabled: true
 kelvin:
     standard:
         topic: aap.soknad-sendt.v1

@@ -33,7 +33,7 @@ class DokarkivBeanConfig  {
     fun dokarkivFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, DOKARKIV)
 
     @Bean
-    @ConditionalOnProperty("${DOKARKIV}.enabled", havingValue = "true")
+    @ConditionalOnProperty("$DOKARKIV.enabled", havingValue = "true")
     fun dokarkivHealthIndicator(adapter: DokarkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
 }

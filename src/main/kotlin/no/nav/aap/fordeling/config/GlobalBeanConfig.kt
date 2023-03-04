@@ -128,6 +128,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             private fun Environment.maybeInjectFault(component: Any) =
                 if (isDevOrLocal(this)) {
                     if (nextBoolean())  {
+                        log.info("Injiserer fault")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.info(it.message)
                         }

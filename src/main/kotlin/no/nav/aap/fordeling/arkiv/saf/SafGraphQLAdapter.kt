@@ -13,10 +13,10 @@ import org.springframework.web.reactive.function.client.WebClient
 class SafGraphQLAdapter(@Qualifier(SAF) private val graphQL: GraphQLWebClient, @Qualifier(SAF) webClient: WebClient, cf: SafConfig) :
     AbstractGraphQLAdapter(webClient, cf) {
 
-    fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
+    fun hentJournalpost(journalpostId: String) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
 
     companion object {
-        private fun Long.asIdent() = mapOf(ID to "$this")
+        private fun String.asIdent() = mapOf(ID to this)
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"
         private const val ID = "journalpostId"
     }

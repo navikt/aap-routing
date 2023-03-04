@@ -15,12 +15,11 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
                        val tema: String, val behandlingstema: String?, val fnr: Fødselsnummer, val bruker: Bruker?, val avsenderMottager: Bruker?,
                        val relevanteDatoer: Set<RelevantDato>, val dokumenter: Set<DokumentInfo>) {
 
-    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Brevkode ikke satt"
+    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Ukjent brevkode"
 
-    val hovedDokumentTittel = dokumenter.first().tittel ?: STANDARD.tittel
+    val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: STANDARD.tittel
 
     val vedleggTitler =  dokumenter.drop(1).mapNotNull { it.tittel }
-
 
     fun opprettArenaOppgaveData(enhet: NAVEnhet)  = ArenaOpprettOppgaveData(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler)
 

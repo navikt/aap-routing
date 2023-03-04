@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArkivClient(private val dokarkiv: DokarkivWebClientAdapter, private val saf: SafGraphQLAdapter) {
-    fun hentJournalpost(journalpostId: Long)  = saf.hentJournalpost(journalpostId)
+    fun hentJournalpost(journalpostId: String)  = saf.hentJournalpost(journalpostId)
     fun oppdaterOgFerdigstillJournalpost(journalpost: Journalpost, sakNr: String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId,journalpost.oppdateringsData(sakNr))
 }

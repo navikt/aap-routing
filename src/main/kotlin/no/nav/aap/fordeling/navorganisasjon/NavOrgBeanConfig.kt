@@ -31,5 +31,6 @@ class NavOrgBeanConfig {
         RemovalListener<Any, Any> { _, _, cause -> log.info("Cache removal $cause") }
 
     @ConditionalOnGCP
+    @Bean
     fun orgHealthIndicator(adapter: NavOrgWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

@@ -38,5 +38,6 @@ class SafBeanConfig {
     fun safFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, SAF)
 
     @ConditionalOnGCP
+    @Bean
     fun safHealthIndicator(a: SafGraphQLAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

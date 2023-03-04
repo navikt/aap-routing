@@ -30,5 +30,6 @@ class OppgaveBeanConfig {
         cfg.clientCredentialFlow(service, OPPGAVE)
 
     @ConditionalOnGCP
+    @Bean
     fun oppgaveHealthIndicator(adapter: OppgaveWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

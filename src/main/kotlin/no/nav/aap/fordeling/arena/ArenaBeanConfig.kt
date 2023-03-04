@@ -20,5 +20,6 @@ class ArenaBeanConfig {
             .build()
 
     @ConditionalOnGCP
+    @Bean
     fun arenaHealthIndicator(adapter: ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

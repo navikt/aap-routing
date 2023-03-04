@@ -1,18 +1,18 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import jakarta.validation.constraints.NotEmpty
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
-import no.nav.aap.fordeling.arkiv.fordeling.FordelerKonfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.Companion.INGEN_FORDELER
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)
-data class FordelerKonfig(val topics: FordelerTopics, val routing: @NotEmpty Map<String, FordelingProperties>, val enabled: Boolean = true) : AbstractKafkaConfig(
+data class FordelingConfig(val topics: FordelerTopics, val routing: @NotEmpty Map<String, FordelingProperties>, val enabled: Boolean = true) : AbstractKafkaConfig(
         FORDELING,true) {
     val log = getLogger(javaClass)
 
-    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
+    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeling>) =
         if (enabled) {
             routing[jp.tema]?.let {
                 fordelere.firstOrNull { jp.tema in it.tema() }

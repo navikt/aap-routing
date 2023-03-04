@@ -8,7 +8,7 @@ import org.springframework.kafka.retrytopic.SuffixingRetryTopicNamesProviderFact
 import org.springframework.stereotype.Component
 
 @Component
-class AAPRetryTopicNamingProviderFactory(private val cf: FordelerKonfig) : RetryTopicNamesProviderFactory {
+class FordelingRetryTopicNamingProviderFactory(private val cf: FordelingConfig) : RetryTopicNamesProviderFactory {
 
     val log = getLogger(javaClass)
 

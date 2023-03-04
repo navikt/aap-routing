@@ -2,7 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
-import no.nav.aap.fordeling.arkiv.fordeling.FordelerKonfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator
 import no.nav.aap.health.AbstractPingableHealthIndicator
@@ -30,17 +30,17 @@ import org.springframework.stereotype.Component
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val namingProviderFactory: AAPRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
+class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
 
     @Component
-    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelerKonfig) : AbstractKafkaHealthIndicator(admin,p.bootstrapServers,cfg)
+    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : AbstractKafkaHealthIndicator(admin,p.bootstrapServers,cfg)
 
     @Bean
     @ConditionalOnProperty("$FORDELING.enabled", havingValue = "true")
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
      @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties,props: FordelerKonfig) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties,props: FordelingConfig) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {

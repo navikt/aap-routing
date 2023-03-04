@@ -30,11 +30,11 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun pdlClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service,PDL)
 
-    @Qualifier(PDL)
     @Bean
+    @Qualifier(PDL)
     fun pdlGraphQLClient(@Qualifier(PDL) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun pdlHealthIndicator(a: PDLWebClientAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

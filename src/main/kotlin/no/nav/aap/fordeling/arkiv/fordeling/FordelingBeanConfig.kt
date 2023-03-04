@@ -35,8 +35,8 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     @Component
     class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : AbstractKafkaHealthIndicator(admin,p.bootstrapServers,cfg)
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
      @Bean(FORDELING)

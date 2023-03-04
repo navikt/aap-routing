@@ -17,8 +17,8 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 class EgenAnsattBeanConfig {
 
-    @Qualifier(EGENANSATT)
     @Bean
+    @Qualifier(EGENANSATT)
     fun egenAnsattWebClient(builder: Builder, cfg: EgenAnsattConfig,@Qualifier(EGENANSATT) egenAnsattClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")

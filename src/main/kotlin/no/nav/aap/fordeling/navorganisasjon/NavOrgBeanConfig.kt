@@ -19,8 +19,8 @@ class NavOrgBeanConfig {
     private val log = LoggerUtil.getLogger(javaClass)
 
 
-    @Qualifier(NAVORG)
     @Bean
+    @Qualifier(NAVORG)
     fun navOrgWebClient(builder: Builder, cfg: NavOrgConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
@@ -30,7 +30,7 @@ class NavOrgBeanConfig {
     fun cacheListener() =
         RemovalListener<Any, Any> { _, _, cause -> log.info("Cache removal $cause") }
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun orgHealthIndicator(adapter: NavOrgWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

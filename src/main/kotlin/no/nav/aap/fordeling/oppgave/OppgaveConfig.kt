@@ -27,7 +27,7 @@ class OppgaveConfig(
             add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE.verdi)
             add(OPPGAVETYPE, FORDELINGSOPPGAVE.verdi)
         }
-        private const val DEFAULT_PING_PATH = "/internal/alive"
+        private const val DEFAULT_PING_PATH = "internal/alive"
         private const val DEFAULT_OPPGAVE_PATH = "/api/v1/oppgaver"
         private const val STATUSKATEGORI = "statuskategori"
         private const val OPPGAVETYPE = "oppgavetype"

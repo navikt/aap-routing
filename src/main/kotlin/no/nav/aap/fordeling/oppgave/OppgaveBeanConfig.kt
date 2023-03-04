@@ -16,8 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 class OppgaveBeanConfig {
 
-    @Qualifier(OPPGAVE)
     @Bean
+    @Qualifier(OPPGAVE)
     fun oppgaveWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveClientCredentialFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
@@ -29,7 +29,7 @@ class OppgaveBeanConfig {
     fun oppgaveClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, OPPGAVE)
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun oppgaveHealthIndicator(adapter: OppgaveWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

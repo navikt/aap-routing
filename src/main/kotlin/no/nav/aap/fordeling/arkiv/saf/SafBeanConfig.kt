@@ -22,22 +22,23 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 class SafBeanConfig {
-    @Qualifier(SAF)
+
     @Bean
+    @Qualifier(SAF)
     fun safGraphQLWebClient(builder: Builder, cfg: SafConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
             .build()
-    @Qualifier(SAF)
     @Bean
+    @Qualifier(SAF)
     fun safGraphQLClient(@Qualifier(SAF) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(SAF)
     fun safFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, SAF)
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun safHealthIndicator(a: SafGraphQLAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

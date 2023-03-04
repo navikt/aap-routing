@@ -12,14 +12,14 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 class ArenaBeanConfig {
 
-    @Qualifier(ARENA)
     @Bean
+    @Qualifier(ARENA)
     fun arenaWebClient(builder: Builder, cfg: ArenaConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
             .build()
 
-    @ConditionalOnGCP
     @Bean
+    @ConditionalOnGCP
     fun arenaHealthIndicator(adapter: ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

@@ -1,10 +1,10 @@
-package no.nav.aap.fordeling.arkiv
+package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.Integrasjoner
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat
-import no.nav.aap.fordeling.arkiv.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger

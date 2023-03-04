@@ -106,10 +106,10 @@ no.nav:
                             client-id: ${azure.app.client.id}
                             client-jwk: ${azure.app.jwk}
                             client-auth-method: private_key_jwt
-                    joark:
+                    saf:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
-                        scope: ${joark.scope}
+                        scope: ${saf.scope}
                         authentication:
                             client-id: ${azure.app.client.id}
                             client-jwk: ${azure.app.jwk}
@@ -117,7 +117,7 @@ no.nav:
                     dokarkiv:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
-                        scope: ${joark.dokarkivscope}
+                        scope: ${dokarkiv.scope}
                         authentication:
                             client-id: ${azure.app.client.id}
                             client-jwk: ${azure.app.jwk}
@@ -130,8 +130,10 @@ egenansatt:
     enabled: true
     base-uri: http://skjermede-personer-pip.nom
     scope: api://${env}-gcp.nom.skjermede-personer-pip/.default
-joark:
-    dokarkiv: https://dokarkiv.${env}-fss-pub.nais.io
+dokarkiv:
+    base-uri: https://dokarkiv.${env}-fss-pub.nais.io
+    enabled: true
+saf:
     enabled: true
     base-uri: https://saf.${env}-fss-pub.nais.io/graphql
 oppgave:

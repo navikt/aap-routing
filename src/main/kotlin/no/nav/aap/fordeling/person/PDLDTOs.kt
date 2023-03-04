@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.UTLAND
 
 data class PDLGeoTilknytning(val gtType: PDLGeoType?, val gtKommune: String?, val gtBydel: String?, val gtLand: String?) {
 
-   enum class PDLGeoType() {
+   enum class PDLGeoType {
        KOMMUNE,BYDEL,UTLAND,UDEFINERT
    }
 

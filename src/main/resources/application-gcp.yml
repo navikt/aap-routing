@@ -152,7 +152,7 @@ kelvin:
         topic: aap.soknad-ettersendt.v1
     utland:
         topic: aap.utland-soknad-sendt.v1
-    enabled: true
+    enabled: false
 fordeling:
     topics:
        retry: 'aap.routing.retry'

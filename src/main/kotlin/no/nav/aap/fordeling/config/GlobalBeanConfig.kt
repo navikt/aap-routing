@@ -8,7 +8,9 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
+import java.util.Random
 import java.util.function.Consumer
+import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
@@ -122,9 +124,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.maybeInject(component: Any) =
                 if (isDevOrLocal(this)) {
-                    val i = nextInt(1,4)
-                    if (i.mod(2) == 0)  {
-                        log.info("Injiserer feil siden $i er partall")
+                    if (nextBoolean())  {
+                        log.warn("Injiserer feil")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.info(it.message)
                         }

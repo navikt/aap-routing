@@ -140,7 +140,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     companion object {
         fun ClientConfigurationProperties.clientCredentialFlow( service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
-                next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key], req.url())).build()) }
+                next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build()) }
     }
 
 }

@@ -154,6 +154,7 @@ kelvin:
         topic: aap.utland-soknad-sendt.v1
     enabled: false
 fordeling:
+    enabled: true
     topics:
        retry: 'aap.routing.retry'
        dlt: 'aap.routing.dlt'

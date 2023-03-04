@@ -60,7 +60,7 @@ class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell
     private fun fordelEttersending(jp: Journalpost) =
         with(integrasjoner) {
             arena.nyesteAktiveSak(jp.fnr)?.run {
-                arkiv.oppdaterOgFerdigstillJournalpost(jp, this) // 3a/b
+                arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
                 FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK)
             } ?: throw ArenaSakException(jp.journalpostId,"Har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
         }

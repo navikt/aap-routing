@@ -2,9 +2,9 @@ package no.nav.aap.fordeling.arkiv.dokarkiv
 
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterRespons
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterRespons.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringRespons
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
@@ -13,27 +13,27 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: DokarkivConfig) :
-    AbstractWebClientAdapter(dokarkiv, cf) {
+class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val cf: DokarkivConfig) :
+    AbstractWebClientAdapter(webClient, cf) {
 
-    fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdaterForespørsel) =
+    fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdateringData) =
         with(journalpostId) {
             oppdaterJournalpost(this, data)
             ferdigstillJournalpost(this)
         }
 
-    fun oppdaterJournalpost(journalpostId: String, data: OppdaterForespørsel) =
+    fun oppdaterJournalpost(journalpostId: String, data: OppdateringData) =
         if (cf.isEnabled) {
-            dokarkiv.put()
+            webClient.put()
                 .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
                 .retrieve()
-                .bodyToMono<OppdaterRespons>()
+                .bodyToMono<OppdateringRespons>()
                 .retryWhen(cf.retrySpec(log))
-                .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId med $data OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId med $data feilet", t) }
+                .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId fra $data OK. Respons $it") }
+                .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId fra $data feilet", t) }
                 .block()
         }
         else {
@@ -44,7 +44,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) private val dokarkiv: WebCli
 
     fun ferdigstillJournalpost(journalpostId: String) =
         if (cf.isEnabled) {
-            dokarkiv.patch()
+            webClient.patch()
             .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
             .contentType(APPLICATION_JSON)
             .accept(TEXT_PLAIN)

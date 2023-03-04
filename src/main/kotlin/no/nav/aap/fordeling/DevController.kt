@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
@@ -32,10 +32,10 @@ class DevController(private val fordeler: AAPFordeling,
 
     private val log = getLogger(javaClass)
     @PostMapping("oppdaterogferdigstilljournalpost")
-    fun oppdaterOgFerdigstillJournalpost(@RequestBody  data: OppdaterForespørsel, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
+    fun oppdaterOgFerdigstillJournalpost(@RequestBody  data: OppdateringData, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
 
     @PostMapping("oppdaterjournalpost")
-    fun oppdaterJournalpost( @RequestParam journalpostId: String,@RequestBody  data: OppdaterForespørsel) = arkiv.oppdaterJournalpost(journalpostId,data)
+    fun oppdaterJournalpost( @RequestParam journalpostId: String,@RequestBody  data: OppdateringData) = arkiv.oppdaterJournalpost(journalpostId,data)
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost( @RequestParam journalpostId: String) =
          arkiv.ferdigstillJournalpost(journalpostId)

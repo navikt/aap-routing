@@ -3,11 +3,10 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.PERSON
 import no.nav.aap.util.Constants.AAP
 
-class ArenaDTOs {
-    data class ArenaSakForespørsel(val fnr: Fødselsnummer,val brukertype: String = PERSON,val tema: String = AAP,  val lukket: Boolean = false)
-    data class ArenaOpprettetOppgave(val oppgaveId: String, val arenaSakId: String) {
+object ArenaDTOs {
+    data class ArenaOpprettetOppgave(val oppgaveId: String = "0", val arenaSakId: String = "0") {
         companion object {
-            val EMPTY = ArenaOpprettetOppgave("0","0")
+            val EMPTY = ArenaOpprettetOppgave()
         }
     }
 

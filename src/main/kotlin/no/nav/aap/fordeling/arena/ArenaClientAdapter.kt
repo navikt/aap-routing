@@ -4,7 +4,8 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.SkjemaType.*
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.fordeling.arena.ArenaDTOs.*
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
+import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier

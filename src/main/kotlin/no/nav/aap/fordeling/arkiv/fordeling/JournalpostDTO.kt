@@ -52,7 +52,7 @@ data class JournalpostDTO(
         }
     }
 
-    data class OppdaterForespørsel(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak? = null, val tema: String = AAP.uppercase()) {
+    data class OppdateringData(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak? = null, val tema: String = AAP.uppercase()) {
 
         data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
     }
@@ -63,9 +63,9 @@ data class JournalpostDTO(
             val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
         }
     }
-    data class OppdaterRespons(val journalpostId: String) {
+    data class OppdateringRespons(val journalpostId: String) {
         companion object {
-            val EMPTY = OppdaterRespons("0")
+            val EMPTY = OppdateringRespons("0")
         }
     }
 

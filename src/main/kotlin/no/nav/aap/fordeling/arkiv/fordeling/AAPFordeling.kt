@@ -11,7 +11,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeler) : Fordeling {
+class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeling) : Fordeling {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)

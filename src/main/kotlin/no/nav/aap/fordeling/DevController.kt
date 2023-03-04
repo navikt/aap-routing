@@ -4,7 +4,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
+import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
-class DevController(private val fordeler: AAPFordeler,
+class DevController(private val fordeler: AAPFordeling,
                     private val pdl: PDLWebClientAdapter,
                     private val egen: EgenAnsattClient,
                     private val arkiv: DokarkivWebClientAdapter,

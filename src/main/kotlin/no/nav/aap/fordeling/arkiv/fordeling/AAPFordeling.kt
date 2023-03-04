@@ -9,6 +9,8 @@ import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
+import org.springframework.util.ReflectionUtils
+import org.springframework.util.ReflectionUtils.*
 
 @Component
 class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeling) : Fordeling {
@@ -17,10 +19,16 @@ class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell
     override fun tema() = listOf(AAP)
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         runCatching {
+            findMethod(this::class.java,
+                    "fordel" + jp.hovedDokumentBrevkode.replace(".", "_"),
+                    Journalpost::class.java,
+                    NAVEnhet::class.java)?.let {
+                        log.info("Fant metode $it")
+            } ?: log.info("Fant ikke metode")
             when (jp.hovedDokumentBrevkode) {
                 STANDARD.kode -> {
                     log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
-                    fordelStandard(jp,enhet)
+                    `fordelNAV 11-13_05`(jp,enhet)
                 }
                 STANDARD_ETTERSENDING.kode -> {
                     log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
@@ -42,7 +50,9 @@ class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell
             }
         }
 
-    private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
+
+
+    private fun  `fordelNAV 11-13_05`(jp: Journalpost, enhet: NAVEnhet) =
         with(integrasjoner) {
             if (!arena.harAktivSak(jp.fnr)) {
                 log.info("Arena har IKKE aktiv sak for ${jp.fnr}")

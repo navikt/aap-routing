@@ -19,7 +19,7 @@ abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
             .associateBy({ it.first }, { it.second })
     }
 
-    private fun innslag(topic: String, ix: Int): Pair<String,String>?{
+    private fun innslag(topic: String, ix: Int): Pair<String,String> {
         runCatching {
             with(admin.describeTopics(topic).values.first()) {
                 return Pair("topic-$ix", "${name()} (${partitions().count()} partisjoner")
@@ -27,7 +27,7 @@ abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
         }.recover {
             return Pair(topic, it.message ?: it.javaClass.simpleName)
         }
-        return null
+        return Pair(topic,"OK")
     }
 
     abstract class AbstractKafkaConfig(val name: String, val isEnabled: Boolean) {

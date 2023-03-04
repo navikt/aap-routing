@@ -1,13 +1,11 @@
 package no.nav.aap.fordeling.arkiv
 
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.fordeling.arkiv.ArkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterForespørsel
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons
 import no.nav.aap.fordeling.arkiv.JournalpostDTO.OppdaterRespons.Companion.EMPTY
-import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
-import no.nav.aap.util.Constants.JOARK
+import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
@@ -15,10 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebClient, @Qualifier(JOARK) webClient: WebClient, @Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: ArkivConfig) :
-    AbstractGraphQLAdapter(webClient, cf) {
-
-    fun hentJournalpost(journalpostId: Long) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
+class ArkivWebClientAdapter( @Qualifier(DOKARKIV) private val dokarkiv: WebClient, val cf: ArkivConfig) :
+    AbstractWebClientAdapter(dokarkiv, cf) {
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdaterForespørsel) =
         with(journalpostId) {
@@ -46,8 +42,6 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
             }
         }
 
-
-
     fun ferdigstillJournalpost(journalpostId: String) =
         if (cf.isEnabled) {
             dokarkiv.patch()
@@ -67,11 +61,4 @@ class ArkivWebClientAdapter(@Qualifier(JOARK) private val graphQL: GraphQLWebCli
                 log.info(it)
             }
         }
-
-
-    companion object {
-        private fun Long.asIdent() = mapOf(ID to "$this")
-        private const val JOURNALPOST_QUERY = "query-journalpost.graphql"
-        private const val ID = "journalpostId"
-    }
 }

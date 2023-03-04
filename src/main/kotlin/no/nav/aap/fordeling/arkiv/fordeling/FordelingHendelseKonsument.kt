@@ -29,7 +29,7 @@ class FordelingHendelseKonsument(private val fordeler: DelegerendeFordeler, priv
         runCatching {
             log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
-                faultInjecter.inject(this@FordelingHendelseKonsument)
+                faultInjecter.maybeInject(this@FordelingHendelseKonsument)
                 arkiv.hentJournalpost(hendelse.journalpostId)?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
                 }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
@@ -46,8 +46,7 @@ class FordelingHendelseKonsument(private val fordeler: DelegerendeFordeler, priv
 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
-            @Header(DELIVERY_ATTEMPT) forsøk: String?,
             @Header(EXCEPTION_STACKTRACE) trace: String?)  {
-        log.warn("Gir opp behandling av $payload $trace etter $forsøk forsøk")
+        log.warn("Gir opp behandling av ${payload.journalpostId} $trace")
     }
 }

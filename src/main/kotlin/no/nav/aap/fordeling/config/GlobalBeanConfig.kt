@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
+import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -117,13 +118,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Component
     class FaultInjecter(private val env: Environment)  {
 
-        fun inject(component: Any) = env.maybeInjectFault(component)
+        fun maybeInject(component: Any) = env.maybeInject(component)
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
-            private fun Environment.maybeInjectFault(component: Any) =
+            private fun Environment.maybeInject(component: Any) =
                 if (isDevOrLocal(this)) {
-                    if (nextBoolean())  {
-                        log.info("Injiserer feil")
+                    val i = nextInt()
+                    if (i.mod(2) == 0)  {
+                        log.info("Injiserer feil siden $i er partall")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.info(it.message)
                         }

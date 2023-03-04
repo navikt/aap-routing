@@ -37,7 +37,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         }.getOrElse { e ->
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this,e)
-                slack.sendMessage(this)
+                slack.sendMessage("$this ${e.message}")
             }
             throw e
         }

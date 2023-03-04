@@ -18,12 +18,6 @@ class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell:
     override fun tema() = listOf(AAP)
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         runCatching {
-            findMethod(this::class.java,
-                    "fordel" + jp.hovedDokumentBrevkode.replace(".", "_"),
-                    Journalpost::class.java,
-                    NAVEnhet::class.java)?.let {
-                        log.info("Fant metode $it")
-            } ?: log.info("Fant ikke metode")
             when (jp.hovedDokumentBrevkode) {
                 STANDARD.kode -> {
                     log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")

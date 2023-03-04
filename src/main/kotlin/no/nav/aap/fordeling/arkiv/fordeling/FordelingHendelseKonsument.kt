@@ -47,6 +47,6 @@ class FordelingHendelseKonsument(private val fordeler: DelegerendeFordeler, priv
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
             @Header(EXCEPTION_STACKTRACE) trace: String?)  {
-        log.warn("Gir opp behandling av ${payload.journalpostId} $trace")
+        log.warn("Gir opp behandling av journalpost ${payload.journalpostId} $trace")
     }
 }

@@ -123,7 +123,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.maybeInject(component: Any) =
                 if (isDevOrLocal(this)) {
-                    val i = nextInt()
+                    val i = nextInt(1,4)
                     if (i.mod(2) == 0)  {
                         log.info("Injiserer feil siden $i er partall")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {

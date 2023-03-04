@@ -22,7 +22,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
-class DevController(private val fordeler: AAPFordeler,private val pdl: PDLWebClientAdapter, private val egen: EgenAnsattClient, private val arkiv: ArkivWebClientAdapter, private val oppgave: OppgaveClient, private val arena: ArenaWebClientAdapter, private val org: NavOrgWebClientAdapter) {
+class DevController(private val fordeler: AAPFordeler,
+                    private val pdl: PDLWebClientAdapter,
+                    private val egen: EgenAnsattClient,
+                    private val arkiv: ArkivWebClientAdapter,
+                    private val oppgave: OppgaveClient,
+                    private val arena: ArenaWebClientAdapter,
+                    private val org: NavOrgWebClientAdapter) {
 
     private val log = getLogger(javaClass)
     @PostMapping("oppdaterogferdigstilljournalpost")

@@ -4,6 +4,7 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
+import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
@@ -28,6 +29,15 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
         }.getOrElse {
             handler.handle(it)
         }
+
+    override fun ping() =
+        webClient
+            .options()
+            .uri(baseUri)
+            .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN)
+            .retrieve()
+            .toBodilessEntity()
+            .block().run { emptyMap<String,String>() }
 
     companion object {
         private const val GRAPHQL = "graphql"

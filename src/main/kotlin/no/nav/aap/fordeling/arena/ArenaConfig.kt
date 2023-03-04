@@ -26,8 +26,5 @@ class ArenaConfig(
         private const val OPPGAVE_PATH = "arena/opprettoppgave"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"
         const val ARENA = "arena"
-        const val ENHET = "Enhet"
-        const val PERSON = "PERSON"
-
     }
 }

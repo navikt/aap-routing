@@ -8,8 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
 
 @ConfigurationProperties(SAF)
-class SafConfig(@DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-                @DefaultValue("true") enabled: Boolean,
+class SafConfig(@DefaultValue("true") enabled: Boolean,
                 baseUri: URI) : AbstractRestConfig(baseUri, "", SAF, enabled,DEFAULT) {
 
 

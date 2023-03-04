@@ -23,6 +23,6 @@ class DokarkivConfig(
         private const val PATH_PREFIX = "/rest/journalpostapi/v1/journalpost/"
         private const val DEFAULT_FERDIGSTILL_PATH = "$PATH_PREFIX{journalpostid}/ferdigstill"
         private const val DEFAULT_OPPDATER_PATH = "$PATH_PREFIX{journalpostid}"
-        private const val DEFAULT_PING_PATH = "isAlive"
+        private const val DEFAULT_PING_PATH = "/actuator/health/liveness"
     }
 }

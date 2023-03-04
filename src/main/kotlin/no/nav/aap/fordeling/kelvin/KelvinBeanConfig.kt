@@ -2,11 +2,10 @@ package no.nav.aap.fordeling.kelvin
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include.ALWAYS
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.aap.fordeling.kelvin.AbstractKafkaHealthIndicator.AbstractKafkaConfig
+import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator
+import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
 import no.nav.aap.fordeling.kelvin.KelvinFordelingConfig.Companion.KELVIN
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.health.Pingable
-import no.nav.aap.util.LoggerUtil.getLogger
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -56,35 +55,4 @@ class KelvinFordelingConfig(
 
     override fun topics() = listOf(standard.topic,ettersending.topic,utland.topic)
 
-}
-
-abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
-                                            private val bootstrapServers: List<String>,
-                                            private val cfg: AbstractKafkaConfig) : Pingable {
-    override fun isEnabled() = cfg.isEnabled
-    override fun pingEndpoint() = "$bootstrapServers"
-    override fun name() = cfg.name
-
-    val log = getLogger(javaClass)
-
-    override fun ping(): Map<String, String> {
-        log.info("Helsesjekker ${cfg.topics()}")
-        return cfg.topics().mapIndexedNotNull { ix, topic -> innslag(topic,ix)}
-            .associateBy({ it.first }, { it.second })
-    }
-
-    private fun innslag(topic: String, ix: Int): Pair<String,String>?{
-        runCatching {
-            with(admin.describeTopics(topic).values.first()) {
-                return Pair("topic-$ix", "${name()} (${partitions().count()} partisjoner")
-            }
-        }.recover {
-            return Pair(topic, it.message ?: it.javaClass.simpleName)
-        }
-        return null
-    }
-
-    abstract class AbstractKafkaConfig(val name: String, val isEnabled: Boolean) {
-        abstract fun topics(): List<String>
-    }
 }

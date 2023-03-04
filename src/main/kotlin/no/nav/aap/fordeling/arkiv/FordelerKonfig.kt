@@ -3,11 +3,13 @@ package no.nav.aap.fordeling.arkiv
 import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.fordeling.arkiv.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.FordelerKonfig.Companion.FORDELING
+import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)
-data class FordelerKonfig(val topics: FordelerTopics,val routing: @NotEmpty Map<String, FordelingProperties>) {
+data class FordelerKonfig(val topics: FordelerTopics,val routing: @NotEmpty Map<String, FordelingProperties>) : AbstractKafkaConfig(
+        FORDELING,true) {
     val log = getLogger(javaClass)
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
@@ -30,4 +32,6 @@ data class FordelerKonfig(val topics: FordelerTopics,val routing: @NotEmpty Map<
     companion object {
         const val FORDELING = "fordeling"
     }
+
+    override fun topics(): List<String> = listOf(topics.main,topics.retry,topics.dlt)
 }

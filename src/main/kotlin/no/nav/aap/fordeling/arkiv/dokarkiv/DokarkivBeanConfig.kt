@@ -4,11 +4,11 @@ import java.util.*
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.listener.ContainerProperties.*
@@ -32,8 +32,7 @@ class DokarkivBeanConfig  {
     @Qualifier(DOKARKIV)
     fun dokarkivFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, DOKARKIV)
 
-    @Bean
-    @ConditionalOnProperty("$DOKARKIV.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun dokarkivHealthIndicator(adapter: DokarkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 
 }

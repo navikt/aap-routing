@@ -3,10 +3,10 @@ package no.nav.aap.fordeling.oppgave
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -29,7 +29,6 @@ class OppgaveBeanConfig {
     fun oppgaveClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, OPPGAVE)
 
-    @Bean
-    @ConditionalOnProperty("$OPPGAVE.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun oppgaveHealthIndicator(adapter: OppgaveWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

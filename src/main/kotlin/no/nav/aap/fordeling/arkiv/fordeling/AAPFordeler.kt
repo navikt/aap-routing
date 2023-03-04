@@ -9,7 +9,6 @@ import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
-import org.springframework.util.ReflectionUtils.*
 
 @Component
 class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeler) : Fordeler {

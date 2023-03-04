@@ -125,43 +125,26 @@ no.nav:
 
 navorg:
     base-uri: https://norg2.${env}-fss-pub.nais.io
-    enabled: true
 egenansatt:
-    enabled: true
     base-uri: http://skjermede-personer-pip.nom
     scope: api://${env}-gcp.nom.skjermede-personer-pip/.default
 dokarkiv:
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io
-    enabled: true
 saf:
-    enabled: true
     base-uri: https://saf.${env}-fss-pub.nais.io/graphql
-oppgave:
-    enabled: true
 pdl:
-    enabled: true
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
-    enabled: true
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 slack:
     enabled: true
-kelvin:
-    standard:
-        topic: aap.soknad-sendt.v1
-    ettersending:
-        topic: aap.soknad-ettersendt.v1
-    utland:
-        topic: aap.utland-soknad-sendt.v1
-    enabled: false
 fordeling:
-    enabled: true
     topics:
        retry: 'aap.routing.retry'
        dlt: 'aap.routing.dlt'
-       retries: 10
-       backoff: 3000
+       retries: 24
+       backoff: 30000
     routing:
        aap:
           brevkoder:

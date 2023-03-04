@@ -6,10 +6,10 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.common.serialization.StringSerializer
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,8 +35,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     @Component
     class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : AbstractKafkaHealthIndicator(admin,p.bootstrapServers,cfg)
 
-    @Bean
-    @ConditionalOnProperty("$FORDELING.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
      @Bean(FORDELING)

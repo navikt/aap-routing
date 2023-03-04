@@ -5,9 +5,6 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import java.util.*
 import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
-import no.nav.aap.fordeling.person.PDLConfig
-import no.nav.aap.fordeling.person.PDLConfig.Companion
-import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties

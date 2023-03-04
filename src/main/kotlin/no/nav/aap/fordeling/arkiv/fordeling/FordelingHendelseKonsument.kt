@@ -27,16 +27,15 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
-            log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
+            log.info("Fordeler journalpost ${hendelse.journalpostId} på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
-                slack.sendMessage("Behandler")
                 faultInjecter.maybeInject(this@FordelingHendelseKonsument)
                 arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
-                }?: log.warn("Ingen journalpost kunne hentes for id ${hendelse.journalpostId}")  // TODO hva gjør vi her?
+                }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
-            with("Behandling av $hendelse på $topic feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
+            with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this,e)
                 slack.sendMessage(this)
             }
@@ -48,6 +47,8 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord,
             @Header(EXCEPTION_STACKTRACE) trace: String?)  {
-        log.warn("Gir opp behandling av journalpost ${payload.journalpostId} $trace")
+        log.warn("Gir opp fordeling av journalpost ${payload.journalpostId} $trace").also {
+            slack.sendMessage("Journalpost ${payload.journalpostId} kunne ikke fordeles")
+        }
     }
 }

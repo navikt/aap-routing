@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.arkiv.saf
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import java.util.*
-import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig
 import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -23,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 class SafBeanConfig {
     @Qualifier(SAF)
     @Bean
-    fun safGraphQLWebClient(builder: Builder, cfg: DokarkivConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
+    fun safGraphQLWebClient(builder: Builder, cfg: SafConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)

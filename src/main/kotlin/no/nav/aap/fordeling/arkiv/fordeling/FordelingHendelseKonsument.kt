@@ -29,6 +29,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         runCatching {
             log.info("Behandler $hendelse på $topic for ${forsøk?.let { "$it." } ?: "1."} gang")
             with(integrasjoner) {
+                slack.sendMessage("Behandler")
                 faultInjecter.maybeInject(this@FordelingHendelseKonsument)
                 arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }

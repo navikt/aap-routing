@@ -3,17 +3,16 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.Integrasjoner
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.FordelingType.AUTOMATISK
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
-import org.springframework.util.ReflectionUtils
 import org.springframework.util.ReflectionUtils.*
 
 @Component
-class AAPFordeling(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeling) : Fordeling {
+class AAPFordeler(private val integrasjoner: Integrasjoner, private val manuell: AAPManuellFordeler) : Fordeler {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)

@@ -1,9 +1,9 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.FordelingType.INGEN
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.FordelingType.MANUELL_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.Constants.AAP
@@ -11,8 +11,8 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeling(private val oppgave: OppgaveClient) : ManuellFordeling {
-    val log = getLogger(AAPManuellFordeling::class.java)
+class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
+    val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)
 

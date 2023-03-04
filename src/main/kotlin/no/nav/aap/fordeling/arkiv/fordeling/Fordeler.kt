@@ -1,16 +1,16 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.Companion.NONE
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.NONE
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 
-interface Fordeling {
+interface Fordeler {
 
     fun tema(): List<String>
 
     fun fordel(jp: Journalpost, enhet: NAVEnhet) : FordelingResultat
     companion object {
-        val INGEN_FORDELER =  object : Fordeling {
+        val INGEN_FORDELER =  object : Fordeler {
             override fun tema() = emptyList<String>()
             override fun fordel(jp: Journalpost, enhet: NAVEnhet) = NONE
         }
@@ -28,4 +28,4 @@ interface Fordeling {
         }
     }
 }
-interface ManuellFordeling: Fordeling
+interface ManuellFordeler: Fordeler

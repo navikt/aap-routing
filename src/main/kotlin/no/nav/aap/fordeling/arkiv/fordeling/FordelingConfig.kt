@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import jakarta.validation.constraints.NotEmpty
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeling.Companion.INGEN_FORDELER
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -12,7 +12,7 @@ data class FordelingConfig(val topics: FordelerTopics, val routing: @NotEmpty Ma
         FORDELING,enabled) {
     val log = getLogger(javaClass)
 
-    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeling>) =
+    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
         if (enabled) {
             routing[jp.tema]?.let {
                 fordelere.firstOrNull { jp.tema in it.tema() }

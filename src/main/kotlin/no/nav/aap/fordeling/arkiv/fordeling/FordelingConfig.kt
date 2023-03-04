@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(FORDELING)
 data class FordelingConfig(val topics: FordelerTopics, val routing: @NotEmpty Map<String, FordelingProperties>, val enabled: Boolean = true) : AbstractKafkaConfig(
-        FORDELING,true) {
+        FORDELING,enabled) {
     val log = getLogger(javaClass)
 
     fun fordelerFor(jp: Journalpost, fordelere: List<Fordeling>) =
@@ -17,7 +17,7 @@ data class FordelingConfig(val topics: FordelerTopics, val routing: @NotEmpty Ma
             routing[jp.tema]?.let {
                 fordelere.firstOrNull { jp.tema in it.tema() }
             } ?: INGEN_FORDELER.also {
-                log.info("Ingen konfigurasjon for tema ${jp.tema}")
+                log.warn("Ingen konfigurasjon for tema ${jp.tema}")
             }
         }
         else {

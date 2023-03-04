@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 interface Fordeling {
 
     fun tema(): List<String>
+
     fun fordel(jp: Journalpost, enhet: NAVEnhet) : FordelingResultat
     companion object {
         val INGEN_FORDELER =  object : Fordeling {

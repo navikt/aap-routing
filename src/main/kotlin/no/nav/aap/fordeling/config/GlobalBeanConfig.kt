@@ -74,12 +74,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextInt().mod(10) == 1 && isDevOrLocal(env))  {
-                log.info("Tvinger fram feil for ${it.url()}")
+            val v = nextInt().mod(10)
+            if (v <3 && isDevOrLocal(env))  {
+                log.info("($v) Tvinger fram feil for ${it.url()}")
                 Mono.error { IntegrationException("Tvunget feil for request til ${it.url()}") }
             }
             else  {
-                log.info("Tvinger IKKE fram  feil for ${it.url()}")
+                log.info("($v) Tvinger IKKE fram  feil for ${it.url()}")
                 Mono.just(it)
             };
         }

@@ -63,11 +63,11 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                  )
     }
     @Bean
-    fun webClientCustomizer(client: HttpClient, faultInjecter: FaultInjecter, registry: MeterRegistry) =
+    fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingResponseFilterFunction(faultInjecter))
+                .filter(faultInjectingResponseFilterFunction())
         }
 
     private fun faultInjectingResponseFilterFunction() =

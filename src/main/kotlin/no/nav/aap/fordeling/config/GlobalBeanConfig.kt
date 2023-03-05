@@ -8,10 +8,8 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
-import java.util.Random
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
-import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger

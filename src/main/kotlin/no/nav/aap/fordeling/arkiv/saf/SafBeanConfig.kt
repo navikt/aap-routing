@@ -6,11 +6,11 @@ import java.util.*
 import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.listener.ContainerProperties.*
@@ -22,15 +22,16 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 class SafBeanConfig {
-    @Qualifier(SAF)
+
     @Bean
+    @Qualifier(SAF)
     fun safGraphQLWebClient(builder: Builder, cfg: SafConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
             .build()
-    @Qualifier(SAF)
     @Bean
+    @Qualifier(SAF)
     fun safGraphQLClient(@Qualifier(SAF) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
@@ -38,6 +39,6 @@ class SafBeanConfig {
     fun safFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, SAF)
 
     @Bean
-    @ConditionalOnProperty("$SAF.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun safHealthIndicator(a: SafGraphQLAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

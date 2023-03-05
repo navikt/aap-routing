@@ -22,7 +22,7 @@ abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
     private fun innslag(topic: String, ix: Int): Pair<String,String> {
         runCatching {
             with(admin.describeTopics(topic).values.first()) {
-                return Pair("topic-$ix", "${name()} (${partitions().count()} partisjoner")
+                return Pair("topic-$ix", "${name()} (${partitions().count()} partisjoner)")
             }
         }.recover {
             return Pair(topic, it.message ?: it.javaClass.simpleName)

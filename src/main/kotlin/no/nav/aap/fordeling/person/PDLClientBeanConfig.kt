@@ -6,10 +6,10 @@ import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFl
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.temaFilterFunction
+import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -30,11 +30,11 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun pdlClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service,PDL)
 
-    @Qualifier(PDL)
     @Bean
+    @Qualifier(PDL)
     fun pdlGraphQLClient(@Qualifier(PDL) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
-    @ConditionalOnProperty("$PDL.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun pdlHealthIndicator(a: PDLWebClientAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

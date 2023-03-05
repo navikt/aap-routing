@@ -4,8 +4,8 @@ import com.github.benmanes.caffeine.cache.RemovalListener
 import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.LoggerUtil
+import no.nav.boot.conditionals.ConditionalOnGCP
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,8 +19,8 @@ class NavOrgBeanConfig {
     private val log = LoggerUtil.getLogger(javaClass)
 
 
-    @Qualifier(NAVORG)
     @Bean
+    @Qualifier(NAVORG)
     fun navOrgWebClient(builder: Builder, cfg: NavOrgConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
@@ -31,6 +31,6 @@ class NavOrgBeanConfig {
         RemovalListener<Any, Any> { _, _, cause -> log.info("Cache removal $cause") }
 
     @Bean
-    @ConditionalOnProperty("$NAVORG.enabled", havingValue = "true")
+    @ConditionalOnGCP
     fun orgHealthIndicator(adapter: NavOrgWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

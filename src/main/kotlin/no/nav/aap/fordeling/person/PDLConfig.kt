@@ -9,15 +9,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.context.properties.bind.DefaultValue
 
 @ConfigurationProperties(PDL)
-class PDLConfig(baseUri: URI,
-                @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-                @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
-                @DefaultValue("true") enabled: Boolean) : AbstractRestConfig(baseUri, pingPath, PDL, enabled,retryCfg) {
+class PDLConfig(baseUri: URI, @DefaultValue("true") enabled: Boolean) : AbstractRestConfig(baseUri, "", PDL, enabled, DEFAULT) {
 
     override fun toString() = "$javaClass.simpleName [baseUri=$baseUri, pingEndpoint=$pingEndpoint]"
 
     companion object {
         const val PDL = "pdl"
-        const val DEFAULT_PING_PATH = ""
     }
 }

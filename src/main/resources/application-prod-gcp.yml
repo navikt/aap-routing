@@ -1,0 +1,14 @@
+saf:
+   scope: api://prod-fss.teamdokumenthandtering.saf/.default
+dokarkiv:
+    enabled: false
+    scope: api://prod-fss.teamdokumenthandtering.dokarkiv/.default
+fordeling:
+    topics:
+        main: teamdokumenthandtering.aapen-dok-journalfoering
+oppgave:
+    enabled: false
+    base-uri: https://oppgave.prod-fss-pub.nais.io
+    scope: api://prod-fss.oppgavehandtering.oppgave/.default
+arena:
+    enabled: false

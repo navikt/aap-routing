@@ -79,9 +79,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             val v = nextInt(1,5)
             if (v  == 1 && isDevOrLocal(env))  {
                val e = WebClientResponseException(BAD_GATEWAY,"Tvunget feil for request til ${it.url()}",null,null,null,null)
-                log.trace(e.message)
+                log.info(e.message,e)
                 Mono.error(e)
-               // Mono.error { IOException("Tvunget feil for request til ${it.url()}") }
             }
             else  {
                 log.trace("($v) Tvinger IKKE fram  feil for ${it.url()}")

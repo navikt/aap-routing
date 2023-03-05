@@ -13,16 +13,12 @@ class ArenaConfig(
     @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
     @DefaultValue("true") enabled: Boolean,
     @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
-    @DefaultValue(AKTIV_SAK_PATH) val aktivSakPath: String,
     @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
-
-    @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
-    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled,retryCfg) {
+    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled, DEFAULT) {
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
         private const val NYESTE_PATH = "arena/nyesteaktivesak/{fnr}"
-        private const val AKTIV_SAK_PATH = "arena/haraktivsak/{fnr}"
         private const val OPPGAVE_PATH = "arena/opprettoppgave"
         private const val DEFAULT_PING_PATH = "actuator/health/liveness"
         const val ARENA = "arena"

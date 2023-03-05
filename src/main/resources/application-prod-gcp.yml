@@ -4,6 +4,7 @@ dokarkiv:
     enabled: false
     scope: api://prod-fss.teamdokumenthandtering.dokarkiv/.default
 fordeling:
+    enabled: false
     topics:
         main: teamdokumenthandtering.aapen-dok-journalfoering
 oppgave:

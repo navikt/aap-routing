@@ -13,10 +13,9 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 class NavOrgConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
-        @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
         @DefaultValue(ENHET_PATH) val enhet: String,
         @DefaultValue(AKTIVE_PATH) val aktive: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,retryCfg) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled, DEFAULT) {
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

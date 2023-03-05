@@ -12,9 +12,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 class EgenAnsattConfig(
     @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
     @DefaultValue("true") enabled: Boolean,
-    retryCfg: RetryConfig = DEFAULT,
     @DefaultValue(SKJERMING_PATH) val path: String,
-    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled,retryCfg) {
+    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled, DEFAULT) {
 
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"

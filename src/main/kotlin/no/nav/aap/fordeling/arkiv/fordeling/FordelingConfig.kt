@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
+import no.nav.aap.rest.AbstractRestConfig.RetryConfig
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 
@@ -26,10 +27,12 @@ data class FordelingConfig(val topics: FordelerTopics, val routing: @NotEmpty Ma
             }
         }
 
-    data class FordelerTopics(val main: String,val retry: String, val dlt: String, val backoff: Int, val retries: Int)
+    data class FordelerTopics(val main: String,val retry: String = RETRY_TOPIC, val dlt: String = DLT_TOPIC, val backoff: Int, val retries: Int)
     data class FordelingProperties(val brevkoder: List<String>)
 
     companion object {
+        const val RETRY_TOPIC = "aap.routing.retry"
+        const val DLT_TOPIC = "aap.routing.dlt"
         const val FORDELING = "fordeling"
     }
 

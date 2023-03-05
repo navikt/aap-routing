@@ -141,8 +141,6 @@ slack:
     enabled: true
 fordeling:
     topics:
-       retry: 'aap.routing.retry'
-       dlt: 'aap.routing.dlt'
        retries: 24
        backoff: 30000
     routing:

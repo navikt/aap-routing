@@ -24,8 +24,7 @@ interface Fordeler {
             AUTOMATISK,MANUELL_JOURNALFØRING,MANUELL_FORDELING,INGEN
         }
         companion object {
-            val NONE = FordelingResultat(msg ="Shit happens", type =  INGEN)
+            val NONE = FordelingResultat(msg ="Ingen fordeling utført", type =  INGEN)
         }
     }
 }
-interface ManuellFordeler: Fordeler

@@ -5,6 +5,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -37,7 +39,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         }.getOrElse { e ->
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang.") {
                 log.warn(this,e)
-                slack.sendMessage("$this (${e.message})")
+                slack.sendMessage("$this ${currentCluster()}. (${e.message})")
             }
             throw e
         }

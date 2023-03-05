@@ -73,10 +73,6 @@ spring:
               max:
                 request:
                     size: 2000000
-    jms:
-        listener:
-            acknowledge-mode:
-
 no.nav:
     security:
         jwt:

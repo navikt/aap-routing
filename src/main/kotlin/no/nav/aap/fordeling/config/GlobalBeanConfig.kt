@@ -11,6 +11,7 @@ import java.time.Duration
 import java.util.Random
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
+import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -73,8 +74,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextBoolean() && isDevOrLocal(env))  {
-                log.info("Tvinger fram  feil for ${it.url()}")
+            if (nextInt().mod(10) == 1 && isDevOrLocal(env))  {
+                log.info("Tvinger fram feil for ${it.url()}")
                 Mono.error { IntegrationException("Tvunget feil for request til ${it.url()}") }
             }
             else  {

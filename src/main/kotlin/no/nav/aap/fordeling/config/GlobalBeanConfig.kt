@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.io.IOException
 import java.time.Duration
-import java.util.Random
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
@@ -19,7 +18,6 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
@@ -37,6 +35,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
@@ -44,12 +44,13 @@ import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction.*
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
-class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String)  {
+class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String, private val env: Environment)  {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
@@ -66,7 +67,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                  )
     }
     @Bean
-    fun webClientCustomizer(client: HttpClient, env: Environment,registry: MeterRegistry) =
+    fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
@@ -75,13 +76,15 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            val v = nextInt(1,10)
-            if (v <3 && isDevOrLocal(env))  {
-                log.info("($v) Tvinger fram feil for ${it.url()}")
-                Mono.error { IOException("Tvunget feil for request til ${it.url()}") }
+            val v = nextInt(1,5)
+            if (v  == 1 && isDevOrLocal(env))  {
+               val e = WebClientResponseException(BAD_GATEWAY,"Tvunget feil for request til ${it.url()}",null,null,null,null)
+                log.trace("($v) Tvinger fram feil for ${it.url()}")
+                Mono.error(e)
+               // Mono.error { IOException("Tvunget feil for request til ${it.url()}") }
             }
             else  {
-                log.info("($v) Tvinger IKKE fram  feil for ${it.url()}")
+                log.trace("($v) Tvinger IKKE fram  feil for ${it.url()}")
                 Mono.just(it)
             };
         }
@@ -143,9 +146,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             private fun Environment.maybeInject(component: Any) =
                 if (isDevOrLocal(this)) {
                     if (nextBoolean())  {
-                        log.warn("Injiserer feil")
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
-                            log.info(it.message)
+                            log.warn(it.message)
                         }
                     } else {
                         Unit

@@ -7,6 +7,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
+import java.io.IOException
 import java.time.Duration
 import java.util.Random
 import java.util.function.Consumer
@@ -77,7 +78,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             val v = nextInt(1,10)
             if (v <3 && isDevOrLocal(env))  {
                 log.info("($v) Tvinger fram feil for ${it.url()}")
-                Mono.error { IntegrationException("Tvunget feil for request til ${it.url()}") }
+                Mono.error { IOException("Tvunget feil for request til ${it.url()}") }
             }
             else  {
                 log.info("($v) Tvinger IKKE fram  feil for ${it.url()}")

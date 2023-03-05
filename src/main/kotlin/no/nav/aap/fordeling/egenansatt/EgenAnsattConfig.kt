@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 class EgenAnsattConfig(
     @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
     @DefaultValue("true") enabled: Boolean,
-    @NestedConfigurationProperty private val retryCfg: RetryConfig = DEFAULT,
+    retryCfg: RetryConfig = DEFAULT,
     @DefaultValue(SKJERMING_PATH) val path: String,
     baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled,retryCfg) {
 

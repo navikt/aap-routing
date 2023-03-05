@@ -17,6 +17,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
+import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
@@ -63,21 +64,23 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                  )
     }
     @Bean
-    fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
+    fun webClientCustomizer(client: HttpClient, env: Environment,registry: MeterRegistry) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingResponseFilterFunction())
+                .filter(faultInjectingRequestFilterFunction(env))
         }
 
-    private fun faultInjectingResponseFilterFunction() =
+    private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextBoolean())  {
-                log.info("Injiserer feil for ${it.url()}")
+            if (nextBoolean() && isDevOrLocal(env))  {
+                log.info("Tvinger fram  feil for ${it.url()}")
                 Mono.error { IntegrationException("Tvunget feil for request til ${it.url()}") }
             }
-            else
-           Mono.just(it);
+            else  {
+                log.info("Tvinger IKKE fram  feil for ${it.url()}")
+                Mono.just(it)
+            };
         }
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown

@@ -12,7 +12,7 @@ resilience4j:
         instances:
             graphql:
                 max-attempts: 10
-                waitDuration: 100ms
+                waitDuration: 1s
                 retryExceptions:
                     - org.springframework.web.reactive.function.client.WebClientResponseException
                     - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQL

@@ -37,9 +37,9 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
                 }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
             }
         }.getOrElse { e ->
-            with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang.") {
+            with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this,e)
-                slack.sendMessage("$this ${currentCluster()}. (${e.message})")
+                slack.sendMessage("$this i ${currentCluster().name.lowercase()}. (${e.message})")
             }
             throw e
         }

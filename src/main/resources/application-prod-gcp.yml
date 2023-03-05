@@ -13,3 +13,5 @@ oppgave:
     scope: api://prod-fss.oppgavehandtering.oppgave/.default
 arena:
     enabled: false
+slack:
+    kanal: C048CS5J3K4

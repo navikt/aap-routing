@@ -40,6 +40,6 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
             .block().run { emptyMap<String,String>() }
 
     companion object {
-        private const val GRAPHQL = "graphql"
+        const val GRAPHQL = "graphql"
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.person
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import io.github.resilience4j.retry.annotation.Retry
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
@@ -14,6 +15,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL)
 
     fun diskresjonskode(fnr: Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
+    @Retry(name = GRAPHQL)
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
 

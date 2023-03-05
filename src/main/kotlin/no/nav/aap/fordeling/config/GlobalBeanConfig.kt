@@ -77,7 +77,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
             val v = nextInt(1,5)
-            if (v  == 1 && isDevOrLocal(env))  {
+            if (v  == 1 && isDevOrLocal(env) && !it.url().host.contains("microsoftonline"))  {
                val e = WebClientResponseException(BAD_GATEWAY,"Tvunget feil for request til ${it.url()}",null,null,null,null)
                 log.info(e.message,e)
                 Mono.error(e)

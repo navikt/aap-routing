@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
+import java.util.Random
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
 import no.nav.aap.api.felles.error.IntegrationException
@@ -69,10 +70,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 .filter(faultInjectingResponseFilterFunction(faultInjecter))
         }
 
-    private fun faultInjectingResponseFilterFunction(injecter: FaultInjecter) =
+    private fun faultInjectingResponseFilterFunction() =
         ofResponseProcessor {
-            log.info("Dette er en respons fra $it ($injecter)")
-            Mono.just(it);
+            //if (nextBoolean())  {
+                log.info("Injiserer feil")
+                Mono.error { IntegrationException("Tvunget feil") }
+           // }
+           // else
+           // Mono.just(it);
         }
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown

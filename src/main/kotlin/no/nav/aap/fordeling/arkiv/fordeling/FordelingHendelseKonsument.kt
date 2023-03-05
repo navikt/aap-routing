@@ -31,7 +31,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         runCatching {
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
             with(integrasjoner) {
-                faultInjecter.maybeInject(this@FordelingHendelseKonsument)
+             //   faultInjecter.maybeInject(this@FordelingHendelseKonsument)
                 arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
                 }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?

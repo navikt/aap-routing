@@ -38,13 +38,16 @@ import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction.*
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String)  {
 
+    private val log = getLogger(GlobalBeanConfig::class.java)
 
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
@@ -59,12 +62,18 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                  )
     }
     @Bean
-    fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
+    fun webClientCustomizer(client: HttpClient, faultInjecter: FaultInjecter, registry: MeterRegistry) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
+                .filter(faultInjectingResponseFilterFunction(faultInjecter))
         }
 
+    private fun faultInjectingResponseFilterFunction(injecter: FaultInjecter) =
+        ofResponseProcessor {
+            log.info("Dette er en respons fra $it ($injecter)")
+            Mono.just(it);
+        }
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
 
@@ -136,7 +145,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         }
     }
 
-    companion object {
+        companion object {
         fun ClientConfigurationProperties.clientCredentialFlow( service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build()) }

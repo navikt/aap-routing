@@ -12,7 +12,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeler(private val oppgave: OppgaveClient, private val slack: SlackNotifier) : Fordeler {
+class AAPManuellFordeler(private val oppgave: OppgaveClient) : Fordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)
@@ -30,12 +30,10 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient, private val slack: 
                 }.getOrElse {
                     runCatching {
                         log.warn("Feil ved opprettelse av manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
-                       // slack.sendMessage("Feil ved opprettelse av manuell journalføringsopgave for journalpost $journalpostId. (${it.message})")
                         oppgave.opprettFordelingOppgave(jp)
                         FordelingResultat(journalpostId, "Fordelingsoppgave oprettet",MANUELL_FORDELING)
                     }.getOrElse {
                         log.warn("Feil ved opprettelse av manuell fordelingsoppgave for journalpost $journalpostId")
-                       // slack.sendMessage("Feil ved opprettelse av manuell fordelingsoppgave for journalpost $journalpostId ${it.message})")
                         throw ManuellFordelingException(journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
                     }
                 }

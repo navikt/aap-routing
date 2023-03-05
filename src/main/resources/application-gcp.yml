@@ -134,7 +134,6 @@ pdl:
 arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 slack:
-    kanal: C04S7UW5ERL
     enabled: true
 fordeling:
     topics:

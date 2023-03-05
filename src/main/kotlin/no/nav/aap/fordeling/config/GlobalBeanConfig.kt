@@ -79,7 +79,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             val v = nextInt(1,5)
             if (v  == 1 && isDevOrLocal(env))  {
                val e = WebClientResponseException(BAD_GATEWAY,"Tvunget feil for request til ${it.url()}",null,null,null,null)
-                log.trace("($v) Tvinger fram feil for ${it.url()}")
+                log.trace(e.message)
                 Mono.error(e)
                // Mono.error { IOException("Tvunget feil for request til ${it.url()}") }
             }

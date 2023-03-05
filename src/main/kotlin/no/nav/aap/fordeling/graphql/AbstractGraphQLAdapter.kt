@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
-import io.github.resilience4j.retry.annotation.Retry
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.http.MediaType
@@ -9,7 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-   @Retry(name = GRAPHQL)
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,String>) =
         runCatching {
             graphQL.post(query, args, T::class.java).block().also {
@@ -19,7 +17,6 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
             handler.handle(it)
         }
 
-    @Retry(name = GRAPHQL)
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,List<String>>) =
         runCatching {
             graphQL.flux(query,args, T::class.java)

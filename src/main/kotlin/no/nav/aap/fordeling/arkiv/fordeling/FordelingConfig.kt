@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
-import no.nav.aap.rest.AbstractRestConfig.RetryConfig
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.boot.context.properties.ConfigurationProperties
 

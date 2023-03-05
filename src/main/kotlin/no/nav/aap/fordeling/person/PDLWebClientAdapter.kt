@@ -13,9 +13,10 @@ import org.springframework.web.reactive.function.client.WebClient
 @Component
 class PDLWebClientAdapter(@Qualifier(PDL) val client: WebClient, @Qualifier(PDL) val graphQL: GraphQLWebClient, cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
+    @Retry(name = GRAPHQL)
     fun diskresjonskode(fnr: Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL,BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
-   // @Retry(name = GRAPHQL)
+    @Retry(name = GRAPHQL)
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
 

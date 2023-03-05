@@ -7,7 +7,6 @@ import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
-import java.io.IOException
 import java.time.Duration
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextBoolean
@@ -35,7 +34,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component

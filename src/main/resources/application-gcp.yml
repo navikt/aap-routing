@@ -138,7 +138,7 @@ slack:
 fordeling:
     topics:
        retries: 24
-       backoff: 30000
+       backoff: 1000
     routing:
        aap:
           brevkoder:

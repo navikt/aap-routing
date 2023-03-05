@@ -71,13 +71,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         }
 
     private fun faultInjectingResponseFilterFunction() =
-        ofResponseProcessor {
-            //if (nextBoolean())  {
-                log.info("Injiserer feil")
-                Mono.error { IntegrationException("Tvunget feil") }
-           // }
-           // else
-           // Mono.just(it);
+        ofRequestProcessor {
+            if (nextBoolean())  {
+                log.info("Injiserer feil for ${it.url()}")
+                Mono.error { IntegrationException("Tvunget feil for request til ${it.url()}") }
+            }
+            else
+           Mono.just(it);
         }
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown

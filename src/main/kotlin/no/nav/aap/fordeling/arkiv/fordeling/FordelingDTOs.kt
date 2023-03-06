@@ -53,7 +53,7 @@ object FordelingDTOs {
             }
         }
 
-        data class OppdateringData(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak? = null, val tema: String = AAP.uppercase()) {
+        data class OppdateringData(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak? = null, val tema: String) {
 
             data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
         }

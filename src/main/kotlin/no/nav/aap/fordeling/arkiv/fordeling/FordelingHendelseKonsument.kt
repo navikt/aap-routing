@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
-import no.nav.aap.fordeling.navenhet.NavEnhetAvgjører
+import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
@@ -19,7 +19,7 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, private val arkiv: ArkivClient, private val enhet: NavEnhetAvgjører, private val slack: SlackNotifier, private val faultInjecter: FaultInjecter) {
+class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, private val arkiv: ArkivClient, private val enhet: NavEnhetUtvelger, private val slack: SlackNotifier, private val faultInjecter: FaultInjecter) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 

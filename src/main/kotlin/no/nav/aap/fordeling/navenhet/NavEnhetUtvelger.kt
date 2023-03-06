@@ -10,7 +10,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-data class NavEnhetAvgjører(val pdl: PDLClient, val enhet: NavEnhetClient, val egen: EgenAnsattClient) {
+data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient, val egen: EgenAnsattClient) {
     val log = getLogger(javaClass)
 
     fun navEnhet(jp: Journalpost) =

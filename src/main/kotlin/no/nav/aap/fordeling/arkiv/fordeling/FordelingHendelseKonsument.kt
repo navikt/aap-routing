@@ -34,12 +34,12 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
             arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
                 fordeler.fordel(it,enhet.navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
             }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
-        }.getOrElse { e ->
+        }.getOrElse {
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
-                log.warn(this,e)
-                slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${e.message})")
+                log.warn(this,it)
+                slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }
-            throw e
+            throw it
         }
     }
 

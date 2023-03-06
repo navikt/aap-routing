@@ -13,7 +13,8 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
     init {
         log.info("Kan fordele følgende tema:\n ${fordelere
             .filter { it !is ManuellFordeler }
-            .map { Pair(it.javaClass.simpleName, it.tema()) }}")
+            .map { Pair(it.javaClass.simpleName, it.tema()) }
+            .map {it.second + " -> " + it.first }}")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp,enhet)

@@ -21,9 +21,9 @@ data class Integrasjoner(val oppgave: OppgaveClient, val pdl: PDLClient, val org
         with(journalpost) {
             journalførendeEnhet?.let { enhet ->
                 if (org.erAktiv(enhet))
-                    NAVEnhet(enhet, AKTIV).also { log.info("Journalførende enhet $it er aktiv") }
+                    NAVEnhet(enhet, AKTIV).also { log.info("Journalførende enhet  $it satt på journalposten er aktiv") }
                 else {
-                    enhetFor(fnr).also { log.info("Enhet ikke aktiv, fra GT er $it") }
+                    enhetFor(fnr).also { log.info("Enhet $IT satt på journalposten er IKKE aktiv") }
                 }
             }?: enhetFor(fnr).also { log.info("Enhet ikke satt på journalposten, fra GT er den $it") }
         }

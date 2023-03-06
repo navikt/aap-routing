@@ -16,11 +16,11 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
         log.info("Kan fordele følgende tema:\n ${fordelere.map { Pair(it.javaClass.simpleName, it.tema()) }}")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp,fordelere).fordel(jp,enhet)
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema,fordelere).fordel(jp,enhet)
 
-    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
+    fun fordelerFor(tema: String, fordelere: List<Fordeler>) =
         if (cfg.enabled) {
-            fordelere.first { jp.tema.lowercase() in it.tema()}
+            fordelere.first { tema.lowercase() in it.tema()}
         }
         else {
             INGEN_FORDELER.also {

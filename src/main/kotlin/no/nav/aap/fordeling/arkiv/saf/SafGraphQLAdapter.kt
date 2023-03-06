@@ -2,7 +2,7 @@ package no.nav.aap.fordeling.arkiv.saf
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 import org.springframework.beans.factory.annotation.Qualifier

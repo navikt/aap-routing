@@ -5,8 +5,8 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV

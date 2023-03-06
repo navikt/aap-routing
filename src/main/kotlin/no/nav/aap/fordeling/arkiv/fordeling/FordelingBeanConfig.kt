@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP

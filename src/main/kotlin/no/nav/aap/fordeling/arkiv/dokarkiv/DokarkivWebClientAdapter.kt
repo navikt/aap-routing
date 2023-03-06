@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.arkiv.dokarkiv
 
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringRespons
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringRespons.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*

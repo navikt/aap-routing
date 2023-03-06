@@ -3,12 +3,12 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.Bruker
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.DokumentInfo
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalStatus
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.OppdateringData.Sak
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.RelevantDato
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
 import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
 
 data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, val journalpostId: String, val status: JournalStatus,

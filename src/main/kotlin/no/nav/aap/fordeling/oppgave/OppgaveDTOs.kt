@@ -6,8 +6,8 @@ import java.time.LocalDateTime.now
 import java.time.ZoneId.systemDefault
 import java.util.*
 import no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalførendeEnhet.Companion.AUTO_ENHET
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalførendeEnhet.Companion.AUTO_ENHET
 import no.nav.aap.util.Constants.AAP
 
 object OppgaveDTOs {

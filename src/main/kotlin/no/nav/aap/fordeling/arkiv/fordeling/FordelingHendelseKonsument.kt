@@ -29,6 +29,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
+           faultInjecter.maybeInject(this)
             with(integrasjoner) {
                 arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
                     fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
@@ -37,7 +38,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         }.getOrElse { e ->
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this,e)
-                slack.send("$this i ${currentCluster().name.lowercase()}. (${e.message})")
+                slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${e.message})")
             }
             throw e
         }

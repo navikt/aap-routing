@@ -141,4 +141,3 @@ slack:
 fordeling:
     topics:
        retries: 24
-       backoff: 1000

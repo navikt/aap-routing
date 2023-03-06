@@ -16,6 +16,7 @@ fordeling:
     enabled: true
     topics:
         main: teamdokumenthandtering.aapen-dok-journalfoering-q1
+        backoff: 2000
 oppgave:
     base-uri: https://oppgave-q1.dev-fss-pub.nais.io
     scope: api://dev-fss.oppgavehandtering.oppgave-q1/.default

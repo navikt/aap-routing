@@ -18,7 +18,9 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
 
     fun fordelerFor(tema: String) =
         if (cfg.enabled) {
-            fordelere.first { tema.lowercase() in it.tema()}
+            fordelere.first { tema.lowercase() in it.tema()}.also {
+                log.trace("Bruker fordeler $it for tema $tema")
+            }
         }
         else {
             INGEN_FORDELER.also {

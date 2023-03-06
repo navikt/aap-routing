@@ -27,8 +27,10 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression =  "#{'\${fordeling.topics.backoff}'}"), sameIntervalTopicReuseStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
+               @Header(ORIGINAL_TIMESTAMP) timestamp: String?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
+            log.info("Original timestamp $timestamp")
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
            faultInjecter.maybeInject(this)
             arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {

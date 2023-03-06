@@ -60,7 +60,7 @@ class AAPFordeler(private val arena: ArenaClient,private val arkiv: ArkivClient,
         arena.nyesteAktiveSak(jp.fnr)?.run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
             FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK)
-        } ?: throw ArenaSakException(jp.journalpostId,"Har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
+        } ?: throw ArenaSakException(jp.journalpostId,"Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
 
 }
 

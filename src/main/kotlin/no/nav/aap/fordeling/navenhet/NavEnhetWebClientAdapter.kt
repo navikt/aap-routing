@@ -3,8 +3,6 @@ package no.nav.aap.fordeling.navenhet
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
-import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.AKTIV
-import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.ENHETSLISTE
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,7 +18,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
     AbstractWebClientAdapter(webClient, cf) {
 
     fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
-        .uri { b -> b.path(cf.enhet).build() }
+        .uri(cf::enhetURI)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
@@ -37,7 +35,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
 
     @Cacheable(NAVENHET)
     fun aktiveEnheter() = webClient.get()
-        .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
+        .uri(cf::aktiveEnheterURI)
         .accept(APPLICATION_JSON)
         .retrieve()
         .bodyToMono<List<NavOrg>>()

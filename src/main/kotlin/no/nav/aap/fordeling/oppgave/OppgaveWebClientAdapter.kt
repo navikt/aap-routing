@@ -28,7 +28,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
     fun opprettOppgave(data: OpprettOppgaveData)  =
         if (cf.isEnabled) {
             webClient.post()
-                .uri{b -> b.path(cf.oppgavePath).build()}
+                .uri(cf::opprettOppgaveUri)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)

@@ -18,6 +18,8 @@ class OppgaveConfig(
         @DefaultValue(DEFAULT_OPPGAVE_PATH) val oppgavePath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled, DEFAULT) {
     fun oppgaveUri(b: UriBuilder, id: String) = b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID,id).path(oppgavePath).build()
+    fun opprettOppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
+
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {

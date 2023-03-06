@@ -18,7 +18,6 @@ class NavEnhetBeanConfig {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
-
     @Bean
     @Qualifier(NAVENHET)
     fun navEnhetWebClient(builder: Builder, cfg: NavEnhetConfig) =

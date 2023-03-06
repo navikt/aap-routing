@@ -17,8 +17,8 @@ class NavEnhetConfig(
         @DefaultValue(AKTIVE_PATH) val aktive: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled, DEFAULT) {
 
-    fun aktiveEnheterURI(b: UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
-    fun enhetURI(b: UriBuilder) = b.path(enhet).build()
+    fun aktiveEnheterUri(b: UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
+    fun enhetUri(b: UriBuilder) = b.path(enhet).build()
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

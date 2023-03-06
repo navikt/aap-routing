@@ -24,7 +24,7 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
             else {
                 runCatching {
                     log.info("Oppretter manuell journalføringsoppgave for journalpost $journalpostId")
-                    oppgave.opprettManuellJournalføringOppgave(jp,enhet)
+                    oppgave.opprettJournalføringOppgave(jp,enhet)
                     FordelingResultat(journalpostId,"Journalføringsoppgave opprettet",MANUELL_JOURNALFØRING)
                 }.getOrElse {
                     runCatching {

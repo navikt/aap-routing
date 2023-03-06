@@ -20,7 +20,6 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 @Configuration
 class DokarkivBeanConfig  {
 
-
     @Bean
     @Qualifier(DOKARKIV)
     fun dokarkivWebClient(builder: Builder, cfg: DokarkivConfig, @Qualifier(DOKARKIV) dokarkivFlow: ExchangeFilterFunction) =
@@ -28,14 +27,10 @@ class DokarkivBeanConfig  {
             .baseUrl("${cfg.baseUri}")
             .filter(dokarkivFlow)
             .build()
-
     @Bean
     @Qualifier(DOKARKIV)
     fun dokarkivFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, DOKARKIV)
-
-
     @Bean
     @ConditionalOnGCP
     fun dokarkivHealthIndicator(adapter: DokarkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
-
 }

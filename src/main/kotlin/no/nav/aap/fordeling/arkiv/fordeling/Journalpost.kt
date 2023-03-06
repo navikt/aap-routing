@@ -17,7 +17,7 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
 
     val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Ukjent brevkode"
 
-    val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: STANDARD.tittel
+    val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: "Ukjent tittel"
 
     val vedleggTitler =  dokumenter.drop(1).mapNotNull { it.tittel }
 

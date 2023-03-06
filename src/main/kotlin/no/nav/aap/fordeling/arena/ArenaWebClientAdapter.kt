@@ -16,12 +16,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
-    AbstractWebClientAdapter(webClient, cf) {
+class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) : AbstractWebClientAdapter(webClient, cf) {
 
     fun nyesteArenaSak(fnr: Fødselsnummer) =
         webClient.get()
-            .uri { b -> b.path(cf.nyesteSakPath).build(fnr.fnr) }
+            .uri { cf.nyesteSakUri(it,fnr) }
             .accept(APPLICATION_JSON)
             .retrieve()
             .bodyToMono<String>()
@@ -33,7 +32,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
     fun opprettArenaOppgave(data: ArenaOpprettOppgaveData) =
         if (cf.isEnabled) {
             webClient.post()
-                .uri { b -> b.path(cf.oppgavePath).build() }
+                .uri(cf::oppgaveUri)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
@@ -46,9 +45,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
         }
         else {
             EMPTY.also {
-                log.info("Opprettet ikke arena oppgave med data $data")
+                log.info("Opprettet ikke arena oppgave med data fra $data")
             }
         }
-
-
 }

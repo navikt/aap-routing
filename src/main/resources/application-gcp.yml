@@ -138,8 +138,6 @@ pdl:
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
-slack:
-    enabled: true
 oppgave:
     base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io
     scope: api://${env}-fss.oppgavehandtering.oppgave${suffix}/.default

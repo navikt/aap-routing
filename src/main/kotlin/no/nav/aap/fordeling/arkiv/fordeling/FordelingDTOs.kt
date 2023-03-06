@@ -2,10 +2,19 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
-import no.nav.aap.util.Constants.AAP
 object FordelingDTOs {
+
+
+    data class FordelingResultat(val journalpostId: String = "0", val msg: String, val type: FordelingType) {
+        fun formattertMelding() = "${msg} for journalpost $journalpostId og fordelingstype $type"
+        enum class FordelingType  { AUTOMATISK,MANUELL_JOURNALFØRING,MANUELL_FORDELING,INGEN }
+        companion object {
+            val INGEN_FORDELING = FordelingResultat(msg ="Ingen fordeling utført", type =  INGEN)
+        }
+    }
 
     data class JournalpostDTO(
             val tittel: String?,

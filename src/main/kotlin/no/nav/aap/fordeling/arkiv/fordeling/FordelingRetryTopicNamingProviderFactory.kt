@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.kafka.retrytopic.DestinationTopic.Properties
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory.RetryTopicNamesProvider
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class FordelingRetryTopicNamingProviderFactory(private val cf: FordelingConfig) : RetryTopicNamesProviderFactory {
-
-    val log = getLogger(javaClass)
 
       override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
           with(cf.topics) {

@@ -25,7 +25,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val c
     fun oppdaterJournalpost(journalpostId: String, data: OppdateringData) =
         if (cf.isEnabled) {
             webClient.put()
-                .uri { b -> b.path(cf.oppdaterPath).build(journalpostId) }
+                .uri { cf.oppdaterJournlpostUri(it,journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)

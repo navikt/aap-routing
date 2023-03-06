@@ -14,11 +14,10 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
-    AbstractWebClientAdapter(webClient, cf) {
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) : AbstractWebClientAdapter(webClient, cf) {
 
     fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
-        .uri(cf::enhetURI)
+        .uri(cf::enhetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
@@ -35,7 +34,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
 
     @Cacheable(NAVENHET)
     fun aktiveEnheter() = webClient.get()
-        .uri(cf::aktiveEnheterURI)
+        .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
         .retrieve()
         .bodyToMono<List<NavOrg>>()

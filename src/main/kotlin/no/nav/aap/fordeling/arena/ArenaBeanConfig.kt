@@ -18,7 +18,6 @@ class ArenaBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .build()
-
     @Bean
     @ConditionalOnGCP
     fun arenaHealthIndicator(adapter: ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}

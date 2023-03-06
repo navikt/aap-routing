@@ -15,7 +15,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
     AbstractWebClientAdapter(webClient, cf) {
 
         fun erSkjermet(fnr: String) = webClient.post()
-            .uri { b -> b.path(cf.path).build() }
+            .uri(cf::skjermetUri)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .bodyValue(Ident(fnr))

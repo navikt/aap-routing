@@ -16,7 +16,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
 
     fun harOppgave(journalpostId: String) =
             webClient.get()
-                .uri{b -> cf.oppgaveUri(b,journalpostId)}
+                .uri{cf.oppgaveUri(it,journalpostId)}
                 .retrieve()
                 .bodyToMono<OppgaveRespons>()
                 .retryWhen(cf.retrySpec(log))

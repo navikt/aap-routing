@@ -7,6 +7,5 @@ object ArenaDTOs {
             val EMPTY = ArenaOpprettetOppgave()
         }
     }
-
     data class ArenaOpprettOppgaveData(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String> = emptyList())
 }

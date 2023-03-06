@@ -43,8 +43,6 @@ class AAPFordeler(private val arena: ArenaClient,private val arkiv: ArkivClient,
             }
         }
 
-
-
     private fun  fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
             log.info("Arena har IKKE aktiv sak for ${jp.fnr}")

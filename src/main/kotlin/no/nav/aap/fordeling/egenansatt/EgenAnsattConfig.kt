@@ -6,6 +6,7 @@ import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
+import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(EGENANSATT)
 class EgenAnsattConfig(
@@ -14,8 +15,9 @@ class EgenAnsattConfig(
     @DefaultValue(SKJERMING_PATH) val path: String,
     baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled, DEFAULT) {
 
-
+    fun skjermetUri(b: UriBuilder) =  b.path(path).build()
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
+
 
     companion object {
         private const val DEFAULT_PING_PATH = "internal/health/liveness"

@@ -57,7 +57,7 @@ spec:
   env:
     - name: ENV
       value: {{env}}
-    - name: ENV
+    - name: SUFFIX
       value: {{suffix}}
   envFrom:
     -   secret: slack

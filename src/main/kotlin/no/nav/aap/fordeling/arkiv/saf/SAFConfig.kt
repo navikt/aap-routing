@@ -14,6 +14,5 @@ class SAFConfig(@DefaultValue("true") enabled: Boolean,
 
     companion object {
         const val SAF = "saf"
-        const val DEFAULT_PING_PATH = ""
     }
 }

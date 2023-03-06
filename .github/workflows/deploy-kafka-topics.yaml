@@ -28,6 +28,6 @@ jobs:
           env:
             APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
             CLUSTER: ${{matrix.cluster}}
-            RESOURCE: ${{matrix.topic}}/topic.yaml
-            VARS: ${{matrix.topic}}/${{matrix.cluster}}.yaml
+            RESOURCE: .nais/${{matrix.topic}}/topic.yaml
+            VARS: .nais/${{matrix.topic}}/${{matrix.cluster}}.yaml
             PRINT_PAYLOAD: true

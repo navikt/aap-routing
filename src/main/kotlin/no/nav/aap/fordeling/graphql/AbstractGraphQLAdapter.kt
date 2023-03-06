@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,String>) =
+    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, String>) =
         runCatching {
             graphQL.post(query, args, T::class.java).block().also {
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
@@ -17,12 +17,12 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
             handler.handle(it)
         }
 
-    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String,List<String>>) =
+    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, List<String>>) =
         runCatching {
-            graphQL.flux(query,args, T::class.java)
+            graphQL.flux(query, args, T::class.java)
                 .collectList().block()?.toList().also {
                     log.trace("Slo opp ${T::class.java.simpleName} $it")
-                }  ?: emptyList()
+                } ?: emptyList()
         }.getOrElse {
             handler.handle(it)
         }
@@ -34,7 +34,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
             .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN)
             .retrieve()
             .toBodilessEntity()
-            .block().run { emptyMap<String,String>() }
+            .block().run { emptyMap<String, String>() }
 
     companion object {
         const val GRAPHQL = "graphql"

@@ -17,26 +17,31 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     override fun tema() = listOf(AAP)
 
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
-        with(jp)  {
+        with(jp) {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                FordelingResultat(journalpostId,"Det finnes allerede journalføringsoppgave for journalpost", INGEN)
+                FordelingResultat(journalpostId, "Det finnes allerede journalføringsoppgave for journalpost", INGEN)
             }
             else {
                 runCatching {
                     log.info("Oppretter manuell journalføringsoppgave for journalpost $journalpostId")
-                    oppgave.opprettJournalføringOppgave(jp,enhet)
-                    FordelingResultat(journalpostId,"Journalføringsoppgave opprettet", MANUELL_JOURNALFØRING)
+                    oppgave.opprettJournalføringOppgave(jp, enhet)
+                    FordelingResultat(journalpostId, "Journalføringsoppgave opprettet", MANUELL_JOURNALFØRING)
                 }.getOrElse {
                     runCatching {
-                        log.warn("Feil ved opprettelse av manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
+                        log.warn("Feil ved opprettelse av manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave",
+                                it)
                         oppgave.opprettFordelingOppgave(jp)
                         FordelingResultat(journalpostId, "Fordelingsoppgave oprettet", MANUELL_FORDELING)
                     }.getOrElse {
                         log.warn("Feil ved opprettelse av manuell fordelingsoppgave for journalpost $journalpostId")
-                        throw ManuellFordelingException(journalpostId,"Feil ved opprettelse av manuell fordelingsoppgave",it)
+                        throw ManuellFordelingException(journalpostId,
+                                "Feil ved opprettelse av manuell fordelingsoppgave",
+                                it)
                     }
                 }
             }
         }
 }
-class ManuellFordelingException(val journalpostId: String, msg: String, cause: Throwable? = null) : RuntimeException(msg,cause)
+
+class ManuellFordelingException(val journalpostId: String, msg: String, cause: Throwable? = null) :
+    RuntimeException(msg, cause)

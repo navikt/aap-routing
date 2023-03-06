@@ -10,14 +10,13 @@ import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(EGENANSATT)
 class EgenAnsattConfig(
-    @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-    @DefaultValue("true") enabled: Boolean,
-    @DefaultValue(SKJERMING_PATH) val path: String,
-    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled, DEFAULT) {
+        @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
+        @DefaultValue("true") enabled: Boolean,
+        @DefaultValue(SKJERMING_PATH) val path: String,
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled, DEFAULT) {
 
-    fun skjermetUri(b: UriBuilder) =  b.path(path).build()
+    fun skjermetUri(b: UriBuilder) = b.path(path).build()
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
-
 
     companion object {
         private const val DEFAULT_PING_PATH = "internal/health/liveness"

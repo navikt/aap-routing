@@ -30,22 +30,24 @@ import org.springframework.stereotype.Component
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
+class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
+    RetryTopicConfigurationSupport() {
 
     @Component
-    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : KafkaPingable(admin,p.bootstrapServers,cfg)
+    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) :
+        KafkaPingable(admin, p.bootstrapServers, cfg)
 
     @Bean
     @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
-     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties,delegator: FordelingTemaDelegator) =
+    @Bean(FORDELING)
+    fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
-                    with (it.value()) {
-                         !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)
+                    with(it.value()) {
+                        !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)
                     }
                 }
             })
@@ -54,10 +56,12 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
 
     @Bean
     fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
-        KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties().apply {
-            put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-            put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-        }))
+        KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
+            .apply {
+                put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
+            }))
+
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory
     }

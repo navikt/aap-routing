@@ -14,7 +14,7 @@ import org.springframework.boot.runApplication
 class RoutingApplication
 
 fun main(args: Array<String>) {
-	runApplication<RoutingApplication>(*args) {
-		setAdditionalProfiles(*profiler())
-	}
+    runApplication<RoutingApplication>(*args) {
+        setAdditionalProfiles(*profiler())
+    }
 }

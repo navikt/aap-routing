@@ -9,22 +9,22 @@ import org.springframework.stereotype.Component
 @Component
 class FordelingRetryTopicNamingProviderFactory(private val cf: FordelingConfig) : RetryTopicNamesProviderFactory {
 
-      override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
-          with(cf.topics) {
-              if (p.isDltTopic) {
-                  return object : SuffixingRetryTopicNamesProvider(p) {
-                      override fun getTopicName(topic: String) = dlt
-                  }
-              }
-              if (p.isMainEndpoint) {
-                  return object : SuffixingRetryTopicNamesProvider(p) {
-                      override fun getTopicName(topic: String) = topic
-                  }
-              }
-              return object : SuffixingRetryTopicNamesProvider(p) { // retry
-                  override fun getTopicName(topic: String) = retry
-              }
-          }
+    override fun createRetryTopicNamesProvider(p: Properties): RetryTopicNamesProvider {
+        with(cf.topics) {
+            if (p.isDltTopic) {
+                return object : SuffixingRetryTopicNamesProvider(p) {
+                    override fun getTopicName(topic: String) = dlt
+                }
+            }
+            if (p.isMainEndpoint) {
+                return object : SuffixingRetryTopicNamesProvider(p) {
+                    override fun getTopicName(topic: String) = topic
+                }
+            }
+            return object : SuffixingRetryTopicNamesProvider(p) { // retry
+                override fun getTopicName(topic: String) = retry
+            }
+        }
 
-      }
+    }
 }

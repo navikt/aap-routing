@@ -5,14 +5,20 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
-object FordelingDTOs {
 
+object FordelingDTOs {
 
     data class FordelingResultat(val journalpostId: String = "0", val msg: String, val type: FordelingType) {
         fun formattertMelding() = "${msg} for journalpost $journalpostId og fordelingstype $type"
-        enum class FordelingType  { AUTOMATISK,MANUELL_JOURNALFØRING,MANUELL_FORDELING,INGEN }
+        enum class FordelingType {
+            AUTOMATISK,
+            MANUELL_JOURNALFØRING,
+            MANUELL_FORDELING,
+            INGEN
+        }
+
         companion object {
-            val INGEN_FORDELING = FordelingResultat(msg ="Ingen fordeling utført", type =  INGEN)
+            val INGEN_FORDELING = FordelingResultat(msg = "Ingen fordeling utført", type = INGEN)
         }
     }
 
@@ -28,12 +34,10 @@ object FordelingDTOs {
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>) {
 
-
         fun tilJournalpost() =
-            Journalpost(tittel,journalfoerendeEnhet,journalpostId,journalstatus,tema.lowercase(),behandlingstema,
-                    Fødselsnummer(bruker.id), Bruker(bruker.id,bruker.type),
-                    Bruker(avsenderMottaker.id,avsenderMottaker.type),relevanteDatoer,dokumenter)
-
+            Journalpost(tittel, journalfoerendeEnhet, journalpostId, journalstatus, tema.lowercase(), behandlingstema,
+                    Fødselsnummer(bruker.id), Bruker(bruker.id, bruker.type),
+                    Bruker(avsenderMottaker.id, avsenderMottaker.type), relevanteDatoer, dokumenter)
 
         enum class JournalStatus {
             MOTTATT,
@@ -49,6 +53,7 @@ object FordelingDTOs {
             OPPLASTING_DOKUMENT,
             UKJENT
         }
+
         data class RelevantDato(val dato: LocalDateTime, val datotype: RelevantDatoType) {
 
             enum class RelevantDatoType {
@@ -62,7 +67,13 @@ object FordelingDTOs {
             }
         }
 
-        data class OppdateringData(val tittel: String?, val avsenderMottaker: Bruker?, val bruker: Bruker?, val sak: Sak? = null, val tema: String) {
+        data class OppdateringData(
+                val tittel: String?,
+                val avsenderMottaker: Bruker?,
+                val bruker: Bruker?,
+                val sak: Sak? = null,
+                val tema: String,
+                                  ) {
 
             data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
         }
@@ -73,6 +84,7 @@ object FordelingDTOs {
                 val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
             }
         }
+
         data class OppdateringRespons(val journalpostId: String) {
             companion object {
                 val EMPTY = OppdateringRespons("0")
@@ -81,7 +93,7 @@ object FordelingDTOs {
 
         data class Bruker(val id: String, val idType: BrukerType = FNR)
 
-        data class DokumentInfo(val dokumentInfoId: String, val tittel: String?,val brevkode: String?)
+        data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 
         data class BrukerDTO(val id: String, val type: BrukerType) {
             enum class BrukerType {
@@ -95,7 +107,7 @@ object FordelingDTOs {
             }
         }
 
-        companion object  {
+        companion object {
             private const val FAGSAK = "FAGSAK"
             private const val FAGSAKSYSTEM = "AO01"
         }

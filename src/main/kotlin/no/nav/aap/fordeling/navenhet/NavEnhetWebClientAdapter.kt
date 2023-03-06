@@ -14,7 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) : AbstractWebClientAdapter(webClient, cf) {
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
+    AbstractWebClientAdapter(webClient, cf) {
 
     fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
         .uri(cf::enhetUri)

@@ -28,11 +28,13 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
-    fun pdlClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) = cfg.clientCredentialFlow(service,PDL)
+    fun pdlClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+        cfg.clientCredentialFlow(service, PDL)
 
     @Bean
     @Qualifier(PDL)
-    fun pdlGraphQLClient(@Qualifier(PDL) client: WebClient, mapper: ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
+    fun pdlGraphQLClient(@Qualifier(PDL) client: WebClient, mapper: ObjectMapper) =
+        GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @ConditionalOnGCP

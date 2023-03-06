@@ -13,12 +13,14 @@ data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient, val e
     val log = getLogger(javaClass)
 
     fun navEnhet(jp: Journalpost) =
-            jp.journalførendeEnhet?.let { e ->
-                if (enhet.erAktiv(e))
-                    NAVEnhet(e).also { log.info("Journalførende enhet $it satt på journalposten er aktiv") }
-                else {
-                    enhetFor(jp.fnr).also { log.info("Journalførende enhet $it satt på journalposten er IKKE aktiv") }
-                }
-            }?: enhetFor(jp.fnr).also { log.info("Journalførende enhet ikke satt på journalposten, fra GT er den $it") }
-    private fun enhetFor(fnr: Fødselsnummer) = enhet.navEnhet(pdl.geoTilknytning(fnr), egen.erSkjermet(fnr), pdl.diskresjonskode(fnr))
+        jp.journalførendeEnhet?.let { e ->
+            if (enhet.erAktiv(e))
+                NAVEnhet(e).also { log.info("Journalførende enhet $it satt på journalposten er aktiv") }
+            else {
+                enhetFor(jp.fnr, jp.tema).also { log.info("Journalførende enhet $it satt på journalposten er IKKE aktiv") }
+            }
+        } ?: enhetFor(jp.fnr,jp.tema).also { log.info("Journalførende enhet ikke satt på journalposten, fra GT er den $it") }
+
+    private fun enhetFor(fnr: Fødselsnummer, tema: String) =
+        enhet.navEnhet(pdl.geoTilknytning(fnr), egen.erSkjermet(fnr), pdl.diskresjonskode(fnr), tema)
 }

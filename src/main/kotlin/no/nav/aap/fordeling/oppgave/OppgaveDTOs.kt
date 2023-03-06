@@ -14,12 +14,12 @@ object OppgaveDTOs {
 
     data class OppgaveRespons(val antallTreffTotalt: Int, val oppgaver: List<Oppgave>) {
         @JsonIgnoreProperties(ignoreUnknown = true)
-        data  class Oppgave(val id: Long)
+        data class Oppgave(val id: Long)
     }
 }
 
 fun Journalpost.tilOpprettOppgave(oppgaveType: OppgaveType, enhetNr: String? = null) =
-    OpprettOppgaveData(fnr.fnr,journalpostId, behandlingstema,enhetNr,tittel,oppgaveType.verdi)
+    OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi)
 
 enum class OppgaveType(val verdi: String) {
     JOURNALFØRINGSOPPGAVE("JFR"),
@@ -38,7 +38,8 @@ data class OpprettOppgaveData(
         val prioritet: String = NORMAL_PRIORITET,
         val fristFerdigstillelse: LocalDate = frist(),
         val aktivDato: LocalDate = LocalDate.now(),
-        val opprettetAvEnhetsnr: String = AUTO_ENHET) {
+        val opprettetAvEnhetsnr: String = AUTO_ENHET,
+                             ) {
 
     companion object {
         private const val NORMAL_PRIORITET = "NORM"
@@ -47,7 +48,7 @@ data class OpprettOppgaveData(
 
         private fun frist() =
             with(now()) {
-                 addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
+                addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
                         dagerTilFrist(hour)).toInstant()
                     .atZone(systemDefault()).toLocalDate()
             }

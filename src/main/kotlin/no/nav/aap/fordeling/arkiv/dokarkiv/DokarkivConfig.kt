@@ -15,9 +15,9 @@ class DokarkivConfig(
         @DefaultValue("true") enabled: Boolean,
         @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
         @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,DEFAULT) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled, DEFAULT) {
 
-    fun ferdigstillUri(b: UriBuilder,journalpostId: String) = b.path(ferdigstillPath).build(journalpostId)
+    fun ferdigstillUri(b: UriBuilder, journalpostId: String) = b.path(ferdigstillPath).build(journalpostId)
     fun oppdaterJournlpostUri(b: UriBuilder, journalpostId: String) = b.path(oppdaterPath).build(journalpostId)
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

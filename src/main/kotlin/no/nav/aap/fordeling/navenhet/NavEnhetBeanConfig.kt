@@ -31,5 +31,6 @@ class NavEnhetBeanConfig {
 
     @Bean
     @ConditionalOnGCP
-    fun navEnhetHealthIndicator(adapter: NavEnhetWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun navEnhetHealthIndicator(adapter: NavEnhetWebClientAdapter) =
+        object : AbstractPingableHealthIndicator(adapter) {}
 }

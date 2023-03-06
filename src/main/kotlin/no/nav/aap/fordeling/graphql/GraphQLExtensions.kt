@@ -23,28 +23,31 @@ object GraphQLExtensions {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
-     fun GraphQLErrorsException.oversett() = oversett(code(), message ?: "Ukjent feil").also {
-         log.warn("GraphQL oppslag returnerte ${errors.size} feil. ${errors}, oversatte feilkode til ${it.javaClass.simpleName}", this)
-     }
+    fun GraphQLErrorsException.oversett() = oversett(code(), message ?: "Ukjent feil").also {
+        log.warn("GraphQL oppslag returnerte ${errors.size} feil. ${errors}, oversatte feilkode til ${it.javaClass.simpleName}",
+                this)
+    }
 
     private fun GraphQLErrorsException.code() = errors.firstOrNull()?.extensions?.get("code")?.toString()
 
     private fun oversett(kode: String?, msg: String) =
         when (kode) {
-            NOTAUTHORIZED -> UnauthorizedGraphQL(UNAUTHORIZED,msg)
-            UNAUTHENTICATED -> UnauthenticatedGraphQL(FORBIDDEN,msg)
+            NOTAUTHORIZED -> UnauthorizedGraphQL(UNAUTHORIZED, msg)
+            UNAUTHENTICATED -> UnauthenticatedGraphQL(FORBIDDEN, msg)
             BADREQUEST -> BadGraphQL(BAD_REQUEST, msg)
             NOTFOUND -> NotFoundGraphQL(NOT_FOUND, msg)
-            else -> UnhandledGraphQL(INTERNAL_SERVER_ERROR,msg)
+            else -> UnhandledGraphQL(INTERNAL_SERVER_ERROR, msg)
         }
+
     abstract class UnrecoverableGraphQL(status: HttpStatus, msg: String) : Throwable("${status.value()}-$msg", null) {
-        class NotFoundGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status,msg)
-        class BadGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status,msg)
-        class UnauthenticatedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status,msg)
-        class UnauthorizedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status,msg)
+        class NotFoundGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status, msg)
+        class BadGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status, msg)
+        class UnauthenticatedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status, msg)
+        class UnauthorizedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQL(status, msg)
 
     }
+
     abstract class RecoverableGraphQL(status: HttpStatus, msg: String) : Throwable("${status.value()}-$msg", null) {
-        class UnhandledGraphQL(status: HttpStatus, msg: String) : RecoverableGraphQL(status,msg)
+        class UnhandledGraphQL(status: HttpStatus, msg: String) : RecoverableGraphQL(status, msg)
     }
 }

@@ -11,14 +11,14 @@ import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(ARENA)
 class ArenaConfig(
-    @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-    @DefaultValue("true") enabled: Boolean,
-    @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
-    @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
-    baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled, DEFAULT) {
+        @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
+        @DefaultValue("true") enabled: Boolean,
+        @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
+        @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled, DEFAULT) {
 
-    fun nyesteSakUri(b: UriBuilder, fnr: Fødselsnummer) =  b.path(nyesteSakPath).build(fnr.fnr)
-    fun oppgaveUri(b: UriBuilder) =  b.path(oppgavePath).build()
+    fun nyesteSakUri(b: UriBuilder, fnr: Fødselsnummer) = b.path(nyesteSakPath).build(fnr.fnr)
+    fun oppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

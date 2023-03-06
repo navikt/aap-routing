@@ -16,11 +16,12 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) : AbstractWebClientAdapter(webClient, cf) {
+class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
+    AbstractWebClientAdapter(webClient, cf) {
 
     fun nyesteArenaSak(fnr: Fødselsnummer) =
         webClient.get()
-            .uri { cf.nyesteSakUri(it,fnr) }
+            .uri { cf.nyesteSakUri(it, fnr) }
             .accept(APPLICATION_JSON)
             .retrieve()
             .bodyToMono<String>()

@@ -20,26 +20,36 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, private val arkiv: ArkivClient, private val enhet: NavEnhetUtvelger, private val slack: SlackNotifier, private val faultInjecter: FaultInjecter) {
+class FordelingHendelseKonsument(
+        private val fordeler: FordelingTemaDelegator,
+        private val arkiv: ArkivClient,
+        private val enhet: NavEnhetUtvelger,
+        private val slack: SlackNotifier,
+        private val faultInjecter: FaultInjecter) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
-    @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression =  "#{'\${fordeling.topics.backoff}'}"), sameIntervalTopicReuseStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
-    fun listen(hendelse: JournalfoeringHendelseRecord,
-               @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
-               @Header(DEFAULT_HEADER_ORIGINAL_TIMESTAMP) timestamp: String?,
-               @Header(RECEIVED_TOPIC) topic: String)  {
+    @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}",
+            backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
+            sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
+            autoCreateTopics = "false")
+    fun listen(
+            hendelse: JournalfoeringHendelseRecord,
+            @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
+            @Header(DEFAULT_HEADER_ORIGINAL_TIMESTAMP) timestamp: String?,
+            @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             log.info("Original timestamp $timestamp")
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
-           faultInjecter.maybeInject(this)
+            faultInjecter.maybeInject(this)
             arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
-                fordeler.fordel(it,enhet.navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
-            }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
+                fordeler.fordel(it, enhet.navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
+            }
+                ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
         }.getOrElse {
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
-                log.warn(this,it)
+                log.warn(this, it)
                 slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }
             throw it
@@ -47,7 +57,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
     }
 
     @DltHandler
-    fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?)  {
+    fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         log.warn("Gir opp fordeling av journalpost ${payload.journalpostId} $trace").also {
             slack.send("Journalpost ${payload.journalpostId} kunne ikke fordeles")
         }

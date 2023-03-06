@@ -48,7 +48,9 @@ import reactor.netty.http.client.HttpClient
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
-class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String, private val env: Environment)  {
+class GlobalBeanConfig(
+        @Value("\${spring.application.name}") private val applicationName: String,
+        private val env: Environment) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
@@ -64,6 +66,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .url("https://nav.no"))
                  )
     }
+
     @Bean
     fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
         WebClientCustomizer { b ->
@@ -74,25 +77,32 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextInt(1, 5) == 1 && isDevOrLocal(env) && !it.url().host.contains("microsoftonline"))  {
-                with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil for request til ${it.url()}", null, null, null, null)) {
+            if (nextInt(1, 5) == 1 && isDevOrLocal(env) && !it.url().host.contains("microsoftonline")) {
+                with(WebClientResponseException(BAD_GATEWAY,
+                        "Tvunget feil for request til ${it.url()}",
+                        null,
+                        null,
+                        null,
+                        null)) {
                     log.info(message, this)
                     Mono.error(this)
                 }
             }
-            else  {
+            else {
                 log.trace("Tvinger IKKE fram  feil for ${it.url()}")
                 Mono.just(it)
-            };
+            }
         }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
 
     @Bean
     fun objectMapperCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
         it.apply {
-            mixIn(OAuth2AccessTokenResponse::class.java,IgnoreUnknown::class.java)
-            modules(JavaTimeModule(), KotlinModule.Builder().build()) }
+            mixIn(OAuth2AccessTokenResponse::class.java, IgnoreUnknown::class.java)
+            modules(JavaTimeModule(), KotlinModule.Builder().build())
+        }
     }
 
     @ConditionalOnNotProd
@@ -102,6 +112,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @ConditionalOnProd
     @Bean
     fun prodHttpClient() = HttpClient.create()
+
     @Bean
     fun configMatcher() =
         object : ClientConfigurationPropertiesMatcher {}
@@ -122,43 +133,58 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .retrieve()
                     .bodyToMono(OAuth2AccessTokenResponse::class.java)
                     .retryWhen(retry())
-                    .onErrorMap { e -> e as? OAuth2ClientException ?: OAuth2ClientException("Uventet feil fra token endpoint $tokenEndpointUrl",e) }
+                    .onErrorMap { e ->
+                        e as? OAuth2ClientException
+                            ?: OAuth2ClientException("Uventet feil fra token endpoint $tokenEndpointUrl", e)
+                    }
                     .doOnSuccess { log.trace("Token endpoint $tokenEndpointUrl returnerte OK") }
                     .block()
                     ?: throw OAuth2ClientException("Ingen respons (null) fra token endpoint $tokenEndpointUrl")
             }
+
         private fun retry() =
             fixedDelay(3, Duration.ofMillis(100))
                 .filter { it is OAuth2ClientException }
-                .doBeforeRetry { log.info("Retry kall mot token endpoint feilet med  ${it.failure().message} for ${it.totalRetriesInARow() + 1} gang, prøver igjen",it.failure()) }
-                .onRetryExhaustedThrow { _, spec ->  spec.failure().also { log.warn("Retry mot token endpoint gir opp etter ${spec.totalRetriesInARow()} forsøk") } }
+                .doBeforeRetry {
+                    log.info("Retry kall mot token endpoint feilet med  ${it.failure().message} for ${it.totalRetriesInARow() + 1} gang, prøver igjen",
+                            it.failure())
+                }
+                .onRetryExhaustedThrow { _, spec ->
+                    spec.failure()
+                        .also { log.warn("Retry mot token endpoint gir opp etter ${spec.totalRetriesInARow()} forsøk") }
+                }
     }
 
     @Component
-    class FaultInjecter(private val env: Environment)  {
+    class FaultInjecter(private val env: Environment) {
 
         fun maybeInject(component: Any) = env.maybeInject(component)
+
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.maybeInject(component: Any) =
                 if (isDevOrLocal(this)) {
-                    if (nextBoolean())  {
+                    if (nextBoolean()) {
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.warn(it.message)
                         }
-                    } else {
+                    }
+                    else {
                         Unit
                     }
-                } else {
+                }
+                else {
                     Unit
                 }
         }
     }
 
-        companion object {
-        fun ClientConfigurationProperties.clientCredentialFlow( service: OAuth2AccessTokenService, key: String) =
+    companion object {
+        fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
-                next.exchange(ClientRequest.from(req).header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build()) }
+                next.exchange(ClientRequest.from(req)
+                    .header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build())
+            }
     }
 
 }

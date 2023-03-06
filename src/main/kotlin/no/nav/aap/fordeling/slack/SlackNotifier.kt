@@ -20,7 +20,7 @@ class SlackNotifier(private val cfg: SlackConfig) {
                             LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
                         }
                     }
-                }.getOrElse{
+                }.getOrElse {
                     LOG.warn("Fikk ikke kontakt med Slack-API", it)
                 }
             }

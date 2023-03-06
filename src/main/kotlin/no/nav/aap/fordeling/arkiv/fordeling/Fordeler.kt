@@ -5,9 +5,11 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 
 interface Fordeler {
     fun tema() = emptyList<String>()
-    fun fordel(jp: Journalpost, enhet: NAVEnhet)  = INGEN_FORDELING
+    fun fordel(jp: Journalpost, enhet: NAVEnhet) = INGEN_FORDELING
+
     companion object {
-        val INGEN_FORDELER =  object : Fordeler {}
+        val INGEN_FORDELER = object : Fordeler {}
     }
 }
-interface ManuellFordeler: Fordeler
+
+interface ManuellFordeler : Fordeler

@@ -24,7 +24,7 @@ class NavEnhetConfig(
 
     companion object {
         const val NAVENHET = "navorg"
-        private const  val ENHETSLISTE = "enhetStatusListe"
+        private const val ENHETSLISTE = "enhetStatusListe"
         private const val AKTIV = "AKTIV"
         private const val AKTIVE_PATH = "norg2/api/v1/enhet"
         private const val DEFAULT_PING_PATH = "norg2/internal/isAlive"

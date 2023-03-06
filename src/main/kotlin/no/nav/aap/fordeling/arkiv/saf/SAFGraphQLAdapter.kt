@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class SAFGraphQLAdapter(@Qualifier(SAF) private val graphQL: GraphQLWebClient, @Qualifier(SAF) webClient: WebClient, cf: SAFConfig) :
-    AbstractGraphQLAdapter(webClient, cf) {
+class SAFGraphQLAdapter(
+        @Qualifier(SAF) private val graphQL: GraphQLWebClient,
+        @Qualifier(SAF) webClient: WebClient,
+        cf: SAFConfig) : AbstractGraphQLAdapter(webClient, cf) {
 
     @Retry(name = GRAPHQL)
-    fun hentJournalpost(journalpostId: String) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
+    fun hentJournalpost(journalpostId: String) =
+        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.tilJournalpost()
 
     companion object {
         private fun String.asIdent() = mapOf(ID to this)

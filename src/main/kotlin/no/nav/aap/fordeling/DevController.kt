@@ -9,7 +9,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
@@ -22,28 +21,34 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
-class DevController(private val fordeler: AAPFordeler,
-                    private val pdl: PDLWebClientAdapter,
-                    private val egen: EgenAnsattClient,
-                    private val arkiv: DokarkivWebClientAdapter,
-                    private val oppgave: OppgaveClient,
-                    private val arena: ArenaWebClientAdapter,
-                    private val org: NavEnhetWebClientAdapter) {
+class DevController(
+        private val fordeler: AAPFordeler,
+        private val pdl: PDLWebClientAdapter,
+        private val egen: EgenAnsattClient,
+        private val arkiv: DokarkivWebClientAdapter,
+        private val oppgave: OppgaveClient,
+        private val arena: ArenaWebClientAdapter,
+        private val org: NavEnhetWebClientAdapter,
+                   ) {
 
     private val log = getLogger(javaClass)
+
     @PostMapping("oppdaterogferdigstilljournalpost")
-    fun oppdaterOgFerdigstillJournalpost(@RequestBody  data: OppdateringData, @RequestParam journalpostId: String) = arkiv.oppdaterOgFerdigstillJournalpost(journalpostId,data)
+    fun oppdaterOgFerdigstillJournalpost(@RequestBody data: OppdateringData, @RequestParam journalpostId: String) =
+        arkiv.oppdaterOgFerdigstillJournalpost(journalpostId, data)
 
     @PostMapping("oppdaterjournalpost")
-    fun oppdaterJournalpost( @RequestParam journalpostId: String,@RequestBody  data: OppdateringData) = arkiv.oppdaterJournalpost(journalpostId,data)
-    @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
-    fun ferdigstillJournalpost( @RequestParam journalpostId: String) =
-         arkiv.ferdigstillJournalpost(journalpostId)
+    fun oppdaterJournalpost(@RequestParam journalpostId: String, @RequestBody data: OppdateringData) =
+        arkiv.oppdaterJournalpost(journalpostId, data)
 
+    @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
+    fun ferdigstillJournalpost(@RequestParam journalpostId: String) =
+        arkiv.ferdigstillJournalpost(journalpostId)
 
     @PostMapping("fordel")
-    fun fordelSøknad(@RequestBody  journalpost: Journalpost, @RequestParam enhetNr: String) =
+    fun fordelSøknad(@RequestBody journalpost: Journalpost, @RequestParam enhetNr: String) =
         fordeler.fordel(journalpost, NAVEnhet(enhetNr))
+
     @GetMapping("hargosysoppgave")
     fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
 
@@ -51,7 +56,7 @@ class DevController(private val fordeler: AAPFordeler,
     fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arena.nyesteArenaSak(fnr)
 
     @GetMapping("skjerming")
-    fun erSkjermet(@RequestParam fnr: Fødselsnummer) =  egen.erSkjermet(fnr)
+    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egen.erSkjermet(fnr)
 
     @GetMapping("aktiveenheter")
     fun aktiveEnheter() = org.aktiveEnheter()
@@ -63,5 +68,5 @@ class DevController(private val fordeler: AAPFordeler,
     fun gt(@RequestParam fnr: Fødselsnummer) = pdl.geoTilknytning(fnr)
 
     @PostMapping("opprettarenaoppgave")
-    fun arenaOpprettOppgave(@RequestBody  data: ArenaOpprettOppgaveData) = arena.opprettArenaOppgave(data)
+    fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arena.opprettArenaOppgave(data)
 }

@@ -1,4 +1,5 @@
 package no.nav.aap.fordeling.arena
+
 import no.nav.aap.api.felles.Fødselsnummer
 
 object ArenaDTOs {
@@ -7,5 +8,11 @@ object ArenaDTOs {
             val EMPTY = ArenaOpprettetOppgave()
         }
     }
-    data class ArenaOpprettOppgaveData(val fnr: Fødselsnummer, val enhet: String, val tittel: String, val titler: List<String> = emptyList())
+
+    data class ArenaOpprettOppgaveData(
+            val fnr: Fødselsnummer,
+            val enhet: String,
+            val tittel: String,
+            val titler: List<String> = emptyList(),
+                                      )
 }

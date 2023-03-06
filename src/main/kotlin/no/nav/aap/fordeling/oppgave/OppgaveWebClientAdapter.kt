@@ -15,17 +15,17 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
     AbstractWebClientAdapter(webClient, cf) {
 
     fun harOppgave(journalpostId: String) =
-            webClient.get()
-                .uri{cf.oppgaveUri(it,journalpostId)}
-                .retrieve()
-                .bodyToMono<OppgaveRespons>()
-                .retryWhen(cf.retrySpec(log))
-                .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet", t) }
-                .block()?.antallTreffTotalt?.let { it > 0 } ?: throw IntegrationException("Null respons fra opslag oppgave $journalpostId")
+        webClient.get()
+            .uri { cf.oppgaveUri(it, journalpostId) }
+            .retrieve()
+            .bodyToMono<OppgaveRespons>()
+            .retryWhen(cf.retrySpec(log))
+            .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
+            .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet", t) }
+            .block()?.antallTreffTotalt?.let { it > 0 }
+            ?: throw IntegrationException("Null respons fra opslag oppgave $journalpostId")
 
-
-    fun opprettOppgave(data: OpprettOppgaveData)  =
+    fun opprettOppgave(data: OpprettOppgaveData) =
         if (cf.isEnabled) {
             webClient.post()
                 .uri(cf::opprettOppgaveUri)

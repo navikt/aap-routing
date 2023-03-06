@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val cf: DokarkivConfig) :
+class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf: DokarkivConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdateringData) =
@@ -25,7 +25,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val c
     fun oppdaterJournalpost(journalpostId: String, data: OppdateringData) =
         if (cf.isEnabled) {
             webClient.put()
-                .uri { cf.oppdaterJournlpostUri(it,journalpostId) }
+                .uri { cf.oppdaterJournlpostUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
@@ -45,7 +45,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val c
     fun ferdigstillJournalpost(journalpostId: String) =
         if (cf.isEnabled) {
             webClient.patch()
-                .uri {cf.ferdigstillUri(it,journalpostId) }
+                .uri { cf.ferdigstillUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
                 .bodyValue(AUTOMATISK_JOURNALFØRING)

@@ -14,17 +14,17 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, val cf: EgenAnsattConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-        fun erSkjermet(fnr: String) = webClient.post()
-            .uri(cf::skjermetUri)
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .bodyValue(Ident(fnr))
-            .retrieve()
-            .bodyToMono<Boolean>()
-            .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
-            .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
-            .block() ?: throw IntegrationException("Null respons fra Skjerming")
+    fun erSkjermet(fnr: String) = webClient.post()
+        .uri(cf::skjermetUri)
+        .contentType(APPLICATION_JSON)
+        .accept(APPLICATION_JSON)
+        .bodyValue(Ident(fnr))
+        .retrieve()
+        .bodyToMono<Boolean>()
+        .retryWhen(cf.retrySpec(log))
+        .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
+        .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
+        .block() ?: throw IntegrationException("Null respons fra Skjerming")
 
     private data class Ident(val personident: String)
 }

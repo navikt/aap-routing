@@ -17,14 +17,16 @@ class OppgaveConfig(
         @DefaultValue("true") enabled: Boolean,
         @DefaultValue(DEFAULT_OPPGAVE_PATH) val oppgavePath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled, DEFAULT) {
-    fun oppgaveUri(b: UriBuilder, id: String) = b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID,id).path(oppgavePath).build()
+    fun oppgaveUri(b: UriBuilder, id: String) =
+        b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID, id).path(oppgavePath).build()
+
     fun opprettOppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
         const val OPPGAVE = "oppgave"
-        private val OPPGAVE_PARAMS = LinkedMultiValueMap<String,String>().apply {
+        private val OPPGAVE_PARAMS = LinkedMultiValueMap<String, String>().apply {
             add(STATUSKATEGORI, ÅPEN)
             add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE.verdi)
             add(OPPGAVETYPE, FORDELINGSOPPGAVE.verdi)

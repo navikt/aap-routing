@@ -1,14 +1,14 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.config.AbstractKafkaConfig
+import no.nav.aap.fordeling.config.KafkaConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.context.properties.bind.DefaultValue
 
 @ConfigurationProperties(FORDELING)
 data class FordelingConfig(@NestedConfigurationProperty val topics: FordelingTopics,
-                           @DefaultValue("true") val enabled: Boolean) : AbstractKafkaConfig(FORDELING,enabled) {
+                           @DefaultValue("true") val enabled: Boolean) : KafkaConfig(FORDELING,enabled) {
 
     data class FordelingTopics(@DefaultValue(DEFAULT_MAIN)  val main: String,
                                @DefaultValue(RETRY_TOPIC) val retry: String,

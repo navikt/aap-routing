@@ -11,7 +11,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeler(private val oppgave: OppgaveClient) : Fordeler {
+class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun tema() = listOf(AAP)

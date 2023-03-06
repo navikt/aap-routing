@@ -28,3 +28,4 @@ interface Fordeler {
         }
     }
 }
+interface ManuellFordeler: Fordeler

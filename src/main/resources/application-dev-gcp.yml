@@ -13,6 +13,7 @@ saf:
 dokarkiv:
     scope: api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default
 fordeling:
+    enabled: true
     topics:
         main: teamdokumenthandtering.aapen-dok-journalfoering-q1
 oppgave:

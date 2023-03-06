@@ -142,8 +142,3 @@ fordeling:
     topics:
        retries: 24
        backoff: 1000
-    routing:
-       aap:
-          brevkoder:
-             - 'NAV 11-13.05'
-             - 'NAVe 11-13.05'

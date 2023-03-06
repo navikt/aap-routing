@@ -15,7 +15,7 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
         log.info("Kan fordele følgende tema:\n${fordelere
             .filter { it !is ManuellFordeler }
             .map { Pair(it.javaClass.simpleName, it.tema()) }
-            .map { "\t${it.second} -> ${it.first}" }}")
+            .map { "${it.second} -> ${it.first}" }}")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp,enhet)

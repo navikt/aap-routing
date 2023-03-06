@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.slack
 
 import com.slack.api.Slack
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
@@ -33,5 +34,9 @@ class SlackNotifier(private val cfg: SlackConfig) {
     }
 }
 
-@ConfigurationProperties("slack")
-data class SlackConfig(val kanal: String, val token: String, val enabled: Boolean)
+@ConfigurationProperties(SLACK)
+data class SlackConfig(val kanal: String, val token: String, val enabled: Boolean) {
+    companion object {
+        const val SLACK = "slack"
+    }
+}

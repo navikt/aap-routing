@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.saf
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import java.util.*
-import no.nav.aap.fordeling.arkiv.saf.SafConfig.Companion.SAF
+import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -21,11 +21,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
-class SafBeanConfig {
+class SAFBeanConfig {
 
     @Bean
     @Qualifier(SAF)
-    fun safGraphQLWebClient(builder: Builder, cfg: SafConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
+    fun safGraphQLWebClient(builder: Builder, cfg: SAFConfig, @Qualifier(SAF) safFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
@@ -40,5 +40,5 @@ class SafBeanConfig {
 
     @Bean
     @ConditionalOnGCP
-    fun safHealthIndicator(a: SafGraphQLAdapter) = object : AbstractPingableHealthIndicator(a) {}
+    fun safHealthIndicator(a: SAFGraphQLAdapter) = object : AbstractPingableHealthIndicator(a) {}
 }

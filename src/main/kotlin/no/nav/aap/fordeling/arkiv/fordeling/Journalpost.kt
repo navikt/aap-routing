@@ -22,8 +22,6 @@ data class Journalpost(val tittel: String?, val journalførendeEnhet: String?, v
     val vedleggTitler =  dokumenter.drop(1).mapNotNull { it.tittel }
 
     fun opprettArenaOppgaveData(enhet: NAVEnhet)  = ArenaOpprettOppgaveData(fnr,enhet.enhetNr,hovedDokumentTittel, vedleggTitler)
-
-
     fun oppdateringsData(saksNr: String) = OppdateringData(tittel, avsenderMottager ?: bruker,bruker, Sak(saksNr))
 
 }

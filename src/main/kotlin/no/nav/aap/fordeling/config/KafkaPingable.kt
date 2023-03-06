@@ -11,11 +11,11 @@ abstract class KafkaPingable(private val admin: KafkaAdmin,
     override fun name() = cfg.name
 
     override fun ping(): Map<String, String> {
-        return cfg.topics().mapIndexedNotNull { ix, topic -> innslag(topic,ix)}
+        return cfg.topics().mapIndexedNotNull { ix, topic -> innslag(ix, topic)}
             .associateBy({ it.first }, { it.second })
     }
 
-    private fun innslag(topic: String, ix: Int): Pair<String,String> {
+    private fun innslag(ix: Int, topic: String): Pair<String,String> {
         runCatching {
             with(admin.describeTopics(topic).values.first()) {
                 return Pair("topic-$ix", "${name()} (${partitions().count()} partisjoner)")

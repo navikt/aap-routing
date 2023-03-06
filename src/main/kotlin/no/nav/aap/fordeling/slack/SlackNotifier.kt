@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.config
+package no.nav.aap.fordeling.slack
 
 import com.slack.api.Slack
 import org.slf4j.LoggerFactory.*

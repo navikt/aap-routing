@@ -22,13 +22,12 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
 
     fun fordelerFor(tema: String) =
         if (cfg.enabled) {
-            fordelere.first { tema.lowercase() in it.tema() && it !is ManuellFordeler}.also {
-                log.trace("Bruker fordeler $it for tema $tema")
-            }
+            fordelere.filterNot { it is ManuellFordeler }
+            fordelere.first { tema.lowercase() in it.tema()  }
         }
         else {
-            INGEN_FORDELER.also {
-                log.trace("Fordeling ikke aktivert, sett fordeling.enabled=true for å aktivere")
-            }
+            INGEN_FORDELER
+        }.also {
+            log.info("Bruker fordeler ${it::class.java.simpleName} for tema $tema")
         }
 }

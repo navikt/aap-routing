@@ -18,7 +18,6 @@ data class EnhetsKriteria(val geografiskOmraade: String,
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class NavOrg(val enhetNr: String, val status: String) {
-        fun tilNavEnhet() = NAVEnhet(enhetNr, Status.valueOf(status.uppercase().replace(' ','_')))
+        data class NAVEnhet(val enhetNr: String)
     }
-    data class NAVEnhet(val enhetNr: String, val status: Status)
 }

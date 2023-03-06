@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 

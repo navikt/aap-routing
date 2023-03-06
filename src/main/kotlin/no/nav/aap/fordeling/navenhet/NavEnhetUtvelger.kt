@@ -3,8 +3,7 @@ package no.nav.aap.fordeling.navenhet
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.Status.AKTIV
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
@@ -16,7 +15,7 @@ data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient, val e
     fun navEnhet(jp: Journalpost) =
             jp.journalførendeEnhet?.let { e ->
                 if (enhet.erAktiv(e))
-                    NAVEnhet(e, AKTIV).also { log.info("Journalførende enhet $it satt på journalposten er aktiv") }
+                    NAVEnhet(e).also { log.info("Journalførende enhet $it satt på journalposten er aktiv") }
                 else {
                     enhetFor(jp.fnr).also { log.info("Journalførende enhet $it satt på journalposten er IKKE aktiv") }
                 }

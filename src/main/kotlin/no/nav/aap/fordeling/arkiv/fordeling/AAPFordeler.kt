@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component

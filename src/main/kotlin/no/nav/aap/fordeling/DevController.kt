@@ -8,7 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.Status.AKTIV
 import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
@@ -43,7 +43,7 @@ class DevController(private val fordeler: AAPFordeler,
 
     @PostMapping("fordel")
     fun fordelSøknad(@RequestBody  journalpost: Journalpost, @RequestParam enhetNr: String) =
-        fordeler.fordel(journalpost, NAVEnhet(enhetNr,AKTIV))
+        fordeler.fordel(journalpost, NAVEnhet(enhetNr))
     @GetMapping("hargosysoppgave")
     fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
 

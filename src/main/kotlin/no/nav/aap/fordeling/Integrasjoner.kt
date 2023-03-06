@@ -23,7 +23,7 @@ data class Integrasjoner(val oppgave: OppgaveClient, val pdl: PDLClient, val org
                 if (org.erAktiv(enhet))
                     NAVEnhet(enhet, AKTIV).also { log.info("Journalførende enhet  $it satt på journalposten er aktiv") }
                 else {
-                    enhetFor(fnr).also { log.info("Enhet $IT satt på journalposten er IKKE aktiv") }
+                    enhetFor(fnr).also { log.info("Enhet $it satt på journalposten er IKKE aktiv") }
                 }
             }?: enhetFor(fnr).also { log.info("Enhet ikke satt på journalposten, fra GT er den $it") }
         }

@@ -9,14 +9,14 @@ management:
         shutdown:
             enabled: true
 saf:
-   scope: api://dev-fss.teamdokumenthandtering.saf-q1/.default
+   scope: api://dev-fss.teamdokumenthandtering.saf${suffix}/.default
 dokarkiv:
-    scope: api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default
+    scope: api://dev-fss.teamdokumenthandtering.dokarkiv${suffix}/.default
 fordeling:
     enabled: true
     topics:
-        main: teamdokumenthandtering.aapen-dok-journalfoering-q1
+        main: teamdokumenthandtering.aapen-dok-journalfoering${suffix}
         backoff: 2000
 oppgave:
-    base-uri: https://oppgave-q1.dev-fss-pub.nais.io
-    scope: api://dev-fss.oppgavehandtering.oppgave-q1/.default
+    base-uri: https://oppgave${suffix}.dev-fss-pub.nais.io
+    scope: api://dev-fss.oppgavehandtering.oppgave${suffix}/.default

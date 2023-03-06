@@ -7,6 +7,7 @@ import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
+import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(DOKARKIV)
 class DokarkivConfig(
@@ -15,6 +16,9 @@ class DokarkivConfig(
         @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
         @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled,DEFAULT) {
+
+
+    fun ferdigstillUri(b: UriBuilder,journalpostId: String) = b.path(ferdigstillPath).build(journalpostId)
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

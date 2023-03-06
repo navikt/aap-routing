@@ -45,16 +45,16 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV)  webClient: WebClient, val c
     fun ferdigstillJournalpost(journalpostId: String) =
         if (cf.isEnabled) {
             webClient.patch()
-            .uri { b -> b.path(cf.ferdigstillPath).build(journalpostId) }
-            .contentType(APPLICATION_JSON)
-            .accept(TEXT_PLAIN)
-            .bodyValue(AUTOMATISK_JOURNALFØRING)
-            .retrieve()
-            .bodyToMono<String>()
-            .retryWhen(cf.retrySpec(log))
-            .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
-            .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
-            .block()
+                .uri {cf.ferdigstillUri(it,journalpostId) }
+                .contentType(APPLICATION_JSON)
+                .accept(TEXT_PLAIN)
+                .bodyValue(AUTOMATISK_JOURNALFØRING)
+                .retrieve()
+                .bodyToMono<String>()
+                .retryWhen(cf.retrySpec(log))
+                .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
+                .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
+                .block()
         }
         else {
             "Ferdigstilte ikke journalpost $journalpostId".also {

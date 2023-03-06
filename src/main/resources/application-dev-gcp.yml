@@ -6,17 +6,6 @@ management:
     endpoint:
         health:
             show-details: always
-        shutdown:
-            enabled: true
-saf:
-   scope: api://${env}-fss.teamdokumenthandtering.saf${suffix}/.default
-dokarkiv:
-    scope: api://${env}-fss.teamdokumenthandtering.dokarkiv${suffix}/.default
 fordeling:
-    enabled: true
     topics:
-        main: teamdokumenthandtering.aapen-dok-journalfoering${suffix}
         backoff: 2000
-oppgave:
-    base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io
-    scope: api://${env}-fss.oppgavehandtering.oppgave${suffix}/.default

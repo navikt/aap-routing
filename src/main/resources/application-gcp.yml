@@ -129,8 +129,10 @@ egenansatt:
     scope: api://${env}-gcp.nom.skjermede-personer-pip/.default
 dokarkiv:
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io
+    scope: api://${env}-fss.teamdokumenthandtering.dokarkiv${suffix}/.default
 saf:
     base-uri: https://saf.${env}-fss-pub.nais.io/graphql
+    scope: api://${env}-fss.teamdokumenthandtering.saf${suffix}/.default
 pdl:
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql
     scope: api://${env}-fss.pdl.pdl-api/.default
@@ -138,6 +140,10 @@ arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
 slack:
     enabled: true
+oppgave:
+    base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io
+    scope: api://${env}-fss.oppgavehandtering.oppgave${suffix}/.default
 fordeling:
     topics:
-       retries: 24
+        main: teamdokumenthandtering.aapen-dok-journalfoering${suffix}
+        retries: 24

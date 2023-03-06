@@ -1,16 +1,11 @@
-saf:
-   scope: api://prod-fss.teamdokumenthandtering.saf/.default
 dokarkiv:
     enabled: false
-    scope: api://prod-fss.teamdokumenthandtering.dokarkiv/.default
 fordeling:
     enabled: false
     topics:
       backoff: 30000
 oppgave:
     enabled: false
-    base-uri: https://oppgave.prod-fss-pub.nais.io
-    scope: api://prod-fss.oppgavehandtering.oppgave/.default
 arena:
     enabled: false
 slack:

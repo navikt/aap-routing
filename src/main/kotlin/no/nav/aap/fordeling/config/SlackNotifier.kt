@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class SlackNotifier(private val cfg: SlackConfig) {
-    fun sendMessage(message: String) =
+    fun send(message: String) =
         with(cfg) {
             if (enabled) {
                 runCatching {

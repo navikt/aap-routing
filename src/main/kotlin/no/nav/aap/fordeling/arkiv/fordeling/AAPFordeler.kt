@@ -4,8 +4,8 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -48,7 +48,7 @@ class AAPFordeler(private val arena: ArenaClient,private val arkiv: ArkivClient,
             log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
             arena.opprettOppgave(jp, enhet).run {
                 arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
-                FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",AUTOMATISK)
+                FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", AUTOMATISK)
             }
         }
         else {

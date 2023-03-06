@@ -13,6 +13,7 @@ import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS
+import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP
 import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
@@ -27,7 +28,7 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression =  "#{'\${fordeling.topics.backoff}'}"), sameIntervalTopicReuseStrategy = SINGLE_TOPIC, autoCreateTopics = "false")
     fun listen(hendelse: JournalfoeringHendelseRecord,
                @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
-               @Header(ORIGINAL_TIMESTAMP) timestamp: String?,
+               @Header(DEFAULT_HEADER_ORIGINAL_TIMESTAMP) timestamp: String?,
                @Header(RECEIVED_TOPIC) topic: String)  {
         runCatching {
             log.info("Original timestamp $timestamp")

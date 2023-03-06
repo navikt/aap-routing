@@ -4,7 +4,7 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator
+import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component
 class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
 
     @Component
-    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : AbstractKafkaHealthIndicator(admin,p.bootstrapServers,cfg)
+    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) : KafkaPingable(admin,p.bootstrapServers,cfg)
 
     @Bean
     @ConditionalOnGCP

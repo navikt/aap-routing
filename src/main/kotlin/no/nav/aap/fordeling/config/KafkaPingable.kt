@@ -3,9 +3,9 @@ package no.nav.aap.fordeling.config
 import no.nav.aap.health.Pingable
 import org.springframework.kafka.core.KafkaAdmin
 
-abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
-                                           private val bootstrapServers: List<String>,
-                                           private val cfg: AbstractKafkaConfig) : Pingable {
+abstract class KafkaPingable(private val admin: KafkaAdmin,
+                             private val bootstrapServers: List<String>,
+                             private val cfg: AbstractKafkaConfig) : Pingable {
     override fun isEnabled() = cfg.isEnabled
     override fun pingEndpoint() = "$bootstrapServers"
     override fun name() = cfg.name

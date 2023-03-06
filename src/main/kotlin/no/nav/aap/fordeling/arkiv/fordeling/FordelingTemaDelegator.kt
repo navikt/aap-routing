@@ -11,14 +11,16 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
     val log = LoggerUtil.getLogger(FordelingTemaDelegator::class.java)
 
     init {
-        log.info("Kan fordele følgende tema:\n ${fordelere.map { Pair(it.javaClass.simpleName, it.tema()) }}")
+        log.info("Kan fordele følgende tema:\n ${fordelere
+            .filter { it !is ManuellFordeler }
+            .map { Pair(it.javaClass.simpleName, it.tema()) }}")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp,enhet)
 
     fun fordelerFor(tema: String) =
         if (cfg.enabled) {
-            fordelere.first { tema.lowercase() in it.tema()}.also {
+            fordelere.first { tema.lowercase() in it.tema() && it !is ManuellFordeler}.also {
                 log.trace("Bruker fordeler $it for tema $tema")
             }
         }

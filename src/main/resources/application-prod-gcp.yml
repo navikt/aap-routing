@@ -5,8 +5,6 @@ dokarkiv:
     scope: api://prod-fss.teamdokumenthandtering.dokarkiv/.default
 fordeling:
     enabled: false
-    topics:
-        main: teamdokumenthandtering.aapen-dok-journalfoering
 oppgave:
     enabled: false
     base-uri: https://oppgave.prod-fss-pub.nais.io

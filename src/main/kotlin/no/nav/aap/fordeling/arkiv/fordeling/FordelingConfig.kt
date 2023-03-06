@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import jakarta.validation.constraints.NotEmpty
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.AbstractKafkaHealthIndicator.AbstractKafkaConfig
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -14,25 +12,22 @@ data class FordelingConfig(@NestedConfigurationProperty val topics: FordelerTopi
                            @DefaultValue("true") val enabled: Boolean) : AbstractKafkaConfig(FORDELING,enabled) {
     val log = getLogger(javaClass)
 
-    fun fordelerFor(jp: Journalpost, fordelere: List<Fordeler>) =
-        if (enabled) {
-           fordelere.first { jp.tema.lowercase() in it.tema()}
-        }
-        else {
-            INGEN_FORDELER.also {
-                log.trace("Fordeling ikke aktivert, sett fordeling.enabled=true for å aktivere")
-            }
-        }
-
-    data class FordelerTopics(val main: String,val retry: String = RETRY_TOPIC, val dlt: String = DLT_TOPIC, val backoff: Int, val retries: Int)
+    data class FordelerTopics(@DefaultValue(DEFAULT_MAIN)  val main: String,
+                              @DefaultValue(RETRY_TOPIC) val retry: String,
+                              @DefaultValue(DLT_TOPIC) val dlt: String,
+                              @DefaultValue(DEFAULT_BACKOFF) val backoff: Int,
+                              @DefaultValue(DEFAULT_RETRIES)  val retries: Int)
 
     companion object {
-        const val RETRY_TOPIC = "aap.routing.retry"
-        const val DLT_TOPIC = "aap.routing.dlt"
         const val FORDELING = "fordeling"
+        private const val DEFAULT_BACKOFF = "30000"
+        private const val DEFAULT_RETRIES= "24"
+        private const val RETRY_TOPIC = "aap.routing.retry"
+        private const val DLT_TOPIC = "aap.routing.dlt"
+        private const val DEFAULT_MAIN = "teamdokumenthandtering.aapen-dok-journalfoering"
     }
 
-    override fun topics(): List<String> =
+    override fun topics()  =
         with(topics) {
             listOf(main,retry,dlt)
         }

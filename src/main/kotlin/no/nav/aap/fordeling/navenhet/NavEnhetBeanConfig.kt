@@ -1,7 +1,7 @@
-package no.nav.aap.fordeling.navorganisasjon
+package no.nav.aap.fordeling.navenhet
 
 import com.github.benmanes.caffeine.cache.RemovalListener
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.LoggerUtil
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -14,14 +14,14 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 @EnableCaching
-class NavOrgBeanConfig {
+class NavEnhetBeanConfig {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
 
     @Bean
-    @Qualifier(NAVORG)
-    fun navOrgWebClient(builder: Builder, cfg: NavOrgConfig) =
+    @Qualifier(NAVENHET)
+    fun navEnhetWebClient(builder: Builder, cfg: NavEnhetConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
             .build()
@@ -32,5 +32,5 @@ class NavOrgBeanConfig {
 
     @Bean
     @ConditionalOnGCP
-    fun orgHealthIndicator(adapter: NavOrgWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun navEnhetHealthIndicator(adapter: NavEnhetWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

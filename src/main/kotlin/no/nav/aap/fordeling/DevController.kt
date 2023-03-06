@@ -8,9 +8,9 @@ import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.Status.AKTIV
-import no.nav.aap.fordeling.navorganisasjon.NavOrgWebClientAdapter
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.Status.AKTIV
+import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -28,7 +28,7 @@ class DevController(private val fordeler: AAPFordeler,
                     private val arkiv: DokarkivWebClientAdapter,
                     private val oppgave: OppgaveClient,
                     private val arena: ArenaWebClientAdapter,
-                    private val org: NavOrgWebClientAdapter) {
+                    private val org: NavEnhetWebClientAdapter) {
 
     private val log = getLogger(javaClass)
     @PostMapping("oppdaterogferdigstilljournalpost")

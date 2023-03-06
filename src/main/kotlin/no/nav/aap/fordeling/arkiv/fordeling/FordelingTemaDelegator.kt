@@ -1,10 +1,8 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.LoggerUtil
-import org.aspectj.weaver.tools.cache.SimpleCacheFactory.enabled
 import org.springframework.stereotype.Component
 
 @Component

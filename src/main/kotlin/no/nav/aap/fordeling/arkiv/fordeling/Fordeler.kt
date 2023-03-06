@@ -2,7 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.NONE
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
 
 interface Fordeler {
 

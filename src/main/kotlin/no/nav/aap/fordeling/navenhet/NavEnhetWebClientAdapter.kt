@@ -1,10 +1,10 @@
-package no.nav.aap.fordeling.navorganisasjon
+package no.nav.aap.fordeling.navenhet
 
 import no.nav.aap.api.felles.error.IntegrationException
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NavOrg
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.AKTIV
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.ENHETSLISTE
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.AKTIV
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.ENHETSLISTE
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.Cacheable
@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: NavOrgConfig) :
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
         fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
@@ -35,7 +35,7 @@ class NavOrgWebClientAdapter(@Qualifier(NAVORG) webClient: WebClient, val cf: Na
             ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
 
-    @Cacheable(NAVORG)
+    @Cacheable(NAVENHET)
     fun aktiveEnheter() = webClient.get()
         .uri { b -> b.path(cf.aktive).queryParam(ENHETSLISTE, AKTIV).build() }
         .accept(APPLICATION_JSON)

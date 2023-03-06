@@ -1,10 +1,10 @@
-package no.nav.aap.fordeling.navorganisasjon
+package no.nav.aap.fordeling.navenhet
 
 import no.nav.aap.fordeling.person.Diskresjonskode
 import org.springframework.stereotype.Component
 
 @Component
-class NavOrgClient(private val a: NavOrgWebClientAdapter) {
+class NavEnhetClient(private val a: NavEnhetWebClientAdapter) {
     fun navEnhet(område: String, skjermet: Boolean, kode: Diskresjonskode) =
         a.navEnhet(EnhetsKriteria(område, skjermet, kode),a.aktiveEnheter())
 

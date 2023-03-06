@@ -5,7 +5,7 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.Integrasjoner
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component

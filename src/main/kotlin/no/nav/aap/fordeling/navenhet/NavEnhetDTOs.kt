@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.navorganisasjon
+package no.nav.aap.fordeling.navenhet
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import no.nav.aap.fordeling.person.Diskresjonskode

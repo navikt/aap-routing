@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.oppgave
 
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.navorganisasjon.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
 import org.springframework.stereotype.Component

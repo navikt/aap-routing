@@ -1,15 +1,15 @@
-package no.nav.aap.fordeling.navorganisasjon
+package no.nav.aap.fordeling.navenhet
 
 import java.net.URI
-import no.nav.aap.fordeling.navorganisasjon.NavOrgConfig.Companion.NAVORG
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
 
-@ConfigurationProperties(NAVORG)
-class NavOrgConfig(
+@ConfigurationProperties(NAVENHET)
+class NavEnhetConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
         @DefaultValue(ENHET_PATH) val enhet: String,
@@ -19,7 +19,7 @@ class NavOrgConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        const val NAVORG = "navorg"
+        const val NAVENHET = "navorg"
         const  val ENHETSLISTE = "enhetStatusListe"
         const val AKTIV = "AKTIV"
         private const val AKTIVE_PATH = "norg2/api/v1/enhet"

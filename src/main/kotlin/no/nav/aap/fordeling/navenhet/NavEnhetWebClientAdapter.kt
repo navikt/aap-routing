@@ -42,7 +42,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .retrieve()
         .bodyToMono<List<NavOrg>>()
         .retryWhen(cf.retrySpec(log))
-        .doOnSuccess {log.info("Aktive enheter oppslag  NORG2 OK. Respons ${it.size} innslag") }
+        .doOnSuccess {log.info("Aktive enheter oppslag  NORG2 OK. Respons ${it.map { e -> e.enhetNr }.sorted()} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()
         ?: throw IntegrationException("Kunne ikke hente aktive enheter")

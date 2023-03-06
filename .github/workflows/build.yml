@@ -57,6 +57,7 @@ jobs:
         environment: ${{matrix.cluster}}:aap
         env:
             PRINT_PAYLOAD: true
+            TIMEOUT: 30m
             APIKEY: ${{secrets.NAIS_DEPLOY_APIKEY}}
             RESOURCE: .nais/naiserator.yaml
             CLUSTER: ${{matrix.cluster}}

@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.config
 
 import no.nav.aap.health.Pingable
-import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.kafka.core.KafkaAdmin
 
 abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
@@ -11,10 +10,7 @@ abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
     override fun pingEndpoint() = "$bootstrapServers"
     override fun name() = cfg.name
 
-    val log = getLogger(javaClass)
-
     override fun ping(): Map<String, String> {
-        log.info("Helsesjekker ${cfg.topics()}")
         return cfg.topics().mapIndexedNotNull { ix, topic -> innslag(topic,ix)}
             .associateBy({ it.first }, { it.second })
     }
@@ -30,7 +26,4 @@ abstract class AbstractKafkaHealthIndicator(private val admin: KafkaAdmin,
         return Pair(topic,"OK")
     }
 
-    abstract class AbstractKafkaConfig(val name: String, val isEnabled: Boolean) {
-        abstract fun topics(): List<String>
-    }
 }

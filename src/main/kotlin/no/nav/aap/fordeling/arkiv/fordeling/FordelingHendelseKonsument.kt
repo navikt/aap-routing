@@ -1,8 +1,9 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.Integrasjoner
+import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
+import no.nav.aap.fordeling.navenhet.NavEnhetAvgjører
 import no.nav.aap.fordeling.slack.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
@@ -18,7 +19,7 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, private val integrasjoner: Integrasjoner, private val slack: SlackNotifier, private val faultInjecter: FaultInjecter) {
+class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, private val arkiv: ArkivClient, private val enhet: NavEnhetAvgjører, private val slack: SlackNotifier, private val faultInjecter: FaultInjecter) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -30,11 +31,9 @@ class FordelingHendelseKonsument(private val fordeler: FordelingTemaDelegator, p
         runCatching {
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
            faultInjecter.maybeInject(this)
-            with(integrasjoner) {
-                arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
-                    fordeler.fordel(it,navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
-                }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
-            }
+            arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
+                fordeler.fordel(it,enhet.navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
+            }?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
         }.getOrElse { e ->
             with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this,e)

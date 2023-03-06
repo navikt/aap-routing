@@ -1,0 +1,25 @@
+package no.nav.aap.fordeling.navenhet
+
+import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.Status.AKTIV
+import no.nav.aap.fordeling.person.PDLClient
+import no.nav.aap.util.LoggerUtil.getLogger
+import org.springframework.stereotype.Component
+
+@Component
+data class NavEnhetAvgjører(val pdl: PDLClient, val enhet: NavEnhetClient, val egen: EgenAnsattClient) {
+    val log = getLogger(javaClass)
+
+    fun navEnhet(jp: Journalpost) =
+            jp.journalførendeEnhet?.let { e ->
+                if (enhet.erAktiv(e))
+                    NAVEnhet(e, AKTIV).also { log.info("Journalførende enhet $it satt på journalposten er aktiv") }
+                else {
+                    enhetFor(jp.fnr).also { log.info("Journalførende enhet $it satt på journalposten er IKKE aktiv") }
+                }
+            }?: enhetFor(jp.fnr).also { log.info("Journalførende enhet ikke satt på journalposten, fra GT er den $it") }
+    private fun enhetFor(fnr: Fødselsnummer) = enhet.navEnhet(pdl.geoTilknytning(fnr), egen.erSkjermet(fnr), pdl.diskresjonskode(fnr))
+}

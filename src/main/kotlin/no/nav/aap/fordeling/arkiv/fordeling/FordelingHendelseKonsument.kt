@@ -4,6 +4,7 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
@@ -47,7 +48,7 @@ class FordelingHendelseKonsument(
                 fordeler.fordel(it, enhet.navEnhet(it)).also {
                     r ->
                     log.info(r.formattertMelding())
-                    slack.send(r.formattertMelding())
+                    slack.send("$ROCKET ${r.formattertMelding()}")
                 }
             }
                 ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")

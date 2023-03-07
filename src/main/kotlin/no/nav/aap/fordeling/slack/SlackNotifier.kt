@@ -39,5 +39,6 @@ class SlackNotifier(private val cfg: SlackConfig) {
 data class SlackConfig(val kanal: String, val token: String, @DefaultValue("true") val enabled: Boolean) {
     companion object {
         const val SLACK = "slack"
+        const val ROCKET = ":rocket:"
     }
 }

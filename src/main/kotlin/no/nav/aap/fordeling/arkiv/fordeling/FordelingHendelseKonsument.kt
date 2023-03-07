@@ -48,7 +48,11 @@ class FordelingHendelseKonsument(
             }
                 ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
         }.getOrElse {
-            with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
+            val jp = when(it)  {
+                is JournalpostAwareException -> it.journalpost
+                else -> ""
+            }
+            with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
                 slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }

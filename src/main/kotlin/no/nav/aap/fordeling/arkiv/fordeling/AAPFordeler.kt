@@ -59,16 +59,18 @@ class AAPFordeler(
         }
         else {
             log.warn("Arena HAR aktiv sak for ${jp.fnr}")
-            throw ArenaSakException(jp.journalpostId, "Har aktiv sak for ${jp.fnr}, kan ikke opprett oppgave i Arena")
+            throw ArenaSakException(jp, "Har aktiv sak for ${jp.fnr}, kan ikke opprett oppgave i Arena")
         }
 
     private fun fordelEttersending(jp: Journalpost) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
             FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", AUTOMATISK)
-        } ?: throw ArenaSakException(jp.journalpostId,
+        } ?: throw ArenaSakException(jp,
                 "Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
 
 }
 
-class ArenaSakException(val journalpostId: String, msg: String) : RuntimeException(msg)
+class ArenaSakException(journalpost: Journalpost, msg: String) : JournalpostAwareException(journalpost,msg)
+
+abstract class  JournalpostAwareException( val journalpost: Journalpost,msg: String, e: Throwable? =  null) : RuntimeException(msg,e)

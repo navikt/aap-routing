@@ -44,9 +44,13 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
             faultInjecter.maybeInject(this)
             arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
-                fordeler.fordel(it, enhet.navEnhet(it)).also { r -> log.info(r.formattertMelding()) }
+                fordeler.fordel(it, enhet.navEnhet(it)).also {
+                    r ->
+                    log.info(r.formattertMelding())
+                    slack.send(r.formattertMelding())
+                }
             }
-                ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")  // TODO hva gjør vi her?
+                ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")
         }.getOrElse {
             val jp = when(it)  {
                 is JournalpostAwareException -> it.journalpost

@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerD
 object FordelingDTOs {
 
     data class FordelingResultat(val journalpostId: String = "0", val msg: String, val type: FordelingType) {
-        fun formattertMelding() = "${msg} for journalpost $journalpostId og fordelingstype $type"
+        fun formattertMelding() = "(Fordelingstype $type$). $msg for journalpost $journalpostId"
         enum class FordelingType {
             AUTOMATISK,
             MANUELL_JOURNALFØRING,

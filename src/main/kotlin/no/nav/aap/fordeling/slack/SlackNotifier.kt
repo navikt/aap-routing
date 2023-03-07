@@ -47,10 +47,10 @@ class SlackNotifier(private val cfg: SlackConfig) {
 @ConfigurationProperties(SLACK)
 data class SlackConfig(val kanal: String, val token: String, @DefaultValue("true") val enabled: Boolean) {
     companion object {
+        private fun String.emoji() = ":$this: "
         const val SLACK = "slack"
-        const val ROCKET = ":rocket: "
-        const val ERROR = ":error: "
-        const val OK = ":white_check_mark: "
-
+        val ROCKET = "rocket".emoji()
+        val ERROR = "error".emoji()
+        val OK = "white_check_mark".emoji()
     }
 }

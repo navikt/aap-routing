@@ -4,7 +4,6 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
-import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
@@ -48,7 +47,7 @@ class FordelingHendelseKonsument(
                 fordeler.fordel(it, enhet.navEnhet(it)).also {
                     r ->
                     log.info(r.formattertMelding())
-                    slack.send("$ROCKET ${r.formattertMelding()}")
+                    slack.sendOK("${r.formattertMelding()}")
                 }
             }
                 ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")
@@ -59,7 +58,7 @@ class FordelingHendelseKonsument(
             }
             with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
-                slack.send("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
+                slack.sendError("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }
             throw it
         }
@@ -68,7 +67,7 @@ class FordelingHendelseKonsument(
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         log.warn("Gir opp fordeling av journalpost ${payload.journalpostId} $trace").also {
-            slack.send("Journalpost ${payload.journalpostId} kunne ikke fordeles")
+            slack.sendError("Journalpost ${payload.journalpostId} kunne ikke fordeles")
         }
     }
 }

@@ -1,6 +1,8 @@
 package no.nav.aap.fordeling.slack
 
 import com.slack.api.Slack
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -9,7 +11,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class SlackNotifier(private val cfg: SlackConfig) {
-    fun send(message: String) =
+
+
+    fun sendOK(message: String) = send("$ROCKET$message")
+    fun sendError(message: String) = send("$ERROR$message")
+
+    private fun send(message: String) =
         with(cfg) {
             if (enabled) {
                 runCatching {
@@ -39,6 +46,8 @@ class SlackNotifier(private val cfg: SlackConfig) {
 data class SlackConfig(val kanal: String, val token: String, @DefaultValue("true") val enabled: Boolean) {
     companion object {
         const val SLACK = "slack"
-        const val ROCKET = ":rocket:"
+        const val ROCKET = ":rocket: "
+        const val ERROR = ":error: "
+
     }
 }

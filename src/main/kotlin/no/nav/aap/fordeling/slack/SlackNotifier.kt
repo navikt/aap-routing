@@ -1,7 +1,9 @@
 package no.nav.aap.fordeling.slack
 
 import com.slack.api.Slack
+import javax.xml.transform.OutputKeys
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import org.slf4j.LoggerFactory.*
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component
 class SlackNotifier(private val cfg: SlackConfig) {
 
 
-    fun sendOK(message: String) = send("$ROCKET$message")
+    fun sendOK(message: String) = send("$OK$message")
     fun sendError(message: String) = send("$ERROR$message")
 
     private fun send(message: String) =
@@ -48,6 +50,7 @@ data class SlackConfig(val kanal: String, val token: String, @DefaultValue("true
         const val SLACK = "slack"
         const val ROCKET = ":rocket: "
         const val ERROR = ":error: "
+        const val OK = ":white_check_mark: "
 
     }
 }

@@ -19,19 +19,19 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                FordelingResultat(journalpostId, "Det finnes allerede journalføringsoppgave for journalpost", INGEN)
+                FordelingResultat(journalpostId, "Det finnes allerede journalføringsoppgave for journalpost", INGEN,jp.hovedDokumentBrevkode)
             }
             else {
                 runCatching {
                     log.info("Oppretter manuell journalføringsoppgave for journalpost $journalpostId")
                     oppgave.opprettJournalføringOppgave(jp, enhet)
-                    FordelingResultat(journalpostId, "Journalføringsoppgave opprettet", MANUELL_JOURNALFØRING)
+                    FordelingResultat(journalpostId, "Journalføringsoppgave opprettet", MANUELL_JOURNALFØRING,jp.hovedDokumentBrevkode)
                 }.getOrElse {
                     runCatching {
                         log.warn("Feil ved opprettelse av manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave",
                                 it)
                         oppgave.opprettFordelingOppgave(jp)
-                        FordelingResultat(journalpostId, "Fordelingsoppgave oprettet", MANUELL_FORDELING)
+                        FordelingResultat(journalpostId, "Fordelingsoppgave oprettet", MANUELL_FORDELING,jp.hovedDokumentBrevkode)
                     }.getOrElse {
                         log.warn("Feil ved opprettelse av manuell fordelingsoppgave for journalpost $journalpostId")
                         throw ManuellFordelingException(jp, "Feil ved opprettelse av manuell fordelingsoppgave", it)

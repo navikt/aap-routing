@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import java.lang.Exception
 import java.util.*
 import kotlin.properties.Delegates
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.DELEGATOR
@@ -10,8 +11,10 @@ import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerInterceptor
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
@@ -29,6 +32,7 @@ import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.listener.ContainerProperties.*
 import org.springframework.kafka.listener.ContainerProperties.AckMode.*
+import org.springframework.kafka.listener.RecordInterceptor
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -56,6 +60,7 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 put(INTERCEPTOR_CLASSES_CONFIG, listOf(MonitoringConsumerInterceptor::class.java))
                 put(DELEGATOR,delegator)
+                setRecordInterceptor(LoggingRecordInterceptor())
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(delegator.kanFordele(temaNytt,journalpostStatus))
@@ -103,4 +108,25 @@ class MonitoringConsumerInterceptor : ConsumerInterceptor<String, Journalfoering
     }
     override fun onCommit(offsets: Map<TopicPartition, OffsetAndMetadata>) {}
     override fun close() {}
+}
+class LoggingRecordInterceptor: RecordInterceptor<String,JournalfoeringHendelseRecord> {
+
+    private val log = LoggerFactory.getLogger(LoggingRecordInterceptor::class.java)
+
+    override fun intercept(record: ConsumerRecord<String, JournalfoeringHendelseRecord>,
+            consumer: Consumer<String, JournalfoeringHendelseRecord>): ConsumerRecord<String, JournalfoeringHendelseRecord>? {
+         log.info("Intercepting ${record.value()} $consumer")
+        return record
+    }
+
+    override fun success(record: ConsumerRecord<String, JournalfoeringHendelseRecord>, consumer: Consumer<String, JournalfoeringHendelseRecord>, ) {
+        log.info("Success")
+        super.success(record, consumer)
+    }
+
+    override fun failure(
+            record: ConsumerRecord<String, JournalfoeringHendelseRecord>, exception: Exception, consumer: Consumer<String, JournalfoeringHendelseRecord>) {
+        log.info("Failure")
+        super.failure(record, exception, consumer)
+    }
 }

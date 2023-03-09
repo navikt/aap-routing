@@ -14,7 +14,7 @@
 	<name>routing</name>
 	<description>KRUT erstatning</description>
 	<properties>
-		<bekk-nocommons.version>0.12.0</bekk-nocommons.version>
+		<bekk-nocommons.version>0.15.0</bekk-nocommons.version>
 		<confluent.version>7.3.1</confluent.version>
 		<domain.version>2.0.10</domain.version>
 		<dokumenthåndtering.version>08271806</dokumenthåndtering.version>

@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerD
 object FordelingDTOs {
 
     data class FordelingResultat(val journalpostId: String = "0", val msg: String, val type: FordelingType, val brevkode: String) {
-        fun formattertMelding() = "$type:  $msg for journalpost $journalpostId ($brevkode)"
+        fun msg() = "$type:  $msg for journalpost $journalpostId ($brevkode)"
         enum class FordelingType {
             AUTOMATISK,
             MANUELL_JOURNALFØRING,
@@ -31,13 +31,14 @@ object FordelingDTOs {
             val behandlingstema: String?,
             val bruker: BrukerDTO,
             val avsenderMottaker: BrukerDTO,
+            val kanal: String,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>) {
 
         fun tilJournalpost() =
             Journalpost(tittel, journalfoerendeEnhet, journalpostId, journalstatus, tema.lowercase(), behandlingstema,
                     Fødselsnummer(bruker.id), Bruker(bruker.id, bruker.type),
-                    Bruker(avsenderMottaker.id, avsenderMottaker.type), relevanteDatoer, dokumenter)
+                    Bruker(avsenderMottaker.id, avsenderMottaker.type), kanal,relevanteDatoer, dokumenter)
 
         enum class JournalStatus {
             MOTTATT,

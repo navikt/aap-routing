@@ -20,6 +20,7 @@ data class Journalpost(
         val fnr: Fødselsnummer,
         val bruker: Bruker?,
         val avsenderMottager: Bruker?,
+        val kanal: String,
         val relevanteDatoer: Set<RelevantDato>,
         val dokumenter: Set<DokumentInfo>) {
 

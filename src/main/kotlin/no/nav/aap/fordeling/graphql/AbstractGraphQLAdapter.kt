@@ -4,6 +4,7 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.http.MediaType
+import org.springframework.http.MediaType.*
 import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
@@ -31,7 +32,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
         webClient
             .options()
             .uri(baseUri)
-            .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN)
+            .accept(APPLICATION_JSON, TEXT_PLAIN)
             .retrieve()
             .toBodilessEntity()
             .block().run { emptyMap<String, String>() }

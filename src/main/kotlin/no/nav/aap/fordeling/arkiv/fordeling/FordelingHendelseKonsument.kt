@@ -46,8 +46,8 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.let {
                 fordeler.fordel(it, enhet.navEnhet(it)).run {
-                    metrikker.inc("jp","tema",it.tema,"type",type.name,"brevkode",brevkode)
-                    with(formattertMelding()) {
+                    metrikker.inc("jp","tema",it.tema,"type",type.name,"kanal",it.kanal,"brevkode",brevkode)
+                    with(msg()) {
                         log.info(this)
                         slack.sendOK(this)
                     }

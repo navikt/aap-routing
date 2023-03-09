@@ -4,7 +4,6 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import kotlin.properties.Delegates
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.DELEGATOR
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.FAULT_INJECTER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.KafkaPingable

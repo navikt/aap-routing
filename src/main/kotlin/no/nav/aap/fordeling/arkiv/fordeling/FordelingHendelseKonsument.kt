@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import com.sun.jndi.ldap.LdapPoolManager.trace
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter

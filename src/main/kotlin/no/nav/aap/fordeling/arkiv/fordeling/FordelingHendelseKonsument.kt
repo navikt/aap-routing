@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
+import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.SlackNotifier
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -24,6 +25,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: SlackNotifier,
+        private val metrikker: Metrikker,
         private val faultInjecter: FaultInjecter) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -43,6 +45,7 @@ class FordelingHendelseKonsument(
             faultInjecter.maybeInject(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.let {
+                metrikker.inc("jp","brevkode",it.hovedDokumentBrevkode)
                 fordeler.fordel(it, enhet.navEnhet(it)).run {
                     with(formattertMelding()) {
                         log.info(this)

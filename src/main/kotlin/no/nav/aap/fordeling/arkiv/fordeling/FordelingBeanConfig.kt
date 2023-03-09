@@ -3,23 +3,18 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.lang.Exception
 import java.util.*
-import kotlin.properties.Delegates
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.DELEGATOR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.KafkaPingable
+import no.nav.aap.fordeling.config.Metrikker
+import no.nav.aap.fordeling.config.Metrikker.Companion.HENDELSE
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.consumer.Consumer
-import org.apache.kafka.clients.consumer.ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG
-import org.apache.kafka.clients.consumer.ConsumerInterceptor
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.apache.kafka.clients.consumer.ConsumerRecords
-import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
-import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -55,12 +50,10 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties, m: Metrikker,delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                put(INTERCEPTOR_CLASSES_CONFIG, listOf(MonitoringConsumerInterceptor::class.java))
-                put(DELEGATOR,delegator)
-                setRecordInterceptor(LoggingRecordInterceptor())
+                setRecordInterceptor(LoggingRecordInterceptor(m))
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(delegator.kanFordele(temaNytt,journalpostStatus))
@@ -86,47 +79,15 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
     }
 }
 
-
-@Component
-class MonitoringConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
-
-    private val log = LoggerFactory.getLogger(MonitoringConsumerInterceptor::class.java)
-    private var delegator by  Delegates.notNull<FordelingTemaDelegator>()
-    override fun configure(configs: Map<String, *>)  {
-        delegator = configs[DELEGATOR] as FordelingTemaDelegator
-    }
-
-    override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
-        records.forEach {
-            with(it.value()) {
-                if (delegator.kanFordele(temaNytt,journalpostStatus)) {
-                    log.info("Lager metrikker for $this (soon)")
-                }
-            }
-        }
-        return records
-    }
-    override fun onCommit(offsets: Map<TopicPartition, OffsetAndMetadata>) {}
-    override fun close() {}
-}
-class LoggingRecordInterceptor: RecordInterceptor<String,JournalfoeringHendelseRecord> {
+class LoggingRecordInterceptor(private val metrikker: Metrikker): RecordInterceptor<String,JournalfoeringHendelseRecord> {
 
     private val log = LoggerFactory.getLogger(LoggingRecordInterceptor::class.java)
 
     override fun intercept(record: ConsumerRecord<String, JournalfoeringHendelseRecord>,
             consumer: Consumer<String, JournalfoeringHendelseRecord>): ConsumerRecord<String, JournalfoeringHendelseRecord>? {
-         log.info("Intercepting ${record.value()} $consumer")
+        with(record.value()){
+            metrikker.inc(HENDELSE,"kanal",this.mottaksKanal)
+        }
         return record
-    }
-
-    override fun success(record: ConsumerRecord<String, JournalfoeringHendelseRecord>, consumer: Consumer<String, JournalfoeringHendelseRecord>, ) {
-        log.info("Success")
-        super.success(record, consumer)
-    }
-
-    override fun failure(
-            record: ConsumerRecord<String, JournalfoeringHendelseRecord>, exception: Exception, consumer: Consumer<String, JournalfoeringHendelseRecord>) {
-        log.info("Failure")
-        super.failure(record, exception, consumer)
     }
 }

@@ -45,7 +45,7 @@ class FordelingHendelseKonsument(
             faultInjecter.maybeInject(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.let {
-                metrikker.inc("jp","brevkode",it.hovedDokumentBrevkode)
+                metrikker.inc("jp","tema",it.tema,"brevkode",it.hovedDokumentBrevkode)
                 fordeler.fordel(it, enhet.navEnhet(it)).run {
                     with(formattertMelding()) {
                         log.info(this)

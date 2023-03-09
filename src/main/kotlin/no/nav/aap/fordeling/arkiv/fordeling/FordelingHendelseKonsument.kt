@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import com.sun.jndi.ldap.LdapPoolManager.trace
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
@@ -41,12 +42,12 @@ class FordelingHendelseKonsument(
             @Header(RECEIVED_TOPIC) topic: String) {
         var jp: Journalpost? = null
         runCatching {
-            log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
+            log.info("($n) Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.maybeInject(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.let {
-                metrikker.inc("jp","tema",it.tema,"brevkode",it.hovedDokumentBrevkode)
                 fordeler.fordel(it, enhet.navEnhet(it)).run {
+                    metrikker.inc("jp","tema",it.tema,"type",type.name,"brevkode",brevkode)
                     with(formattertMelding()) {
                         log.info(this)
                         slack.sendOK(this)

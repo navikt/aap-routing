@@ -78,8 +78,7 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
         override fun retryTopicNamesProviderFactory() = namingProviderFactory
     }
     companion object {
-        const val FAULT_INJECTER = "faultInjecter"
-        const val DELEGATOR = "delegator"
+        const val DELEGATOR = "beans.delegator"
     }
 }
 

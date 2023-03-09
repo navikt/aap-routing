@@ -96,13 +96,13 @@ class MonitoringConsumerInterceptor : ConsumerInterceptor<String, Journalfoering
     override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
         records.forEach {
             with(it.value()) {
-            if (delegator.kanFordele(temaNytt,journalpostStatus)) {
-                log.info("Logger metrikker for $this (soon)")
+                if (delegator.kanFordele(temaNytt,journalpostStatus)) {
+                    log.info("Logger metrikker for $this (soon)")
+                }
             }
+            return records
         }
-        return records
     }
-
     override fun onCommit(offsets: Map<TopicPartition, OffsetAndMetadata>) {}
     override fun close() {}
 }

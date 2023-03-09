@@ -33,7 +33,7 @@
         <logger name="org.apache.kafka.clients.Metadata" level="warn" />
         <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer" level="warn"/>
         <logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
-        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info"/>
+        <logger name="org.springframework.kafka.config" level="trace"/>
         <logger name="secure" level="debug" additivity="false">
             <appender-ref ref="secureJson"/>
         </logger>

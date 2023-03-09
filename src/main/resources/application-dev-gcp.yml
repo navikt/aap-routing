@@ -9,4 +9,4 @@ management:
 fordeling:
     topics:
         backoff: 2000
-debug: true
+debug: false

@@ -8,5 +8,5 @@ management:
             show-details: always
 fordeling:
     topics:
-        backoff: 2000:
+        backoff: 2000
 debug: true

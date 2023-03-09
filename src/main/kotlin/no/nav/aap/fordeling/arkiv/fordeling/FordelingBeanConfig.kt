@@ -1,22 +1,17 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import java.lang.Exception
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.fordeling.config.Metrikker
-import no.nav.aap.fordeling.config.Metrikker.Companion.HENDELSE
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import org.apache.kafka.clients.consumer.Consumer
-import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
 import org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
 import org.apache.kafka.common.serialization.StringSerializer
-import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,7 +22,6 @@ import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.listener.ContainerProperties.*
 import org.springframework.kafka.listener.ContainerProperties.AckMode.*
-import org.springframework.kafka.listener.RecordInterceptor
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
@@ -53,7 +47,6 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
     fun fordelingListenerContainerFactory(p: KafkaProperties, m: Metrikker,delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                setRecordInterceptor(LoggingRecordInterceptor(m))
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(delegator.kanFordele(temaNytt,journalpostStatus))
@@ -76,18 +69,5 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
     }
     companion object {
         const val DELEGATOR = "beans.delegator"
-    }
-}
-
-class LoggingRecordInterceptor(private val metrikker: Metrikker): RecordInterceptor<String,JournalfoeringHendelseRecord> {
-
-    private val log = LoggerFactory.getLogger(LoggingRecordInterceptor::class.java)
-
-    override fun intercept(record: ConsumerRecord<String, JournalfoeringHendelseRecord>,
-            consumer: Consumer<String, JournalfoeringHendelseRecord>): ConsumerRecord<String, JournalfoeringHendelseRecord>? {
-        with(record.value()){
-            metrikker.inc(HENDELSE,"kanal",this.mottaksKanal)
-        }
-        return record
     }
 }

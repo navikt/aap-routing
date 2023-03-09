@@ -2,11 +2,13 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
+import kotlin.properties.Delegates
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
+import no.nav.boot.conditionals.EnvUtil
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.consumer.ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerInterceptor
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -37,7 +40,7 @@ import org.springframework.stereotype.Component
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
+class FordelingBeanConfig(private val env: Environment,private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
     RetryTopicConfigurationSupport() {
 
     @Component
@@ -52,7 +55,8 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                put(INTERCEPTOR_CLASSES_CONFIG, listOf(TestConsumerInterceptor::class.java))
+                put(INTERCEPTOR_CLASSES_CONFIG, listOf(FaultInjectingConsumerInterceptor::class.java))
+                put("env",env)
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)
@@ -75,13 +79,18 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     }
 }
 
-class TestConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
 
-    private val log = LoggerFactory.getLogger(TestConsumerInterceptor::class.java)
-    override fun configure(configs: Map<String, *>) = Unit
+@Component
+class FaultInjectingConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
+
+    private val log = LoggerFactory.getLogger(FaultInjectingConsumerInterceptor::class.java)
+    private var shouldInject by Delegates.notNull<Boolean>()
+    override fun configure(configs: Map<String, *>)  {
+        shouldInject = EnvUtil.isDevOrLocal(configs["env"] as Environment)
+    }
 
     override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
-        log.info("Consuming record ${records.firstOrNull()?.value()}")
+        log.info("$shouldInject Consuming record $${records.firstOrNull()?.value()}")
         return records
     }
 

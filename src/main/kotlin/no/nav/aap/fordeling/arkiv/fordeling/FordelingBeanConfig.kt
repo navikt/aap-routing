@@ -52,7 +52,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                put(INTERCEPTOR_CLASSES_CONFIG, TestConsumerInterceptor::class.java)
+                put(INTERCEPTOR_CLASSES_CONFIG, listOf(TestConsumerInterceptor::class.java))
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)

@@ -3,12 +3,13 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import kotlin.properties.Delegates
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.DELEGATOR
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeanConfig.Companion.FAULT_INJECTER
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.apache.kafka.clients.consumer.ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerInterceptor
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val env: Environment,private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
+class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
     RetryTopicConfigurationSupport() {
 
     @Component
@@ -55,11 +55,11 @@ class FordelingBeanConfig(private val env: Environment,private val namingProvide
     fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
-                put(INTERCEPTOR_CLASSES_CONFIG, listOf(FaultInjectingConsumerInterceptor::class.java))
-                put("env",env)
+                put(INTERCEPTOR_CLASSES_CONFIG, listOf(MonitoringConsumerInterceptor::class.java))
+                put(DELEGATOR,delegator)
                 setRecordFilterStrategy {
                     with(it.value()) {
-                        !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)
+                        !(delegator.kanFordele(temaNytt,journalpostStatus))
                     }
                 }
             })
@@ -77,20 +77,28 @@ class FordelingBeanConfig(private val env: Environment,private val namingProvide
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory
     }
+    companion object {
+        const val FAULT_INJECTER = "faultInjecter"
+        const val DELEGATOR = "delegator"
+    }
 }
 
 
 @Component
-class FaultInjectingConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
+class MonitoringConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
 
-    private val log = LoggerFactory.getLogger(FaultInjectingConsumerInterceptor::class.java)
-    private var shouldInject by Delegates.notNull<Boolean>()
+    private val log = LoggerFactory.getLogger(MonitoringConsumerInterceptor::class.java)
+    private var delegator by  Delegates.notNull<FordelingTemaDelegator>()
     override fun configure(configs: Map<String, *>)  {
-        shouldInject = EnvUtil.isDevOrLocal(configs["env"] as Environment)
+        delegator = configs[DELEGATOR] as FordelingTemaDelegator
     }
 
     override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
-        log.info("$shouldInject Consuming record $${records.firstOrNull()?.value()}")
+        with(records.first().value()) {
+            if (delegator.kanFordele(temaNytt,journalpostStatus)) {
+                log.info("Logger metrikker for $this (soon)")
+            }
+        }
         return records
     }
 

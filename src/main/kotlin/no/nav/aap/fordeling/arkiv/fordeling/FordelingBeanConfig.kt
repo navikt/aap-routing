@@ -94,7 +94,8 @@ class MonitoringConsumerInterceptor : ConsumerInterceptor<String, Journalfoering
     }
 
     override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
-        with(records.first().value()) {
+        records.forEach() {
+            with(it.value()) {
             if (delegator.kanFordele(temaNytt,journalpostStatus)) {
                 log.info("Logger metrikker for $this (soon)")
             }

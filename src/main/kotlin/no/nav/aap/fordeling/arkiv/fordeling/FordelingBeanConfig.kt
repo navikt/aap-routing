@@ -8,8 +8,14 @@ import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.consumer.ConsumerInterceptor
+import org.apache.kafka.clients.consumer.ConsumerRecords
+import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.clients.producer.ProducerConfig.*
+import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringSerializer
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -45,6 +51,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingTemaDelegator) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
+                put(INTERCEPTOR_CLASSES_CONFIG, TestConsumerInterceptor::class.java)
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(temaNytt.lowercase() in delegator.tema() && journalpostStatus == MOTTATT.name)
@@ -65,4 +72,18 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory
     }
+}
+
+class TestConsumerInterceptor : ConsumerInterceptor<String, JournalfoeringHendelseRecord> {
+
+    private val log = LoggerFactory.getLogger(TestConsumerInterceptor::class.java)
+    override fun configure(configs: Map<String, *>) = Unit
+
+    override fun onConsume(records: ConsumerRecords<String, JournalfoeringHendelseRecord>): ConsumerRecords<String, JournalfoeringHendelseRecord> {
+        log.info("Consuming record ${records.firstOrNull()?.value()}")
+        return records
+    }
+
+    override fun onCommit(offsets: Map<TopicPartition, OffsetAndMetadata>) {}
+    override fun close() {}
 }

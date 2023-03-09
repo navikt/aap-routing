@@ -13,7 +13,6 @@ import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS
-import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP
 import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
@@ -36,27 +35,23 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(
             hendelse: JournalfoeringHendelseRecord,
-            @Header(DEFAULT_HEADER_ATTEMPTS, required = false) forsøk: Int?,
-            @Header(DEFAULT_HEADER_ORIGINAL_TIMESTAMP) timestamp: String?,
+            @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?,
             @Header(RECEIVED_TOPIC) topic: String) {
+        var jp: Journalpost? = null
         runCatching {
-            log.info("Original timestamp $timestamp")
-            log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${forsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.maybeInject(this)
-            arkiv.hentJournalpost("${hendelse.journalpostId}")?.let {
-                fordeler.fordel(it, enhet.navEnhet(it)).also {
-                    r ->
-                    log.info(r.formattertMelding())
-                    slack.sendOK("${r.formattertMelding()}")
+            jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
+            jp?.let {
+                fordeler.fordel(it, enhet.navEnhet(it)).run {
+                    with(formattertMelding()) {
+                        log.info(this)
+                        slack.sendOK(this)
+                    }
                 }
-            }
-                ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")
-        }.getOrElse {
-            val jp = when(it)  {
-                is JournalpostAwareException -> it.journalpost
-                else -> ""
-            }
-            with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${forsøk?.let { "$it." } ?: "1."} gang") {
+            } ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")
+        }.onFailure {
+            with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${n?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
                 slack.sendError("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }

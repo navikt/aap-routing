@@ -46,14 +46,14 @@ class FordelingHendelseKonsument(
                 fordeler.fordel(this, enhet.navEnhet(this)).run {
                     with("${msg()}($fnr)") {
                         log.info(this)
-                        slack.sendOKHvisDev(this)
+                        slack.okHvisDev(this)
                     }
                 }
             }
         }.onFailure {
             with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${n?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
-                slack.sendError("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
+                slack.feil("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }
             throw it
         }
@@ -62,7 +62,7 @@ class FordelingHendelseKonsument(
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         log.warn("Gir opp fordeling av journalpost ${payload.journalpostId} $trace").also {
-            slack.sendError("Journalpost ${payload.journalpostId} kunne ikke fordeles")
+            slack.feil("Journalpost ${payload.journalpostId} kunne ikke fordeles")
         }
     }
 }

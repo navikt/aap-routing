@@ -15,20 +15,20 @@ import org.springframework.stereotype.Component
 class SlackNotifier(private val cfg: SlackConfig, private val env: Environment) {
 
 
-    fun sendOKHvisDev(message: String) =
+    fun okHvisDev(melding: String) =
         if (isDevOrLocal(env)) {
-            send("$OK$message")
+            ok(melding)
         }
         else Unit
-    fun sendOK(message: String) = send("$OK$message")
-    fun sendError(message: String) = send("$ERROR$message")
+    fun ok(melding: String) = melding("$OK$melding")
+    fun feil(melding: String) = melding("$ERROR$melding")
 
-    private fun send(message: String) =
+    private fun melding(melding: String) =
         with(cfg) {
             if (enabled) {
                 runCatching {
                     with(slack.methods(token).chatPostMessage {
-                        it.channel(kanal).text(message)
+                        it.channel(kanal).text(melding)
                     }) {
                         if (!isOk) {
                             LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")

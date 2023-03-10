@@ -13,5 +13,8 @@ class Metrikker(private val registry: MeterRegistry) {
 
     companion object {
         const val HENDELSE = "hendelse"
+        const val FORDELINGSTYPE = "type"
+        const val KANAL = "kanal"
+        const val BREVKODE = "brevkode"
     }
 }

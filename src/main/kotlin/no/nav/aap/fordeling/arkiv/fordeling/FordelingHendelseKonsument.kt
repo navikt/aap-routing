@@ -4,8 +4,12 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
+import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
+import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.SlackNotifier
+import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -46,7 +50,7 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.let {
                 fordeler.fordel(it, enhet.navEnhet(it)).run {
-                    metrikker.inc("jp","tema",it.tema,"type",type.name,"kanal",it.kanal,"brevkode",brevkode)
+                    metrikker.inc(FORDELING,TEMA,it.tema, FORDELINGSTYPE, fordelingstype.name,KANAL,it.kanal, BREVKODE,brevkode)
                     with(msg()) {
                         log.info(this)
                         slack.sendOK(this)

@@ -158,11 +158,11 @@ class GlobalBeanConfig(
     @Component
     class FaultInjecter(private val env: Environment) {
 
-        fun maybeInject(component: Any) = env.maybeInject(component)
+        fun randomFeilHvisDev(component: Any) = env.randomFeilHvisDev(component)
 
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
-            private fun Environment.maybeInject(component: Any) =
+            private fun Environment.randomFeilHvisDev(component: Any) =
                 if (isDevOrLocal(this)) {
                     if (nextBoolean()) {
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {

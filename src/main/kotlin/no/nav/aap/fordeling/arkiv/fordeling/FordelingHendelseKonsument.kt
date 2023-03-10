@@ -40,13 +40,13 @@ class FordelingHendelseKonsument(
         var jp: Journalpost? = null
         runCatching {
             log.info("($n) Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
-            faultInjecter.maybeInject(this)
+            faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp?.run {
                 fordeler.fordel(this, enhet.navEnhet(this)).run {
                     with("${msg()}($fnr)") {
                         log.info(this)
-                        slack.sendOKDev(this)
+                        slack.sendOKHvisDev(this)
                     }
                 }
             }

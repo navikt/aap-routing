@@ -4,7 +4,6 @@ import com.slack.api.Slack
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component
 class SlackNotifier(private val cfg: SlackConfig, private val env: Environment) {
 
 
-    fun sendOKDev(message: String) =
+    fun sendOKHvisDev(message: String) =
         if (isDevOrLocal(env)) {
             send("$OK$message")
         }

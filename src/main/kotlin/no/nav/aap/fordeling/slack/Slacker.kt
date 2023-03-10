@@ -12,9 +12,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class SlackNotifier(private val cfg: SlackConfig, private val env: Environment) {
-
-
+class Slacker(private val cfg: SlackConfig, private val env: Environment) {
     fun okHvisDev(melding: String) =
         if (isDevOrLocal(env)) {
             ok(melding)
@@ -44,7 +42,7 @@ class SlackNotifier(private val cfg: SlackConfig, private val env: Environment) 
         }
 
     companion object {
-        private val LOG = getLogger(SlackNotifier::class.java)
+        private val LOG = getLogger(Slacker::class.java)
         private val slack = Slack.getInstance()
     }
 }

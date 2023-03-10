@@ -42,14 +42,14 @@ class FordelingHendelseKonsument(
             log.info("($n) Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.maybeInject(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
-            jp?.let {
-                fordeler.fordel(it, enhet.navEnhet(it)).run {
-                    with(msg()) {
+            jp?.run {
+                fordeler.fordel(this, enhet.navEnhet(this)).run {
+                    with("${msg()}($fnr)") {
                         log.info(this)
-                        slack.sendOK(this)
+                        slack.sendOKDev(this)
                     }
                 }
-            } ?: log.warn("Ingen journalpost kunne hentes for journalpost ${hendelse.journalpostId}")
+            }
         }.onFailure {
             with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${n?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)

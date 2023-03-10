@@ -1,20 +1,26 @@
 package no.nav.aap.fordeling.slack
 
 import com.slack.api.Slack
-import javax.xml.transform.OutputKeys
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
-import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
+import no.nav.boot.conditionals.EnvUtil
+import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class SlackNotifier(private val cfg: SlackConfig) {
+class SlackNotifier(private val cfg: SlackConfig, private val env: Environment) {
 
 
+    fun sendOKDev(message: String) =
+        if (isDevOrLocal(env)) {
+            send("$OK$message")
+        }
+        else Unit
     fun sendOK(message: String) = send("$OK$message")
     fun sendError(message: String) = send("$ERROR$message")
 

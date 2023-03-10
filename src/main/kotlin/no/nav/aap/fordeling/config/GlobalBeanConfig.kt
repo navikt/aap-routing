@@ -180,11 +180,15 @@ class GlobalBeanConfig(
     }
 
     companion object {
+
+        inline fun <T> T?.whenNull(block: T?.() -> Unit): T? {
+            if (this == null) block()
+            return this@whenNull
+        }
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)
                     .header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build())
             }
     }
-
 }

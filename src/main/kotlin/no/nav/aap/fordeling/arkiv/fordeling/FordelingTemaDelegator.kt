@@ -1,13 +1,21 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.config.Metrikker
+import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
+import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.util.Constants
+import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 
 @Component
-class FordelingTemaDelegator(private val cfg: FordelingConfig, private val fordelere: List<Fordeler>) : Fordeler {
+class FordelingTemaDelegator(private val cfg: FordelingConfig, private val fordelere: List<Fordeler>, private val metrikker: Metrikker) : Fordeler {
 
     val log = LoggerUtil.getLogger(FordelingTemaDelegator::class.java)
 
@@ -22,7 +30,9 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
 
     fun kanFordele(tema: String, status: String) = tema.lowercase() in tema() && status == MOTTATT.name
     override fun tema() = fordelere.flatMap { it.tema() }
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp, enhet)
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp, enhet).also {
+        metrikker.inc(FORDELING, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
+    }
 
     fun fordelerFor(tema: String) =
         if (cfg.enabled) {

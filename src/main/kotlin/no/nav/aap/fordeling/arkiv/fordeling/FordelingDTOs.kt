@@ -92,7 +92,13 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val id: String, val idType: BrukerType = FNR)
+        data class Bruker(val id: String, val idType: BrukerType) {
+            init {
+                require(idType == FNR) {
+                    throw IllegalArgumentException("idtype $idType er ikke støttet")
+                }
+            }
+        }
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

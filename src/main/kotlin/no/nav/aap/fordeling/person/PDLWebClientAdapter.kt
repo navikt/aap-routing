@@ -18,7 +18,7 @@ class PDLWebClientAdapter(
         cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = GRAPHQL)
-    fun fnr(aktørId: AktørId) = query<Any>(graphQL, IDENT_QUERY, aktørId.asIdent())
+    fun fnr(aktørId: AktørId) = query<Identer>(graphQL, IDENT_QUERY, aktørId.asIdent())?.fnr()
 
     @Retry(name = GRAPHQL)
     fun diskresjonskode(fnr: Fødselsnummer) =

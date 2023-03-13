@@ -2,7 +2,6 @@ query($ident: ID!, $grupper: [IdentGruppe!] = [FOLKEREGISTERIDENT], $historikk:B
         hentIdenter(ident: $ident, grupper:$grupper, historikk:$historikk) {
             identer {
                    ident
-                   gruppe
             }
        }
 }

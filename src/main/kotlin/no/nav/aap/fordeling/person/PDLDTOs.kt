@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.person
 
+import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.Diskresjonskode.SPFO
 import no.nav.aap.fordeling.person.Diskresjonskode.SPSF
@@ -7,6 +8,11 @@ import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.BYDEL
 import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.KOMMUNE
 import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.UTLAND
 
+data class Identer(val identer: List<Ident>) {
+    data class Ident(val ident: Fødselsnummer)
+
+    fun fnr() = identer.first().ident
+}
 data class PDLGeoTilknytning(
         val gtType: PDLGeoType?,
         val gtKommune: String?,

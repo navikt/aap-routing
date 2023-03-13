@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling
 
+import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
@@ -28,8 +29,7 @@ class DevController(
         private val arkiv: DokarkivWebClientAdapter,
         private val oppgave: OppgaveClient,
         private val arena: ArenaWebClientAdapter,
-        private val org: NavEnhetWebClientAdapter,
-                   ) {
+        private val org: NavEnhetWebClientAdapter) {
 
     private val log = getLogger(javaClass)
 
@@ -66,6 +66,10 @@ class DevController(
 
     @GetMapping("gt")
     fun gt(@RequestParam fnr: Fødselsnummer) = pdl.geoTilknytning(fnr)
+
+    @GetMapping("fnr")
+    fun fnr(@RequestParam aktørId: AktørId) = pdl.fnr(aktørId)
+
 
     @PostMapping("opprettarenaoppgave")
     fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arena.opprettArenaOppgave(data)

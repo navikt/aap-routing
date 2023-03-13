@@ -16,7 +16,7 @@
 	<properties>
 		<bekk-nocommons.version>0.15.0</bekk-nocommons.version>
 		<confluent.version>7.3.1</confluent.version>
-		<domain.version>2.0.11</domain.version>
+		<domain.version>2.0.13</domain.version>
 		<dokumenthåndtering.version>08271806</dokumenthåndtering.version>
 		<graphql.version>2.0.1</graphql.version>
 		<jib.version>3.3.1</jib.version>
@@ -27,7 +27,7 @@
 		<slack.version>1.27.3</slack.version>
 		<springdoc.version>2.0.2</springdoc.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
-		<tokensupport.version>3.0.4</tokensupport.version>
+		<tokensupport.version>3.0.7</tokensupport.version>
 	</properties>
 	<repositories>
 		<repository>

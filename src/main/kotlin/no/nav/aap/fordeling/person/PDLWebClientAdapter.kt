@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.person
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
+import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
@@ -17,12 +18,18 @@ class PDLWebClientAdapter(
         cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = GRAPHQL)
+    fun fnr(aktørId: AktørId) = query<PDLGeoTilknytning>(graphQL, GT_IDENT, aktørId.asIdent())?.gt()
+
+    @Retry(name = GRAPHQL)
     fun diskresjonskode(fnr: Fødselsnummer) =
         query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = GRAPHQL)
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
+
+    private fun AktørId.asIdent() = mapOf(IDENT to id)
+
 
     override fun toString() =
         "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg]"
@@ -31,5 +38,7 @@ class PDLWebClientAdapter(
         private const val IDENT = "ident"
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
+        private const val GT_IDENT = "query-ident.graphql"
+
     }
 }

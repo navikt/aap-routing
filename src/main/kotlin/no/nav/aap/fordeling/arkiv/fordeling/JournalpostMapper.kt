@@ -15,10 +15,22 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
-           val b = tilBruker(bruker)
-           Journalpost(tittel, journalfoerendeEnhet, journalpostId, journalstatus, tema.lowercase(), behandlingstema,
-                   b.fnr, b, tilBruker(avsenderMottaker), kanal,relevanteDatoer, dokumenter)
+           with(tilBruker(bruker)) {
+               Journalpost(tittel,
+                       journalfoerendeEnhet,
+                       journalpostId,
+                       journalstatus,
+                       tema.lowercase(),
+                       behandlingstema,
+                       fnr,
+                       this,
+                       tilBruker(avsenderMottaker),
+                       kanal,
+                       relevanteDatoer,
+                       dokumenter)
+           }
        }
+
     fun tilBruker(dto: BrukerDTO) = Bruker(tilFnr(dto))
 
     private fun tilFnr(dto: BrukerDTO) =

@@ -23,14 +23,10 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     private fun tilFnr(dto: BrukerDTO) =
         with(dto) {
-            if (type == AKTOERID) {
-              return@with tilFnr(id)
-            }
-            if (type == FNR)  {
-                return@with Fødselsnummer(id)
-            }
-            else {
-                throw IllegalStateException("IdType $type ikke støttet")
+            when(type) {
+                AKTOERID -> tilFnr(id)
+                FNR -> Fødselsnummer(id)
+                else -> throw IllegalStateException("IdType $type ikke støttet")
             }
         }
     private fun tilFnr(aktørId: String) =

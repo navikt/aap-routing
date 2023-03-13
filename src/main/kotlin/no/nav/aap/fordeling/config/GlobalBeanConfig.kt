@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
+import io.netty.handler.logging.LogLevel
+import io.netty.handler.logging.LogLevel.*
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
@@ -45,6 +47,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
+import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
@@ -107,7 +110,7 @@ class GlobalBeanConfig(
 
     @ConditionalOnNotProd
     @Bean
-    fun notProdHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
+    fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)
 
     @ConditionalOnProd
     @Bean

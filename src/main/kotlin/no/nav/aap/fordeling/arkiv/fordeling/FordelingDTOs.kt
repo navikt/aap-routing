@@ -3,8 +3,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 
 object FordelingDTOs {
 
@@ -34,11 +32,6 @@ object FordelingDTOs {
             val kanal: String,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>) {
-
-        fun tilJournalpost() =
-            Journalpost(tittel, journalfoerendeEnhet, journalpostId, journalstatus, tema.lowercase(), behandlingstema,
-                    Fødselsnummer(bruker.id), Bruker(bruker.id, bruker.type),
-                    Bruker(avsenderMottaker.id, avsenderMottaker.type), kanal,relevanteDatoer, dokumenter)
 
         enum class JournalStatus {
             MOTTATT,
@@ -92,13 +85,7 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val id: String, val idType: BrukerType) {
-            init {
-                require(idType == FNR) {
-                    throw IllegalArgumentException("idtype $idType er ikke støttet")
-                }
-            }
-        }
+        data class Bruker(val fnr: Fødselsnummer)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

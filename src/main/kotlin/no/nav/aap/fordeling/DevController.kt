@@ -4,6 +4,7 @@ import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
+import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.AAPFordeler
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
@@ -24,53 +25,57 @@ import org.springframework.web.bind.annotation.RequestParam
 @UnprotectedRestController(value = ["/dev"])
 class DevController(
         private val fordeler: AAPFordeler,
-        private val pdl: PDLWebClientAdapter,
-        private val egen: EgenAnsattClient,
-        private val arkiv: DokarkivWebClientAdapter,
-        private val oppgave: OppgaveClient,
-        private val arena: ArenaWebClientAdapter,
-        private val org: NavEnhetWebClientAdapter) {
+        private val pdlAdapter: PDLWebClientAdapter,
+        private val egenClient: EgenAnsattClient,
+        private val arkivAdapter: DokarkivWebClientAdapter,
+        private val arkivClient: ArkivClient,
+        private val oppgaveClient: OppgaveClient,
+        private val arenaAdapter: ArenaWebClientAdapter,
+        private val orgAdapter: NavEnhetWebClientAdapter) {
 
     private val log = getLogger(javaClass)
 
     @PostMapping("oppdaterogferdigstilljournalpost")
     fun oppdaterOgFerdigstillJournalpost(@RequestBody data: OppdateringData, @RequestParam journalpostId: String) =
-        arkiv.oppdaterOgFerdigstillJournalpost(journalpostId, data)
+        arkivAdapter.oppdaterOgFerdigstillJournalpost(journalpostId, data)
 
     @PostMapping("oppdaterjournalpost")
     fun oppdaterJournalpost(@RequestParam journalpostId: String, @RequestBody data: OppdateringData) =
-        arkiv.oppdaterJournalpost(journalpostId, data)
+        arkivAdapter.oppdaterJournalpost(journalpostId, data)
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId: String) =
-        arkiv.ferdigstillJournalpost(journalpostId)
+        arkivAdapter.ferdigstillJournalpost(journalpostId)
+
+    @GetMapping("journalpost")
+    fun journalpost(@RequestParam journalpostId: String) = arkivClient.hentJournalpost(journalpostId)
 
     @PostMapping("fordel")
     fun fordelSøknad(@RequestBody journalpost: Journalpost, @RequestParam enhetNr: String) =
         fordeler.fordel(journalpost, NAVEnhet(enhetNr))
 
     @GetMapping("hargosysoppgave")
-    fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgave.harOppgave(journalpostId)
+    fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgaveClient.harOppgave(journalpostId)
 
     @GetMapping("nyestearenasak")
-    fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arena.nyesteArenaSak(fnr)
+    fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arenaAdapter.nyesteArenaSak(fnr)
 
     @GetMapping("skjerming")
-    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egen.erSkjermet(fnr)
+    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erSkjermet(fnr)
 
     @GetMapping("aktiveenheter")
-    fun aktiveEnheter() = org.aktiveEnheter()
+    fun aktiveEnheter() = orgAdapter.aktiveEnheter()
 
     @GetMapping("diskresjonskode")
-    fun diskresjonskode(@RequestParam fnr: Fødselsnummer) = pdl.diskresjonskode(fnr)
+    fun diskresjonskode(@RequestParam fnr: Fødselsnummer) = pdlAdapter.diskresjonskode(fnr)
 
     @GetMapping("gt")
-    fun gt(@RequestParam fnr: Fødselsnummer) = pdl.geoTilknytning(fnr)
+    fun gt(@RequestParam fnr: Fødselsnummer) = pdlAdapter.geoTilknytning(fnr)
 
     @GetMapping("fnr")
-    fun fnr(@RequestParam aktørId: AktørId) = pdl.fnr(aktørId)
+    fun fnr(@RequestParam aktørId: AktørId) = pdlAdapter.fnr(aktørId)
 
 
     @PostMapping("opprettarenaoppgave")
-    fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arena.opprettArenaOppgave(data)
+    fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arenaAdapter.opprettArenaOppgave(data)
 }

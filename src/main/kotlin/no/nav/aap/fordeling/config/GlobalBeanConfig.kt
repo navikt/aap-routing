@@ -110,7 +110,7 @@ class GlobalBeanConfig(
 
     @ConditionalOnNotProd
     @Bean
-    fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)
+    fun notProdHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
 
     @ConditionalOnProd
     @Bean

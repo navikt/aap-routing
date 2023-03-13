@@ -22,7 +22,7 @@ class SAFGraphQLAdapter(
     fun hentJournalpost(journalpostId: String) =
         query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.let {
             mapper.tilJournalpost(it)
-        }
+        } ?: throw IllegalStateException("Kunne ikke lese journalpost $journalpostId fra SAF")
 
     companion object {
         private fun String.asIdent() = mapOf(ID to this)

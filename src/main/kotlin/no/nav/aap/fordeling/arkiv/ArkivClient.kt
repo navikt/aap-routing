@@ -13,9 +13,7 @@ class ArkivClient(private val dokarkiv: DokarkivWebClientAdapter, private val sa
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)
 
-    fun hentJournalpost(journalpostId: String) = saf.hentJournalpost(journalpostId).whenNull {
-        log.warn("Ingen journalpost kunne hentes for journalpost $journalpostId")
-    }
+    fun hentJournalpost(journalpostId: String) = saf.hentJournalpost(journalpostId)
     fun oppdaterOgFerdigstillJournalpost(journalpost: Journalpost, sakNr: String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId, journalpost.oppdateringsData(sakNr))
 }

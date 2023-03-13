@@ -18,7 +18,7 @@ class PDLWebClientAdapter(
         cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = GRAPHQL)
-    fun fnr(aktørId: AktørId) = query<Any>(graphQL, GT_IDENT, aktørId.asIdent())
+    fun fnr(aktørId: AktørId) = query<Any>(graphQL, IDENT_QUERY, aktørId.asIdent())
 
     @Retry(name = GRAPHQL)
     fun diskresjonskode(fnr: Fødselsnummer) =
@@ -38,7 +38,7 @@ class PDLWebClientAdapter(
         private const val IDENT = "ident"
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
-        private const val GT_IDENT = "query-ident.graphql"
+        private const val IDENT_QUERY = "query-ident.graphql"
 
     }
 }

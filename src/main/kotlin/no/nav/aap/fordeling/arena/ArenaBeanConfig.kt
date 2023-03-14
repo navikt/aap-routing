@@ -28,7 +28,7 @@ class ArenaBeanConfig {
 
     @Bean
     @Qualifier(ARENA)
-    fun arenaarkivFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun arenaFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, ARENA)
 
     @Bean

@@ -151,7 +151,7 @@ pdl:
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
-    scope: api://${env}-fss.fss-proxy.aap/.default
+    scope: api://${env}-fss.aap.fss-proxy/.default
 oppgave:
     base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io
     scope: api://${env}-fss.oppgavehandtering.oppgave${suffix}/.default

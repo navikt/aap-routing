@@ -84,7 +84,7 @@ no.nav:
                     arena:
                         token-endpoint-url: ${azure.openid.config.token.endpoint}
                         grant-type: client_credentials
-                        scope: ${egenansatt.scope}
+                        scope: ${arena.scope}
                         authentication:
                             client-id: ${azure.app.client.id}
                             client-jwk: ${azure.app.jwk}
@@ -134,6 +134,7 @@ no.nav:
                     discoveryurl: ${azure.app.well.known.url}
                     accepted_audience: ${azure.app.client.id}
 
+
 navorg:
     base-uri: https://norg2.${env}-fss-pub.nais.io
 egenansatt:
@@ -150,6 +151,7 @@ pdl:
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
     base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
+    scope: api://${env}-fss.fss-proxy.aap/.default
 oppgave:
     base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io
     scope: api://${env}-fss.oppgavehandtering.oppgave${suffix}/.default

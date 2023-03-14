@@ -20,20 +20,20 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
         with(jp) {
             if (oppgave.harOppgave(jp.journalpostId)) {
                 FordelingResultat(INGEN,
-                        journalpostId,
                         "Det finnes allerede en journalføringsoppgave for journalpost",
-                        jp.hovedDokumentBrevkode)
+                        jp.hovedDokumentBrevkode,
+                        journalpostId)
             }
             else {
                 runCatching {
                     log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
                     oppgave.opprettJournalføringOppgave(jp, enhet)
-                    FordelingResultat(MANUELL_JOURNALFØRING, journalpostId, "Journalføringsoppgave opprettet", jp.hovedDokumentBrevkode)
+                    FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", jp.hovedDokumentBrevkode, journalpostId)
                 }.getOrElse {
                     runCatching {
                         log.warn("Feil ved opprettelse av en manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
                         oppgave.opprettFordelingOppgave(jp)
-                        FordelingResultat(MANUELL_FORDELING, journalpostId, "Fordelingsoppgave oprettet", jp.hovedDokumentBrevkode)
+                        FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave oprettet", jp.hovedDokumentBrevkode, journalpostId)
                     }.getOrElse {
                         log.warn("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId")
                         throw ManuellFordelingException("Feil ved opprettelse av manuell fordelingsoppgave", it)

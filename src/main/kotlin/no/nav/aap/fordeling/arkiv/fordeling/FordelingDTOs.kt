@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 
 object FordelingDTOs {
 
-    data class FordelingResultat(val fordelingstype: FordelingType, val journalpostId: String = "0", val msg: String, val brevkode: String) {
+    data class FordelingResultat(val fordelingstype: FordelingType, val msg: String, val brevkode: String, val journalpostId: String = "0") {
         fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
         enum class FordelingType {
             AUTOMATISK,
@@ -16,7 +16,7 @@ object FordelingDTOs {
         }
 
         companion object {
-            val INGEN_FORDELING = FordelingResultat(fordelingstype = INGEN, msg = "Ingen fordeling utført", brevkode =  "Ingen brevkode")
+            val INGEN_FORDELING = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
         }
     }
 

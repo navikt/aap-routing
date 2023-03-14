@@ -39,7 +39,7 @@ class FordelingHendelseKonsument(
             @Header(RECEIVED_TOPIC) topic: String) {
         lateinit var jp: Journalpost
         runCatching {
-            log.info("($n) Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
+            log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp.run {

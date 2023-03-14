@@ -167,7 +167,7 @@ class GlobalBeanConfig(
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.randomFeilHvisDev(component: Any) =
                 if (isDevOrLocal(this)) {
-                    if (nextBoolean()) {
+                    if (nextInt(1,5) == 1) {
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.warn(it.message)
                         }

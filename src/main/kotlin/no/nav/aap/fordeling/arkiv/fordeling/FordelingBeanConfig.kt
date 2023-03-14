@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.health.AbstractPingableHealthIndicator
@@ -32,7 +31,7 @@ import org.springframework.stereotype.Component
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
+class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
     RetryTopicConfigurationSupport() {
 
     @Component
@@ -66,8 +65,5 @@ class FordelingBeanConfig(private val faultInjecter: FaultInjecter,private val n
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory
-    }
-    companion object {
-        const val DELEGATOR = "beans.delegator"
     }
 }

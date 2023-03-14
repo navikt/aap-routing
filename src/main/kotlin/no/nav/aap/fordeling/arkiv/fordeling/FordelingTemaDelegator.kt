@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.Metrikker
@@ -9,7 +8,6 @@ import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
 import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
-import no.nav.aap.util.Constants
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component

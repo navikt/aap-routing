@@ -54,7 +54,10 @@ class AAPFordeler(
             log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
             arena.opprettOppgave(jp, enhet).run {
                 arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
-                FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", AUTOMATISK,jp.hovedDokumentBrevkode)
+                FordelingResultat(AUTOMATISK,
+                        jp.journalpostId,
+                        "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",
+                        jp.hovedDokumentBrevkode)
             }
         }
         else {
@@ -65,7 +68,7 @@ class AAPFordeler(
     private fun fordelEttersending(jp: Journalpost) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
-            FordelingResultat(jp.journalpostId, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", AUTOMATISK,jp.hovedDokumentBrevkode)
+            FordelingResultat(AUTOMATISK, jp.journalpostId, "Vellykket fordeling", jp.hovedDokumentBrevkode)
         } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
 }
 

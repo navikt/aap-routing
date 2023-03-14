@@ -44,7 +44,7 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp.run {
                 fordeler.fordel(this, enhet.navEnhet(this)).run {
-                    with("${msg()}($fnr)") {
+                    with("${msg()} ($fnr)") {
                         log.info(this)
                         slack.okHvisDev(this)
                     }

@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.saf
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
+import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
@@ -22,7 +23,7 @@ class SAFGraphQLAdapter(
     fun hentJournalpost(journalpostId: String) =
         query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.let {
             mapper.tilJournalpost(it)
-        } ?: throw IllegalStateException("Kunne ikke lese journalpost $journalpostId fra SAF")
+        } ?: throw IntegrationException("Kunne ikke lese journalpost $journalpostId fra SAF")
 
     companion object {
         private fun String.asIdent() = mapOf(ID to this)

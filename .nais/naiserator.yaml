@@ -17,7 +17,7 @@ spec:
         - application: skjermede-personer-pip
           namespace: nom
       external:
-        -   host: aap-fss-proxy.{{env}}-fss-pub.nais.io
+        -   host: aap-proxy.{{env}}-fss-pub.nais.io
         -   host: pdl-api.{{env}}-fss-pub.nais.io
         -   host: saf.{{env}}-fss-pub.nais.io
         -   host: dokarkiv.{{env}}-fss-pub.nais.io

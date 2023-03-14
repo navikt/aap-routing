@@ -150,7 +150,7 @@ pdl:
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql
     scope: api://${env}-fss.pdl.pdl-api/.default
 arena:
-    base-uri: https://aap-proxy.${env}-fss-pub.nais.io
+    base-uri: https://aap-fss-proxy.${env}-fss-pub.nais.io
     scope: api://${env}-fss.aap.fss-proxy/.default
 oppgave:
     base-uri: https://oppgave${suffix}.${env}-fss-pub.nais.io

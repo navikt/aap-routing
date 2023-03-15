@@ -3,8 +3,14 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
+import no.nav.aap.fordeling.config.Metrikker
+import no.nav.aap.fordeling.config.Metrikker.Companion
+import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
+import no.nav.aap.util.Constants
+import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -27,6 +33,7 @@ class FordelingHendelseKonsument(
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
         private val faultInjecter: FaultInjecter,
+        private val metrikker: Metrikker,
         private val env: Environment) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -47,6 +54,7 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             if (EnvUtil.isProd(env)) {
                 log.info("return etter Journalpost $jp")
+                metrikker.inc(FORDELING, TEMA,jp.tema, KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
                 return  // TODO Midlertidig
             }
             jp.run {

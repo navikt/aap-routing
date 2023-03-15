@@ -15,6 +15,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
             }
         }.getOrElse {
+            log.warn("SAF query $query feilet",it)
             handler.handle(it)
         }
 
@@ -25,6 +26,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
                     log.trace("Slo opp ${T::class.java.simpleName} $it")
                 } ?: emptyList()
         }.getOrElse {
+            log.warn("SAF bulk query $query feilet",it)
             handler.handle(it)
         }
 

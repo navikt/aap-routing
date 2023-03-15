@@ -31,7 +31,11 @@ object FordelingDTOs {
             val avsenderMottaker: BrukerDTO,
             val kanal: String,
             val relevanteDatoer: Set<RelevantDato>,
-            val dokumenter: Set<DokumentInfo>) {
+            val dokumenter: Set<DokumentInfo>,
+            val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
+
+
+        data class Tilleggsopplysning(val nokkel: String, val verdi: String)
 
         enum class JournalStatus {
             MOTTATT,

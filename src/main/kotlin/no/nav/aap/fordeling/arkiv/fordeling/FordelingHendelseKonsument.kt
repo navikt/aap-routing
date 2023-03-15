@@ -55,7 +55,7 @@ class FordelingHendelseKonsument(
             var tittel = jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel"
             tittel = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
             val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort" else jp.hovedDokumentBrevkode
-            metrikker.inc("jp", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,brevkode)
+            metrikker.inc("jper", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,brevkode)
             if (isProd(env)) {
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig

@@ -52,7 +52,7 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             if (EnvUtil.isProd(env)) {
                 log.info("return etter Journalpost $jp")
-                metrikker.inc(FORDELING, TEMA,jp.tema, KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
+                metrikker.inc(FORDELING + "er", TEMA,jp.tema, KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
                 return  // TODO Midlertidig
             }
             jp.run {

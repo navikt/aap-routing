@@ -29,7 +29,7 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
     fun isEnabled() = cfg.isEnabled
 
     fun kanFordele(tema: String, status: String) = (tema.lowercase() in tema() && status == MOTTATT.name).also {
-        log.info("Kan fordele $tema $status er $it")
+        log.trace("Kan fordele $tema $status er $it")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp, enhet).also {

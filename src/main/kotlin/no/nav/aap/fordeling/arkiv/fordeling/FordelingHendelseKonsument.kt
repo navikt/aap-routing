@@ -46,7 +46,7 @@ class FordelingHendelseKonsument(
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             if (EnvUtil.isProd(env)) {
-                log.info("Journalpost $jp")
+                log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }
             jp.run {

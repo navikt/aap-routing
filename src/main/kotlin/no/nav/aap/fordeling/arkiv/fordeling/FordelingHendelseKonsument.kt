@@ -14,6 +14,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.boot.conditionals.EnvUtil
+import no.nav.boot.conditionals.EnvUtil.isProd
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
@@ -55,7 +56,7 @@ class FordelingHendelseKonsument(
             tittel = if (tittel.startsWith("korrigert meldekort")) "Korrigert meldekort" else tittel
             val brevkode = if (jp.hovedDokumentBrevkode.startsWith("Ingen brevkode") && tittel.contains("meldekort", ignoreCase = true)) "Meldekort" else jp.hovedDokumentBrevkode
             metrikker.inc("jp", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,brevkode)
-            if (EnvUtil.isProd(env)) {
+            if (isProd(env)) {
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }

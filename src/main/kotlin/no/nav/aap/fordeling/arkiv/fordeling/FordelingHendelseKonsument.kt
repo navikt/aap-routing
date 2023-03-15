@@ -43,11 +43,16 @@ class FordelingHendelseKonsument(
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             jp.run {
-                fordeler.fordel(this, enhet.navEnhet(this)).run {
-                    with("${msg()} ($fnr)") {
-                        log.info(this)
-                        slack.okHvisDev(this)
+                if (fordeler.isEnabled()) {
+                    fordeler.fordel(this, enhet.navEnhet(this)).run {
+                        with("${msg()} ($fnr)") {
+                            log.info(this)
+                            slack.okHvisDev(this)
+                        }
                     }
+                }
+                else {
+                    log.info("Ingen fordeling av $jp, set fordeling:enabled;true for aktivering")
                 }
             }
         }.onFailure {

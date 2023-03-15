@@ -7,22 +7,7 @@ info:
         app: ${nais.app.name}
         namespace: ${nais.namespace}
 
-resilience4j:
-    retry:
-        instances:
-            graphql:
-                max-attempts: 10
-                waitDuration: 1s
-                retryExceptions:
-                    - org.springframework.web.reactive.function.client.WebClientResponseException
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQL
-                ignoreExceptions:
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQL
 spring:
-    cache:
-        cache-names: navorg
-        caffeine:
-          spec: maximumSize=1,expireAfterAccess=3600s
     cloud:
         gcp:
             project-id: ${gcp.team.project.id}

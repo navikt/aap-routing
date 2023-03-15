@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class Resilience4jRetryListener(registry: RetryRegistry, private val slacker: Slacker) {
+class Resilience4jRetryListener(registry: RetryRegistry, slacker: Slacker) {
     private val log = LoggerFactory.getLogger(Resilience4jRetryListener::class.java)
     init {
         registry.retry(GRAPHQL).eventPublisher.onRetry {

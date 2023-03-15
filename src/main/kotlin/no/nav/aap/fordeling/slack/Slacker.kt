@@ -18,6 +18,11 @@ class Slacker(private val cfg: SlackConfig, private val env: Environment) {
             ok(melding)
         }
         else Unit
+    fun feilHvisDev(melding: String) =
+        if (isDevOrLocal(env)) {
+            feil(melding)
+        }
+        else Unit
     fun ok(melding: String) = melding("$OK$melding")
     fun feil(melding: String) = melding("$ERROR$melding")
 

@@ -8,7 +8,9 @@ import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
+import no.nav.boot.conditionals.EnvUtil
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -24,7 +26,8 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
-        private val faultInjecter: FaultInjecter) {
+        private val faultInjecter: FaultInjecter,
+        private val env: Environment) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -42,6 +45,10 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
+            if (EnvUtil.isProd(env)) {
+                log.info("Journalpost $jp")
+                return  // TODO Midlertidig
+            }
             jp.run {
                 if (fordeler.isEnabled()) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {

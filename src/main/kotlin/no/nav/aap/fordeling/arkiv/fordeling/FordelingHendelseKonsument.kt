@@ -6,6 +6,7 @@ import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
+import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
@@ -52,7 +53,7 @@ class FordelingHendelseKonsument(
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
             if (EnvUtil.isProd(env)) {
                 log.info("return etter Journalpost $jp")
-                metrikker.inc(FORDELING + "er", TEMA,jp.tema, KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
+                metrikker.inc(FORDELING + "er", TEMA,jp.tema, TITTEL,jp.tittel ?: "Ingen tittel",KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
                 return  // TODO Midlertidig
             }
             jp.run {

@@ -51,11 +51,11 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
+            var tittel = jp.tittel?.let { if (it.startsWith("meldekort for uke")) "Meldekort" else it } ?: "Ingen tittel"
+            tittel = if (tittel.startsWith("korrigert meldekort")) "Korrigert meldekort" else tittel
+            metrikker.inc("journalposter", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
             if (EnvUtil.isProd(env)) {
                 log.info("return etter Journalpost $jp")
-                var tittel = jp.tittel?.let { if (it.startsWith("meldekort for uke")) "Meldekort" else it } ?: "Ingen tittel"
-                tittel = if (tittel.startsWith("korrigert meldekort")) "Korrigert meldekort" else tittel
-                metrikker.inc("journalposter", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,jp.hovedDokumentBrevkode)
                 return  // TODO Midlertidig
             }
             jp.run {

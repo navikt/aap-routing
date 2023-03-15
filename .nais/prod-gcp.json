@@ -1,6 +1,6 @@
 {
-    "tenant": "trygdeetaten.no",
-    "ingress": "https://aap-routing.nav.no",
+    "tenant": "nav.no",
+    "ingress": "https://aap-routing.intern.nav.no",
     "env": "prod",
     "suffix": ""
 }

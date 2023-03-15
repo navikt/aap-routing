@@ -13,9 +13,12 @@ import org.springframework.web.util.UriBuilder
 class DokarkivConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
+        @DefaultValue(DOK_PATH) val dokPath: String,
         @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
         @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled, DEFAULT) {
+
+    fun dokUri(b: UriBuilder, journalpostId: String, dokumentInfoId:String, variantFormat: VariantFormat) = b.path(dokPath).build(journalpostId,dokumentInfoId,variantFormat.name)
 
     fun ferdigstillUri(b: UriBuilder, journalpostId: String) = b.path(ferdigstillPath).build(journalpostId)
     fun oppdaterJournlpostUri(b: UriBuilder, journalpostId: String) = b.path(oppdaterPath).build(journalpostId)
@@ -23,6 +26,7 @@ class DokarkivConfig(
 
     companion object {
         const val DOKARKIV = "dokarkiv"
+        private const val DOK_PATH = "/rest/hentdokument/{journalpostId}/{dokumentInfoId}/{variantFormat}"
         private const val PATH_PREFIX = "rest/journalpostapi/v1/journalpost/"
         private const val DEFAULT_FERDIGSTILL_PATH = "$PATH_PREFIX{journalpostid}/ferdigstill"
         private const val DEFAULT_OPPDATER_PATH = "$PATH_PREFIX{journalpostid}"

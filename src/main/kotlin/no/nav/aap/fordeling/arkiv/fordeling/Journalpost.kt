@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 
 data class Journalpost(
@@ -22,7 +23,8 @@ data class Journalpost(
         val avsenderMottager: Bruker?,
         val kanal: String,
         val relevanteDatoer: Set<RelevantDato>,
-        val dokumenter: Set<DokumentInfo>) {
+        val dokumenter: Set<DokumentInfo>,
+        val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
     val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Ukjent brevkode"
 

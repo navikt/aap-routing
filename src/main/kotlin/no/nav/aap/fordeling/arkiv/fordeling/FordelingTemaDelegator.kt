@@ -32,19 +32,19 @@ class FordelingTemaDelegator(private val cfg: FordelingConfig, private val forde
         log.trace("Kan fordele $tema $status er $it")
     }
     override fun tema() = fordelere.flatMap { it.tema() }
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp.tema).fordel(jp, enhet).also {
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet) = fordelerFor(jp).fordel(jp, enhet).also {
         metrikker.inc(FORDELING, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
     }
 
-    fun fordelerFor(tema: String) =
+    fun fordelerFor(jp: Journalpost) =
         if (cfg.enabled) {
             fordelere
                 .filterNot { it is ManuellFordeler }
-                .first { tema.lowercase() in it.tema() }
+                .first { jp.tema.lowercase() in it.tema() }
         }
         else {
             INGEN_FORDELER
         }.also {
-            log.info("Bruker fordeler ${it::class.java.simpleName} for tema $tema")
+            log.info("Bruker fordeler ${it::class.java.simpleName} for tema ${jp.tema}")
         }
 }

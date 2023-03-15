@@ -52,10 +52,7 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
-            var tittel = jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel"
-            tittel = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
-            val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort" else jp.hovedDokumentBrevkode
-            metrikker.inc("jper", TEMA,jp.tema, TITTEL,tittel,KANAL,jp.kanal, BREVKODE,brevkode)
+            lagMetrikker(jp)
             if (isProd(env)) {
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
@@ -80,6 +77,15 @@ class FordelingHendelseKonsument(
             }
             throw it
         }
+    }
+
+    private fun lagMetrikker(jp: Journalpost) {
+        var tittel = jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel"
+        tittel = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
+        val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort",
+                    ignoreCase = true)) "Meldekort"
+        else jp.hovedDokumentBrevkode
+        metrikker.inc("jper", TEMA, jp.tema, TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
     }
 
     @DltHandler

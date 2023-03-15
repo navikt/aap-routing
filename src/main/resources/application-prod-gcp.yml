@@ -1,7 +1,6 @@
 dokarkiv:
     enabled: false
 fordeling:
-    enabled: false
     topics:
       backoff: 30000
 oppgave:

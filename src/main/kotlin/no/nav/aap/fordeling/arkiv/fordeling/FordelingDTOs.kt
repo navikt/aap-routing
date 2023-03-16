@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 
 object FordelingDTOs {
 
-    val FNRIKKESATT = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
+    val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
 
     data class FordelingResultat(val fordelingstype: FordelingType, val msg: String, val brevkode: String, val journalpostId: String = "0") {
         fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
@@ -90,7 +90,7 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val id: String)
+        data class Bruker(val id: Fødselsnummer)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

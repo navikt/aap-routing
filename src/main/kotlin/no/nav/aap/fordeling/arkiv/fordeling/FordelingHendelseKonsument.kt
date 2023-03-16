@@ -2,7 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FNRIKKESATT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
@@ -47,8 +47,7 @@ class FordelingHendelseKonsument(
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             faultInjecter.randomFeilHvisDev(this)
-            val fordeler = factory.fordelerFor(h.tema())
-            log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler ${fordeler.javaClass.simpleName}")
+            log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
 
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
@@ -57,7 +56,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            if (jp.fnr == FNRIKKESATT) {
+            if (jp.fnr == FIKTIVTFNR) {
                 log.warn("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
@@ -71,8 +70,8 @@ class FordelingHendelseKonsument(
 
             jp.run {
                 if (factory.isEnabled() && status == MOTTATT) {
-                    fordeler.fordel(this, enhet.navEnhet(this)).run {
-                        with("${msg()} ($fnr)") {
+                    factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
+                        with("${it.msg()} ($fnr)") {
                             log.info(this)
                             slack.jippiHvisDev(this)
                         }

@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
@@ -58,7 +59,7 @@ class FordelingHendelseKonsument(
                 return  // TODO Midlertidig
             }
             jp.run {
-                if (fordeler.isEnabled()) {
+                if (fordeler.isEnabled() && jp.status == MOTTATT) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {
                         with("${msg()} ($fnr)") {
                             log.info(this)

@@ -91,8 +91,9 @@ class FordelingHendelseKonsument(
 
     @DltHandler
     fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
-        log.warn("Gir opp fordeling av journalpost ${payload.journalpostId} $trace").also {
-            slack.feil("Journalpost ${payload.journalpostId} kunne ikke fordeles")
+        with("Gir opp fordeling av journalpost ${payload.journalpostId}") {
+            log.warn("$this $trace")
+            slack.feil(this)
         }
     }
 }

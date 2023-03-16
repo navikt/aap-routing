@@ -21,14 +21,15 @@ class JournalpostMapper(private val pdl: PDLClient) {
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
            with(bruker) {
+               val fnr = fødselsnummer(this)
                Journalpost(tittel,
                        journalfoerendeEnhet,
                        journalpostId,
                        journalstatus,
                        tema.lowercase(),
-                       behandlingstema, fødselsnummer(this),
-                       tilBruker(this),
-                       tilBruker(avsenderMottaker),
+                       behandlingstema, fnr,
+                       Bruker(fnr),
+                       tilBruker(avsenderMottaker),  // kab være annerledes, derfor oppslag
                        kanal,
                        relevanteDatoer,
                        dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),

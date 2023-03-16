@@ -41,8 +41,7 @@ class FordelingHendelseKonsument(
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
-    @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}",
-            backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
+    @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
@@ -50,20 +49,23 @@ class FordelingHendelseKonsument(
             faultInjecter.randomFeilHvisDev(this)
             val fordeler = factory.fordelerFor(h.tema())
             log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler $fordeler")
+
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
                 return
             }
+
             if (isProd(env)) {
                 lagMetrikker(jp)
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }
 
-          if (jp.fnr == null) {  // TODO må fikse dette
-            fordeler.fordelManuelt(jp, FORDELINGSENHET)
-          }
+            if (jp.fnr == null) {  // TODO må fikse dette
+                fordeler.fordelManuelt(jp, FORDELINGSENHET)
+            }
+
             jp.run {
                 if (factory.isEnabled() && status == MOTTATT) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {
@@ -80,9 +82,17 @@ class FordelingHendelseKonsument(
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
-                slack.feil("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
+                slack.feilHvisDev("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }
             throw it
+        }
+    }
+
+    @DltHandler
+    fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
+        with("Gir opp fordeling av journalpost ${payload.journalpostId}") {
+            log.warn("$this $trace")
+            slack.feil(this)
         }
     }
 
@@ -93,14 +103,6 @@ class FordelingHendelseKonsument(
                     ignoreCase = true)) "Meldekort"
         else jp.hovedDokumentBrevkode
         metrikker.inc(FORDELINGTS, TEMA, jp.tema, TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
-    }
-
-    @DltHandler
-    fun dlt(payload: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
-        with("Gir opp fordeling av journalpost ${payload.journalpostId}") {
-            log.warn("$this $trace")
-            slack.feil(this)
-        }
     }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 }

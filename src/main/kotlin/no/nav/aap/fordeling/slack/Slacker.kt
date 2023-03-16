@@ -30,6 +30,7 @@ class Slacker(private val cfg: SlackConfig, private val env: Environment) {
             jippi(melding)
         }
         else Unit
+
     fun ok(melding: String) = melding("$OK$melding")
     fun feil(melding: String) = melding("$ERROR$melding")
     fun jippi(melding: String) = melding("$ROCKET$melding")

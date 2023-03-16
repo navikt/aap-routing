@@ -3,8 +3,6 @@ package no.nav.aap.fordeling.arkiv.saf
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter

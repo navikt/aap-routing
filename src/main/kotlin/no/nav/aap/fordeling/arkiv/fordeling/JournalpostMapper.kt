@@ -37,7 +37,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    fun tilBruker(dto: BrukerDTO) = Bruker(fødselsnummer(dto))
+    private fun tilBruker(dto: BrukerDTO) = Bruker(fødselsnummer(dto))
 
     private fun fødselsnummer(dto: BrukerDTO) =
         with(dto) {

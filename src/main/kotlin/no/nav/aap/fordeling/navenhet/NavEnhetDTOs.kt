@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.util.Constants.AAP
 
 data class EnhetsKriteria(
-        val geografiskOmraade: String,
+        val geografiskOmraade: String?,
         val skjermet: Boolean = false,
         val diskresjonskode: Diskresjonskode = ANY,
         val tema: String ) {

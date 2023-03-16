@@ -71,9 +71,11 @@ class AAPFordeler(
             }
         }
         else {
-            log.info("Arena HAR aktiv sak for ${jp.fnr}")
-            throw ArenaSakException("Har aktiv sak for ${jp.fnr}, skal IKKE opprett oppgave i Arena")
-        }
+            with("Har aktiv sak for ${jp.fnr}, skal IKKE opprett oppgave i Arena") {
+                log.info(this)
+                throw ArenaSakException(this)
+            }
+         }
 
     private fun fordelEttersending(jp: Journalpost) =
         arena.nyesteAktiveSak(jp.fnr)?.run {

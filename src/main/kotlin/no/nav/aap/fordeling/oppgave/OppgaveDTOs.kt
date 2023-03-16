@@ -18,8 +18,8 @@ object OppgaveDTOs {
     }
 }
 
-fun Journalpost.tilOpprettOppgave(oppgaveType: OppgaveType, enhetNr: String? = null) =
-    OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi)
+fun Journalpost.opprettOppgaveData(oppgaveType: OppgaveType, tema: String, enhetNr: String? = null) =
+    OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi,tema)
 
 enum class OppgaveType(val verdi: String) {
     JOURNALFØRINGSOPPGAVE("JFR"),
@@ -33,13 +33,12 @@ data class OpprettOppgaveData(
         val tildeltEnhetsnr: String?,
         val beskrivelse: String?,
         val oppgavetype: String,
+        val tema: String,
         val behandlingstype: String? = null,
-        val tema: String = AAP.uppercase(),
         val prioritet: String = NORMAL_PRIORITET,
         val fristFerdigstillelse: LocalDate = frist(),
         val aktivDato: LocalDate = LocalDate.now(),
-        val opprettetAvEnhetsnr: String = AUTO_ENHET,
-                             ) {
+        val opprettetAvEnhetsnr: String = AUTO_ENHET) {
 
     companion object {
         private const val NORMAL_PRIORITET = "NORM"

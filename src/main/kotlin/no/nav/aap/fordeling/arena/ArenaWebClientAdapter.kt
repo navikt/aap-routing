@@ -41,7 +41,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .bodyToMono<ArenaOpprettetOppgave>()
                 .retryWhen(cf.retrySpec(log))
                 .doOnSuccess { log.info("Arena opprettet oppgave OK. Respons $it") }
-                .doOnError { t -> log.warn("Arena opprett oppgave feilet", t) }
+                .doOnError { t -> log.warn("Arena opprett oppgave feilet (${t.message})", t) }
                 .block() ?: throw IntegrationException("Null respons for opprettelse av oppgave")
         }
         else {

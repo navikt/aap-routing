@@ -14,14 +14,12 @@ import org.springframework.stereotype.Component
 class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
 
-    override fun tema() = listOf(AAP)
-
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                with("Det finnes allerede en journalføringsoppgave") {
+                with("Det finnes allerede en journalføringsoppgave, oppretter ingen ny") {
                     FordelingResultat(INGEN, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                        log.info(this)
+                        log.info(it.msg())
                     }
                 }
             }
@@ -31,7 +29,7 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
                     oppgave.opprettJournalføringOppgave(jp, enhet)
                     with("Journalføringsoppgave opprettet")  {
                         FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                            log.info(this)
+                            log.info(it.msg())
                         }
                     }
                 }.getOrElse {
@@ -40,7 +38,7 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
                         oppgave.opprettFordelingOppgave(jp)
                         with("Fordelingsoppgave oprettet")  {
                             FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                                log.info(this)
+                                log.info(it.msg())
                             }
                         }
                     }.getOrElse {

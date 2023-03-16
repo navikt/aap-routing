@@ -13,10 +13,10 @@ import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
+import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil.isProd
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
@@ -63,7 +63,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            if (isProd(env)) {
+            if (env.isProd()) {
                 lagMetrikker(jp)
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig

@@ -12,6 +12,7 @@ import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
+import no.nav.aap.util.EnvExtensions.isDev
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.ConditionalOnNotProd
@@ -77,7 +78,7 @@ class GlobalBeanConfig(
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextInt(1, 5) == 1 && isDevOrLocal(env)) {
+            if (nextInt(1, 5) == 1 && env.isDev()) {
                 with(WebClientResponseException(BAD_GATEWAY,
                         "Tvunget feil for request til ${it.url()}",
                         null,
@@ -163,7 +164,7 @@ class GlobalBeanConfig(
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
             private fun Environment.randomFeilHvisDev(component: Any) =
-                if (isDevOrLocal(this)) {
+                if (isDev()) {
                     if (nextInt(1,5) == 1) {
                         throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
                             log.warn(it.message)

@@ -19,24 +19,35 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             if (oppgave.harOppgave(jp.journalpostId)) {
-                FordelingResultat(INGEN,
-                        "Det finnes allerede en journalføringsoppgave for journalpost",
-                        jp.hovedDokumentBrevkode,
-                        journalpostId)
+                with("Det finnes allerede en journalføringsoppgave") {
+                    FordelingResultat(INGEN, this, jp.hovedDokumentBrevkode, journalpostId).also {
+                        log.info(this)
+                    }
+                }
             }
             else {
                 runCatching {
                     log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
                     oppgave.opprettJournalføringOppgave(jp, enhet)
-                    FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", jp.hovedDokumentBrevkode, journalpostId)
+                    with("Journalføringsoppgave opprettet")  {
+                        FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, journalpostId).also {
+                            log.info(this)
+                        }
+                    }
                 }.getOrElse {
                     runCatching {
                         log.warn("Feil ved opprettelse av en manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
                         oppgave.opprettFordelingOppgave(jp)
-                        FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave oprettet", jp.hovedDokumentBrevkode, journalpostId)
+                        with("Fordelingsoppgave oprettet")  {
+                            FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, journalpostId).also {
+                                log.info(this)
+                            }
+                        }
                     }.getOrElse {
-                        log.warn("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId")
-                        throw ManuellFordelingException("Feil ved opprettelse av manuell fordelingsoppgave", it)
+                        with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId") {
+                            log.warn(this)
+                            throw ManuellFordelingException(this, it)
+                        }
                     }
                 }
             }

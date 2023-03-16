@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Companion.EMPTY
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
@@ -51,19 +52,21 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler $fordeler")
 
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
+
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
                 return
+            }
+
+            if (jp == EMPTY) {
+                log.info("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
+               // fordeler.fordelManuelt(jp, FORDELINGSENHET)
             }
 
             if (isProd(env)) {
                 lagMetrikker(jp)
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
-            }
-
-            if (jp.fnr == null) {  // TODO må fikse dette
-                fordeler.fordelManuelt(jp, FORDELINGSENHET)
             }
 
             jp.run {

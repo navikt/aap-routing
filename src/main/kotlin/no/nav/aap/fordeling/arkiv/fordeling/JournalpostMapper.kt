@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Companion.EMPTY
 import no.nav.aap.fordeling.person.PDLClient
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -34,7 +35,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                            relevanteDatoer,
                            dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
                            tilleggsopplysninger)
-               }
+               } ?: EMPTY
            }
        }
 

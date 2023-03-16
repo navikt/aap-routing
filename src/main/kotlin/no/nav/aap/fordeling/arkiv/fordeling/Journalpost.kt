@@ -5,6 +5,7 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
@@ -37,5 +38,11 @@ data class Journalpost(
 
     fun oppdateringsData(saksNr: String) =
         OppdateringData(tittel, avsenderMottager ?: bruker, bruker, Sak(saksNr), tema.uppercase())
+
+    companion object {
+        // fiktivt fødselsnummer for dem som måtte lure
+        val EMPTY = Journalpost(null,null,"0",MOTTATT,"TEMA",
+                null, Fødselsnummer("08089403198"),null,null,"NAV_NO", emptySet(), emptySet())
+    }
 
 }

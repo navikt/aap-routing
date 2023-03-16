@@ -20,6 +20,11 @@ data class EnhetsKriteria(
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class NavOrg(val enhetNr: String, val status: String) {
-        data class NAVEnhet(val enhetNr: String)
+        data class NAVEnhet(val enhetNr: String) {
+            companion object {
+                private const val FORDELING = "4303"
+                val FORDELINGSENHET = NAVEnhet(FORDELING)
+            }
+        }
     }
 }

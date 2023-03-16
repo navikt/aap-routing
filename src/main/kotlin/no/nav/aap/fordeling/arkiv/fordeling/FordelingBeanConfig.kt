@@ -43,7 +43,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, m: Metrikker,delegator: FordelingTemaDelegator) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties, m: Metrikker,delegator: FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {

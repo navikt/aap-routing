@@ -22,7 +22,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
            with(bruker) {
-               val fnr = fødselsnummer()
+               val fnr = tilFnr()
                Journalpost(tittel,
                        journalfoerendeEnhet,
                        journalpostId,
@@ -31,7 +31,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        behandlingstema,
                        fnr,
                        Bruker(fnr),
-                       avsenderMottaker.avsenderMottaker(),  // kab være annerledes, derfor nytt oppslag
+                       avsenderMottaker.tilAvsenderMottaker(),  // kab være annerledes, derfor nytt oppslag
                        kanal,
                        relevanteDatoer,
                        dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
@@ -39,11 +39,11 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun AvsenderMottakerDTO.avsenderMottaker() = AvsenderMottaker(fødselsnummer())
-    private fun BrukerDTO.fødselsnummer() =
+    private fun AvsenderMottakerDTO.tilAvsenderMottaker() = AvsenderMottaker(tilFnr())
+    private fun BrukerDTO.tilFnr() =
         with(this) {
             when(type) {
-                AKTOERID -> fødselsnummer(id)
+                AKTOERID -> tilFnr(id)
                 FNR -> Fødselsnummer(id)
                 else -> FIKTIVTFNR.also {
                     log.warn("IdType $type ikke støttet, bruker fiktivt FNR")
@@ -51,6 +51,6 @@ class JournalpostMapper(private val pdl: PDLClient) {
             }
         }
 
-    private fun fødselsnummer(aktørId: String) =
+    private fun tilFnr(aktørId: String) =
         pdl.fnr(AktørId(aktørId)) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId")
 }

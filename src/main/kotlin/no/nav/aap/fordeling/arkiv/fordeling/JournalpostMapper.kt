@@ -21,7 +21,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
            with(bruker) {
-               val fnr = fødselsnummer(this)
+               val fnr = fødselsnummer()
                Journalpost(tittel,
                        journalfoerendeEnhet,
                        journalpostId,
@@ -30,7 +30,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        behandlingstema,
                        fnr,
                        Bruker(fnr),
-                       avsenderMottaker(avsenderMottaker),  // kab være annerledes, derfor nytt oppslag
+                       avsenderMottaker.avsenderMottaker(),  // kab være annerledes, derfor nytt oppslag
                        kanal,
                        relevanteDatoer,
                        dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
@@ -38,9 +38,9 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun avsenderMottaker(dto: AvsenderMottakerDTO) = AvsenderMottaker(fødselsnummer(dto))
-        private fun fødselsnummer(dto: BrukerDTO) =
-        with(dto) {
+    private fun AvsenderMottakerDTO.avsenderMottaker() = AvsenderMottaker(fødselsnummer())
+    private fun BrukerDTO.fødselsnummer() =
+        with(this) {
             when(type) {
                 AKTOERID -> fødselsnummer(id)
                 FNR -> Fødselsnummer(id)

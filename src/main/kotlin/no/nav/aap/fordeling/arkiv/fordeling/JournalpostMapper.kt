@@ -27,9 +27,10 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        journalpostId,
                        journalstatus,
                        tema.lowercase(),
-                       behandlingstema, fnr,
+                       behandlingstema,
+                       fnr,
                        Bruker(fnr),
-                       tilBruker(avsenderMottaker),  // kab være annerledes, derfor oppslag
+                       avsenderMottaker(avsenderMottaker),  // kab være annerledes, derfor nytt oppslag
                        kanal,
                        relevanteDatoer,
                        dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
@@ -37,9 +38,8 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun tilBruker(dto: BrukerDTO) = Bruker(fødselsnummer(dto))
-
-    private fun fødselsnummer(dto: BrukerDTO) =
+    private fun avsenderMottaker(dto: BrukerDTO) = AvsenderMottaker(fødselsnummer(dto))
+        private fun fødselsnummer(dto: BrukerDTO) =
         with(dto) {
             when(type) {
                 AKTOERID -> fødselsnummer(id)

@@ -5,12 +5,13 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+
+typealias AvsenderMottaker = Bruker
 
 data class Journalpost(
         val tittel: String?,
@@ -21,7 +22,7 @@ data class Journalpost(
         val behandlingstema: String?,
         val fnr: Fødselsnummer,
         val bruker: Bruker?,
-        val avsenderMottager: Bruker?,
+        val avsenderMottager: AvsenderMottaker?,
         val kanal: String,
         val relevanteDatoer: Set<RelevantDato>,
         val dokumenter: Set<DokumentInfo>,

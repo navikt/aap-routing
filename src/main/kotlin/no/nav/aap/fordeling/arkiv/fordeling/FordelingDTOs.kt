@@ -3,6 +3,9 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
+
+typealias AvsenderMottakerDTO = BrukerDTO
 
 object FordelingDTOs {
 
@@ -30,7 +33,7 @@ object FordelingDTOs {
             val tema: String,
             val behandlingstema: String?,
             val bruker: BrukerDTO,
-            val avsenderMottaker: BrukerDTO,
+            val avsenderMottaker: AvsenderMottakerDTO,
             val kanal: String,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>,

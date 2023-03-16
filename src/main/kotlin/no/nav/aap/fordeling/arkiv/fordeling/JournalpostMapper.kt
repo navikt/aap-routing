@@ -38,7 +38,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun avsenderMottaker(dto: BrukerDTO) = AvsenderMottaker(fødselsnummer(dto))
+    private fun avsenderMottaker(dto: AvsenderMottakerDTO) = AvsenderMottaker(fødselsnummer(dto))
         private fun fødselsnummer(dto: BrukerDTO) =
         with(dto) {
             when(type) {

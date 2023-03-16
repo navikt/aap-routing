@@ -9,6 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.person.PDLClient
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -33,7 +34,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        avsenderMottaker.avsenderMottaker(),  // kab være annerledes, derfor nytt oppslag
                        kanal,
                        relevanteDatoer,
-                       dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
+                       dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
                        tilleggsopplysninger)
            }
        }

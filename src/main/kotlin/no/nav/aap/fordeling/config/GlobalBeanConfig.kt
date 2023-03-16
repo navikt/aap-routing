@@ -78,7 +78,7 @@ class GlobalBeanConfig(
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
-            if (nextInt(1, 5) == 1 && isDevOrLocal(env) && !it.url().host.contains("microsoftonline")) {
+            if (nextInt(1, 5) == 1 && isDevOrLocal(env)) {
                 with(WebClientResponseException(BAD_GATEWAY,
                         "Tvunget feil for request til ${it.url()}",
                         null,

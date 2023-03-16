@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 
@@ -19,7 +20,7 @@ class FordelingFactory(private val cfg: FordelingConfig, private val fordelere: 
     }
 
     fun isEnabled() = cfg.isEnabled
-    fun kanFordele(tema: String, status: String) = fordelerFor(tema) != INGEN_FORDELER
+    fun kanFordele(tema: String, status: String) = fordelerFor(tema) != INGEN_FORDELER && status == MOTTATT.name
 
     fun fordelerFor(tema: String) =
             fordelere

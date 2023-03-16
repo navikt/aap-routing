@@ -49,7 +49,7 @@ class FordelingHendelseKonsument(
         runCatching {
             faultInjecter.randomFeilHvisDev(this)
             val fordeler = factory.fordelerFor(h.tema())
-            log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler $fordeler")
+            log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler ${fordeler.javaClass.simpleName}")
 
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 

@@ -12,6 +12,7 @@ class Metrikker(private val registry: MeterRegistry) {
         .increment()
 
     companion object {
+        const val FORDELINGTS = "jper"
         const val TITTEL = "tittel"
         const val FORDELINGSTYPE = "type"
         const val KANAL = "kanal"

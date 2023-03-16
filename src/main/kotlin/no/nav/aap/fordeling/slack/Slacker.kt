@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.slack
 import com.slack.api.Slack
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
+import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import org.slf4j.LoggerFactory.*
@@ -23,8 +24,15 @@ class Slacker(private val cfg: SlackConfig, private val env: Environment) {
             feil(melding)
         }
         else Unit
+
+    fun jippiHvisDev(melding: String) =
+        if (isDevOrLocal(env)) {
+            jippi(melding)
+        }
+        else Unit
     fun ok(melding: String) = melding("$OK$melding")
     fun feil(melding: String) = melding("$ERROR$melding")
+    fun jippi(melding: String) = melding("$ROCKET$melding")
 
     private fun melding(melding: String) =
         with(cfg) {

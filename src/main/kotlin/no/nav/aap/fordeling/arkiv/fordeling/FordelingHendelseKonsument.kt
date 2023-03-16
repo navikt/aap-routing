@@ -6,17 +6,19 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
-import no.nav.boot.conditionals.EnvUtil
 import no.nav.boot.conditionals.EnvUtil.isProd
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import okhttp3.internal.format
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -29,7 +31,7 @@ import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
-        private val fordeler: FordelingTemaDelegator,
+        private val factory: FordelingFactory,
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
@@ -53,17 +55,28 @@ class FordelingHendelseKonsument(
             log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
+
+
             lagMetrikker(jp)
             if (isProd(env)) {
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }
+            val fordeler = factory.fordelerFor(jp.tema).also {
+                log.info("Fordeler for ${jp.tema} er $it")
+            }
+            /*
+          if (fnr == null)
+            fordeler.fordelManuelt(jp, FORDELINGSENHET)
+
+          else */
+
             jp.run {
-                if (fordeler.isEnabled() && jp.status == MOTTATT) {
+                if (factory.isEnabled() && jp.status == MOTTATT) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {
                         with("${msg()} ($fnr)") {
                             log.info(this)
-                            slack.okHvisDev(this)
+                            slack.jippiHvisDev(this)
                         }
                     }
                 }
@@ -86,7 +99,7 @@ class FordelingHendelseKonsument(
         val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort",
                     ignoreCase = true)) "Meldekort"
         else jp.hovedDokumentBrevkode
-        metrikker.inc("jper", TEMA, jp.tema, TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
+        metrikker.inc(FORDELINGTS, TEMA, jp.tema, TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
     }
 
     @DltHandler

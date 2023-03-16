@@ -48,8 +48,7 @@ class AAPFordeler(
             }
         }.getOrElse {
             if (it !is ManuellFordelingException) {
-                log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt",
-                        it)
+                log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
                 manuell.fordel(jp, enhet)
             }
             else {

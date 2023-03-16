@@ -56,7 +56,6 @@ class FordelingHendelseKonsument(
             faultInjecter.randomFeilHvisDev(this)
             jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
-
             lagMetrikker(jp)
             if (isProd(env)) {
                 log.info("return etter Journalpost $jp")

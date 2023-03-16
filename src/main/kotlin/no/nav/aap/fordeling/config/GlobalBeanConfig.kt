@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.micrometer.core.instrument.MeterRegistry
 import io.netty.handler.logging.LogLevel.*
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -69,7 +68,7 @@ class GlobalBeanConfig(
     }
 
     @Bean
-    fun webClientCustomizer(client: HttpClient, registry: MeterRegistry) =
+    fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))

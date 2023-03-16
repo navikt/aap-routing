@@ -44,9 +44,8 @@ class JournalpostMapper(private val pdl: PDLClient) {
             when(type) {
                 AKTOERID -> fødselsnummer(id)
                 FNR -> Fødselsnummer(id)
-                else -> {
+                else -> FIKTIVTFNR.also {
                     log.warn("IdType $type ikke støttet, bruker fiktivt FNR")
-                    FIKTIVTFNR
                 }
             }
         }

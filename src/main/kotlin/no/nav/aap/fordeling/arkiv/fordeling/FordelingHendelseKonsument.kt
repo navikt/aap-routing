@@ -60,7 +60,8 @@ class FordelingHendelseKonsument(
 
             if (jp == EMPTY) {
                 log.info("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
-               // fordeler.fordelManuelt(jp, FORDELINGSENHET)
+               // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
+                return
             }
 
             if (isProd(env)) {

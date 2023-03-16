@@ -28,7 +28,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        tilBruker(avsenderMottaker),
                        kanal,
                        relevanteDatoer,
-                       dokumenter,
+                       dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
                        tilleggsopplysninger)
            }
        }

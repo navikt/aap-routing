@@ -58,14 +58,14 @@ class FordelingHendelseKonsument(
             }
 
             if (jp.fnr == FNRIKKESATT) {
-                log.info("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
+                log.warn("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
 
             if (env.isProd()) {
                 lagMetrikker(jp)
-                log.info("return etter Journalpost $jp")
+                log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig
             }
 

@@ -9,6 +9,7 @@ import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
 import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
@@ -46,8 +47,9 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            log.info("Fordeler journalpost ${h.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
+            val fordeler = factory.fordelerFor(h.tema())
+            log.info("Fordeler journalpost ${h.journalpostId} med tema ${h.tema()} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang med fordeler $fordeler")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
@@ -58,15 +60,10 @@ class FordelingHendelseKonsument(
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }
-            val fordeler = factory.fordelerFor(h.temaNytt.lowercase()).also {
-                log.info("Fordeler for ${h.temaNytt.lowercase()} er $it")
-            }
-            /*
-          if (fnr == null)
+
+          if (jp.fnr == null) {  // TODO må fikse dette
             fordeler.fordelManuelt(jp, FORDELINGSENHET)
-
-          else */
-
+          }
             jp.run {
                 if (factory.isEnabled() && status == MOTTATT) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {
@@ -105,4 +102,5 @@ class FordelingHendelseKonsument(
             slack.feil(this)
         }
     }
+    private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 }

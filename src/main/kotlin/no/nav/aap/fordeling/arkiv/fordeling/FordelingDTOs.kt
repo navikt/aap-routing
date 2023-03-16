@@ -6,6 +6,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 
 object FordelingDTOs {
 
+    val FNRIKKESATT = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
+
     data class FordelingResultat(val fordelingstype: FordelingType, val msg: String, val brevkode: String, val journalpostId: String = "0") {
         fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
         enum class FordelingType {

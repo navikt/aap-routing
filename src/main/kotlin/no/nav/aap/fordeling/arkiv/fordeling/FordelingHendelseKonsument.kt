@@ -2,15 +2,14 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FNRIKKESATT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Companion.EMPTY
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
 import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
@@ -58,7 +57,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            if (jp == EMPTY) {
+            if (jp.fnr == FNRIKKESATT) {
                 log.info("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return

@@ -84,7 +84,9 @@ class AAPFordeler(
                 metrikker.inc(FORDELINGTS, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
             }
 
-        } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost")
+        } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost").also {
+            log.warn(it.message,it)
+        }
 }
 
 class ArenaSakException(msg: String) : RuntimeException(msg)

@@ -9,7 +9,6 @@ import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
 import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
@@ -18,7 +17,6 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.boot.conditionals.EnvUtil.isProd
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import okhttp3.internal.format
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -46,23 +44,22 @@ class FordelingHendelseKonsument(
             backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             autoCreateTopics = "false")
-    fun listen(
-            hendelse: JournalfoeringHendelseRecord,
-            @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?,
-            @Header(RECEIVED_TOPIC) topic: String) {
-        lateinit var jp: Journalpost
+    fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            log.info("Fordeler journalpost ${hendelse.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
+            log.info("Fordeler journalpost ${h.journalpostId} mottatt på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             faultInjecter.randomFeilHvisDev(this)
-            jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
-
-            lagMetrikker(jp)
+            val jp = arkiv.hentJournalpost("${h.journalpostId}")
+            if (jp == null)  {
+                log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
+                return
+            }
             if (isProd(env)) {
+                lagMetrikker(jp)
                 log.info("return etter Journalpost $jp")
                 return  // TODO Midlertidig
             }
-            val fordeler = factory.fordelerFor(jp.tema).also {
-                log.info("Fordeler for ${jp.tema} er $it")
+            val fordeler = factory.fordelerFor(h.temaNytt.lowercase()).also {
+                log.info("Fordeler for ${h.temaNytt.lowercase()} er $it")
             }
             /*
           if (fnr == null)
@@ -71,7 +68,7 @@ class FordelingHendelseKonsument(
           else */
 
             jp.run {
-                if (factory.isEnabled() && jp.status == MOTTATT) {
+                if (factory.isEnabled() && status == MOTTATT) {
                     fordeler.fordel(this, enhet.navEnhet(this)).run {
                         with("${msg()} ($fnr)") {
                             log.info(this)
@@ -80,11 +77,11 @@ class FordelingHendelseKonsument(
                     }
                 }
                 else {
-                    log.info("Ingen fordeling av $jp, set fordeling:enabled;true for aktivering")
+                    log.info("Ingen fordeling av $journalpostId, enten disabled eller allerede endelig journalført")
                 }
             }
         }.onFailure {
-            with("Fordeling av journalpost ${hendelse.journalpostId} $jp feilet for ${n?.let { "$it." } ?: "1."} gang") {
+            with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang") {
                 log.warn(this, it)
                 slack.feil("$this (cluster: ${currentCluster().name.lowercase()}). (${it.message})")
             }

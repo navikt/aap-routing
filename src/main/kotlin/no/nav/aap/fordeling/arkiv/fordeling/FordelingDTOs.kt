@@ -88,7 +88,7 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val fnr: Fødselsnummer)
+        data class Bruker(val id: String)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

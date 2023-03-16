@@ -9,40 +9,48 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerD
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.fordeling.person.PDLClient
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class JournalpostMapper(private val pdl: PDLClient) {
 
+    private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
+
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
-           with(tilBruker(bruker)) {
-               Journalpost(tittel,
-                       journalfoerendeEnhet,
-                       journalpostId,
-                       journalstatus,
-                       tema.lowercase(),
-                       behandlingstema,
-                       fnr,
-                       this,
-                       tilBruker(avsenderMottaker),
-                       kanal,
-                       relevanteDatoer,
-                       dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
-                       tilleggsopplysninger)
+           with(bruker) {
+               fødselsnummer(this)?.let {
+                   Journalpost(tittel,
+                           journalfoerendeEnhet,
+                           journalpostId,
+                           journalstatus,
+                           tema.lowercase(),
+                           behandlingstema,
+                           it,
+                           tilBruker(this),
+                           tilBruker(avsenderMottaker),
+                           kanal,
+                           relevanteDatoer,
+                           dokumenter.toSortedSet(compareBy{it.dokumentInfoId}),
+                           tilleggsopplysninger)
+               }
            }
        }
 
-    fun tilBruker(dto: BrukerDTO) = Bruker(tilFnr(dto))
+    fun tilBruker(dto: BrukerDTO) = Bruker(dto.id)
 
-    private fun tilFnr(dto: BrukerDTO) =
+    private fun fødselsnummer(dto: BrukerDTO) =
         with(dto) {
             when(type) {
-                AKTOERID -> tilFnr(id)
+                AKTOERID -> fødselsnummer(id)
                 FNR -> Fødselsnummer(id)
-                else -> throw IllegalStateException("IdType $type ikke støttet")
+                else -> {
+                    log.warn("IdType $type ikke støttet")
+                    null
+                }
             }
         }
-    private fun tilFnr(aktørId: String) =
+    private fun fødselsnummer(aktørId: String) =
         pdl.fnr(AktørId(aktørId)) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId")
 }

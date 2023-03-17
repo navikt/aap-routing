@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import com.fasterxml.jackson.annotation.JsonValue
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -97,7 +98,7 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val id: Fødselsnummer)
+        data class Bruker(@JsonValue val id: Fødselsnummer)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

@@ -17,7 +17,8 @@ object FordelingDTOs {
             AUTOMATISK,
             MANUELL_JOURNALFØRING,
             MANUELL_FORDELING,
-            INGEN
+            INGEN,
+            FAILED
         }
 
         companion object {

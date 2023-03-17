@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import io.micrometer.core.instrument.MeterRegistry
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
@@ -19,6 +20,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.core.MicrometerConsumerListener
 import org.springframework.kafka.listener.ContainerProperties.*
 import org.springframework.kafka.listener.ContainerProperties.AckMode.*
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
@@ -43,15 +45,18 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, m: Metrikker,delegator: FordelingFactory) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties, registry: MeterRegistry, delegator: FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
-            consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
+            consumerFactory = DefaultKafkaConsumerFactory<String?, JournalfoeringHendelseRecord?>(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
                     with(it.value()) {
                         !(delegator.kanFordele(temaNytt,journalpostStatus))
                     }
                 }
             })
+                .apply {
+                    addListener(MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry))
+                }
             containerProperties.ackMode = RECORD
         }
 

@@ -52,7 +52,7 @@ class AAPFordeler(
                 manuell.fordel(jp, enhet)
             }
             else {
-                log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet", it)
+                log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
                 throw it
             }
         }

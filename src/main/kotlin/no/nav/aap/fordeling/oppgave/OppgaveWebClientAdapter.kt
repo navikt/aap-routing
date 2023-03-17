@@ -36,7 +36,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .bodyToMono<Any>()// TODO?
                 .retryWhen(cf.retrySpec(log))
                 .doOnSuccess { log.info("Opprett oppgave fra $data OK. Respons $it") }
-                .doOnError { t -> log.warn("Opprett oppgave fra $data  feilet", t) }
+                .doOnError { t -> log.warn("Opprett oppgave fra $data feilet (${t.message})", t) }
                 .block() ?: throw IntegrationException("Null respons fra opprett oppgave fr $data")
         }
         else {

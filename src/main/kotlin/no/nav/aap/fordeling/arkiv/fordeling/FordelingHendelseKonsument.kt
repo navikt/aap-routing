@@ -2,10 +2,13 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
+import no.nav.aap.fordeling.config.Metrikker.Companion
 import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
 import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
 import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
 import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
@@ -19,6 +22,7 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import org.springframework.boot.actuate.integration.IntegrationGraphEndpoint
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -106,7 +110,7 @@ class FordelingHendelseKonsument(
         val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort",
                     ignoreCase = true)) "Meldekort"
         else jp.hovedDokumentBrevkode
-        metrikker.inc(FORDELINGTS, TEMA, jp.tema, TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
+        metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
     }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 

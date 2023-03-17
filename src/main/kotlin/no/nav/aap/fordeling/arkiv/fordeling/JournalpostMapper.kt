@@ -46,11 +46,11 @@ class JournalpostMapper(private val pdl: PDLClient) {
                 AKTOERID -> tilFnr(AktørId(id),journalpostId)
                 FNR -> Fødselsnummer(id)
                 else -> FIKTIVTFNR.also {
-                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for id $id, type $type  ($kind) for journalpost $journalpostId")
+                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for $kind med id $id, type $type i journalpost $journalpostId")
                 }
             }
         }
 
     private fun tilFnr(aktørId: AktørId,journalpostId: String) =
-        pdl.fnr(aktørId) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId for journalpost $journalpostId")
+        pdl.fnr(aktørId) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId i journalpost $journalpostId")
 }

@@ -22,6 +22,7 @@
     </appender>
     <springProfile name="dev">
         <logger name="no.nav.aap" level="trace"/>
+        <logger name="reactor.netty.http.client.httpclient" level="trace" />
         <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="warn" />
         <logger name="io.confluent.kafka.serializers.KafkaAvroSerializerConfig" level="warn" />
         <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="warn" />

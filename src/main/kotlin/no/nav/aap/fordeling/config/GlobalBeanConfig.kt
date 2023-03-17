@@ -108,11 +108,11 @@ class GlobalBeanConfig(
 
     @ConditionalOnNotProd
     @Bean
-    fun notProdHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
+    fun notProdHttpClient() = HttpClient.create().wiretap("reactor.netty.http.client.httpclient", TRACE, TEXTUAL)
 
     @ConditionalOnProd
     @Bean
-    fun prodHttpClient() = HttpClient.create()
+    fun prodHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
 
     @Bean
     fun configMatcher() =

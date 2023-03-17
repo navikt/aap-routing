@@ -35,7 +35,6 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.HttpStatus.*
@@ -159,13 +158,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Component
-    class FaultInjecter(private val env: Environment) {
+    class FaultInjecter{
 
-        fun randomFeilForClusters(component: Any, vararg clusters: Cluster = arrayOf(DEV_GCP)) = env.randomFeilForClusters(component, *clusters)
+        fun randomFeilForClusters(component: Any, vararg clusters: Cluster = arrayOf(DEV_GCP)) = randomFeilIn(component, *clusters)
 
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
-            private fun Environment.randomFeilForClusters(component: Any, vararg clusters: Cluster) =
+            private fun randomFeilIn(component: Any, vararg clusters: Cluster) =
                 if (currentCluster() in clusters) {
                     if (nextInt(1,5) == 1) {
                         throw WebClientResponseException(BAD_GATEWAY, "Tvunget feil i ${currentCluster()} fra ${component.javaClass.simpleName}}", null, null, null, null).also {

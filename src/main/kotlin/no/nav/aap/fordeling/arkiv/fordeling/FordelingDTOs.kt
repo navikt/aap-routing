@@ -30,6 +30,7 @@ object FordelingDTOs {
             val journalfoerendeEnhet: String?,
             val journalpostId: String,
             val journalstatus: JournalStatus,
+            val journalpostType: JournalpostType,
             val tema: String,
             val behandlingstema: String?,
             val bruker: BrukerDTO?,
@@ -40,6 +41,10 @@ object FordelingDTOs {
             val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
 
+
+        enum class JournalpostType {
+            I,U,N
+        }
         data class Tilleggsopplysning(val nokkel: String, val verdi: String)
 
         enum class JournalStatus {

@@ -8,6 +8,7 @@ query journalpost($journalpostId: String!) {
       type
     }
     journalstatus
+        journalposttype
     tema
     behandlingstema
     kanal

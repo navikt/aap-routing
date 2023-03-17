@@ -5,6 +5,7 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalpostType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
@@ -18,6 +19,7 @@ data class Journalpost(
         val journalførendeEnhet: String?,
         val journalpostId: String,
         val status: JournalStatus,
+        val type: JournalpostType,
         val tema: String,
         val behandlingstema: String?,
         val fnr: Fødselsnummer,

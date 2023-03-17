@@ -31,6 +31,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                     journalfoerendeEnhet,
                     journalpostId,
                     journalstatus,
+                    journalpostType,
                     tema.lowercase(),
                     behandlingstema,
                     brukerFnr ?: FIKTIVTFNR,

@@ -19,7 +19,7 @@ object OppgaveDTOs {
 }
 
 fun Journalpost.opprettOppgaveData(oppgaveType: OppgaveType, tema: String, enhetNr: String? = null) =
-    OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi,tema)
+    OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi,tema.uppercase())
 
 enum class OppgaveType(val verdi: String) {
     JOURNALFØRINGSOPPGAVE("JFR"),

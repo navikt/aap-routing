@@ -17,14 +17,14 @@ class PDLWebClientAdapter(
         @Qualifier(PDL) val graphQL: GraphQLWebClient,
         cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
-    @Retry(name = GRAPHQL)
+    @Retry(name = PDL)
     fun fnr(aktørId: AktørId) = query<Identer>(graphQL, IDENT_QUERY, aktørId.asIdent())?.fnr()
 
-    @Retry(name = GRAPHQL)
+    @Retry(name = PDL)
     fun diskresjonskode(fnr: Fødselsnummer) =
         query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
-    @Retry(name = GRAPHQL)
+    @Retry(name = PDL)
     fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
 

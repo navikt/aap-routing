@@ -161,7 +161,7 @@ class GlobalBeanConfig(
             private fun Environment.randomFeilHvisDev(component: Any) =
                 if (isDev()) {
                     if (nextInt(1,5) == 1) {
-                        throw IntegrationException("Dette er en tvunget feil i dev fra ${component.javaClass.simpleName}").also {
+                        throw WebClientResponseException(BAD_GATEWAY, "Tvunget feil i dev fra ${component.javaClass.simpleName}}", null, null, null, null).also {
                             log.warn(it.message)
                         }
                     }

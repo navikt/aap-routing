@@ -20,33 +20,35 @@ class JournalpostMapper(private val pdl: PDLClient) {
     private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
 
     fun tilJournalpost(dto: JournalpostDTO) =
-       with(dto) {
-           with(bruker) {
-               val fnr = tilFnr(dto.journalpostId,"'bruker'")
-               Journalpost(tittel,
-                       journalfoerendeEnhet,
-                       journalpostId,
-                       journalstatus,
-                       tema.lowercase(),
-                       behandlingstema,
-                       fnr,
-                       Bruker(fnr),
-                       avsenderMottaker.tilAvsenderMottaker(dto.journalpostId),  // kab være annerledes, derfor nytt oppslag
-                       kanal,
-                       relevanteDatoer,
-                       dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
-                       tilleggsopplysninger)
-           }
-       }
+        with(dto) {
+            val brukerFnr = bruker?.let {
+                it.tilFnr(journalpostId,"'bruker'", FIKTIVTFNR)
+            }
+            val avsenderMottakerFnr = avsenderMottaker?.let { // kab være annerledes, derfor nytt oppslag
+                it.tilFnr(journalpostId,"'avsenderMottaker'")
+            }
+            Journalpost(tittel,
+                    journalfoerendeEnhet,
+                    journalpostId,
+                    journalstatus,
+                    tema.lowercase(),
+                    behandlingstema,
+                    brukerFnr ?: FIKTIVTFNR,
+                    brukerFnr?.let { Bruker(brukerFnr) },
+                    avsenderMottakerFnr?.let { AvsenderMottaker(avsenderMottakerFnr) },
+                    kanal,
+                    relevanteDatoer,
+                    dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
+                    tilleggsopplysninger)
+        }
 
-    private fun AvsenderMottakerDTO.tilAvsenderMottaker(journalpostId: String) = AvsenderMottaker(tilFnr(journalpostId,"'avsenderMottaker'"))
-    private fun BrukerDTO.tilFnr(journalpostId: String, kind: String) =
+    private fun BrukerDTO.tilFnr(journalpostId: String, kind: String, defaultValue: Fødselsnummer? = null) =
         with(this) {
             when(type) {
                 AKTOERID -> tilFnr(AktørId(id),journalpostId)
                 FNR -> Fødselsnummer(id)
-                else -> FIKTIVTFNR.also {
-                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for $kind med id $id, type $type i journalpost $journalpostId")
+                else -> defaultValue.also {
+                    log.warn("IdType $type ikke støttet, bruker default verdi $defaultValue for $kind med id $id, type $type i journalpost $journalpostId")
                 }
             }
         }

@@ -22,7 +22,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
            with(bruker) {
-               val fnr = tilFnr(dto.journalpostId)
+               val fnr = tilFnr(dto.journalpostId,"'bruker'")
                Journalpost(tittel,
                        journalfoerendeEnhet,
                        journalpostId,
@@ -39,14 +39,14 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun AvsenderMottakerDTO.tilAvsenderMottaker(journalpostId: String) = AvsenderMottaker(tilFnr(journalpostId))
-    private fun BrukerDTO.tilFnr(journalpostId: String) =
+    private fun AvsenderMottakerDTO.tilAvsenderMottaker(journalpostId: String) = AvsenderMottaker(tilFnr(journalpostId,"'avsenderMottaker'"))
+    private fun BrukerDTO.tilFnr(journalpostId: String, kind: String) =
         with(this) {
             when(type) {
                 AKTOERID -> tilFnr(AktørId(id),journalpostId)
                 FNR -> Fødselsnummer(id)
                 else -> FIKTIVTFNR.also {
-                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for $this for journalpost $journalpostId")
+                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for id $id, type $type  ($kind) for journalpost $journalpostId")
                 }
             }
         }

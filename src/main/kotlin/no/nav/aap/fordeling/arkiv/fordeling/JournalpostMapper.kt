@@ -22,7 +22,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
     fun tilJournalpost(dto: JournalpostDTO) =
        with(dto) {
            with(bruker) {
-               val fnr = tilFnr()
+               val fnr = tilFnr(dto.journalpostId)
                Journalpost(tittel,
                        journalfoerendeEnhet,
                        journalpostId,
@@ -31,7 +31,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                        behandlingstema,
                        fnr,
                        Bruker(fnr),
-                       avsenderMottaker.tilAvsenderMottaker(),  // kab være annerledes, derfor nytt oppslag
+                       avsenderMottaker.tilAvsenderMottaker(dto.journalpostId),  // kab være annerledes, derfor nytt oppslag
                        kanal,
                        relevanteDatoer,
                        dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
@@ -39,18 +39,18 @@ class JournalpostMapper(private val pdl: PDLClient) {
            }
        }
 
-    private fun AvsenderMottakerDTO.tilAvsenderMottaker() = AvsenderMottaker(tilFnr())
-    private fun BrukerDTO.tilFnr() =
+    private fun AvsenderMottakerDTO.tilAvsenderMottaker(journalpostId: String) = AvsenderMottaker(tilFnr(journalpostId))
+    private fun BrukerDTO.tilFnr(journalpostId: String) =
         with(this) {
             when(type) {
-                AKTOERID -> tilFnr(id)
+                AKTOERID -> tilFnr(AktørId(id),journalpostId)
                 FNR -> Fødselsnummer(id)
                 else -> FIKTIVTFNR.also {
-                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR")
+                    log.warn("IdType $type ikke støttet, bruker fiktivt FNR for $this for journalpost $journalpostId")
                 }
             }
         }
 
-    private fun tilFnr(aktørId: String) =
-        pdl.fnr(AktørId(aktørId)) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId")
+    private fun tilFnr(aktørId: AktørId,journalpostId: String) =
+        pdl.fnr(aktørId) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId for journalpost $journalpostId")
 }

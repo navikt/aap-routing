@@ -79,12 +79,7 @@ class GlobalBeanConfig(
     private fun faultInjectingRequestFilterFunction(env: Environment) =
         ofRequestProcessor {
             if (nextInt(1, 5) == 1 && env.isDev()) {
-                with(WebClientResponseException(BAD_GATEWAY,
-                        "Tvunget feil for request til ${it.url()}",
-                        null,
-                        null,
-                        null,
-                        null)) {
+                with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil for request til ${it.url()}", null, null, null, null)) {
                     log.info(message, this)
                     Mono.error(this)
                 }

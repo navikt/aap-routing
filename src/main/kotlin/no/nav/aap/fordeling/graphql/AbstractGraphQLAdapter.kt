@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.graphql
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.*
 import org.springframework.web.reactive.function.client.WebClient
 
@@ -11,7 +10,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
 
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, String>) =
         runCatching {
-            graphQL.post(query, args, T::class.java).block().also {
+            graphQL.post(query, args, T::class.java).log().block().also {
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
             }
         }.getOrElse {

@@ -44,7 +44,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     private fun BrukerDTO.tilFnr(journalpostId: String, kind: String, defaultValue: Fødselsnummer? = null) =
         with(this) {
-            log.info("Mapper til fnr fra $this")
+            log.info("Mapper til fnr fra $this for journalpost $journalpostId")
             when(type) {
                 AKTOERID -> id?.let { tilFnr(AktørId(it),journalpostId) }
                 FNR -> id?.let { Fødselsnummer(it) }

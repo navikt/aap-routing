@@ -21,7 +21,7 @@
         </encoder>
     </appender>
     <springProfile name="dev">
-        <logger name="reactor.netty.http.client" level="trace" />
+        <logger name="reactor.netty.http.client" level="info" />
         <logger name="no.nav.aap" level="trace"/>
         <logger name="webClientLogger" level="trace" />
         <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="warn" />

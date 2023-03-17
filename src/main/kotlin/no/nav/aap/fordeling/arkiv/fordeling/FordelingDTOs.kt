@@ -9,7 +9,6 @@ typealias AvsenderMottakerDTO = BrukerDTO
 
 object FordelingDTOs {
 
-    val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
 
     data class FordelingResultat(val fordelingstype: FordelingType, val msg: String, val brevkode: String, val journalpostId: String = "0") {
         fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"

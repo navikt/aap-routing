@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IntegrationException
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
@@ -19,14 +18,13 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
 
+    private val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
+
+
     fun tilJournalpost(dto: JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker?.let {
-                it.tilFnr(journalpostId,"'bruker'", FIKTIVTFNR)
-            }
-            val avsenderMottakerFnr = avsenderMottaker?.let { // kab være annerledes, derfor nytt oppslag
-                it.tilFnr(journalpostId,"'avsenderMottaker'")
-            }
+            val brukerFnr = bruker?.tilFnr(journalpostId,"'bruker'")
+            val avsenderMottakerFnr = avsenderMottaker?.tilFnr(journalpostId,"'avsenderMottaker'")
             Journalpost(tittel,
                     journalfoerendeEnhet,
                     journalpostId,

@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
@@ -56,8 +55,8 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            if (jp.fnr == FIKTIVTFNR) {
-                log.warn("Ingen brukerid er satt på journalposten, går direkte til manuell journalføring (snart)")
+            if (jp.bruker == null) {
+                log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }

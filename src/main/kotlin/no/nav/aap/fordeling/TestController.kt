@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
-class DevController(
+class TestController(
         private val fordeler: AAPFordeler,
         private val pdlAdapter: PDLWebClientAdapter,
         private val egenClient: EgenAnsattClient,

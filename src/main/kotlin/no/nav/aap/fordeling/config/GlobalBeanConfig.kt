@@ -73,7 +73,7 @@ class GlobalBeanConfig(
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingRequestFilterFunction(env))
+       //         .filter(faultInjectingRequestFilterFunction(env))
         }
 
     private fun faultInjectingRequestFilterFunction(env: Environment) =

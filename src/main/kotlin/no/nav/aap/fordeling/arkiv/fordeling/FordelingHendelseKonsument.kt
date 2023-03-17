@@ -61,8 +61,9 @@ class FordelingHendelseKonsument(
                 return
             }
 
+            lagMetrikker(jp)
+
             if (env.isProd()) {
-                lagMetrikker(jp)
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig
             }

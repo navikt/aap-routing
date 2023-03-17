@@ -11,6 +11,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
@@ -31,7 +32,7 @@ class TestController(
         private val arkivClient: ArkivClient,
         private val oppgaveClient: OppgaveClient,
         private val arenaAdapter: ArenaWebClientAdapter,
-        private val orgAdapter: NavEnhetWebClientAdapter) {
+        private val orgClient: NavEnhetClient) {
 
     private val log = getLogger(javaClass)
 
@@ -64,7 +65,7 @@ class TestController(
     fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erSkjermet(fnr)
 
     @GetMapping("aktiveenheter")
-    fun aktiveEnheter() = orgAdapter.aktiveEnheter()
+    fun aktiveEnheter(@RequestParam enhetNr: String) = orgClient.erAktiv(enhetNr)
 
     @GetMapping("diskresjonskode")
     fun diskresjonskode(@RequestParam fnr: Fødselsnummer) = pdlAdapter.diskresjonskode(fnr)

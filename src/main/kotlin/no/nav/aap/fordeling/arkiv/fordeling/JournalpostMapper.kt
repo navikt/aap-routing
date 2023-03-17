@@ -44,9 +44,10 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     private fun BrukerDTO.tilFnr(journalpostId: String, kind: String, defaultValue: Fødselsnummer? = null) =
         with(this) {
+            log.info("Mapper til fnr fra $this")
             when(type) {
-                AKTOERID -> tilFnr(AktørId(id),journalpostId)
-                FNR -> Fødselsnummer(id)
+                AKTOERID -> id?.let { tilFnr(AktørId(it),journalpostId) }
+                FNR -> id?.let { Fødselsnummer(it) }
                 else -> defaultValue.also {
                     log.warn("IdType $type ikke støttet, bruker default verdi $defaultValue for $kind med id $id, type $type i journalpost $journalpostId")
                 }

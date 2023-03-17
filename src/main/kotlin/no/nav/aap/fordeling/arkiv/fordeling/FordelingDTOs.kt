@@ -97,7 +97,7 @@ object FordelingDTOs {
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 
-        data class BrukerDTO(val id: String, val type: BrukerType) {
+        data class BrukerDTO(val id: String?, val type: BrukerType) {
             enum class BrukerType {
                 FNR,
                 AKTOERID,

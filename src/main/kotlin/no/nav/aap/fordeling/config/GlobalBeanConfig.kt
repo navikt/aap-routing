@@ -3,11 +3,17 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
+import io.netty.handler.timeout.ReadTimeoutHandler
+import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
+import java.time.Duration.ofSeconds
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.*
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.api.felles.error.IntegrationException
@@ -104,6 +110,11 @@ class GlobalBeanConfig(
     @ConditionalOnNotProd
     @Bean
     fun notProdHttpClient() = HttpClient.create().wiretap("webClientLogger", TRACE, TEXTUAL)
+        .doOnConnected {
+            it.addHandlerFirst(WriteTimeoutHandler(90, SECONDS))
+        }
+        .responseTimeout(ofSeconds(90))
+        .option(CONNECT_TIMEOUT_MILLIS, SECONDS.toMillis(10).toInt())
 
     @ConditionalOnProd
     @Bean

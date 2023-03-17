@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
@@ -30,10 +31,13 @@ data class Journalpost(
         val dokumenter: Set<DokumentInfo>,
         val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
+    @JsonIgnore
     val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Ukjent brevkode"
 
+    @JsonIgnore
     val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: "Ukjent tittel"
 
+    @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
 
     fun opprettArenaOppgaveData(enhet: NAVEnhet) =

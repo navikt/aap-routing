@@ -23,8 +23,8 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     fun tilJournalpost(dto: JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker?.tilFnr(journalpostId,"'bruker'")
-            val avsenderMottakerFnr = avsenderMottaker?.tilFnr(journalpostId,"'avsenderMottaker'")
+            val brukerFnr = bruker?.fødselsnummer(journalpostId,"'bruker'")
+            val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId,"'avsenderMottaker'")
             Journalpost(tittel,
                     journalfoerendeEnhet,
                     journalpostId,
@@ -41,17 +41,18 @@ class JournalpostMapper(private val pdl: PDLClient) {
                     tilleggsopplysninger)
         }
 
-    private fun BrukerDTO.tilFnr(journalpostId: String, kind: String, defaultValue: Fødselsnummer? = null) =
+    private fun BrukerDTO.fødselsnummer(journalpostId: String, kind: String) =
         with(this) {
-            when(type) {
-                AKTOERID -> id?.let { tilFnr(AktørId(it),journalpostId) }
-                FNR -> id?.let { Fødselsnummer(it) }
-                else -> defaultValue.also {
-                    log.warn("IdType $type ikke støttet, bruker default verdi $defaultValue for $kind med id $id, type $type i journalpost $journalpostId")
+            id?.let {
+                when(type) {
+                    AKTOERID -> AktørId(it).fødselsnummer(journalpostId)
+                    FNR -> Fødselsnummer(it)
+                    else -> null.also {
+                        log.warn("IdType $type ikke støttet for $kind med id $it i journalpost $journalpostId")
+                    }
                 }
             }
         }
+    private fun AktørId.fødselsnummer(journalpostId: String) = pdl.fnr(this)?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
-    private fun tilFnr(aktørId: AktørId,journalpostId: String) =
-        pdl.fnr(aktørId) ?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $aktørId i journalpost $journalpostId")
-}
+  }

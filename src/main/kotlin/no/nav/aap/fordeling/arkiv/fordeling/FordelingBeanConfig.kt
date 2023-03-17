@@ -44,8 +44,13 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
+    @Bean
+    fun micrometerKafkaListener(registry: MeterRegistry)  =
+        MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry)
+
+
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, registry: MeterRegistry, delegator: FordelingFactory) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties, listener: MicrometerConsumerListener<String,JournalfoeringHendelseRecord>, delegator: FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory<String?, JournalfoeringHendelseRecord?>(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
@@ -55,7 +60,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
                 }
             })
                 .apply {
-                    addListener(MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry))
+                    addListener(listener)
                 }
             containerProperties.ackMode = RECORD
         }

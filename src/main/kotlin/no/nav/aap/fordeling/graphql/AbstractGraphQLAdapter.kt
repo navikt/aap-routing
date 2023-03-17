@@ -10,7 +10,7 @@ abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig
 
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, String>) =
         runCatching {
-            graphQL.post(query, args, T::class.java).log().block().also {
+            graphQL.post(query, args, T::class.java).block().also {
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
             }
         }.getOrElse {

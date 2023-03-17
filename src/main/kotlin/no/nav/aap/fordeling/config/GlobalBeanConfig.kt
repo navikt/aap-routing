@@ -65,7 +65,7 @@ class GlobalBeanConfig(
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()
             .info(Info()
-                .title("AAP routng")
+                .title("AAP routing")
                 .description("Routing ala KRUT (bare bedre)")
                 .version(p.version)
                 .license(License()

@@ -14,7 +14,7 @@ data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient, val e
 
     fun navEnhet(jp: Journalpost) =
         jp.journalførendeEnhet?.let { e ->
-            if (enhet.erAktiv(e)) {
+            if (enhet.erAktiv(e,enhet.aktiveEnheter())) {
                 NAVEnhet(e).also { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er aktiv") }
             }
             else {

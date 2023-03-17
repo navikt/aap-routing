@@ -33,7 +33,6 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         ?.let { NAVEnhet(it.enhetNr) }
         ?: throw IntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
-    @Cacheable(NAVENHET)
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)

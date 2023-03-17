@@ -45,9 +45,8 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean
-    fun micrometerKafkaListener(registry: MeterRegistry)  =
+    fun micrometerConsumerListener(registry: MeterRegistry)  =
         MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry)
-
 
     @Bean(FORDELING)
     fun fordelingListenerContainerFactory(p: KafkaProperties, listener: MicrometerConsumerListener<String,JournalfoeringHendelseRecord>, delegator: FordelingFactory) =

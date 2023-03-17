@@ -65,7 +65,10 @@ class TestController(
     fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erSkjermet(fnr)
 
     @GetMapping("aktiveenheter")
-    fun aktiveEnheter(@RequestParam enhetNr: String) = orgClient.erAktiv(enhetNr)
+    fun aktiveEnheter() = orgClient.aktiveEnheter()
+
+    @GetMapping("eraktiv")
+    fun erAktiv(@RequestParam enhetNr: String) = orgClient.erAktiv(enhetNr,aktiveEnheter())
 
     @GetMapping("diskresjonskode")
     fun diskresjonskode(@RequestParam fnr: Fødselsnummer) = pdlAdapter.diskresjonskode(fnr)

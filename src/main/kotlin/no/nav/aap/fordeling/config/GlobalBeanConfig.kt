@@ -5,25 +5,23 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
-import io.netty.handler.timeout.ReadTimeoutHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.time.Duration.ofSeconds
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.*
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
-import no.nav.aap.util.EnvExtensions.isDev
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.*
+import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
-import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
 import no.nav.security.token.support.client.core.OAuth2ClientException
 import no.nav.security.token.support.client.core.http.OAuth2HttpClient
 import no.nav.security.token.support.client.core.http.OAuth2HttpRequest
@@ -55,9 +53,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
 
 @Configuration
-class GlobalBeanConfig(
-        @Value("\${spring.application.name}") private val applicationName: String,
-        private val env: Environment) {
+class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
@@ -79,13 +75,13 @@ class GlobalBeanConfig(
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingRequestFilterFunction(env))
+                .filter(faultInjectingRequestFilterFunction(DEV_GCP))
         }
 
-    private fun faultInjectingRequestFilterFunction(env: Environment) =
+    private fun faultInjectingRequestFilterFunction(vararg clusters: Cluster) =
         ofRequestProcessor {
-            if (nextInt(1, 5) == 1 && env.isDev()) {
-                with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil for request til ${it.url()}", null, null, null, null)) {
+            if (nextInt(1, 5) == 1 && currentCluster() in clusters) {
+                with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil i ${currentCluster()} for request til ${it.url()}", null, null, null, null)) {
                     log.info(message, this)
                     Mono.error(this)
                 }
@@ -165,14 +161,14 @@ class GlobalBeanConfig(
     @Component
     class FaultInjecter(private val env: Environment) {
 
-        fun randomFeilHvisDev(component: Any) = env.randomFeilHvisDev(component)
+        fun randomFeilForClusters(component: Any, vararg clusters: Cluster = arrayOf(DEV_GCP)) = env.randomFeilForClusters(component, *clusters)
 
         companion object {
             private val log = getLogger(FaultInjecter::class.java)
-            private fun Environment.randomFeilHvisDev(component: Any) =
-                if (isDev()) {
+            private fun Environment.randomFeilForClusters(component: Any, vararg clusters: Cluster) =
+                if (currentCluster() in clusters) {
                     if (nextInt(1,5) == 1) {
-                        throw WebClientResponseException(BAD_GATEWAY, "Tvunget feil i dev fra ${component.javaClass.simpleName}}", null, null, null, null).also {
+                        throw WebClientResponseException(BAD_GATEWAY, "Tvunget feil i ${currentCluster()} fra ${component.javaClass.simpleName}}", null, null, null, null).also {
                             log.warn(it.message)
                         }
                     }

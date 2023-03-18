@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling
 
-import no.nav.boot.conditionals.Cluster
-import no.nav.boot.conditionals.Cluster.Companion.isDev
 import no.nav.boot.conditionals.Cluster.Companion.profiler
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation

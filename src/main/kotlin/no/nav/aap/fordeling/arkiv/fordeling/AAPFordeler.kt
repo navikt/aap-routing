@@ -6,15 +6,15 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.config.Metrikker
-import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
-import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
-import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
-import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
+import no.nav.aap.fordeling.config.Metrikker.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.FORDELINGSTYPE
+import no.nav.aap.fordeling.config.Metrikker.FORDELINGTS
+import no.nav.aap.fordeling.config.Metrikker.KANAL
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.Metrics
 import org.springframework.stereotype.Component
 
 @Component
@@ -22,7 +22,7 @@ class AAPFordeler(
         private val arena: ArenaClient,
         private val arkiv: ArkivClient,
         private val manuell: AAPManuellFordeler,
-        private val metrikker: Metrikker) : Fordeler {
+        private val metrikker: Metrics) : Fordeler {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)

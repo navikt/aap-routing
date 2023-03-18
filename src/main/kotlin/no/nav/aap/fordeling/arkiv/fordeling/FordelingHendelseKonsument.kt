@@ -6,18 +6,17 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.Metrikker
-import no.nav.aap.fordeling.config.Metrikker.Companion.BREVKODE
-import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGSTYPE
-import no.nav.aap.fordeling.config.Metrikker.Companion.FORDELINGTS
-import no.nav.aap.fordeling.config.Metrikker.Companion.KANAL
-import no.nav.aap.fordeling.config.Metrikker.Companion.TITTEL
+import no.nav.aap.fordeling.config.Metrikker.BREVKODE
+import no.nav.aap.fordeling.config.Metrikker.FORDELINGSTYPE
+import no.nav.aap.fordeling.config.Metrikker.FORDELINGTS
+import no.nav.aap.fordeling.config.Metrikker.KANAL
+import no.nav.aap.fordeling.config.Metrikker.TITTEL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster.DEV_GCP
-import no.nav.boot.conditionals.Cluster.PROD_GCP
+import no.nav.aap.util.Metrics
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
@@ -37,7 +36,7 @@ class FordelingHendelseKonsument(
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
         private val faultInjecter: FaultInjecter,
-        private val metrikker: Metrikker,
+        private val metrikker: Metrics,
         private val env: Environment) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)

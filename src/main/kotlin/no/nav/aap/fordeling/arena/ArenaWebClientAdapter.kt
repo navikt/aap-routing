@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.Metrics
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*
@@ -16,8 +17,8 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
-    AbstractWebClientAdapter(webClient, cf) {
+class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig,metrikker: Metrics) :
+    AbstractWebClientAdapter(webClient, cf, metrikker = metrikker) {
 
     fun nyesteArenaSak(fnr: Fødselsnummer) =
         webClient.get()
@@ -25,7 +26,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .accept(APPLICATION_JSON)
             .retrieve()
             .bodyToMono<String>()
-            .retryWhen(cf.retrySpec(log))
+            .retryWhen(cf.retrySpec(log, metrikker = metrikker))
             .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
             .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet", t) }
             .block()
@@ -39,7 +40,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .bodyValue(data)
                 .retrieve()
                 .bodyToMono<ArenaOpprettetOppgave>()
-                .retryWhen(cf.retrySpec(log))
+                .retryWhen(cf.retrySpec(log, metrikker = metrikker))
                 .doOnSuccess { log.info("Arena opprettet oppgave OK. Respons $it") }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet (${t.message})", t) }
                 .block() ?: throw IntegrationException("Null respons for opprettelse av oppgave")

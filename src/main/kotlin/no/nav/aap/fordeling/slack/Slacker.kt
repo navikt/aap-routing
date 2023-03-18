@@ -5,28 +5,31 @@ import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
-import no.nav.boot.conditionals.EnvUtil.isDevOrLocal
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion.currentCluster
+import no.nav.boot.conditionals.Cluster.DEV_GCP
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class Slacker(private val cfg: SlackConfig, private val env: Environment) {
-    fun okHvisDev(melding: String) =
-        if (isDevOrLocal(env)) {
+class Slacker(private val cfg: SlackConfig) {
+
+    private val cluster = currentCluster()
+    fun okHvisCluster(melding: String, vararg clusters: Cluster = arrayOf(DEV_GCP)) =
+        if (cluster in clusters) {
             ok(melding)
         }
         else Unit
-    fun feilHvisDev(melding: String) =
-        if (isDevOrLocal(env)) {
+    fun feilHvisCluster(melding: String,vararg clusters: Cluster = arrayOf(DEV_GCP)) =
+        if (cluster in clusters) {
             feil(melding)
         }
         else Unit
 
-    fun jippiHvisDev(melding: String) =
-        if (isDevOrLocal(env)) {
+    fun jippiHvisCluster(melding: String,vararg clusters: Cluster = arrayOf(DEV_GCP)) =
+        if (cluster in clusters) {
             jippi(melding)
         }
         else Unit
@@ -40,7 +43,7 @@ class Slacker(private val cfg: SlackConfig, private val env: Environment) {
             if (enabled) {
                 runCatching {
                     with(slack.methods(token).chatPostMessage {
-                        it.channel(kanal).text(melding)
+                        it.channel(kanal).text(melding + " (${currentCluster().name.lowercase()}")
                     }) {
                         if (!isOk) {
                             LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")

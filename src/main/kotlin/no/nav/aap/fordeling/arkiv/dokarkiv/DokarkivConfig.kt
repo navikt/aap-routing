@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.arkiv.dokarkiv
 import java.net.URI
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.rest.AbstractRestConfig
-import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
@@ -16,7 +15,7 @@ class DokarkivConfig(
         @DefaultValue(DOK_PATH) val dokPath: String,
         @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
         @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled, DEFAULT) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun dokUri(b: UriBuilder, journalpostId: String, dokumentInfoId:String, variantFormat: VariantFormat) = b.path(dokPath).build(journalpostId,dokumentInfoId,variantFormat.name)
 

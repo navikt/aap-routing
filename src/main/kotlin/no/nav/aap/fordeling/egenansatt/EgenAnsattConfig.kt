@@ -15,7 +15,7 @@ class EgenAnsattConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
         @DefaultValue(SKJERMING_PATH) val path: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled, RetryConfig(2L,ofSeconds(5))) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled) {
 
     fun skjermetUri(b: UriBuilder) = b.path(path).build()
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"

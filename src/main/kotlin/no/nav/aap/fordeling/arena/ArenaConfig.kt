@@ -4,7 +4,6 @@ import java.net.URI
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.rest.AbstractRestConfig
-import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
 import org.springframework.web.util.UriBuilder
@@ -15,7 +14,7 @@ class ArenaConfig(
         @DefaultValue("true") enabled: Boolean,
         @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
         @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled, DEFAULT) {
+        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled) {
 
     fun nyesteSakUri(b: UriBuilder, fnr: Fødselsnummer) = b.path(nyesteSakPath).build(fnr.fnr)
     fun oppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()

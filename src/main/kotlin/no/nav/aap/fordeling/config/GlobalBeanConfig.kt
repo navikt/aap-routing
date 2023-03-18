@@ -78,20 +78,20 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingRequestFilterFunction(DEV_GCP))
+                .filter(chaosMonkeyRequestFilterFunction(DEV_GCP))
         }
 
-    private fun faultInjectingRequestFilterFunction(vararg clusters: Cluster) =
+    private fun chaosMonkeyRequestFilterFunction(vararg clusters: Cluster) =
         ofRequestProcessor {
             with(currentCluster) {
                 if (nextInt(1, 5) == 1 && this in clusters.asList() && it.url().host != "login.microsoftonline.com") {
-                    with(WebClientResponseException(BAD_GATEWAY, "Tvinger fram feil i $this for request til ${it.url()}", null, null, null, null)) {
+                    with(WebClientResponseException(BAD_GATEWAY, "Tvinger fram feil i $this for ${it.url()}", null, null, null, null)) {
                         log.info(message, this)
                         Mono.error(this)
                     }
                 }
                 else {
-                    log.trace("Tvinger IKKE fram feil i $this for ${it.url()} i $this")
+                    log.trace("Tvinger IKKE fram feil i $this for ${it.url()}")
                     Mono.just(it)
                 }
             }

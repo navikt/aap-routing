@@ -91,7 +91,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     }
                 }
                 else {
-                    log.trace("Tvinger IKKE fram feil for ${it.url()} i $this  (${clusters.asList()})")
+                    log.trace("Tvinger IKKE fram feil i $this for ${it.url()} i $this  (${clusters.asList()})")
                     Mono.just(it)
                 }
             }

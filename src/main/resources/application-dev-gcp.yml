@@ -21,3 +21,4 @@ chaos:
           latency-active: true
           exceptions-active: true
           kill-application-active: false
+          level: 5

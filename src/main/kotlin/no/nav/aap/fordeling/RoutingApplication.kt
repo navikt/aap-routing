@@ -17,11 +17,11 @@ class RoutingApplication
 
 fun main(args: Array<String>) {
     runApplication<RoutingApplication>(*args) {
-        if (isDev()) {
+     //   if (isDev()) {
             setAdditionalProfiles(*profiler() + "chaos-monkey")
-        }
+   /*     }
         else  {
             setAdditionalProfiles(*profiler())
-        }
+        } */
     }
 }

@@ -9,3 +9,23 @@ arena:
     enabled: false
 slack:
     kanal: C048CS5J3K4
+management:
+    endpoint:
+        chaosmonkey:
+            enabled: true
+chaos:
+    monkey:
+        apidoc:
+            enabled: true
+        enabled: true
+        watcher:
+            service: false
+            rest-controller: false
+            web-client: true
+            component: true
+        assaults:
+            latency-active: true
+            exceptions-active: true
+            kill-application-active: false
+            level: 5
+            watchedCustomServices:  no.nav.aap.fordeling.arkiv.fordeling.FordelingHendelseKonsument

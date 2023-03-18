@@ -2,7 +2,6 @@ fordeling:
     enabled: true
     topics:
         backoff: 2000
-debug: false
 management:
   endpoint:
     chaosmonkey:

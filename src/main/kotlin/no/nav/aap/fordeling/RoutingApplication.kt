@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling
 
+import no.nav.boot.conditionals.Cluster.Companion.isDev
 import no.nav.boot.conditionals.Cluster.Companion.profiler
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
@@ -15,11 +16,11 @@ class RoutingApplication
 
 fun main(args: Array<String>) {
     runApplication<RoutingApplication>(*args) {
-     //   if (isDev()) {
+       if (isDev()) {
             setAdditionalProfiles(*profiler() + "chaos-monkey")
-   /*     }
+       }
         else  {
             setAdditionalProfiles(*profiler())
-        } */
+        }
     }
 }

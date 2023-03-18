@@ -3,3 +3,10 @@ fordeling:
     topics:
         backoff: 2000
 debug: false
+chaos:
+    monkey:
+      enabled: true
+      watcher:
+          service: true
+      assaults:
+          latency-active: true

@@ -9,6 +9,8 @@ management:
         enabled: true
 chaos:
     monkey:
+      apidoc:
+        enabled: true
       enabled: true
       watcher:
           service: true

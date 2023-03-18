@@ -20,4 +20,4 @@ chaos:
       assaults:
           latency-active: true
           exceptions-active: true
-          kill-application-active: true
+          kill-application-active: false

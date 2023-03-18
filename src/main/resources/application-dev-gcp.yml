@@ -16,6 +16,7 @@ chaos:
           service: true
           rest-controller: true
           web-client: true
+          component: true
       assaults:
           latency-active: true
           exceptions-active: true

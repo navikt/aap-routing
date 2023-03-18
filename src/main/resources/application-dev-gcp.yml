@@ -14,11 +14,12 @@ chaos:
       enabled: true
       watcher:
           service: false
-          rest-controller: true
+          rest-controller: false
           web-client: true
-          component: false
+          component: true
       assaults:
           latency-active: true
           exceptions-active: true
           kill-application-active: false
           level: 5
+          watchedCustomServices:  no.nav.aap.fordeling.arkiv.fordeling.FordelingHendelseKonsument

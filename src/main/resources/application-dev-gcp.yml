@@ -10,9 +10,11 @@ management:
 chaos:
     monkey:
       apidoc:
-        enabled: true
+          enabled: true
       enabled: true
       watcher:
           service: true
+          rest-controller: true
+          web-client: true
       assaults:
           latency-active: true

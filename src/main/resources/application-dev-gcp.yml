@@ -13,10 +13,10 @@ chaos:
           enabled: true
       enabled: true
       watcher:
-          service: true
+          service: false
           rest-controller: true
           web-client: true
-          component: true
+          component: false
       assaults:
           latency-active: true
           exceptions-active: true

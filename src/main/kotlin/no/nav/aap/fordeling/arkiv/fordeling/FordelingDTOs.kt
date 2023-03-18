@@ -99,11 +99,11 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(@JsonValue val id: Fødselsnummer)
+        data class Bruker(@JsonValue val fnr: Fødselsnummer)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 
-        data class BrukerDTO(val id: String?, val type: BrukerType) {
+        data class BrukerDTO(val id: String?, val type: BrukerType?) {
             enum class BrukerType {
                 FNR,
                 AKTOERID,

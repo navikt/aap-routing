@@ -83,15 +83,17 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private fun faultInjectingRequestFilterFunction(vararg clusters: Cluster) =
         ofRequestProcessor {
-            if (nextInt(1, 5) == 1 && currentCluster() in clusters) {
-                with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil i ${currentCluster()} for request til ${it.url()}", null, null, null, null)) {
-                    log.info(message, this)
-                    Mono.error(this)
+            with(currentCluster) {
+                if (nextInt(1, 5) == 1 && this in clusters) {
+                    with(WebClientResponseException(BAD_GATEWAY, "Tvunget feil i $this for request til ${it.url()}", null, null, null, null)) {
+                        log.info(message, this)
+                        Mono.error(this)
+                    }
                 }
-            }
-            else {
-                log.trace("Tvinger IKKE fram  feil for ${it.url()}")
-                Mono.just(it)
+                else {
+                    log.trace("Tvinger IKKE fram feil for ${it.url()} i $this  ($clusters)")
+                    Mono.just(it)
+                }
             }
         }
 

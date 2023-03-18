@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: routing-alerts
+  labels:
+    team: aap
+    app: soknad-api
+  namespace: aap
+spec:
+  groups:
+    - name:  api-alerts
+      rules:
+       - alert: InstanceDown
+         expr: kube_deployment_status_replicas_unavailable{deployment="routing",job="kubernetes-service-endpoints"} > 0
+         for: 5m
+         annotations:
+           consequence:  "routing har utilgjengelige podder i aap {{env}}"
+           action: "kubectl describe pod -l app=routing -n aap` for events og `kubectl get pods -l app=routing -n aap` for å se feilende podder"
+         labels:
+          severity: critical
+       - alert: IntancesRestarting
+         expr: sum(increase(kube_pod_container_status_restarts_total{container=~"routing"}[5m])) by (container) > 2
+         for: 2m
+         annotations:
+          consequence: "routing i {{env}} har restartet flere ganger de siste 5 minuttene!"
+          action: "Se `kubectl describe pod routing` for events, og `kubectl logs routing` for logger"
+         labels:
+           severity: critical
+       -   alert: MissingMetrics
+           expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="routing",log_level=~"Error"}[10m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="routing"}[10m]))) > 15
+           for: 5m
+           annotations:
+             consequence: "routing rapporterer ingen metrikker i aap {{env}}"
+             action: "Sjekk om routing i aap er oppe"
+           labels:
+             severity: critical

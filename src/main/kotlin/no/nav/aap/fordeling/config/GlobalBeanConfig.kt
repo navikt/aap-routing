@@ -84,7 +84,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     private fun chaosMonkeyRequestFilterFunction(vararg clusters: Cluster) =
         ofRequestProcessor {
             with(currentCluster) {
-                if (nextInt(1, 5) == 1 && this in clusters.asList() && it.url().host != "login.microsoftonline.com") {
+                if (nextInt(1, 5) < 4 && this in clusters.asList() && it.url().host != "login.microsoftonline.com") {
                     with(WebClientResponseException(BAD_GATEWAY, "Tvinger fram feil i $this for ${it.url()}", null, null, null, null)) {
                         log.info(message, this)
                         Mono.error(this)

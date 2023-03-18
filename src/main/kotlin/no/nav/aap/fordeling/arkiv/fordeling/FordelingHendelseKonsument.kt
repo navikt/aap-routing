@@ -16,7 +16,8 @@ import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.DEV_GCP
+import no.nav.boot.conditionals.Cluster.PROD_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
@@ -47,9 +48,8 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           // DEV_GCP.chaosMonkey()
+            faultInjecter.randomFeilForClusters(this,PROD_GCP,DEV_GCP)
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
-
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
             if (jp == null)  {
@@ -110,5 +110,4 @@ class FordelingHendelseKonsument(
     }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 
-    private fun Cluster.chaosMonkey() = faultInjecter.randomFeilForClusters(this)
 }

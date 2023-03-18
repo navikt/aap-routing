@@ -74,7 +74,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(faultInjectingRequestFilterFunction(DEV_GCP))
+            //    .filter(faultInjectingRequestFilterFunction(DEV_GCP))
         }
 
     private fun faultInjectingRequestFilterFunction(vararg clusters: Cluster) =

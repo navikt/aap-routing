@@ -18,3 +18,5 @@ chaos:
           web-client: true
       assaults:
           latency-active: true
+          exceptions-active: true
+          kill-application-active: true

@@ -3,6 +3,10 @@ fordeling:
     topics:
         backoff: 2000
 debug: false
+management:
+  endpoint:
+    chaosmonkey:
+        enabled: true
 chaos:
     monkey:
       enabled: true

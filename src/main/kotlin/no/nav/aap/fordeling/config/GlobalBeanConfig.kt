@@ -3,7 +3,6 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.micrometer.core.instrument.MeterRegistry
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
 import io.netty.handler.timeout.WriteTimeoutHandler
@@ -17,7 +16,6 @@ import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrics
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.*
@@ -58,8 +56,6 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    @Bean
-    fun metrics(registry: MeterRegistry) = Metrics(registry)
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()

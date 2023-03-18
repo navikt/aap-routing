@@ -1,6 +1,6 @@
 package no.nav.aap.fordeling.config
 
-object Metrikker {
+object MetrikkLabels {
         const val FORDELINGTS = "jper"
         const val TITTEL = "tittel"
         const val FORDELINGSTYPE = "type"

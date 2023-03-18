@@ -10,7 +10,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.util.Metrics
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
@@ -21,8 +20,8 @@ import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType.APPLICATION_JSON
 
 @Component
-class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf: DokarkivConfig, metrikker: Metrics, private val mapper: ObjectMapper) :
-    AbstractWebClientAdapter(webClient, cf, metrikker = metrikker) {
+class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf: DokarkivConfig, private val mapper: ObjectMapper) :
+    AbstractWebClientAdapter(webClient, cf) {
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId: String, data: OppdateringData) =
         with(journalpostId) {
@@ -39,7 +38,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
                 .bodyValue(data)
                 .retrieve()
                 .bodyToMono<OppdateringRespons>()
-                .retryWhen(cf.retrySpec(log, metrikker = metrikker))
+                .retryWhen(cf.retrySpec(log))
                 .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId fra $data feilet", t) }
                 .block()
@@ -59,7 +58,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
                 .bodyValue(AUTOMATISK_JOURNALFØRING)
                 .retrieve()
                 .bodyToMono<String>()
-                .retryWhen(cf.retrySpec(log, metrikker = metrikker))
+                .retryWhen(cf.retrySpec(log,cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
                 .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
                 .block()
@@ -80,7 +79,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
             .onStatus({ UNAUTHORIZED == it }, { Mono
                 .empty<Throwable>().also { log.trace("Dokument $journalpostId/$dokumentInfoId kan ikke slås opp") } })
             .bodyToMono<ByteArray>()
-            .retryWhen(cf.retrySpec(log, metrikker = metrikker))
+            .retryWhen(cf.retrySpec(log,cf.dokPath))
             .doOnSuccess { log.trace("Arkivoppslag returnerte  ${it.size} bytes") }
             .block() ?: throw IntegrationException("Null response fra arkiv for  $journalpostId/$dokumentInfoId ")
 

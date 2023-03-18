@@ -5,9 +5,7 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.util.Metrics
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
@@ -15,8 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
-class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig, metrikker: Metrics) :
-    AbstractWebClientAdapter(webClient, cf, metrikker = metrikker) {
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
+    AbstractWebClientAdapter(webClient, cf) {
 
     fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
         .uri(cf::enhetUri)
@@ -25,7 +23,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .bodyValue(kriterium)
         .retrieve()
         .bodyToMono<List<NavOrg>>()
-        .retryWhen(cf.retrySpec(log, metrikker = metrikker))
+        .retryWhen(cf.retrySpec(log,cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag med $kriterium mot NORG2 OK. Respons $it") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
@@ -39,7 +37,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .accept(APPLICATION_JSON)
         .retrieve()
         .bodyToMono<List<NavOrg>>()
-        .retryWhen(cf.retrySpec(log, metrikker = metrikker))
+        .retryWhen(cf.retrySpec(log,cf.aktive))
         .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons ga ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()

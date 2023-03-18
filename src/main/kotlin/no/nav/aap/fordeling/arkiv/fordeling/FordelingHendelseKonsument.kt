@@ -5,18 +5,17 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
-import no.nav.aap.fordeling.config.Metrikker
-import no.nav.aap.fordeling.config.Metrikker.BREVKODE
-import no.nav.aap.fordeling.config.Metrikker.FORDELINGSTYPE
-import no.nav.aap.fordeling.config.Metrikker.FORDELINGTS
-import no.nav.aap.fordeling.config.Metrikker.KANAL
-import no.nav.aap.fordeling.config.Metrikker.TITTEL
+import no.nav.aap.fordeling.config.MetrikkLabels.BREVKODE
+import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGSTYPE
+import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
+import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
+import no.nav.aap.fordeling.config.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrics
+import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
@@ -36,7 +35,6 @@ class FordelingHendelseKonsument(
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
         private val faultInjecter: FaultInjecter,
-        private val metrikker: Metrics,
         private val env: Environment) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -105,7 +103,7 @@ class FordelingHendelseKonsument(
         val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort",
                     ignoreCase = true)) "Meldekort"
         else jp.hovedDokumentBrevkode
-        metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
+        Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
     }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 

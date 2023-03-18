@@ -6,23 +6,22 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.config.Metrikker.BREVKODE
-import no.nav.aap.fordeling.config.Metrikker.FORDELINGSTYPE
-import no.nav.aap.fordeling.config.Metrikker.FORDELINGTS
-import no.nav.aap.fordeling.config.Metrikker.KANAL
+import no.nav.aap.fordeling.config.MetrikkLabels.BREVKODE
+import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGSTYPE
+import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
+import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrics
+import no.nav.aap.util.Metrikker
 import org.springframework.stereotype.Component
 
 @Component
 class AAPFordeler(
         private val arena: ArenaClient,
         private val arkiv: ArkivClient,
-        private val manuell: AAPManuellFordeler,
-        private val metrikker: Metrics) : Fordeler {
+        private val manuell: AAPManuellFordeler) : Fordeler {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)
@@ -66,7 +65,7 @@ class AAPFordeler(
                         "Vellykket fordeling av ${jp.hovedDokumentBrevkode}",
                         jp.hovedDokumentBrevkode,
                         jp.journalpostId).also {
-                    metrikker.inc(FORDELINGTS, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
+                    Metrikker.inc(FORDELINGTS, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
                 }
             }
         }
@@ -81,7 +80,7 @@ class AAPFordeler(
         arena.nyesteAktiveSak(jp.fnr)?.run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling", jp.hovedDokumentBrevkode, jp.journalpostId).also {
-                metrikker.inc(FORDELINGTS, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
+                Metrikker.inc(FORDELINGTS, TEMA,jp.tema, FORDELINGSTYPE, it.fordelingstype.name, KANAL,jp.kanal, BREVKODE,it.brevkode)
             }
 
         } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost").also {

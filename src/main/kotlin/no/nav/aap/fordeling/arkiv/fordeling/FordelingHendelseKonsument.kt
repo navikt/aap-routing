@@ -9,6 +9,7 @@ import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.config.MetrikkLabels.TITTEL
+import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
@@ -35,6 +36,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
+        private val egen: EgenAnsattClient, //TODO Midlertidig
         private val monkey: ChaosMonkey,
         private val env: Environment) {
 
@@ -64,6 +66,7 @@ class FordelingHendelseKonsument(
             lagMetrikker(jp)
 
             if (env.isProd()) {
+                egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig
             }

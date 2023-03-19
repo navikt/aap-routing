@@ -19,6 +19,7 @@ import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunct
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
+import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnNotProd
@@ -30,6 +31,7 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenRespons
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
@@ -73,22 +75,22 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun chaosMonkey() = ChaosMonkey(DEV_MONKEY)
 
     @Bean
-    @ConditionalOnNotProd
-    fun webClientCustomizer(client: HttpClient) =
+    fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(chaosMonkeyRequestFilterFunction(DEV_MONKEY))
+                .filter(monkey)
         }
+
+
+    @Bean
+    @ConditionalOnNotProd
+    @Qualifier(MONKEY)
+    fun notProdMonkey() = chaosMonkeyRequestFilterFunction(DEV_MONKEY)
 
     @Bean
     @ConditionalOnProd
-    fun webClientProdCustomizer(client: HttpClient) =
-        WebClientCustomizer { b ->
-            b.clientConnector(ReactorClientHttpConnector(client))
-                .filter(correlatingFilterFunction(applicationName))
-                .filter(chaosMonkeyRequestFilterFunction(PROD_MONKEY))
-        }
+    fun prodMonkey() = chaosMonkeyRequestFilterFunction(PROD_MONKEY)
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
@@ -158,9 +160,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     companion object {
 
-        val DEV_MONKEY = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
+        private const val MONKEY = "monkey"
 
-        val PROD_MONKEY = { nextInt(1, 5) == 1 && currentCluster == PROD_GCP }
+        val DEV_MONKEY = monkey(DEV_GCP)
+
+        val PROD_MONKEY = monkey(PROD_GCP)
+
+        private fun monkey(cluster: Cluster) = { -> nextInt(1, 5) == 1 && currentCluster == cluster }
 
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->

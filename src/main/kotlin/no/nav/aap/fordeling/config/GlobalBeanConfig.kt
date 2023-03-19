@@ -137,7 +137,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             with(req) {
                 client.post()
                     .uri(tokenEndpointUrl)
-                    .headers { Consumer<HttpHeaders> { it.putAll(oAuth2HttpHeaders.headers()) } }
+                    .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
                     .retrieve()
                     .bodyToMono(OAuth2AccessTokenResponse::class.java)

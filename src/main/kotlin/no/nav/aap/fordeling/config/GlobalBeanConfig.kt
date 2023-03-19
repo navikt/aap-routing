@@ -73,11 +73,21 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun chaosMonkey() = ChaosMonkey(DEV_MONKEY)
 
     @Bean
+    @ConditionalOnNotProd
     fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
                 .filter(chaosMonkeyRequestFilterFunction(DEV_MONKEY))
+        }
+
+    @Bean
+    @ConditionalOnProd
+    fun webClientProdCustomizer(client: HttpClient) =
+        WebClientCustomizer { b ->
+            b.clientConnector(ReactorClientHttpConnector(client))
+                .filter(correlatingFilterFunction(applicationName))
+                .filter(chaosMonkeyRequestFilterFunction(PROD_MONKEY))
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -149,6 +159,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     companion object {
 
         val DEV_MONKEY = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
+
+        val PROD_MONKEY = { nextInt(1, 5) == 1 && currentCluster == PROD_GCP }
+
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

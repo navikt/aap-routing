@@ -90,6 +90,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Bean
     @ConditionalOnProd
+    @Qualifier(MONKEY)
     fun prodMonkey() = chaosMonkeyRequestFilterFunction(PROD_MONKEY)
 
     @JsonIgnoreProperties(ignoreUnknown = true)

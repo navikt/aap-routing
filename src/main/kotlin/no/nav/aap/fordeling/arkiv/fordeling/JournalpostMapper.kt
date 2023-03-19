@@ -18,7 +18,6 @@ class JournalpostMapper(private val pdl: PDLClient) {
 
     private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
 
-    private val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
 
 
     fun tilJournalpost(dto: JournalpostDTO) =
@@ -55,4 +54,8 @@ class JournalpostMapper(private val pdl: PDLClient) {
         }
     private fun AktørId.fødselsnummer(journalpostId: String) = pdl.fnr(this)?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
-  }
+    companion object {
+        val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
+    }
+
+}

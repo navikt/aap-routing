@@ -37,6 +37,11 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>mockwebserver</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>no.nav.boot</groupId>
 			<artifactId>boot-conditionals</artifactId>
 			<version>5.0.5</version>

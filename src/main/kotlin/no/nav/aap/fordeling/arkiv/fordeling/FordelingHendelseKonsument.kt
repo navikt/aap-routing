@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import java.io.IOException
+import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -10,6 +12,8 @@ import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.config.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableIntegrationException
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
@@ -19,8 +23,8 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import no.nav.security.token.support.client.core.OAuth2ClientException
 import org.springframework.core.env.Environment
-import org.springframework.http.HttpStatus.BAD_GATEWAY
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -29,6 +33,11 @@ import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGL
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest
+import org.springframework.web.reactive.function.client.WebClientResponseException.Forbidden
+import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound
+import org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
@@ -45,7 +54,10 @@ class FordelingHendelseKonsument(
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
-            autoCreateTopics = "false")
+            autoCreateTopics = "false",
+            traversingCauses = "true",
+            include = [WebClientResponseException::class,IOException::class,IntegrationException::class, OAuth2ClientException::class,RecoverableIntegrationException::class],
+            exclude = [UnrecoverableIntegrationException::class, NotFound::class, BadRequest::class,Unauthorized::class, Forbidden::class])
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             /*

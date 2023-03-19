@@ -69,7 +69,7 @@ class FordelingHendelseKonsument(
             lagMetrikker(jp)
 
             if (env.isProd()) {
-                egen.erSkjermet(jp.fnr)  // Resilience test web client
+                //egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig
             }

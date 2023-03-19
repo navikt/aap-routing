@@ -42,6 +42,4 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         else {
             log.info("Oppretter ikke oppgave for data $data")
         }
-
-
 }

@@ -14,7 +14,9 @@ import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.*
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
+import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
+import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.boot.conditionals.Cluster
@@ -46,7 +48,6 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction.*
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
@@ -55,6 +56,8 @@ import reactor.util.retry.Retry.fixedDelay
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+
 
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
@@ -70,27 +73,15 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
+    fun chaosMonkey() = ChaosMonkey(DEFAULT_MONKEY)
+
+    @Bean
     fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
+            val p = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(chaosMonkeyRequestFilterFunction(DEV_GCP))
-        }
-
-    private fun chaosMonkeyRequestFilterFunction(vararg clusters: Cluster) =
-        ofRequestProcessor {
-            with(currentCluster) {
-                if (nextInt(1, 5) < 2 && this in clusters.asList() && it.url().host != "login.microsoftonline.com") {
-                    with(WebClientResponseException(BAD_GATEWAY, "Tvinger fram feil i $this for ${it.url()}", null, null, null, null)) {
-                        log.info(message, this)
-                        Mono.error(this)
-                    }
-                }
-                else {
-                    log.trace("Tvinger IKKE fram feil i $this for ${it.url()}")
-                    Mono.just(it)
-                }
-            }
+                .filter(chaosMonkeyRequestFilterFunction(DEFAULT_MONKEY))
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -159,36 +150,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 }
     }
 
-    @Component
-    class FaultInjecter{
-
-        fun randomFeilForClusters(component: Any, vararg clusters: Cluster = arrayOf(DEV_GCP)) = randomFeilIn(component, *clusters)
-
-        companion object {
-            private val log = getLogger(FaultInjecter::class.java)
-            private fun randomFeilIn(component: Any, vararg clusters: Cluster) =
-                if (currentCluster() in clusters) {
-                    if (nextInt(1,5) == 1) {
-                        throw WebClientResponseException(BAD_GATEWAY, "Tvunget feil i ${currentCluster()} fra ${component.javaClass.simpleName}}", null, null, null, null).also {
-                            log.warn(it.message)
-                        }
-                    }
-                    else {
-                        Unit
-                    }
-                }
-                else {
-                    Unit
-                }
-        }
-    }
-
     companion object {
 
-        inline fun <T> T?.whenNull(block: T?.() -> Unit): T? {
-            if (this == null) block()
-            return this@whenNull
-        }
+        val DEFAULT_MONKEY = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

@@ -1,10 +1,8 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingHendelseKonsument
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
-import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.whenNull
 import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 

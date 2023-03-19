@@ -4,7 +4,6 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.config.GlobalBeanConfig.FaultInjecter
 import no.nav.aap.fordeling.config.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
@@ -12,6 +11,7 @@ import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.config.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
+import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -19,6 +19,7 @@ import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.core.env.Environment
+import org.springframework.http.HttpStatus.BAD_GATEWAY
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -34,7 +35,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
-        private val faultInjecter: FaultInjecter,
+        private val monkey: ChaosMonkey,
         private val env: Environment) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -45,7 +46,7 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           // faultInjecter.randomFeilForClusters(this,PROD_GCP,DEV_GCP)
+            monkey.inhjectFault(this,BAD_GATEWAY)
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 

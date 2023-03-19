@@ -20,6 +20,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.MicrometerConsumerListener
+import org.springframework.kafka.core.MicrometerProducerListener
 import org.springframework.kafka.listener.ContainerProperties.*
 import org.springframework.kafka.listener.ContainerProperties.AckMode.*
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
@@ -47,6 +48,10 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     fun micrometerConsumerListener(registry: MeterRegistry)  =
         MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry)
 
+    @Bean
+    fun micrometerProducerListener(registry: MeterRegistry)  =
+        MicrometerProducerListener<String,JournalfoeringHendelseRecord>(registry)
+
     @Bean(FORDELING)
     fun fordelingListenerContainerFactory(p: KafkaProperties, listener: MicrometerConsumerListener<String,JournalfoeringHendelseRecord>, delegator: FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
@@ -64,12 +69,14 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
         }
 
     @Bean
-    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
+    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties,l: MicrometerProducerListener<String,JournalfoeringHendelseRecord>) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-            }))
+            }).apply {
+            addListener(l)
+        })
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory

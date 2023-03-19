@@ -72,7 +72,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    fun chaosMonkey() = ChaosMonkey(DEV_MONKEY)
+    @ConditionalOnNotProd
+    fun notProdChaosMonkey() = ChaosMonkey(DEV_MONKEY)
+
+    @Bean
+    @ConditionalOnProd
+    fun prodChaosMonkey() = ChaosMonkey(NO_MONKEY)
 
     @Bean
     fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
@@ -86,12 +91,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Bean
     @ConditionalOnNotProd
     @Qualifier(MONKEY)
-    fun notProdMonkey() = chaosMonkeyRequestFilterFunction(DEV_MONKEY)
+    fun notProdFilterMonkey() = chaosMonkeyRequestFilterFunction(DEV_MONKEY)
 
     @Bean
     @ConditionalOnProd
     @Qualifier(MONKEY)
-    fun prodMonkey() = chaosMonkeyRequestFilterFunction(PROD_MONKEY)
+    fun prodFilterMonkey() = chaosMonkeyRequestFilterFunction(PROD_MONKEY)
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
@@ -162,6 +167,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     companion object {
 
         private const val MONKEY = "monkey"
+
+        val NO_MONKEY = { false }
 
         val DEV_MONKEY = monkey(DEV_GCP)
 

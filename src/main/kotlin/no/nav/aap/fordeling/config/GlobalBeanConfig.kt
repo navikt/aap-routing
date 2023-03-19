@@ -19,7 +19,6 @@ import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunct
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
-import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.ConditionalOnNotProd
@@ -41,13 +40,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction.*
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
@@ -73,15 +70,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    fun chaosMonkey() = ChaosMonkey(DEFAULT_MONKEY)
+    fun chaosMonkey() = ChaosMonkey(DEV_MONKEY)
 
     @Bean
     fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
-            val p = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(chaosMonkeyRequestFilterFunction(DEFAULT_MONKEY))
+                .filter(chaosMonkeyRequestFilterFunction(DEV_MONKEY))
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -152,7 +148,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     companion object {
 
-        val DEFAULT_MONKEY = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
+        val DEV_MONKEY = { nextInt(1, 5) == 1 && currentCluster == DEV_GCP }
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

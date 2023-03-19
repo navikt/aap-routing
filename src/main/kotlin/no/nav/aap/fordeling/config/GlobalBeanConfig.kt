@@ -166,7 +166,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         val PROD_MONKEY = monkey(PROD_GCP)
 
-        private fun monkey(cluster: Cluster) = { -> nextInt(1, 5) == 1 && currentCluster == cluster }
+        private fun monkey(vararg clusters: Cluster) = { -> nextInt(1, 5) == 1 && currentCluster in clusters }
 
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->

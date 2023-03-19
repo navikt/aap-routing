@@ -77,7 +77,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Bean
     @ConditionalOnProd
-    fun prodChaosMonkey() = ChaosMonkey(NO_MONKEY)
+    fun prodChaosMonkey() = ChaosMonkey(DEV_MONKEY)
 
     @Bean
     fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =

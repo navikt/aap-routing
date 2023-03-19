@@ -69,13 +69,13 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
         }
 
     @Bean
-    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties,l: MicrometerProducerListener<String,JournalfoeringHendelseRecord>) =
+    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties,listener: MicrometerProducerListener<String,JournalfoeringHendelseRecord>) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }).apply {
-            addListener(l)
+            addListener(listener)
         })
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {

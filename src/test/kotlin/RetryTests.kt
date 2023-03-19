@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.http.HttpStatus.*
+import org.springframework.web.reactive.function.client.WebClientResponseException.BadGateway
 
 class RetryTests {
 
@@ -44,6 +45,6 @@ class RetryTests {
     @DisplayName("Retry gir opp tilslutt")
     fun retryGirOpp() {
         egenServer.expect(4,BAD_GATEWAY)
-        assertThrows<IntegrationException> {client.erSkjermet(FIKTIVTFNR)  }
+        assertThrows<BadGateway> {client.erSkjermet(FIKTIVTFNR)  }
     }
 }

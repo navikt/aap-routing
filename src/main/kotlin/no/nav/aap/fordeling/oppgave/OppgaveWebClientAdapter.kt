@@ -19,7 +19,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
             .uri { cf.oppgaveUri(it, journalpostId) }
             .retrieve()
             .bodyToMono<OppgaveRespons>()
-            .retryWhen(cf.retrySpec(log,cf.oppgavePath))
+            .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
             .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
             .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${t.message})", t) }
             .block()?.antallTreffTotalt?.let { it > 0 }
@@ -34,7 +34,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .bodyValue(data)
                 .retrieve()
                 .bodyToMono<Any>()// TODO?
-                .retryWhen(cf.retrySpec(log,cf.oppgavePath))
+                .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
                 .doOnSuccess { log.info("Opprett oppgave fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Opprett oppgave fra $data feilet (${t.message})", t) }
                 .block() ?: throw IntegrationException("Null respons fra opprett oppgave fr $data")
@@ -42,4 +42,6 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         else {
             log.info("Oppretter ikke oppgave for data $data")
         }
+
+
 }

@@ -16,10 +16,8 @@ import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.Constants.TEMA
-import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
-import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -91,7 +89,7 @@ class FordelingHendelseKonsument(
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
                 log.warn("$this ($it.javaClass.simpleName)", it)
-                slack.feilHvisCluster("$this. (${it.message})", DEV_GCP)
+                slack.feilICluster("$this. (${it.message})", DEV_GCP)
             }
             throw it
         }
@@ -101,7 +99,7 @@ class FordelingHendelseKonsument(
     fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn("$this")
-            slack.feilHvisCluster(this,DEV_GCP)
+            slack.feilICluster(this,DEV_GCP)
         }
     }
 

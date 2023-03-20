@@ -22,7 +22,7 @@ class Slacker(private val cfg: SlackConfig) {
             ok(melding)
         }
         else Unit
-    fun feilHvisCluster(melding: String,vararg clusters: Cluster = arrayOf(DEV_GCP)) =
+    fun feilICluster(melding: String, vararg clusters: Cluster = arrayOf(DEV_GCP)) =
         if (cluster in clusters) {
             feil(melding)
         }

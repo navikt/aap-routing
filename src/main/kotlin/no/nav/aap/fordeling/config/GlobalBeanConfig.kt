@@ -123,8 +123,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun prodHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
 
     @Bean
-    fun configMatcher() =
-        object : ClientConfigurationPropertiesMatcher {}
+    fun configMatcher() = object : ClientConfigurationPropertiesMatcher {}
 
     @Bean
     fun retryingOAuth2HttpClient(b: WebClient.Builder) = RetryingWebClientOAuth2HttpClient(b.build())

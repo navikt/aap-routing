@@ -1,5 +1,6 @@
 import MockWebServerExtensions.expect
 import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig
@@ -45,6 +46,12 @@ class RetryTests {
     @DisplayName("Retry gir opp tilslutt")
     fun retryGirOpp() {
         egenServer.expect(4,BAD_GATEWAY)
-        assertThrows<BadGateway> {client.erSkjermet(FIKTIVTFNR)  }
+        assertThrows<IntegrationException> {client.erSkjermet(FIKTIVTFNR)  }
+    }
+    @Test
+    @DisplayName("Error 400  ingen retry")
+    fun ingenRetry400() {
+        egenServer.expect("error",BAD_REQUEST)
+        assertThrows<IrrecoverableIntegrationException> {client.erSkjermet(FIKTIVTFNR)  }
     }
 }

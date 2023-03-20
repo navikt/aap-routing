@@ -11,17 +11,17 @@ resilience4j:
                 waitDuration: 1s
                 retryExceptions:
                     - org.springframework.web.reactive.function.client.WebClientResponseException
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
                 ignoreExceptions:
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException
             pdl:
                 max-attempts: 10
                 waitDuration: 1s
                 retryExceptions:
                     - org.springframework.web.reactive.function.client.WebClientResponseException
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
                 ignoreExceptions:
-                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException
 spring:
     cache:
         cache-names: navorg

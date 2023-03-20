@@ -1,9 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import java.io.IOException
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -14,8 +11,6 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
@@ -25,7 +20,6 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import no.nav.security.token.support.client.core.OAuth2ClientException
 import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -35,11 +29,6 @@ import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGL
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest
-import org.springframework.web.reactive.function.client.WebClientResponseException.Forbidden
-import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound
-import org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(

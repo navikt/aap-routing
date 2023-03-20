@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
@@ -52,7 +53,7 @@ class JournalpostMapper(private val pdl: PDLClient) {
                 }
             }
         }
-    private fun AktørId.fødselsnummer(journalpostId: String) = pdl.fnr(this)?: throw IntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
+    private fun AktørId.fødselsnummer(journalpostId: String) = pdl.fnr(this)?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
     companion object {
         val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte

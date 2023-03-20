@@ -1,11 +1,13 @@
 package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException.BadGraphQL
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException.NotFoundGraphQL
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException.UnauthenticatedGraphQL
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException.UnauthorizedGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.BadGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.NotFoundGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.UnauthenticatedGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.UnauthorizedGraphQL
 import no.nav.aap.util.LoggerUtil
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
@@ -39,15 +41,15 @@ object GraphQLExtensions {
             else -> UnhandledGraphQL(INTERNAL_SERVER_ERROR, msg)
         }
 
-    abstract class UnrecoverableGraphQLException(status: HttpStatus, msg: String) : Throwable("${status.value()}-$msg", null) {
-        class NotFoundGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQLException(status, msg)
-        class BadGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQLException(status, msg)
-        class UnauthenticatedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQLException(status, msg)
-        class UnauthorizedGraphQL(status: HttpStatus, msg: String) : UnrecoverableGraphQLException(status, msg)
+    abstract class IrrecoverableGraphQLException(status: HttpStatus, msg: String) : IrrecoverableIntegrationException("$msg (${status.value()})", null,null) {
+        class NotFoundGraphQL(status: HttpStatus, msg: String) : IrrecoverableGraphQLException(status, msg)
+        class BadGraphQL(status: HttpStatus, msg: String) : IrrecoverableGraphQLException(status, msg)
+        class UnauthenticatedGraphQL(status: HttpStatus, msg: String) : IrrecoverableGraphQLException(status, msg)
+        class UnauthorizedGraphQL(status: HttpStatus, msg: String) : IrrecoverableGraphQLException(status, msg)
 
     }
 
-    abstract class RecoverableGraphQLException(status: HttpStatus, msg: String) : Throwable("${status.value()}-$msg", null) {
+    abstract class RecoverableGraphQLException(status: HttpStatus, msg: String) : RecoverableIntegrationException("${status.value()}-$msg", null) {
         class UnhandledGraphQL(status: HttpStatus, msg: String) : RecoverableGraphQLException(status, msg)
     }
 }

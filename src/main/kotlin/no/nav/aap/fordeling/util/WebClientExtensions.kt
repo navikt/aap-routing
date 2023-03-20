@@ -13,10 +13,10 @@ import reactor.util.retry.RetrySpec
 
 object WebClientExtensions {
 
-    inline fun <reified T> ClientResponse.toResponse(log: Logger, spec: RetryBackoffSpec) =
+    inline fun <reified T> ClientResponse.toResponse(log: Logger) =
         with(statusCode()){
             if (is2xxSuccessful) {
-                bodyToMono(T::class.java).retryWhen(spec)
+                bodyToMono(T::class.java)
             }
             else if (is4xxClientError)
                 bodyToMono<String>().flatMap {s ->

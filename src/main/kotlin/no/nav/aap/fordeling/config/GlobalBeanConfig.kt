@@ -91,12 +91,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Bean
     @ConditionalOnNotProd
     @Qualifier(MONKEY)
-    fun notProdFilterMonkey() = chaosMonkeyRequestFilterFunction(DEV_MONKEY)
+    fun notProdFilterMonkey() = chaosMonkeyRequestFilterFunction(DEV_FILTER_MONKEY)
 
     @Bean
     @ConditionalOnProd
     @Qualifier(MONKEY)
-    fun prodFilterMonkey() = chaosMonkeyRequestFilterFunction(PROD_MONKEY)
+    fun prodFilterMonkey() = chaosMonkeyRequestFilterFunction(PROD_FILTER_MONKEY)
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
@@ -173,7 +173,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         val DEV_MONKEY = monkey(DEV_GCP)
 
+        val DEV_FILTER_MONKEY = monkey(DEV_GCP)
+
+
         val PROD_MONKEY =  monkey(PROD_GCP)
+
+        val PROD_FILTER_MONKEY =  NO_MONKEY
+
 
         val LOCAL_MONKEY =   monkey(LOCAL)
 

@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import java.io.IOException
 import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -55,9 +56,7 @@ class FordelingHendelseKonsument(
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             autoCreateTopics = "false",
-            traversingCauses = "true",
-            include = [WebClientResponseException::class,IOException::class,IntegrationException::class, OAuth2ClientException::class,RecoverableGraphQLException::class],
-            exclude = [UnrecoverableGraphQLException::class, NotFound::class, BadRequest::class,Unauthorized::class, Forbidden::class])
+            traversingCauses = "true")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             /*

@@ -1,15 +1,11 @@
 package no.nav.aap.fordeling.util
 
-import kotlin.reflect.KClass
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import org.slf4j.Logger
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
-import reactor.util.retry.RetryBackoffSpec
-import reactor.util.retry.RetrySpec
 
 object WebClientExtensions {
 

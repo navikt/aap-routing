@@ -178,7 +178,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         val PROD_MONKEY =  monkey(PROD_GCP)
 
-        val PROD_FILTER_MONKEY =  NO_MONKEY
+        val PROD_FILTER_MONKEY =  DEV_FILTER_MONKEY
 
 
         val LOCAL_MONKEY =   monkey(LOCAL)

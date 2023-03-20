@@ -70,7 +70,7 @@ class FordelingHendelseKonsument(
             if (isProd()) {
                 monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
-                log.info("Prematur retur i prod for Journalpost $jp")
+                log.info("Prematur retur i prod for Journalpost $jp fra topic $topic")
                 return  // TODO Midlertidig
             }
 

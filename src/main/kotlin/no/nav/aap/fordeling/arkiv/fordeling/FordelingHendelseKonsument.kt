@@ -18,9 +18,10 @@ import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.EnvExtensions.isProd
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import org.springframework.core.env.Environment
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -37,8 +38,7 @@ class FordelingHendelseKonsument(
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
         private val egen: EgenAnsattClient, //TODO Midlertidig
-        private val monkey: ChaosMonkey,
-        private val env: Environment) {
+        private val monkey: ChaosMonkey) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -65,9 +65,8 @@ class FordelingHendelseKonsument(
             }
 
             lagMetrikker(jp)
-
-            if (env.isProd()) {
-                throw IrrecoverableIntegrationException("Test resilience")
+            if (isProd()) {
+              //  throw IrrecoverableIntegrationException("Test resilience")
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig

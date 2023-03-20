@@ -63,7 +63,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
                 }
             })
                 .apply {
-                    addListener(listener)
+                  //  addListener(listener)
                 }
             containerProperties.ackMode = RECORD
         }
@@ -75,7 +75,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }).apply {
-            addListener(listener)
+           // addListener(listener)
         })
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {

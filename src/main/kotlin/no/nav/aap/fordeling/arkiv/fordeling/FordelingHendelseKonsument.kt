@@ -90,7 +90,7 @@ class FordelingHendelseKonsument(
             }
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang") {
-                log.warn(this, it)
+                log.warn("$this ($it.javaClass.simpleName)", it)
                 slack.feilHvisCluster("$this. (${it.message})")
             }
             throw it

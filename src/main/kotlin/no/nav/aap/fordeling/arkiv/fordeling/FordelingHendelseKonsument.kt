@@ -70,7 +70,7 @@ class FordelingHendelseKonsument(
             if (isProd()) {
                 monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
-                log.info("Prematur retur i prod for Journalpost $jp fra topic $topic")
+                log.info("Prematur retur fra topic $topic prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
             }
 
@@ -88,7 +88,7 @@ class FordelingHendelseKonsument(
                 }
             }
         }.onFailure {
-            with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang") {
+            with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
                 log.warn("$this ($it.javaClass.simpleName)", it)
                 slack.feilHvisCluster("$this. (${it.message})")
             }

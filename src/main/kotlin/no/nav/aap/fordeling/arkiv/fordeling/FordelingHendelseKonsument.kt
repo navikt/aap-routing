@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -50,7 +51,7 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            monkey.inhjectFault(this@FordelingHendelseKonsument.javaClass.simpleName)
+            monkey.injectFault(this.javaClass.simpleName,RecoverableIntegrationException("Chaos Monkey recoverable exception"))
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
@@ -67,7 +68,7 @@ class FordelingHendelseKonsument(
 
             lagMetrikker(jp)
             if (isProd()) {
-               throw IrrecoverableIntegrationException("Test resilience")
+                monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig

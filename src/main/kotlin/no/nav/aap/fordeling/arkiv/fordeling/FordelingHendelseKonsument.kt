@@ -46,6 +46,7 @@ class FordelingHendelseKonsument(
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             exclude = [IrrecoverableIntegrationException::class],
+            autoStartDltHandler = "true",
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
@@ -66,7 +67,7 @@ class FordelingHendelseKonsument(
 
             lagMetrikker(jp)
             if (isProd()) {
-              //  throw IrrecoverableIntegrationException("Test resilience")
+                throw IrrecoverableIntegrationException("Test resilience")
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig

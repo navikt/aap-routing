@@ -12,7 +12,6 @@ import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.*
-import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
@@ -40,7 +39,6 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -141,7 +139,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .uri(tokenEndpointUrl)
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
-                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(AbstractWebClientAdapter.log)}
+                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(log)}
                //     .retrieve()
                //     .bodyToMono(OAuth2AccessTokenResponse::class.java)
                     .retryWhen(retry())

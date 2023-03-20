@@ -21,6 +21,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.isProd
+import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -70,7 +71,7 @@ class FordelingHendelseKonsument(
             if (isProd()) {
                 monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
-                log.info("Prematur retur fra topic $topic prod for Journalpost ${jp.journalpostId}")
+                log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
             }
 
@@ -79,7 +80,7 @@ class FordelingHendelseKonsument(
                     factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {
                             log.info(this)
-                            slack.jippiHvisCluster(this)
+                            slack.jippiHvisCluster(this,DEV_GCP)
                         }
                     }
                 }
@@ -90,7 +91,7 @@ class FordelingHendelseKonsument(
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
                 log.warn("$this ($it.javaClass.simpleName)", it)
-                slack.feilHvisCluster("$this. (${it.message})")
+                slack.feilHvisCluster("$this. (${it.message})", DEV_GCP)
             }
             throw it
         }
@@ -100,7 +101,7 @@ class FordelingHendelseKonsument(
     fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn("$this")
-        //    slack.feil(this)
+            slack.feilHvisCluster(this,DEV_GCP)
         }
     }
 

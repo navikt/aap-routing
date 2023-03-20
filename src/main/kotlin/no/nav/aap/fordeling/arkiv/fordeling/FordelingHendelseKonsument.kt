@@ -55,8 +55,7 @@ class FordelingHendelseKonsument(
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
-            autoCreateTopics = "false",
-            traversingCauses = "true")
+            autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             /*

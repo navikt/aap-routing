@@ -14,6 +14,8 @@ import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.*
 import java.util.function.Consumer
 import kotlin.random.Random.Default.nextInt
+import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
+import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -139,8 +141,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .uri(tokenEndpointUrl)
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
-                    .retrieve()
-                    .bodyToMono(OAuth2AccessTokenResponse::class.java)
+                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(AbstractWebClientAdapter.log)}
+               //     .retrieve()
+               //     .bodyToMono(OAuth2AccessTokenResponse::class.java)
                     .retryWhen(retry())
                     .onErrorMap { e ->
                         e as? OAuth2ClientException

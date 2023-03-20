@@ -44,16 +44,8 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
     @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
-    @Bean
-    fun micrometerConsumerListener(registry: MeterRegistry)  =
-        MicrometerConsumerListener<String,JournalfoeringHendelseRecord>(registry)
-
-    @Bean
-    fun micrometerProducerListener(registry: MeterRegistry)  =
-        MicrometerProducerListener<String,JournalfoeringHendelseRecord>(registry)
-
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, listener: MicrometerConsumerListener<String,JournalfoeringHendelseRecord>, delegator: FordelingFactory) =
+    fun fordelingListenerContainerFactory(p: KafkaProperties, delegator: FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory<String?, JournalfoeringHendelseRecord?>(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
@@ -62,21 +54,16 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
                     }
                 }
             })
-                .apply {
-                  //  addListener(listener)
-                }
             containerProperties.ackMode = RECORD
         }
 
     @Bean
-    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties,listener: MicrometerProducerListener<String,JournalfoeringHendelseRecord>) =
+    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-            }).apply {
-           // addListener(listener)
-        })
+            }))
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory

@@ -67,7 +67,7 @@ class FordelingHendelseKonsument(
 
             lagMetrikker(jp)
             if (isProd()) {
-               // throw IrrecoverableIntegrationException("Test resilience")
+               throw IrrecoverableIntegrationException("Test resilience")
                 egen.erSkjermet(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur i prod for Journalpost $jp")
                 return  // TODO Midlertidig

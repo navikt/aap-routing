@@ -99,7 +99,7 @@ class FordelingHendelseKonsument(
     fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn("$this $trace")
-            slack.feil(this)
+        //    slack.feil(this)
         }
     }
 

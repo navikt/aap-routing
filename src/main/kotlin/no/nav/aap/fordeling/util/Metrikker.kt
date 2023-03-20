@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.config
+package no.nav.aap.fordeling.util
 
 object MetrikkLabels {
         const val FORDELINGTS = "jper"

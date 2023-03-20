@@ -8,13 +8,15 @@ import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import reactor.util.retry.RetryBackoffSpec
+import reactor.util.retry.RetrySpec
 
 object WebClientExtensions {
 
-    inline fun <reified T> ClientResponse.toResponse(log: Logger) =
+    inline fun <reified T> ClientResponse.toResponse(log: Logger, spec: RetryBackoffSpec) =
         with(statusCode()){
             if (is2xxSuccessful) {
-                bodyToMono(T::class.java)
+                bodyToMono(T::class.java).retryWhen(spec)
             }
             else if (is4xxClientError)
                 bodyToMono<String>().flatMap {s ->

@@ -18,8 +18,8 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(Ident(fnr))
-        .exchangeToMono { it.toResponse<Boolean>(log) }
-        .retryWhen(cf.retrySpec(log, cf.path))
+        .exchangeToMono { it.toResponse<Boolean>(log,cf.retrySpec(log, cf.path))}
+     //   .retryWhen(cf.retrySpec(log, cf.path))
         .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
         .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
         .block() ?: throw IntegrationException("Null respons fra skjerming")

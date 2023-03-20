@@ -6,11 +6,11 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.config.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGSTYPE
-import no.nav.aap.fordeling.config.MetrikkLabels.FORDELINGTS
-import no.nav.aap.fordeling.config.MetrikkLabels.KANAL
-import no.nav.aap.fordeling.config.MetrikkLabels.TITTEL
+import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
+import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
+import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
+import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
+import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.UnrecoverableGraphQLException

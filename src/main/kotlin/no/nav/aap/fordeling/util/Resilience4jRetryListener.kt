@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.config
+package no.nav.aap.fordeling.util
 
 import io.github.resilience4j.retry.RetryRegistry
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter.Companion.GRAPHQL

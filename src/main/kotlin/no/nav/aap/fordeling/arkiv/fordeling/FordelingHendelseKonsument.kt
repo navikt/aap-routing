@@ -49,10 +49,9 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            /*
            if (topic.startsWith("teamdokumenthandtering")) {  // TODO les fra konfig
-               monkey.inhjectFault(this,BAD_GATEWAY)
-           }*/
+               monkey.inhjectFault(this)
+           }
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 

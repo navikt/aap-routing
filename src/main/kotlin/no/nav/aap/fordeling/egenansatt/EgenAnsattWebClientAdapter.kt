@@ -1,6 +1,6 @@
 package no.nav.aap.fordeling.egenansatt
 
-import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
@@ -22,7 +22,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, va
         .retryWhen(cf.retrySpec(log, cf.path))
         .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
         .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
-        .block() ?: throw IntegrationException("Null respons fra skjerming")
+        .block() ?: throw IrrecoverableIntegrationException("Null respons fra skjerming")
 
     private data class Ident(val personident: String)
 

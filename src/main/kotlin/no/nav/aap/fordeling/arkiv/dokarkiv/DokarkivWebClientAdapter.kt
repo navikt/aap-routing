@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.dokarkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.aap.api.felles.error.IntegrationException
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.dokarkiv.VariantFormat.JSON
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
@@ -9,6 +10,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
@@ -36,12 +38,11 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .retrieve()
-                .bodyToMono<OppdateringRespons>()
-                .retryWhen(cf.retrySpec(log))
+                .exchangeToMono { it.toResponse<OppdateringRespons>(log)}
+                .retryWhen(cf.retrySpec(log,cf.oppdaterPath))
                 .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId fra $data feilet", t) }
-                .block()
+                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost $journalpostId")
         }
         else {
             EMPTY.also {
@@ -56,12 +57,12 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
                 .bodyValue(AUTOMATISK_JOURNALFØRING)
-                .retrieve()
-                .bodyToMono<String>()
+                .exchangeToMono { it.toResponse<String>(log)}
                 .retryWhen(cf.retrySpec(log,cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
                 .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
-                .block()
+                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved ferdigstilling av journalpost $journalpostId")
+
         }
         else {
             "Ferdigstilte ikke journalpost $journalpostId".also {
@@ -75,13 +76,11 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
         webClient.get()
             .uri{ cf.dokUri(it,journalpostId,dokumentInfoId, variantFormat) }
             .accept(APPLICATION_JSON)
-            .retrieve()
-            .onStatus({ UNAUTHORIZED == it }, { Mono
-                .empty<Throwable>().also { log.trace("Dokument $journalpostId/$dokumentInfoId kan ikke slås opp") } })
-            .bodyToMono<ByteArray>()
+            .exchangeToMono { it.toResponse<ByteArray>(log)}
             .retryWhen(cf.retrySpec(log,cf.dokPath))
             .doOnSuccess { log.trace("Arkivoppslag returnerte  ${it.size} bytes") }
-            .block() ?: throw IntegrationException("Null response fra arkiv for  $journalpostId/$dokumentInfoId ")
+            .block() ?:  IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av journalpost $journalpostId")
+
 
     private fun søknadDokumentId(jp: Journalpost) = jp.dokumenter.first().dokumentInfoId
 }

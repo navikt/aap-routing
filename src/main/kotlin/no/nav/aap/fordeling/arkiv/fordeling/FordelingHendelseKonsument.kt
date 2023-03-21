@@ -7,9 +7,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
-import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -31,7 +29,6 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
-        private val pdl: PDLClient, //TODO Midlertidig
         private val monkey: ChaosMonkey) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)

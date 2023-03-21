@@ -70,6 +70,7 @@ class FordelingHendelseKonsument(
                         with("${it.msg()} ($fnr)") {
                             log.info(this)
                             slack.jippiHvisCluster(this,DEV_GCP)
+                            metrikker(it.fordelingstype,topic)
                         }
                     }
                 }

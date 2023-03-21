@@ -54,7 +54,7 @@ class FordelingHendelseKonsument(
 
             if (jp.bruker == null) {
                 log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
-                jp.metrikker(DIREKTE_MANUELL)
+                jp.metrikker(DIREKTE_MANUELL,topic)
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
@@ -63,7 +63,7 @@ class FordelingHendelseKonsument(
                 monkey.injectFault("FordelingHendelseKonsument",IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
-                jp.metrikker(INGEN)
+                jp.metrikker(INGEN,topic)
                 return  // TODO Midlertidig
             }
 

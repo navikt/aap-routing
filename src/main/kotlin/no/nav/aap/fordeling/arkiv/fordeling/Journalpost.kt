@@ -24,6 +24,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.Metrikker
+import org.springframework.kafka.support.KafkaHeaders.TOPIC
 
 typealias AvsenderMottaker = Bruker
 
@@ -61,10 +62,11 @@ data class Journalpost(
     fun opprettArenaOppgaveData(enhet: NAVEnhet) =
         ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 
-     fun metrikker(type: FordelingType) =
+     fun metrikker(type: FordelingType, topic: String) =
         with(fixBrevkodeOgMeldekort()) {
             Metrikker.inc(FORDELINGTS, listOf<Pair<String, Any>>(
                     Pair(TEMA, tema),
+                    Pair(TOPIC, topic),
                     Pair(FORDELINGSTYPE, type.name),
                     Pair(TITTEL, first),
                     Pair(KANAL, kanal),

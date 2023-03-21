@@ -14,8 +14,10 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Relevan
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
+import no.nav.aap.fordeling.util.MetrikkLabels.DISKRESJONSKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
@@ -67,6 +69,7 @@ data class Journalpost(
                     Pair(TITTEL, first),
                     Pair(KANAL, kanal),
                     Pair(BREVKODE, second),
+                    Pair(DISKRESJONSKODE,diskresjonskode),
                     Pair(EGENANSATT, egenAnsatt)))
         }
 

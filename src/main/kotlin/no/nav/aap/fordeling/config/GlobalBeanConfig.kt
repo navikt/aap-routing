@@ -139,8 +139,6 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
                     .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(log)}
-               //     .retrieve()
-               //     .bodyToMono(OAuth2AccessTokenResponse::class.java)
                     .retryWhen(retry())
                     .onErrorMap { e ->
                         e as? OAuth2ClientException
@@ -176,7 +174,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         val PROD_MONKEY = NO_MONKEY
 
-        val PROD_FILTER_MONKEY =  monkey(PROD_GCP)
+        val PROD_FILTER_MONKEY =  NO_MONKEY //monkey(PROD_GCP)
 
         val LOCAL_MONKEY =   monkey(LOCAL)
 

@@ -99,7 +99,7 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(@JsonValue val fnr: Fødselsnummer)
+        data class Bruker(@JsonValue val fnr: Fødselsnummer, val erEgenAnsatt: Boolean = false)
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

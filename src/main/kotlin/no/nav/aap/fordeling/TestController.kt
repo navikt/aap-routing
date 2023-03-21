@@ -12,7 +12,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
-import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -62,7 +61,7 @@ class TestController(
     fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arenaAdapter.nyesteArenaSak(fnr)
 
     @GetMapping("skjerming")
-    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erSkjermet(fnr)
+    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erEgenAnsatt(fnr)
 
     @GetMapping("aktiveenheter")
     fun aktiveEnheter() = orgClient.aktiveEnheter()

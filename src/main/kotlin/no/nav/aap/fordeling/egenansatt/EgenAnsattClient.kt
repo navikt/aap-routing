@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class EgenAnsattClient(private val a: EgenAnsattWebClientAdapter) {
-    fun erSkjermet(fnr: Fødselsnummer) = a.erSkjermet(fnr.fnr)
+    fun erEgenAnsatt(fnr: Fødselsnummer) = a.erEgennsatt(fnr.fnr)
 }

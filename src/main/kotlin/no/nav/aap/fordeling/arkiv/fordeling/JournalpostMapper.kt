@@ -10,12 +10,14 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerD
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
+import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig
 import no.nav.aap.fordeling.person.PDLClient
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class JournalpostMapper(private val pdl: PDLClient) {
+class JournalpostMapper(private val pdl: PDLClient, private val egen: EgenAnsattClient) {
 
     private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
 
@@ -33,8 +35,8 @@ class JournalpostMapper(private val pdl: PDLClient) {
                     tema.lowercase(),
                     behandlingstema,
                     brukerFnr ?: FIKTIVTFNR,
-                    brukerFnr?.let { Bruker(brukerFnr) },
-                    avsenderMottakerFnr?.let { AvsenderMottaker(avsenderMottakerFnr) },
+                    brukerFnr?.let { Bruker(it, egen.erEgenAnsatt(it)) },
+                    avsenderMottakerFnr?.let { AvsenderMottaker(it) },
                     kanal,
                     relevanteDatoer,
                     dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),

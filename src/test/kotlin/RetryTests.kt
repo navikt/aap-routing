@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.http.HttpStatus.*
-import org.springframework.web.reactive.function.client.WebClientResponseException.BadGateway
 
 class RetryTests {
 
@@ -34,24 +33,24 @@ class RetryTests {
     @Test
     fun ingenRetry() {
         egenServer.expect("false")
-        assertThat(client.erSkjermet(FIKTIVTFNR)).isFalse
+        assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
     }
     @Test
     @DisplayName("Retry fikser det tilslutt")
     fun retryFunker() {
         egenServer.expect("false",BAD_GATEWAY,BAD_GATEWAY,OK)
-        assertThat(client.erSkjermet(FIKTIVTFNR)).isFalse
+        assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
     }
     @Test
     @DisplayName("Retry gir opp tilslutt")
     fun retryGirOpp() {
         egenServer.expect(4,BAD_GATEWAY)
-        assertThrows<IntegrationException> {client.erSkjermet(FIKTIVTFNR)  }
+        assertThrows<IntegrationException> {client.erEgenAnsatt(FIKTIVTFNR)  }
     }
     @Test
     @DisplayName("Error 400  ingen retry")
     fun ingenRetry400() {
         egenServer.expect("error",BAD_REQUEST)
-        assertThrows<IrrecoverableIntegrationException> {client.erSkjermet(FIKTIVTFNR)  }
+        assertThrows<IrrecoverableIntegrationException> {client.erEgenAnsatt(FIKTIVTFNR)  }
     }
 }

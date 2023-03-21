@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, val cf: EgenAnsattConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun erSkjermet(fnr: String) = webClient.post()
+    fun erEgennsatt(fnr: String) = webClient.post()
         .uri(cf::skjermetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)

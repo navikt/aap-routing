@@ -12,6 +12,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
@@ -68,7 +69,7 @@ class FordelingHendelseKonsument(
             lagMetrikker(jp)
             if (isProd()) {
                 monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
-                egen.erSkjermet(jp.fnr)  // Resilience test web client
+                egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
             }
@@ -104,13 +105,18 @@ class FordelingHendelseKonsument(
     }
 
     private fun lagMetrikker(jp: Journalpost) {
-        var tittel = jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel"
-        tittel = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
-        val brevkode = if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort",
-                    ignoreCase = true)) "Meldekort"
-        else jp.hovedDokumentBrevkode
-        Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode)
+        val tittel = tittel(jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel")
+        val brevkode = brevkode(jp, tittel)
+        Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode, EGENANSATT,
+                "${jp.bruker?.erEgenAnsatt ?: false}")
     }
+
+    private fun tittel(tittel: String) = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
+
+    private fun brevkode(jp: Journalpost, tittel: String) =
+        if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort"
+        else jp.hovedDokumentBrevkode
+
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 
 }

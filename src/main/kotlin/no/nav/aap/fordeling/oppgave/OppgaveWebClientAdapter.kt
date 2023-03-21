@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.oppgave
 
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons

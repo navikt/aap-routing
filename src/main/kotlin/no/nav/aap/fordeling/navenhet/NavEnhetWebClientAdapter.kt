@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.navenhet
 
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet

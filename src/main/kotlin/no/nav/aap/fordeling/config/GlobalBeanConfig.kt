@@ -14,7 +14,6 @@ import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
-import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey

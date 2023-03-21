@@ -3,11 +3,11 @@ package no.nav.aap.fordeling.graphql
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.api.felles.error.RecoverableIntegrationException
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.BadGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.NotFoundGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.UnauthenticatedGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.UnauthorizedGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
 import no.nav.aap.util.LoggerUtil
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST

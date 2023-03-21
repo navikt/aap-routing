@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.micrometer.core.instrument.MeterRegistry
 import java.util.*
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
@@ -19,8 +18,6 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.core.MicrometerConsumerListener
-import org.springframework.kafka.core.MicrometerProducerListener
 import org.springframework.kafka.listener.ContainerProperties.*
 import org.springframework.kafka.listener.ContainerProperties.AckMode.*
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory

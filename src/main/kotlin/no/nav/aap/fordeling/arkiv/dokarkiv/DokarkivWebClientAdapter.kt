@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.dokarkiv
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.dokarkiv.VariantFormat.JSON
@@ -16,10 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
-import reactor.core.publisher.Mono
-import org.springframework.http.HttpStatus.UNAUTHORIZED
-import org.springframework.http.MediaType.APPLICATION_JSON
 
 @Component
 class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf: DokarkivConfig, private val mapper: ObjectMapper) :

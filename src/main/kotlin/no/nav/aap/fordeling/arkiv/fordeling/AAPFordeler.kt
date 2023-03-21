@@ -6,15 +6,9 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
-import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
-import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrikker
 import org.springframework.stereotype.Component
 
 @Component

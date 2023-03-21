@@ -1,8 +1,6 @@
 package no.nav.aap.fordeling.arena
 
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
-import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig
-import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP

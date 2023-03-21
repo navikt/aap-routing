@@ -1,9 +1,12 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import jakarta.validation.constraints.AssertFalse
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
@@ -31,6 +34,7 @@ import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGL
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
+import sun.jvm.hotspot.debugger.win32.coff.DebugVC50X86RegisterEnums.DI
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
@@ -62,6 +66,10 @@ class FordelingHendelseKonsument(
 
             if (jp.bruker == null) {
                 log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
+                with(pair(jp)) {
+                    Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, DIREKTE_MANUELL.name,TITTEL, first, KANAL, jp.kanal, BREVKODE, second, EGENANSATT, "false")
+                }
+
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
@@ -104,14 +112,19 @@ class FordelingHendelseKonsument(
         }
     }
 
-    private fun lagMetrikker(jp: Journalpost) {
-        val tittel = tittel(jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel")
+    private fun lagMetrikker(jp: Journalpost) =
+        with(pair(jp)) {
+            Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, first, KANAL, jp.kanal, BREVKODE, second, EGENANSATT,
+                    "${jp.bruker?.erEgenAnsatt ?: false}")
+        }
+
+    fun pair(jp: Journalpost): Pair<String,String>  {
+        val tittel = fixMeldekort(jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel")
         val brevkode = brevkode(jp, tittel)
-        Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, tittel, KANAL, jp.kanal, BREVKODE, brevkode, EGENANSATT,
-                "${jp.bruker?.erEgenAnsatt ?: false}")
+        return Pair(tittel,brevkode)
     }
 
-    private fun tittel(tittel: String) = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
+    private fun fixMeldekort(tittel: String) = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
 
     private fun brevkode(jp: Journalpost, tittel: String) =
         if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort"

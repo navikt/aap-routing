@@ -18,6 +18,7 @@ object FordelingDTOs {
             MANUELL_JOURNALFØRING,
             MANUELL_FORDELING,
             INGEN,
+            DIREKTE_MANUELL,
             FAILED
         }
 

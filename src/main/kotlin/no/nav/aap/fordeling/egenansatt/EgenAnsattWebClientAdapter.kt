@@ -13,16 +13,16 @@ import org.springframework.web.reactive.function.client.WebClient
 class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, val cf: EgenAnsattConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun erEgennsatt(fnr: String) = webClient.post()
+    fun erEgenAnsatt(fnr: String) = webClient.post()
         .uri(cf::skjermetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(Ident(fnr))
         .exchangeToMono { it.toResponse<Boolean>(log)}
         .retryWhen(cf.retrySpec(log, cf.path))
-        .doOnSuccess { log.info("Skjerming oppslag OK. Respons $it") }
-        .doOnError { t -> log.warn("Skjerming oppslag feilet", t) }
-        .block() ?: throw IrrecoverableIntegrationException("Null respons fra skjerming")
+        .doOnSuccess { log.info("Egen ansatt oppslag OK. Respons $it") }
+        .doOnError { t -> log.warn("Egen ansatt oppslag feilet", t) }
+        .block() ?: throw IrrecoverableIntegrationException("Null respons fra egen ansatt")
 
     private data class Ident(val personident: String)
 

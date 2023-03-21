@@ -1,6 +1,8 @@
 package no.nav.aap.fordeling.arkiv
 
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.util.LoggerUtil
@@ -14,4 +16,7 @@ class ArkivClient(private val dokarkiv: DokarkivWebClientAdapter, private val sa
     fun hentJournalpost(journalpostId: String) = saf.hentJournalpost(journalpostId)
     fun oppdaterOgFerdigstillJournalpost(journalpost: Journalpost, sakNr: String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId, journalpost.oppdateringsData(sakNr))
+
+    private fun Journalpost.oppdateringsData(saksNr: String) =
+        OppdateringData(tittel, avsenderMottager ?: bruker, bruker, Sak(saksNr), tema.uppercase())
 }

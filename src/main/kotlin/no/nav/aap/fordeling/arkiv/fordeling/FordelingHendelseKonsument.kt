@@ -1,27 +1,17 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import jakarta.validation.constraints.AssertFalse
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
-import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
-import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
-import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -64,19 +54,16 @@ class FordelingHendelseKonsument(
 
             if (jp.bruker == null) {
                 log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
-                with(pair(jp)) {
-                    Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, DIREKTE_MANUELL.name,TITTEL, first, KANAL, jp.kanal, BREVKODE, second, EGENANSATT, "false")
-                }
-
+                jp.metrikker(DIREKTE_MANUELL)
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
 
-            lagMetrikker(jp)
             if (isProd()) {
                 monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
+                jp.metrikker(INGEN)
                 return  // TODO Midlertidig
             }
 
@@ -109,24 +96,6 @@ class FordelingHendelseKonsument(
             slack.feilICluster(this,DEV_GCP)
         }
     }
-
-    private fun lagMetrikker(jp: Journalpost) =
-        with(pair(jp)) {
-            Metrikker.inc(FORDELINGTS, TEMA, jp.tema, FORDELINGSTYPE, INGEN.name,TITTEL, first, KANAL, jp.kanal, BREVKODE, second, EGENANSATT,
-                    "${jp.bruker?.erEgenAnsatt ?: false}")
-        }
-
-    fun pair(jp: Journalpost): Pair<String,String>  {
-        val tittel = fixMeldekort(jp.tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel")
-        val brevkode = brevkode(jp, tittel)
-        return Pair(tittel,brevkode)
-    }
-
-    private fun fixMeldekort(tittel: String) = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
-
-    private fun brevkode(jp: Journalpost, tittel: String) =
-        if (jp.hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort"
-        else jp.hovedDokumentBrevkode
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 

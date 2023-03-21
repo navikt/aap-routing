@@ -9,6 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
+import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -30,7 +31,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val slack: Slacker,
-        private val egen: EgenAnsattClient, //TODO Midlertidig
+        private val pdl: PDLClient, //TODO Midlertidig
         private val monkey: ChaosMonkey) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -62,7 +63,7 @@ class FordelingHendelseKonsument(
             if (isProd()) {
                 jp.metrikker(INGEN,topic)
                 monkey.injectFault("FordelingHendelseKonsument",IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
-                egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
+                pdl.geoTilknytning(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
             }

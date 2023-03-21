@@ -12,6 +12,7 @@ class Resilience4jRetryListener(registry: RetryRegistry, slacker: Slacker) {
     private val log = LoggerFactory.getLogger(Resilience4jRetryListener::class.java)
 
     init {
+        log.info("Registrerer retry listener")
         with(registry.retry(GRAPHQL)) {
             eventPublisher.onError {
                 with("Retry event error $it") {

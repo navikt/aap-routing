@@ -18,7 +18,7 @@ class GraphQLDefaultErrorHandler : GraphQLErrorHandler {
                      throw it
                  }
             else ->  e.also {
-                log.warn("GraphQL oppslag feilet, ikke håndtert",it)
+                log.warn("GraphQL oppslag feilet, ${it.javaClass.simpleName} ikke håndtert",it)
                 throw it
             }
         }

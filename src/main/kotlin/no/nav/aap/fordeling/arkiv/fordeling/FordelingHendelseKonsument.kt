@@ -59,7 +59,7 @@ class FordelingHendelseKonsument(
                 return
             }
             jp.metrikker(INGEN,topic)
-            
+
             if (isProd()) {
                 monkey.injectFault("FordelingHendelseKonsument",IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erEgenAnsatt(jp.fnr)  // Resilience test web client

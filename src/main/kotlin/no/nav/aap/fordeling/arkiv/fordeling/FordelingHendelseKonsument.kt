@@ -43,7 +43,7 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            monkey.injectFault(this.javaClass.simpleName,RecoverableIntegrationException("Chaos Monkey recoverable exception"))
+            monkey.injectFault("FordelingHendelseKonsument",RecoverableIntegrationException("Chaos Monkey recoverable exception"))
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
@@ -60,7 +60,7 @@ class FordelingHendelseKonsument(
             }
 
             if (isProd()) {
-                monkey.injectFault(this.javaClass.simpleName,IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
+                monkey.injectFault("FordelingHendelseKonsument",IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 jp.metrikker(INGEN)

@@ -3,13 +3,12 @@ package no.nav.aap.fordeling.navenhet
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
-import no.nav.aap.util.Constants.AAP
 
 data class EnhetsKriteria(
         val geografiskOmraade: String?,
         val skjermet: Boolean = false,
-        val diskresjonskode: Diskresjonskode = ANY,
-        val tema: String ) {
+        val tema: String,
+        val diskresjonskode: Diskresjonskode = ANY ) {
 
     enum class Status {
         AKTIV,

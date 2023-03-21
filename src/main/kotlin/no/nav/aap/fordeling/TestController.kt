@@ -61,7 +61,7 @@ class TestController(
     fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arenaAdapter.nyesteArenaSak(fnr)
 
     @GetMapping("skjerming")
-    fun erSkjermet(@RequestParam fnr: Fødselsnummer) = egenClient.erEgenAnsatt(fnr)
+    fun erEgenAnsatt(@RequestParam fnr: Fødselsnummer) = egenClient.erEgenAnsatt(fnr)
 
     @GetMapping("aktiveenheter")
     fun aktiveEnheter() = orgClient.aktiveEnheter()

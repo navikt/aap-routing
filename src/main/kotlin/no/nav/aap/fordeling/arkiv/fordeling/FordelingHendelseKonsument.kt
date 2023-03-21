@@ -34,8 +34,6 @@ import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGL
 import org.springframework.kafka.support.KafkaHeaders.*
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
-import sun.jvm.hotspot.debugger.win32.coff.DebugVC50X86RegisterEnums.DI
-
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
         private val factory: FordelingFactory,

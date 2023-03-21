@@ -58,12 +58,12 @@ class FordelingHendelseKonsument(
                // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
-
+            jp.metrikker(INGEN,topic)
+            
             if (isProd()) {
                 monkey.injectFault("FordelingHendelseKonsument",IrrecoverableIntegrationException("Chaos Monkey irrecoverable exception"))
                 egen.erEgenAnsatt(jp.fnr)  // Resilience test web client
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
-                jp.metrikker(INGEN,topic)
                 return  // TODO Midlertidig
             }
 

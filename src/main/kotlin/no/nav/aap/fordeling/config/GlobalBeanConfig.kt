@@ -13,12 +13,12 @@ import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
-import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
+import no.nav.aap.util.WebClientExtensions.toResponse
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster

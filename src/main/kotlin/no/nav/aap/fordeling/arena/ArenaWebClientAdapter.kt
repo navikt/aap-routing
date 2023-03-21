@@ -7,8 +7,8 @@ import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
-import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.*

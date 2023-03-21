@@ -4,8 +4,8 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
-import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON

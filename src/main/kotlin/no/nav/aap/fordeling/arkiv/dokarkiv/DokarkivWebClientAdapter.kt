@@ -9,8 +9,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.util.WebClientExtensions.toResponse
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component

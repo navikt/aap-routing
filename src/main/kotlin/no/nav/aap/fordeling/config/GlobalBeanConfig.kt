@@ -167,9 +167,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
         val NO_MONKEY = { false }
 
-        val DEV_MONKEY = monkey(DEV_GCP)
+        val DEV_MONKEY = NO_MONKEY // monkey(DEV_GCP)
 
-        val DEV_FILTER_MONKEY = monkey(DEV_GCP)
+        val DEV_FILTER_MONKEY =  NO_MONKEY //monkey(DEV_GCP)
 
         val PROD_MONKEY = NO_MONKEY
 

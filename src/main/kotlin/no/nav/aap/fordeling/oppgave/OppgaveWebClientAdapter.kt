@@ -27,7 +27,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         }
         else {
             log.info("Slår IKKE opp oppgave ")
-            null
+            false
         }
 
     fun opprettOppgave(data: OpprettOppgaveData) =

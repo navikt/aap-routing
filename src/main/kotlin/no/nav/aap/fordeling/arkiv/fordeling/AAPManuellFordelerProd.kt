@@ -7,12 +7,12 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.ConditionalOnNotProd
+import no.nav.boot.conditionals.ConditionalOnProd
 import org.springframework.stereotype.Component
 
 @Component
-@ConditionalOnNotProd
-class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
+@ConditionalOnProd
+class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
@@ -27,7 +27,6 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
             else {
                 runCatching {
                     log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
-                    oppgave.opprettJournalføringOppgave(jp, enhet)
                     with("Journalføringsoppgave opprettet")  {
                         FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, journalpostId).also {
                             log.info(it.msg())
@@ -36,7 +35,6 @@ class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
                 }.getOrElse {
                     runCatching {
                         log.warn("Feil ved opprettelse av en manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
-                        oppgave.opprettFordelingOppgave(jp)
                         with("Fordelingsoppgave oprettet")  {
                             FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, journalpostId).also {
                                 log.info(it.msg())

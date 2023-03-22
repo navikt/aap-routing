@@ -15,14 +15,20 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
     AbstractWebClientAdapter(webClient, cf) {
 
     fun harOppgave(journalpostId: String) =
-        webClient.get()
-            .uri { cf.oppgaveUri(it, journalpostId) }
-            .exchangeToMono { it.toResponse<OppgaveRespons>(log)}
-            .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
-            .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
-            .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${t.message})", t) }
-            .block()?.antallTreffTotalt?.let { it > 0 }
-            ?: throw IrrecoverableIntegrationException("Null respons fra opslag oppgave $journalpostId")
+        if (cf.oppslagEnabled) {
+            webClient.get()
+                .uri { cf.oppgaveUri(it, journalpostId) }
+                .exchangeToMono { it.toResponse<OppgaveRespons>(log)}
+                .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
+                .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
+                .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${t.message})", t) }
+                .block()?.antallTreffTotalt?.let { it > 0 }
+                ?: throw IrrecoverableIntegrationException("Null respons fra opslag oppgave $journalpostId")
+        }
+        else {
+            log.info("Slår IKKE opp oppgave ")
+            null
+        }
 
     fun opprettOppgave(data: OpprettOppgaveData) =
         if (cf.isEnabled) {
@@ -38,6 +44,6 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .block() ?: throw IrrecoverableIntegrationException("Null respons fra opprett oppgave fra $data")
         }
         else {
-            log.info("Oppretter ikke oppgave for data $data")
+            log.info("Oppretter IKKE oppgave for data $data")
         }
 }

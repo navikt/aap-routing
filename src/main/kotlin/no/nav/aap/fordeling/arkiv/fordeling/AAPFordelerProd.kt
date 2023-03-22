@@ -9,12 +9,12 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.ConditionalOnNotProd
+import no.nav.boot.conditionals.ConditionalOnProd
 import org.springframework.stereotype.Component
 
 @Component
-@ConditionalOnNotProd
-class AAPFordeler(
+@ConditionalOnProd
+class AAPFordelerProd(
         private val arena: ArenaClient,
         private val arkiv: ArkivClient,
         private val manuell: AAPManuellFordeler) : Fordeler {
@@ -55,11 +55,8 @@ class AAPFordeler(
     private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
             log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
-            arena.opprettOppgave(jp, enhet).run {
-                arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
-                FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
+            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
             }
-        }
         else {
             with("Har aktiv sak for ${jp.fnr}, skal IKKE opprett oppgave i Arena") {
                 log.info(this)
@@ -69,9 +66,7 @@ class AAPFordeler(
 
     private fun fordelEttersending(jp: Journalpost) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
-            arkiv.oppdaterOgFerdigstillJournalpost(jp, this)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling", jp.hovedDokumentBrevkode, jp.journalpostId)
-
         } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost").also {
             log.warn(it.message,it)
         }

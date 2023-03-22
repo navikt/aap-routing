@@ -14,3 +14,6 @@ interface Fordeler {
 }
 
 interface ManuellFordeler : Fordeler
+
+class ArenaSakException(msg: String) : RuntimeException(msg)
+class ManuellFordelingException(msg: String, cause: Throwable? = null) : RuntimeException(msg, cause)

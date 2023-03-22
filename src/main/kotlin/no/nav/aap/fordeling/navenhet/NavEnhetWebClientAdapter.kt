@@ -16,7 +16,9 @@ import org.springframework.web.reactive.function.client.WebClient
 class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient.post()
+
+    fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient
+        .post()
         .uri(cf::enhetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)

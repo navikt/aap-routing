@@ -23,6 +23,11 @@ class NavEnhetBeanConfig {
     fun navEnhetWebClient(builder: Builder, cfg: NavEnhetConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
+            .codecs { codec ->
+                codec.defaultCodecs().jackson2JsonDecoder(LoggingJsonDecoder {
+                        log.info("Response er S${String(it)}")
+                })
+            }
             .build()
 
     @Bean

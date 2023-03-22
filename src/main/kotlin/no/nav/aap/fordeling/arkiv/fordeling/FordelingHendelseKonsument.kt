@@ -54,12 +54,12 @@ class FordelingHendelseKonsument(
                 return
             }
 
-
+/*
             if (isProd()) {
                 jp.metrikker(INGEN,topic)
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
-            }
+            } */
 
             jp.run {
                 if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?

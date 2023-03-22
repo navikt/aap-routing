@@ -26,7 +26,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             .exchangeToMono { it.toResponse<String>(log)}
             .retryWhen(cf.retrySpec(log,cf.nyesteSakPath))
             .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
-            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet for url ${cf.baseUri/}${cf.nyesteSakPath} (${t.message})", t) }
+            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet for url ${cf.baseUri}/${cf.nyesteSakPath} (${t.message})", t) }
             .block()
     }
 

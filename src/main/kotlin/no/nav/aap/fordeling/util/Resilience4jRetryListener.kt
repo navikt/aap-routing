@@ -17,25 +17,25 @@ class Resilience4jRetryListener(registry: RetryRegistry, slacker: Slacker) {
             eventPublisher.onError {
                 with("Retry event error $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.feilICluster(this,DEV_GCP)
+                    slacker.okHvisdev(this)
                 }
             }
             eventPublisher.onSuccess {
                 with("Retry event success $it") {
                     log.info(this)
-                    slacker.okHvisCluster(this,DEV_GCP)
+                    slacker.okHvisDev(this)
                 }
             }
             eventPublisher.onIgnoredError() {
                 with("Retry event ignore $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.feilICluster(this,DEV_GCP)
+                    slacker.okHvisdev(this)
                 }
             }
             registry.retry(GRAPHQL).eventPublisher.onRetry {
                 with("Retry event $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.feilICluster(this,DEV_GCP)
+                    slacker.okHvisdev(this)
                 }
             }
         }

@@ -1,21 +1,13 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import kotlin.random.Random
-import kotlin.random.Random.Default
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster
-import no.nav.boot.conditionals.Cluster.Companion
-import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
@@ -68,11 +60,11 @@ class FordelingHendelseKonsument(
             }*/
 
             jp.run {
-                if (factory.isEnabled()) {
+                if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?
                     factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {
                             log.info(this)
-                            slack.jippiHvisCluster(this,DEV_GCP)
+                            slack.jippiHvisDev(this)
                             metrikker(it.fordelingstype,topic)
                         }
                     }
@@ -84,7 +76,7 @@ class FordelingHendelseKonsument(
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
                 log.warn("$this ($it.javaClass.simpleName)", it)
-                slack.feilICluster("$this. (${it.message})", DEV_GCP)
+                slack.okHvisdev("$this. (${it.message})")
             }
             throw it
         }
@@ -94,7 +86,7 @@ class FordelingHendelseKonsument(
     fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn(this)
-            slack.feilICluster(this,DEV_GCP)
+            slack.okHvisdev(this)
         }
     }
 

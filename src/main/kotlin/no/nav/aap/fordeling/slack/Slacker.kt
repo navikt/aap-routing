@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
+import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -17,19 +18,19 @@ import org.springframework.stereotype.Component
 class Slacker(private val cfg: SlackConfig) {
 
     private val cluster = currentCluster()
-    fun okHvisCluster(melding: String, vararg clusters: Cluster = arrayOf(DEV_GCP)) =
-        if (cluster in clusters) {
+    fun okHvisDev(melding: String) =
+        if (cluster in devClusters()) {
             ok(melding)
         }
         else Unit
-    fun feilICluster(melding: String, vararg clusters: Cluster = arrayOf(DEV_GCP)) =
-        if (cluster in clusters) {
+    fun okHvisdev(melding: String) =
+        if (cluster in devClusters()) {
             feil(melding)
         }
         else Unit
 
-    fun jippiHvisCluster(melding: String,vararg clusters: Cluster = arrayOf(DEV_GCP)) =
-        if (cluster in clusters) {
+    fun jippiHvisDev(melding: String) =
+        if (cluster in devClusters()) {
             jippi(melding)
         }
         else Unit

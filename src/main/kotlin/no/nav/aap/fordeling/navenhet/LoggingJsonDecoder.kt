@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.navenhet
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.function.Consumer
@@ -11,21 +12,16 @@ import org.springframework.util.MimeType
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-/**
- * A Wrapper around the default Jackson2JsonDecoder that captures the payload before deserialization and supplies it to a consumer
- *
- * @author rewolf
- */
 class LoggingJsonDecoder (private val payloadConsumer: Consumer<ByteArray>) : Jackson2JsonDecoder() {
+
     override fun decodeToMono(input: Publisher<DataBuffer>,
                               elementType: ResolvableType,
                               mimeType: MimeType?,
                               hints: Map<String, Any>?): Mono<Any> {
-        // Buffer for bytes from each published DataBuffer
         val payload = ByteArrayOutputStream()
 
         // Augment the Flux, and intercept each group of bytes buffered
-        val interceptor = Flux.from(input).doOnNext { buffer: DataBuffer -> bufferBytes(payload, buffer) }
+        val interceptor = Flux.from(input).doOnNext { buffer -> bufferBytes(payload, buffer) }
             .doOnComplete { payloadConsumer.accept(payload.toByteArray()) }
 
         // Return the original method, giving our augmented Publisher

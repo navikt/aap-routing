@@ -63,6 +63,7 @@ class FordelingHendelseKonsument(
 
             jp.run {
                 if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?
+                   log.info("Fordeler $journalpostId")
                     factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {
                             log.info(this)

@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
 class TestController(
-        private val fordeler: AAPFordeler,
         private val pdlAdapter: PDLWebClientAdapter,
         private val egenClient: EgenAnsattClient,
         private val arkivAdapter: DokarkivWebClientAdapter,
@@ -49,10 +48,6 @@ class TestController(
 
     @GetMapping("journalpost")
     fun journalpost(@RequestParam journalpostId: String) = arkivClient.hentJournalpost(journalpostId)
-
-    @PostMapping("fordel")
-    fun fordelSøknad(@RequestBody journalpost: Journalpost, @RequestParam enhetNr: String) =
-        fordeler.fordel(journalpost, NAVEnhet(enhetNr))
 
     @GetMapping("hargosysoppgave")
     fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgaveClient.harOppgave(journalpostId)

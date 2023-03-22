@@ -37,7 +37,7 @@ class AAPFordelerProd(
                 }
 
                 else -> {
-                    log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
+                    log.info("Brevkode ${jp.hovedDokumentBrevkode} IKKE konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
                     manuell.fordel(jp, enhet)
                 }
             }
@@ -47,7 +47,7 @@ class AAPFordelerProd(
                 manuell.fordel(jp, enhet)
             }
             else {
-                log.info("Gjør IKKE umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
+                log.info("Gjør IKKE umiddelbart nytt forsøk på manuell oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
                 throw it
             }
         }

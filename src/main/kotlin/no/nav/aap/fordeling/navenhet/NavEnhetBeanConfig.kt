@@ -27,7 +27,7 @@ class NavEnhetBeanConfig(private val mapper: ObjectMapper) {
             .baseUrl("${cfg.baseUri}")
             .codecs { codec ->
                 codec.defaultCodecs().jackson2JsonDecoder(LoggingJsonDecoder {
-                   log.info("Response er ${mapper.readValue<Map<Any, Any>>(it)}")
+                   log.info("Response er ${mapper.readValue<List<Any>>(it)}")
                 })
             }
             .build()

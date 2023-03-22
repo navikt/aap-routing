@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 @Primary
 class AAPFordelerProd(
         private val arena: ArenaClient,
-        private val manuell: AAPManuellFordeler) : Fordeler {
+        private val manuell: AAPManuellFordelerProd) : Fordeler {
 
     private val log = getLogger(javaClass)
     override fun tema() = listOf(AAP)

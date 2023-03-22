@@ -39,7 +39,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .exchangeToMono { it.toResponse<ArenaOpprettetOppgave>(log)}
                 .retryWhen(cf.retrySpec(log,cf.oppgavePath))
                 .doOnSuccess { log.info("Arena opprettet oppgave OK. Respons $it") }
-                .doOnError { t -> log.warn("Arena opprett oppgave feilet (${t.message})", t) }
+                .doOnError { t -> log.warn("Arena opprett oppgave feilet for konfig $cf  (${t.message})", t) }
                 .block() ?: throw IrrecoverableIntegrationException("Null respons for opprettelse av oppgave")
         }
         else {

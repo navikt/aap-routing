@@ -19,15 +19,16 @@ import org.springframework.web.reactive.function.client.WebClient
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun nyesteArenaSak(fnr: Fødselsnummer) =
-        webClient.get()
+    fun nyesteArenaSak(fnr: Fødselsnummer) : String? {
+       return webClient.get()
             .uri { cf.nyesteSakUri(it, fnr) }
             .accept(APPLICATION_JSON)
             .exchangeToMono { it.toResponse<String>(log)}
             .retryWhen(cf.retrySpec(log,cf.nyesteSakPath))
             .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
-            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet for konfig $cf (${t.message})", t) }
+            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet for url ${cf.baseUri/}${cf.nyesteSakPath} (${t.message})", t) }
             .block()
+    }
 
     fun opprettArenaOppgave(data: ArenaOpprettOppgaveData) =
         if (cf.isEnabled) {

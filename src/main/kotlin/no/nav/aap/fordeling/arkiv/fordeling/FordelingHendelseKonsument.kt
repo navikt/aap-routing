@@ -1,14 +1,20 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import kotlin.random.Random
+import kotlin.random.Random.Default
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -38,6 +44,7 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
+           val fordeler =  factory.fordelerFor(h.tema())
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
@@ -48,19 +55,20 @@ class FordelingHendelseKonsument(
 
             if (jp.bruker == null) {
                 log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
+                fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 jp.metrikker(DIREKTE_MANUELL,topic)
-               // return fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 return
             }
 
+            /*
             if (isProd()) {
                 jp.metrikker(INGEN,topic)
                 log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
                 return  // TODO Midlertidig
-            }
+            }*/
 
             jp.run {
-                if (factory.isEnabled() && status == MOTTATT) {
+                if (factory.isEnabled()) {
                     factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {
                             log.info(this)

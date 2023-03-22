@@ -1,4 +1,5 @@
 fordeling:
+    enabled: true
     topics:
       backoff: 1000
 oppgave:

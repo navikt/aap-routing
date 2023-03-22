@@ -1,7 +1,12 @@
 fordeling:
-    enabled: true
     topics:
         backoff: 2000
+arena:
+    readenabled: true
+oppgave:
+    enabled: true
+dokarkiv:
+    enabled: true
 management:
   endpoint:
     chaosmonkey:

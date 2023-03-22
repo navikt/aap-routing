@@ -8,10 +8,12 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.ConditionalOnProd
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 @Component
 @ConditionalOnProd
+@Primary
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
 

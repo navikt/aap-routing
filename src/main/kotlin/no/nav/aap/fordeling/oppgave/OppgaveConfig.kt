@@ -13,7 +13,7 @@ import org.springframework.web.util.UriBuilder
 @ConfigurationProperties(OPPGAVE)
 class OppgaveConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("true") enabled: Boolean,
+        @DefaultValue("false") enabled: Boolean,
         @DefaultValue("true") val oppslagEnabled: Boolean,
         @DefaultValue(DEFAULT_OPPGAVE_PATH) val oppgavePath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {

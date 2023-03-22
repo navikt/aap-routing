@@ -11,7 +11,7 @@ import org.springframework.web.util.UriBuilder
 @ConfigurationProperties(DOKARKIV)
 class DokarkivConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("true") enabled: Boolean,
+        @DefaultValue("false") enabled: Boolean,
         @DefaultValue(DOK_PATH) val dokPath: String,
         @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
         @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,

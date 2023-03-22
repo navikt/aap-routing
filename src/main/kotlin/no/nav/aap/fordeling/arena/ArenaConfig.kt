@@ -11,7 +11,7 @@ import org.springframework.web.util.UriBuilder
 @ConfigurationProperties(ARENA)
 class ArenaConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("true") enabled: Boolean,
+        @DefaultValue("false") enabled: Boolean,
         @DefaultValue("true") val oppslagEnabled: Boolean,
         @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
         @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,

@@ -1,11 +1,9 @@
-dokarkiv:
-    enabled: false
 fordeling:
     topics:
       backoff: 1000
 oppgave:
-    enabled: false
+    oppslagEnabled: true
 arena:
-    enabled: false
+    oppslagEnabled: true
 slack:
     kanal: C048CS5J3K4

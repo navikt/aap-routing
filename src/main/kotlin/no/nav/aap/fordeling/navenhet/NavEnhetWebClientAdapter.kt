@@ -23,11 +23,12 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
-        .exchangeToMono { it.toResponse<List<NavOrg>>(log)}
+        .exchangeToMono { it.toResponse<List<Map<String,String>>>(log)}
         .retryWhen(cf.retrySpec(log,cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag med $kriterium mot NORG2 OK. Respons $it") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
+        ?.map { NavOrg(it["enhetNr"]!!, it["status"]!!) }
         ?.filterNot(::untatt)
         ?.firstOrNull { it in enheter }
         ?.let { NAVEnhet(it.enhetNr) }

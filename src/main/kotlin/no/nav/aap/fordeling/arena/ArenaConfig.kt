@@ -12,6 +12,7 @@ import org.springframework.web.util.UriBuilder
 class ArenaConfig(
         @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
         @DefaultValue("true") enabled: Boolean,
+        @DefaultValue("true") val oppslagEnabled: Boolean,
         @DefaultValue(NYESTE_PATH) val nyesteSakPath: String,
         @DefaultValue(OPPGAVE_PATH) val oppgavePath: String,
         baseUri: URI) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled) {

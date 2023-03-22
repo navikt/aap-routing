@@ -19,16 +19,20 @@ import org.springframework.web.reactive.function.client.WebClient
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun nyesteArenaSak(fnr: Fødselsnummer) : String? {
-       return webClient.get()
-            .uri { cf.nyesteSakUri(it, fnr) }
-            .accept(APPLICATION_JSON)
-            .exchangeToMono { it.toResponse<String>(log)}
-            .retryWhen(cf.retrySpec(log,cf.nyesteSakPath))
-            .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
-            .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet for url ${cf.baseUri}/${cf.nyesteSakPath} (${t.message})", t) }
-            .block()
-    }
+    fun nyesteArenaSak(fnr: Fødselsnummer) =
+        if (cf.oppslagEnabled) {
+            webClient.get()
+                .uri { cf.nyesteSakUri(it, fnr) }
+                .accept(APPLICATION_JSON)
+                .exchangeToMono { it.toResponse<String>(log)}
+                .retryWhen(cf.retrySpec(log,cf.nyesteSakPath))
+                .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
+                .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet (${t.message})", t) }
+                .block()
+        }  else {
+            log.info("Slo IKKE opp arena sak")
+            null
+        }
 
     fun opprettArenaOppgave(data: ArenaOpprettOppgaveData) =
         if (cf.isEnabled) {
@@ -45,7 +49,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
         }
         else {
             EMPTY.also {
-                log.info("Opprettet ikke arena oppgave med data fra $data")
+                log.info("Opprettet IKKE arena oppgave")
             }
         }
 }

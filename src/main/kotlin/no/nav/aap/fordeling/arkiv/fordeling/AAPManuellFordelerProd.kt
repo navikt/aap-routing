@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 @ConditionalOnProd
 @Primary
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : ManuellFordeler {
-    val log = getLogger(AAPManuellFordeler::class.java)
+    val log = getLogger(AAPManuellFordelerProd::class.java)
 
     override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {

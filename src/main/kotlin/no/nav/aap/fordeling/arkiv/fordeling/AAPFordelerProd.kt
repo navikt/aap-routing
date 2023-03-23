@@ -19,7 +19,7 @@ class AAPFordelerProd(
         private val arena: ArenaClient,
         private val manuell: AAPManuellFordelerProd) : Fordeler {
 
-    private val log = getLogger(javaClass)
+    val log = getLogger(AAPFordelerProd::class.java)
     override fun tema() = listOf(AAP)
 
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet) = manuell.fordelManuelt(jp,enhet)

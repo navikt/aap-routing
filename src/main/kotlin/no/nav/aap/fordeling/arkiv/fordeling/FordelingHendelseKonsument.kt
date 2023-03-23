@@ -31,7 +31,6 @@ class FordelingHendelseKonsument(
         private val factory: FordelingFactory,
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
-        private val metrikker: Metrikker,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)

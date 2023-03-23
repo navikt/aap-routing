@@ -41,7 +41,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .retryWhen(cf.retrySpec(log,cf.aktive))
         .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons ga ${it.size} innslag ${it.first().javaClass.name}") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
-        .block() ?.map { NavOrg(it["enhetNr"]!!.toString(), it["status"]!!.toString()) }
+        .block() ?.map {  NavOrg( "${it["enhetNr"]}", "${it["status"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
     companion object {

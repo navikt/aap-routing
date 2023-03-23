@@ -13,7 +13,9 @@ import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
+import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
+import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.security.token.support.spring.UnprotectedRestController
 import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
@@ -64,6 +66,9 @@ class TestController(
     @GetMapping("eraktiv")
     fun erAktiv(@RequestParam enhetNr: String) = orgClient.erAktiv(enhetNr,aktiveEnheter())
 
+    @GetMapping("enhet")
+    fun enhet(@RequestParam område: String,@RequestParam skjermet: Boolean,@RequestParam diskresjonekode: Diskresjonskode) = orgClient.navEnhet(område, skjermet,diskresjonekode,AAP.uppercase())
+    
     @GetMapping("diskresjonskode")
     fun diskresjonskode(@RequestParam fnr: Fødselsnummer) = pdlAdapter.diskresjonskode(fnr)
 

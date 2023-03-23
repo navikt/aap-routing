@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - dlt/**
+      - .nais/topics/**
   workflow_dispatch:
 
 jobs:

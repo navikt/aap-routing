@@ -8,10 +8,13 @@ on:
             - '**.md'
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    IMAGE_BASE: ghcr.io/${{ github.repository }}
+    IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/
 
 jobs:
     bygg:
+        permissions:
+            contents: "read"
+            id-token: "write"
         runs-on: ubuntu-latest
         outputs:
             image: ${{ steps.kompiler-pr.outputs.image }}
@@ -34,13 +37,21 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE):$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)routing-$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
+
+
+            -   name: Login GAR
+                uses: nais/login@v0
+                with:
+                    project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+                    identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+                    team: aap
 
             -   name: Kompiler
                 id: kompiler-pr
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
-                    ./mvnw  --batch-mode --settings .github/.m2/settings.xml package jib:build 
+                    ./mvnw  -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} --batch-mode --settings .github/.m2/settings.xml package jib:build 
 
     deploy:
         name: Deploy PR til dev-gcp

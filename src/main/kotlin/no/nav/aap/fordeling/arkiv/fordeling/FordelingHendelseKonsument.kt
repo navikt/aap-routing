@@ -60,13 +60,6 @@ class FordelingHendelseKonsument(
                 return
             }
 
-/*
-            if (isProd()) {
-                jp.metrikker(INGEN,topic)
-                log.info("Prematur retur fra topic $topic i prod for Journalpost ${jp.journalpostId}")
-                return  // TODO Midlertidig
-            }
-*/
             jp.run {
                 if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?
                    log.info("Fordeler $journalpostId med brevkode $hovedDokumentBrevkode")
@@ -84,7 +77,7 @@ class FordelingHendelseKonsument(
             }
         }.onFailure {
             with("Fordeling av journalpost ${h.journalpostId} feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
-                log.warn("$this ($it.javaClass.simpleName)", it)
+                log.warn("$this (${it.javaClass.simpleName})", it)
                 slack.okHvisdev("$this. (${it.message})")
             }
             throw it

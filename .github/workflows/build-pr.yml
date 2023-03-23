@@ -8,7 +8,7 @@ on:
             - '**.md'
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/
+    IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/${{ github.event.repository.name }}
 
 jobs:
     bygg:
@@ -37,7 +37,7 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE)routing-$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
 
 
             -   name: Login GAR

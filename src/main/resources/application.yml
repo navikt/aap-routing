@@ -10,16 +10,16 @@ resilience4j:
                 max-attempts: 10
                 waitDuration: 1s
                 retryExceptions:
-                    - no.nav.aap.api.felles.error.RecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
                 ignoreExceptions:
-                    - no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException
             pdl:
                 max-attempts: 10
                 waitDuration: 1s
                 retryExceptions:
-                    - no.nav.aap.api.felles.error.RecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException
                 ignoreExceptions:
-                    - no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+                    - no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException
 spring:
     cache:
         cache-names: navorg

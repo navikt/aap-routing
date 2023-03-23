@@ -37,11 +37,12 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
-        .exchangeToMono { it.toResponse<List<NavOrg>>(log)}
+        .exchangeToMono { it.toResponse<List<Map<String,Any>>>(log)}
         .retryWhen(cf.retrySpec(log,cf.aktive))
         .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons ga ${it.size} innslag ${it.first().javaClass.name}") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
-        .block() ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
+        .block() ?.map { NavOrg(it["enhetNr"]!!.toString(), it["status"]!!.toString()) }
+        ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")

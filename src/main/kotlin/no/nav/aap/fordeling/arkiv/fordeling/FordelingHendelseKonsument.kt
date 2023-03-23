@@ -34,7 +34,6 @@ class FordelingHendelseKonsument(
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
-    @Observed(name ="jalla.listen")
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,

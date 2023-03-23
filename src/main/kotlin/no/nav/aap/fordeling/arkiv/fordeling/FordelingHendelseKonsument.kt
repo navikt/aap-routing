@@ -5,10 +5,15 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
+import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
+import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
+import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.Metrikker
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -26,6 +31,7 @@ class FordelingHendelseKonsument(
         private val factory: FordelingFactory,
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
+        private val metrikker: Metrikker,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -44,11 +50,12 @@ class FordelingHendelseKonsument(
 
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
+                Metrikker.inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
 
             if (jp.bruker == null) {
-                log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring (snart)")
+                log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring")
                 fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 jp.metrikker(DIREKTE_MANUELL,topic)
                 return

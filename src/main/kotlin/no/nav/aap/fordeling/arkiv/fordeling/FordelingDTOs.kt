@@ -19,6 +19,7 @@ object FordelingDTOs {
             MANUELL_JOURNALFØRING,
             MANUELL_FORDELING,
             INGEN,
+            INGEN_JOURNALPOST,
             DIREKTE_MANUELL,
             FAILED
         }

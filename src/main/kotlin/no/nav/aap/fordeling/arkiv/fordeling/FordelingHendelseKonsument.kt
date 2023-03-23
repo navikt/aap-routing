@@ -77,7 +77,7 @@ class FordelingHendelseKonsument(
                 }
             }
         }.onFailure {
-            with("Fordeling av journalpost ${h.journalpostId}  feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
+            with("Fordeling av journalpost ${h.journalpostId} feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
                 log.warn("$this ($it.javaClass.simpleName)", it)
                 slack.okHvisdev("$this. (${it.message})")
             }

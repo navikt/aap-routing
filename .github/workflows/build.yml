@@ -8,7 +8,7 @@ on:
             - '**.md'
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap
+    IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/
 
 jobs:
     bygg:
@@ -21,7 +21,7 @@ jobs:
         steps:
             -   name: Sjekker ut kode
                 uses: actions/checkout@v3
-                
+
             -   name: Setter opp Java 17
                 uses: actions/setup-java@v3
                 with:

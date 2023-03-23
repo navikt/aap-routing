@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import io.micrometer.observation.annotation.Observed
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
@@ -14,8 +15,6 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
-import no.nav.boot.conditionals.Cluster.Companion.isProd
-import no.nav.boot.conditionals.Cluster.DEV_GCP
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -35,6 +34,7 @@ class FordelingHendelseKonsument(
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
+    @Observed(name ="jalla.listen")
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,

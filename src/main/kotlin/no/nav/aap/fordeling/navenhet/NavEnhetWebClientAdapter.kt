@@ -39,7 +39,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .accept(APPLICATION_JSON)
         .exchangeToMono { it.toResponse<List<NavOrg>>(log)}
         .retryWhen(cf.retrySpec(log,cf.aktive))
-        .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons ga ${it.size} innslag") }
+        .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons ga ${it.size} innslag ${it.first()}") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block() ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 

@@ -41,7 +41,7 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE)$(echo ${{ github.repository }}):$(echo $TAG)" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)routing-$(echo $TAG)" >> $GITHUB_ENV
 
             -   name: Login GAR
                 uses: nais/login@v0

@@ -6,10 +6,6 @@ info:
         image: ${nais.app.image}
         app: ${nais.app.name}
         namespace: ${nais.namespace}
-management:
-  health:
-    defaults:
-        enabled: false
 spring:
     cloud:
         gcp:

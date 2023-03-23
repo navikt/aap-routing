@@ -1,15 +1,14 @@
-package no.nav.aap.fordeling.util
+package no.nav.aap.fordeling.graphql
 
 import io.github.resilience4j.retry.RetryRegistry
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter.Companion.GRAPHQL
 import no.nav.aap.fordeling.slack.Slacker
-import no.nav.boot.conditionals.Cluster.DEV_GCP
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class Resilience4jRetryListener(registry: RetryRegistry, slacker: Slacker) {
-    private val log = LoggerFactory.getLogger(Resilience4jRetryListener::class.java)
+class GraphQLRetryListener(registry: RetryRegistry, slacker: Slacker) {
+    private val log = LoggerFactory.getLogger(GraphQLRetryListener::class.java)
 
     init {
         log.info("Registrerer retry listener")

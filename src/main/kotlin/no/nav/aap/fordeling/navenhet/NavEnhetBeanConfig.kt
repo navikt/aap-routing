@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.navenhet
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.benmanes.caffeine.cache.RemovalListener
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.health.AbstractPingableHealthIndicator
@@ -16,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 @EnableCaching
-class NavEnhetBeanConfig(private val mapper: ObjectMapper) {
+class NavEnhetBeanConfig {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
@@ -25,12 +23,6 @@ class NavEnhetBeanConfig(private val mapper: ObjectMapper) {
     fun navEnhetWebClient(builder: Builder, cfg: NavEnhetConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
-            /*
-            .codecs { c ->
-                c.defaultCodecs().jackson2JsonDecoder(LoggingJsonDecoder {
-                   log.info("Response er ${mapper.readValue<List<Map<String,Any>>>(it)}")
-                })
-            }*/
             .build()
 
     @Bean

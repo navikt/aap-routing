@@ -7,14 +7,19 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion
+import no.nav.boot.conditionals.Cluster.Companion.prodClusters
 import no.nav.boot.conditionals.ConditionalOnProd
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 @Component
-@Primary
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFordeler(oppgave) {
     override val log = getLogger(AAPManuellFordelerProd::class.java)
+
+    override fun clusters() = prodClusters()
+
     override fun opprettFordeling(jp: Journalpost) = log.info("Liksomoppretter fordelingsoppgave")
     override fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) =  log.info("Liksomoppretter journalføringsoppgave")
 }

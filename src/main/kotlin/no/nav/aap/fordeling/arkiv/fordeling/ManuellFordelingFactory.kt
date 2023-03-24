@@ -7,25 +7,22 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import org.springframework.stereotype.Component
 
 @Component
-class FordelingFactory(private val cfg: FordelingConfig, private val fordelere: List<Fordeler>)  {
+class ManuellFordelingFactory(private val cfg: FordelingConfig, private val fordelere: List<ManuellFordeler>)  {
 
-    val log = LoggerUtil.getLogger(FordelingFactory::class.java)
+    val log = LoggerUtil.getLogger(ManuellFordelingFactory::class.java)
 
     init {
-        log.info("Kan fordele følgende tema:\n${
+        log.info("Kan manuelt fordele følgende tema:\n${
             fordelere
-                .filter { it !is ManuellFordeler }
+                .filter {  currentCluster in it.clusters()}
                 .map { Pair(it.javaClass.simpleName, it.tema()) }
                 .map { "${it.second} -> ${it.first}" }
         }")
     }
-
     fun isEnabled() = cfg.isEnabled
-    fun kanFordele(tema: String, status: String) = fordelerFor(tema) != INGEN_FORDELER && status == MOTTATT.name
 
     fun fordelerFor(tema: String) =
             fordelere
-                .filterNot { it is ManuellFordeler }
                 .filter{currentCluster in it.clusters() }
                 .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER
 }

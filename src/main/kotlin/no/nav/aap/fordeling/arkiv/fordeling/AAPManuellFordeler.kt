@@ -8,13 +8,15 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import org.springframework.stereotype.Component
 
 @Component
-@ConditionalOnNotProd
 open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
+    override fun clusters() = devClusters()  // For NOW
+
 
     override fun fordel(jp: Journalpost, enhet: NAVEnhet?) =
         enhet?.let {

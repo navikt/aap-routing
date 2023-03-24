@@ -18,6 +18,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
 import no.nav.aap.util.Metrikker.inc
+import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -46,11 +47,13 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           if (count.incrementAndGet() > 1)  {
-               log.warn("Skipping")
+           if (count.incrementAndGet() > 0 && isProd())  {
+               log.warn("Skipping ${count.get()}")
                return
            }
-           val fordeler =  factory.fordelerFor(h.tema())
+           val fordeler =  factory.fordelerFor(h.tema()).also {
+               log.info("Fordeler er ${it.javaClass.simpleName}")
+           }
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 

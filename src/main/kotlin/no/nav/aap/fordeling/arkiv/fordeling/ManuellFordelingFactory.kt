@@ -28,4 +28,5 @@ class ManuellFordelingFactory(private val cfg: FordelingConfig, private val ford
                 .filter{currentCluster in it.clusters() }
                 .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER
 
+    override fun toString() = "ManuellFordelingFactory(cfg=$cfg, fordelere=$fordelere)"
 }

@@ -28,6 +28,6 @@ class AAPFordelerProd(
     override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Liksom  ferdigstilling av søknad")
     override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Liksom ordeler ferdigstilling av ettersending")
     override fun toString(): String {
-        return "AAPFordelerProd(manuell=$arena=$arena), tema=${tema()}, clusters=${clusters().asList()}"
+        return "AAPFordelerProd($arena=$arena), tema=${tema()}, manuell=${manuell}, clusters=${clusters().asList()}"
     }
 }

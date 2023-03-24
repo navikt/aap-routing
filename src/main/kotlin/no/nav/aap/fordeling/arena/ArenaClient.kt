@@ -13,6 +13,6 @@ class ArenaClient(private val a: ArenaWebClientAdapter) {
 
     fun nyesteAktiveSak(fnr: Fødselsnummer) = a.nyesteArenaSak(fnr)
     override fun toString(): String {
-        return "ArenaClient(a=$a)"
+        return "ArenaClient(adapter=$a)"
     }
 }

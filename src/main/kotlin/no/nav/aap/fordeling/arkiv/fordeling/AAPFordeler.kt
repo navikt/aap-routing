@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 class AAPFordeler(
         private val arena: ArenaClient,
         private val arkiv: ArkivClient,
-        private val  manuell    : ManuellFordelingFactory) : Fordeler {
+        protected val  manuell: ManuellFordelingFactory) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
     override fun clusters() = devClusters()  // For NOW

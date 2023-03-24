@@ -14,12 +14,15 @@ data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient) {
     fun navEnhet(jp: Journalpost) =
         jp.journalførendeEnhet?.let { e ->
             if (enhet.erAktiv(e,enhet.aktiveEnheter())) {
-                NAVEnhet(e).also { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er aktiv") }
+                NAVEnhet(e).also { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er aktiv")
+                it}
             }
             else {
-                enhetFor(jp)?.let { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er IKKE aktiv") }
+                enhetFor(jp)?.let { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er IKKE aktiv")
+                it}
             }
-        } ?: enhetFor(jp)?.let { log.info("Journalførende enhet ikke satt på journalposten, fra GT oppslag er den ${it.enhetNr}") }
+        } ?: enhetFor(jp)?.let { log.info("Journalførende enhet ikke satt på journalposten, fra GT oppslag er den ${it.enhetNr}")
+        it}
 
     private fun enhetFor(jp: Journalpost) =
         enhet.navEnhet(pdl.geoTilknytning(jp.fnr), jp.egenAnsatt, jp.diskresjonskode, jp.tema).whenNull { log.warn("Ingen enhet for journalpost ${jp.journalpostId

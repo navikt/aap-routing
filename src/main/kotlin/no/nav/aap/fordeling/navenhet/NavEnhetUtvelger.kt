@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.navenhet
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
+import no.nav.aap.util.ExtensionUtils.whenNull
 import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
@@ -16,10 +17,11 @@ data class NavEnhetUtvelger(val pdl: PDLClient, val enhet: NavEnhetClient) {
                 NAVEnhet(e).also { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er aktiv") }
             }
             else {
-                enhetFor(jp).also { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er IKKE aktiv") }
+                enhetFor(jp)?.let { log.info("Journalførende enhet ${it.enhetNr} satt på journalposten er IKKE aktiv") }
             }
-        } ?: enhetFor(jp).also { log.info("Journalførende enhet ikke satt på journalposten, fra GT oppslag er den ${it.enhetNr}") }
+        } ?: enhetFor(jp)?.let { log.info("Journalførende enhet ikke satt på journalposten, fra GT oppslag er den ${it.enhetNr}") }
 
     private fun enhetFor(jp: Journalpost) =
-        enhet.navEnhet(pdl.geoTilknytning(jp.fnr), jp.egenAnsatt, jp.diskresjonskode, jp.tema)
+        enhet.navEnhet(pdl.geoTilknytning(jp.fnr), jp.egenAnsatt, jp.diskresjonskode, jp.tema).whenNull { log.warn("Ingen enhet for journalpost ${jp.journalpostId
+        }") }
 }

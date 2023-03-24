@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.micrometer.observation.annotation.Observed
+import java.util.concurrent.atomic.AtomicInteger
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
@@ -35,6 +36,7 @@ class FordelingHendelseKonsument(
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
+    private val count = AtomicInteger(0)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
@@ -44,7 +46,10 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-
+           if (count.incrementAndGet() > 1)  {
+               log.warn("Skipping")
+               return
+           }
            val fordeler =  factory.fordelerFor(h.tema())
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")

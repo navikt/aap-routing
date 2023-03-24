@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component
 
 @Component
 @Primary
-@ConditionalOnNotProd
 class AAPFordelerProd(
         private val arena: ArenaClient, arkiv: ArkivClient, manuell: AAPManuellFordelerProd) : AAPFordeler(arena, arkiv,manuell) {
 

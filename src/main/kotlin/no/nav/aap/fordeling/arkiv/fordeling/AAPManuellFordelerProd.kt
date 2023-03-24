@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component
 
 @Component
 @Primary
-@ConditionalOnProd
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFordeler(oppgave) {
     override val log = getLogger(AAPManuellFordelerProd::class.java)
     override fun opprettFordeling(jp: Journalpost) = log.info("Liksomoppretter fordelingsoppgave")

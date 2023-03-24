@@ -36,10 +36,10 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
             }
         }?: fordelingsOppgave(jp)
 
-    protected fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
+    private fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
-            oppgave.opprettJournalføringOppgave(this, enhet)
+           opprettJournalføring(this, enhet)
             with("Journalføringsoppgave opprettet")  {
                 FordelingResultat(MANUELL_JOURNALFØRING, this, hovedDokumentBrevkode, journalpostId).also {
                     log.info(it.msg())
@@ -47,11 +47,11 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
             }
         }
 
-    protected fun fordelingsOppgave(jp: Journalpost) =
+    private fun fordelingsOppgave(jp: Journalpost) =
         with(jp) {
             runCatching {
                 log.info("Oppretter fordelingsoppgave for $journalpostId")
-                oppgave.opprettFordelingOppgave(this)
+                opprettFordeling(this)
                 with("Fordelingsoppgave opprettet")  {
                     FordelingResultat(MANUELL_FORDELING, this, hovedDokumentBrevkode, journalpostId).also {
                         log.info(it.msg())
@@ -63,4 +63,7 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
             }
         }
+      protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp)
+    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet)
+
 }

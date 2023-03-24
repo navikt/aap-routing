@@ -15,18 +15,6 @@ import org.springframework.stereotype.Component
 @Primary
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFordeler(oppgave) {
     override val log = getLogger(AAPManuellFordelerProd::class.java)
-
-    override fun fordelingsOppgave(jp: Journalpost) =
-        with("Fordelingsoppgave liksomoprettet")  {
-            FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, jp.journalpostId).also {
-                log.info(it.msg())
-            }
-        }
-
-    override fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
-        with("Journalføringsoppgave liksomopprettet")  {
-            FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, jp.journalpostId).also {
-                log.info(it.msg())
-            }
-        }
+    override fun opprettFordeling(jp: Journalpost) = log.info("Liksomoppretter fordelingsoppgave")
+    override fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) =  log.info("Liksomoppretter journalføringsoppgave")
 }

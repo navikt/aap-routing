@@ -69,7 +69,8 @@ data class Journalpost(
                     Pair(KANAL, kanal),
                     Pair(BREVKODE, second),
                     Pair(DISKRESJONSKODE,diskresjonskode),
-                    Pair(EGENANSATT, egenAnsatt)))
+                    Pair(EGENANSATT, egenAnsatt),
+                    Pair("mottatt",status)))
         }
 
     private fun fixBrevkodeOgMeldekort(): Pair<String,String>  {

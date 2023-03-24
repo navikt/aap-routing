@@ -22,7 +22,7 @@ class AAPFordeler(
         private val arkiv: ArkivClient,
         private val  manuelle: ManuellFordelingFactory) : Fordeler {
 
-    private val log = getLogger(javaClass)
+    private val log = getLogger(AAPFordeler::class.java)
     override fun clusters() = devClusters()  // For NOW
     override fun tema() = listOf(AAP)
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuelle.fordelerFor(jp.tema).fordelManuelt(jp,enhet)

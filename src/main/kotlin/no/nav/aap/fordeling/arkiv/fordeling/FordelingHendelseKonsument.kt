@@ -52,7 +52,7 @@ class FordelingHendelseKonsument(
                return
            }
            val fordeler =  factory.fordelerFor(h.tema()).also {
-               log.info("Fordeler er ${it.javaClass.simpleName}")
+               log.info("${count.get()} Fordeler fra factory er ${it.javaClass.simpleName}")
            }
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")

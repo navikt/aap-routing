@@ -21,9 +21,10 @@ import org.springframework.stereotype.Component
 class AAPFordelerProd(
         private val arena: ArenaClient, arkiv: ArkivClient, manuell: ManuellFordelingFactory) : AAPFordeler(arena, arkiv,manuell) {
 
+    val log = getLogger(AAPFordelerProd::class.java)
+
     override fun clusters() = prodClusters()  // For NOW
 
-    val log = getLogger(AAPFordelerProd::class.java)
     override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Liksom  ferdigstilling av søknad")
     override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Liksom ordeler ferdigstilling av ettersending")
     override fun toString(): String {

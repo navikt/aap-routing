@@ -27,7 +27,7 @@ class ManuellFordelingFactory(private val cfg: FordelingConfig, private val ford
         (fordelere
                 .filter{currentCluster in it.clusters() }
                 .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER).also {
-                    log.info("Manuell fordeler er $this")
+                    log.info("Manuell fordeler er $it")
         }
 
     override fun toString() = "ManuellFordelingFactory(cfg=$cfg, fordelere=$fordelere)"

@@ -9,23 +9,19 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster
-import no.nav.boot.conditionals.Cluster.Companion
-import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
-import no.nav.boot.conditionals.ConditionalOnNotProd
 import org.springframework.stereotype.Component
 
 @Component
 class AAPFordeler(
         private val arena: ArenaClient,
         private val arkiv: ArkivClient,
-        private val  manuelle: ManuellFordelingFactory) : Fordeler {
+        private val  manuell    : ManuellFordelingFactory) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
     override fun clusters() = devClusters()  // For NOW
     override fun tema() = listOf(AAP)
-    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuelle.fordelerFor(jp.tema).fordelManuelt(jp,enhet)
+    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordelerFor(jp.tema).fordelManuelt(jp,enhet)
     override fun fordel(jp: Journalpost, enhet: NAVEnhet?): FordelingResultat =
         enhet?.let {e ->
             runCatching {
@@ -42,20 +38,23 @@ class AAPFordeler(
 
                     else -> {
                         log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
-                        manuelle.fordelerFor(jp.tema).fordel(jp, e)
+                        with(manuell.fordelerFor((jp.tema))) {
+                            log.info("Bruker manuell fordeler $this")
+                            fordel(jp, e)
+                        }
                     }
                 }
             }.getOrElse {
                 if (it !is ManuellFordelingException) {
                     log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
-                    manuelle.fordelerFor(jp.tema).fordel(jp, e)
+                    manuell.fordelerFor(jp.tema).fordel(jp, e)
                 }
                 else {
                     log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
                     throw it
                 }
             }
-        } ?:  manuelle.fordelerFor(jp.tema).fordel(jp)
+        } ?:  manuell.fordelerFor(jp.tema).fordel(jp)
 
 
     private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
@@ -89,6 +88,6 @@ class AAPFordeler(
     }
 
     override fun toString(): String {
-        return "AAPFordeler(arena=$arena, arkiv=$arkiv, tema=${tema()}, clusters=${clusters().asList()}, manuelle=$manuelle)"
+        return "AAPFordeler(arena=$arena, arkiv=$arkiv, tema=${tema()}, clusters=${clusters().asList()}, manuelle=$manuell)"
     }
 }

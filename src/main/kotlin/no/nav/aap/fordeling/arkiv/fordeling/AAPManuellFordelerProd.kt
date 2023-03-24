@@ -12,43 +12,21 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 @Component
-@ConditionalOnProd
 @Primary
-class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : ManuellFordeler {
-    val log = getLogger(AAPManuellFordelerProd::class.java)
+class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFordeler(oppgave) {
+    override val log = getLogger(AAPManuellFordelerProd::class.java)
 
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet) =
-        with(jp) {
-            if (oppgave.harOppgave(jp.journalpostId)) {
-                with("Det finnes allerede en journalføringsoppgave, oppretter ingen ny") {
-                    FordelingResultat(INGEN, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                        log.info(it.msg())
-                    }
-                }
+    override fun fordelingsOppgave(jp: Journalpost) =
+        with("Fordelingsoppgave liksomoprettet")  {
+            FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, jp.journalpostId).also {
+                log.info(it.msg())
             }
-            else {
-                runCatching {
-                    log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
-                    with("Journalføringsoppgave opprettet")  {
-                        FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                            log.info(it.msg())
-                        }
-                    }
-                }.getOrElse {
-                    runCatching {
-                        log.warn("Feil ved opprettelse av en manuell journalføringsopgave for journalpost $journalpostId, oppretter fordelingsoppgave", it)
-                        with("Fordelingsoppgave oprettet")  {
-                            FordelingResultat(MANUELL_FORDELING, this, jp.hovedDokumentBrevkode, journalpostId).also {
-                                log.info(it.msg())
-                            }
-                        }
-                    }.getOrElse {
-                        with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId") {
-                            log.warn(this)
-                            throw ManuellFordelingException(this, it)
-                        }
-                    }
-                }
+        }
+
+    override fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
+        with("Journalføringsoppgave liksomopprettet")  {
+            FordelingResultat(MANUELL_JOURNALFØRING, this, jp.hovedDokumentBrevkode, jp.journalpostId).also {
+                log.info(it.msg())
             }
         }
 }

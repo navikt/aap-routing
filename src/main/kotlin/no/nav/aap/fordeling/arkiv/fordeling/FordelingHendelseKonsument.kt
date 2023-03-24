@@ -16,6 +16,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.Metrikker
+import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -43,13 +44,14 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
+
            val fordeler =  factory.fordelerFor(h.tema())
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
-                Metrikker.inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
+                inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
 
@@ -61,7 +63,7 @@ class FordelingHendelseKonsument(
             }
 
             jp.run {
-                if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?
+                if (factory.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
                    log.info("Fordeler $journalpostId med brevkode $hovedDokumentBrevkode")
                     factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {

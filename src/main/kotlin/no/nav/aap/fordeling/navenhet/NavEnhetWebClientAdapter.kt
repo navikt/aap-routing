@@ -32,7 +32,6 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         ?.filterNot(::untatt)
         ?.firstOrNull { it in enheter }
         ?.let { NAVEnhet(it.enhetNr) }
-        ?: throw IrrecoverableIntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)

@@ -10,7 +10,7 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import org.springframework.stereotype.Component
 
 @Component
-class ManuellFordelingFactory(private val cfg: FordelingConfig, private val fordelere: List<ManuellFordeler>)   {
+class ManuellFordelingFactory(private val cfg: FordelingConfig, private val fordelere: List<ManuellFordeler>)  : ManuellFordeler {
 
     val log = LoggerUtil.getLogger(ManuellFordelingFactory::class.java)
 
@@ -23,7 +23,7 @@ class ManuellFordelingFactory(private val cfg: FordelingConfig, private val ford
         }")
     }
     fun isEnabled() = cfg.isEnabled
-    fun fordelerFor(tema: String) : Fordeler{
+    private fun fordelerFor(tema: String) : Fordeler{
         log.info("Finner fordeler for $tema blant $fordelere")
        return  (fordelere
                 .filter{currentCluster in it.clusters() }
@@ -31,6 +31,10 @@ class ManuellFordelingFactory(private val cfg: FordelingConfig, private val ford
                     log.info("Manuell fordeler er $it")
         }
     }
+
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet?) = fordelerFor(jp.tema).fordel(jp,enhet)
+
+    override fun clusters() = fordelere.flatMap { it.clusters().asList() }.toTypedArray()
 
     override fun toString() = "ManuellFordelingFactory(cfg=$cfg, fordelere=$fordelere)"
 }

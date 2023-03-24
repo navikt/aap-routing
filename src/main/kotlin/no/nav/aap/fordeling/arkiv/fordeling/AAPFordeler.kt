@@ -21,7 +21,7 @@ class AAPFordeler(
     private val log = getLogger(AAPFordeler::class.java)
     override fun clusters() = devClusters()  // For NOW
     override fun tema() = listOf(AAP)
-    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordelerFor(jp.tema).fordelManuelt(jp,enhet)
+    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordel(jp,enhet)
     override fun fordel(jp: Journalpost, enhet: NAVEnhet?): FordelingResultat =
         enhet?.let {e ->
             runCatching {
@@ -38,23 +38,20 @@ class AAPFordeler(
 
                     else -> {
                         log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
-                        with(manuell.fordelerFor((jp.tema))) {
-                            log.info("Bruker manuell fordeler $this for ${jp.tema}")
-                            fordel(jp, e)
-                        }
+                        manuell.fordel(jp,enhet)
                     }
                 }
             }.getOrElse {
                 if (it !is ManuellFordelingException) {
                     log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
-                    manuell.fordelerFor(jp.tema).fordel(jp, e)
+                    manuell.fordel(jp, e)
                 }
                 else {
                     log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
                     throw it
                 }
             }
-        } ?:  manuell.fordelerFor(jp.tema).fordel(jp)
+        } ?:  manuell.fordel(jp)
 
 
     private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =

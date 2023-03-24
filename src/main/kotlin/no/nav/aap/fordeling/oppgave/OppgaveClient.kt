@@ -14,4 +14,8 @@ class OppgaveClient(private val a: OppgaveWebClientAdapter) {
 
     fun opprettFordelingOppgave(jp: Journalpost) =
         a.opprettOppgave(jp.opprettOppgaveData(FORDELINGSOPPGAVE,jp.tema))
+
+    override fun toString(): String {
+        return "OppgaveClient(a=$a)"
+    }
 }

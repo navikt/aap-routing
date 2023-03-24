@@ -46,4 +46,8 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
         else {
             log.info("Oppretter IKKE oppgave for data $data")
         }
+
+    override fun toString(): String {
+        return "OppgaveWebClientAdapter(cf=$cf)"
+    }
 }

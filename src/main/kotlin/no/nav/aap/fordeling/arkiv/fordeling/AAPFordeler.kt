@@ -87,4 +87,8 @@ class AAPFordeler(
     protected fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) {
         arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
     }
+
+    override fun toString(): String {
+        return "AAPFordeler(arena=$arena, arkiv=$arkiv, manuelle=$manuelle)"
+    }
 }

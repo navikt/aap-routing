@@ -21,8 +21,9 @@ class OppgaveConfig(
         b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID, id).path(oppgavePath).build()
 
     fun opprettOppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
-
-    override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
+    override fun toString(): String {
+        return "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()}"
+    }
 
     companion object {
         const val OPPGAVE = "oppgave"

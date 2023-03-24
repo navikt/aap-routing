@@ -26,5 +26,7 @@ class AAPFordelerProd(
     val log = getLogger(AAPFordelerProd::class.java)
     override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Liksom  ferdigstilling av søknad")
     override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Liksom ordeler ferdigstilling av ettersending")
-    override fun toString() = "AAPFordelerProd(arena=$arena)"
+    override fun toString(): String {
+        return "AAPFordelerProd(arena=$arena)"
+    }
 }

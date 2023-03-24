@@ -68,7 +68,6 @@ class FordelingHendelseKonsument(
                             log.info(this)
                             slack.jippiHvisDev(this)
                             metrikker(it.fordelingstype,topic)
-                            
                         }
                     }
                 }

@@ -27,9 +27,10 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
-        private val factory: FordelingFactory,
+        private val fordeler: FordelingFactory,
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
+        private val beslutter: FordelingBeslutter,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -43,19 +44,18 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           if (count.incrementAndGet() > 1 && isProd())  {
-               log.warn("Skipping ${count.get()}")
-               return
-           }
-           val fordeler =  factory.fordelerFor(h.tema()).also {
-               log.info("${count.get()} Fordeler fra factory er ${it.javaClass.simpleName}")
-           }
+
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
                 inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
+                return
+            }
+
+            if (!beslutter.skalFordele(jp)) {
+                log.info("Journalpost ${jp.journalpostId} fordeles IKKE")
                 return
             }
 
@@ -66,10 +66,11 @@ class FordelingHendelseKonsument(
                 return
             }
 
+
             jp.run {
-                if (factory.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
+                if (fordeler.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
                    log.info("Fordeler $journalpostId med brevkode $hovedDokumentBrevkode")
-                    factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
+                    fordeler.fordel(this, enhet.navEnhet(this)).also {
                         with("${it.msg()} ($fnr)") {
                             log.info(this)
                             slack.jippiHvisDev(this)

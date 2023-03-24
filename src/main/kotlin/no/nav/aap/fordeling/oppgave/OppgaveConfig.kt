@@ -22,7 +22,7 @@ class OppgaveConfig(
 
     fun opprettOppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
     override fun toString(): String {
-        return "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()}"
+        return "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()})"
     }
 
     companion object {

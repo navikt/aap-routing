@@ -9,12 +9,14 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 @Component
 @Primary
+@ConditionalOnNotProd
 class AAPFordelerProd(
         private val arena: ArenaClient, arkiv: ArkivClient, manuell: AAPManuellFordelerProd) : AAPFordeler(arena, arkiv,manuell) {
 

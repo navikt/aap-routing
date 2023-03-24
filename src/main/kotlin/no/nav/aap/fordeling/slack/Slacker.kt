@@ -5,10 +5,8 @@ import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
-import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
-import no.nav.boot.conditionals.Cluster.DEV_GCP
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue

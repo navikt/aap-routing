@@ -56,7 +56,7 @@ jobs:
     deploy:
         strategy:
             matrix:
-                cluster: [ dev-gcp ]
+                cluster: [ dev-gcp, prod-gcp ]
         name: Deploy PR til ${{matrix.cluster}}
         needs: bygg
         runs-on: ubuntu-latest

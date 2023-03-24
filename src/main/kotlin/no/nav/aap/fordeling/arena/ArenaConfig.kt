@@ -19,8 +19,9 @@ class ArenaConfig(
 
     fun nyesteSakUri(b: UriBuilder, fnr: Fødselsnummer) = b.path(nyesteSakPath).build(fnr.fnr)
     fun oppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
-
-    override fun toString() = "${javaClass.simpleName} [nyesteSakPath=$nyesteSakPath, oppgavePath=$oppgavePath,pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
+    override fun toString(): String {
+        return "ArenaConfig(oppslagEnabled=$oppslagEnabled, nyesteSakPath='$nyesteSakPath', oppgavePath='$oppgavePath'),${super.toString()})"
+    }
 
     companion object {
         private const val NYESTE_PATH = "arena/nyesteaktivesak/{fnr}"

@@ -52,4 +52,8 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 log.info("Opprettet IKKE arena oppgave")
             }
         }
+
+    override fun toString(): String {
+        return "ArenaWebClientAdapter(cf=$cf)"
+    }
 }

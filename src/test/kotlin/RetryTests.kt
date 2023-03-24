@@ -50,7 +50,7 @@ class RetryTests {
     @Test
     @DisplayName("Error 400  ingen retry")
     fun ingenRetry400() {
-        egenServer.expect("error",BAD_REQUEST)
+        egenServer.expect("false",BAD_REQUEST)
         assertThrows<IrrecoverableIntegrationException> {client.erEgenAnsatt(FIKTIVTFNR)  }
     }
 }

@@ -25,10 +25,12 @@ class FordelingFactory(private val cfg: FordelingConfig, private val fordelere: 
     fun kanFordele(tema: String, status: String) = fordelerFor(tema) != INGEN_FORDELER && status == MOTTATT.name
 
     fun fordelerFor(tema: String) =
-            fordelere
-                .filterNot { it is ManuellFordeler }
-                .filter{currentCluster in it.clusters() }
-                .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER
+        (fordelere
+            .filterNot { it is ManuellFordeler }
+            .filter{currentCluster in it.clusters() }
+            .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER).also {
+            log.info("Fordeler er $this")
+        }
 
     override fun toString() = "FordelingFactory(fordelere=$fordelere)"
 }

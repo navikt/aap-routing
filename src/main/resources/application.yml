@@ -72,8 +72,6 @@ management:
             enabled: false
         diskspace:
             enabled: false
-fordeling:
-    enabled: false
 springdoc:
     packagesToScan: no.nav.aap
     swagger-ui:

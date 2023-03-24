@@ -74,7 +74,7 @@ class FordelingHendelseKonsument(
                     }
                 }
                 else {
-                    log.info("Ingen fordeling av $journalpostId, enten disabled eller allerede endelig journalført")
+                    log.info("Ingen fordeling av $journalpostId, sett 'fordeling.enabled=true' for å aktivere")
                 }
             }
         }.onFailure {

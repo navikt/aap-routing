@@ -24,7 +24,7 @@ class AAPFordelerProd(
     override fun clusters() = prodClusters()  // For NOW
 
     val log = getLogger(AAPFordelerProd::class.java)
-    override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Ingen ferdigstilling av søknad")
-    override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Ingen ferdigstilling av ettersending")
+    override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Liksom  ferdigstilling av søknad")
+    override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Liksom ordeler ferdigstilling av ettersending")
     override fun toString() = "AAPFordelerProd(arena=$arena)"
 }

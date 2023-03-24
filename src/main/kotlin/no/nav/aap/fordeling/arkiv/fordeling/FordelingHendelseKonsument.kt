@@ -47,7 +47,7 @@ class FordelingHendelseKonsument(
             autoCreateTopics = "false")
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           if (count.incrementAndGet() > 0 && isProd())  {
+           if (count.incrementAndGet() > 1 && isProd())  {
                log.warn("Skipping ${count.get()}")
                return
            }

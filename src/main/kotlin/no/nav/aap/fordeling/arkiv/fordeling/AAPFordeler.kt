@@ -89,6 +89,6 @@ class AAPFordeler(
     }
 
     override fun toString(): String {
-        return "AAPFordeler(arena=$arena, arkiv=$arkiv, manuelle=$manuelle)"
+        return "AAPFordeler(arena=$arena, arkiv=$arkiv, tema=${tema()}, clusters=${clusters()}, manuelle=$manuelle)"
     }
 }

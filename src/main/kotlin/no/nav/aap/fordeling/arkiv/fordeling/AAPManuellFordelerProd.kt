@@ -22,5 +22,5 @@ class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFor
 
     override fun opprettFordeling(jp: Journalpost) = log.info("Liksom oppretter fordelingsoppgave")
     override fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) =  log.info("Liksomo ppretter journalføringsoppgave")
-    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave)"
+    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), tema=${tema()}, clusters=${clusters()}"
 }

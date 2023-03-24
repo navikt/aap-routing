@@ -67,5 +67,5 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
         }
       protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp)
     protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet)
-    override fun toString() = "AAPManuellFordeler(oppgave=$oppgave)"
+    override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, tema=${tema()}, clusters=${clusters()})"
 }

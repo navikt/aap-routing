@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AAPFordelerProd(
-        private val arena: ArenaClient, arkiv: ArkivClient, manuell: AAPManuellFordelerProd) : AAPFordeler(arena, arkiv,manuell) {
+        private val arena: ArenaClient, arkiv: ArkivClient, manuell: ManuellFordelingFactory) : AAPFordeler(arena, arkiv,manuell) {
 
     override fun clusters() = prodClusters()  // For NOW
 

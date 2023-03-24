@@ -23,12 +23,14 @@ class ManuellFordelingFactory(private val cfg: FordelingConfig, private val ford
         }")
     }
     fun isEnabled() = cfg.isEnabled
-    fun fordelerFor(tema: String) =
-        (fordelere
+    fun fordelerFor(tema: String) : Fordeler{
+        log.info("Finner fordeler for $tema blant $fordelere")
+       return  (fordelere
                 .filter{currentCluster in it.clusters() }
                 .firstOrNull { tema.lowercase() in it.tema() } ?: INGEN_FORDELER).also {
                     log.info("Manuell fordeler er $it")
         }
+    }
 
     override fun toString() = "ManuellFordelingFactory(cfg=$cfg, fordelere=$fordelere)"
 }

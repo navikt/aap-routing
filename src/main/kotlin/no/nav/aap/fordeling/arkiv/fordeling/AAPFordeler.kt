@@ -39,7 +39,7 @@ class AAPFordeler(
                     else -> {
                         log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
                         with(manuell.fordelerFor((jp.tema))) {
-                            log.info("Bruker manuell fordeler $this")
+                            log.info("Bruker manuell fordeler $this for ${jp.tema}")
                             fordel(jp, e)
                         }
                     }

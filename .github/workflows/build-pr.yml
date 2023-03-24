@@ -37,7 +37,7 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)" >> $GITHUB_ENV
 
 
             -   name: Login GAR
@@ -47,7 +47,7 @@ jobs:
                     identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
                     team: aap
 
-            -   name: Kompiler
+            -   name: Kompiler, bygg og deploy PR til dev-gcp
                 id: kompiler-pr
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT

@@ -47,7 +47,7 @@ jobs:
                     identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
                     team: aap
 
-            -   name: Kompiler, bygg og deploy PR til dev-gcp
+            -   name: Kompiler, bygg og deploy PR image
                 id: kompiler-pr
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
@@ -60,7 +60,7 @@ jobs:
         name: Deploy PR til ${{matrix.cluster}}
         needs: bygg
         runs-on: ubuntu-latest
-        environment: ${{matrix.cluster}}:aap
+        environment: pr:${{matrix.cluster}}:aap
         env:
             PRINT_PAYLOAD: true
             TIMEOUT: 30m

@@ -54,17 +54,21 @@ jobs:
                     ./mvnw  -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} --batch-mode --settings .github/.m2/settings.xml package jib:build 
 
     deploy:
-        name: Deploy PR til dev-gcp
+        strategy:
+            matrix:
+                cluster: [ dev-gcp ]
+        name: Deploy PR til ${{matrix.cluster}}
         needs: bygg
         runs-on: ubuntu-latest
-        environment: pr:dev-gcp:aap
+        environment: ${{matrix.cluster}}:aap
         env:
             PRINT_PAYLOAD: true
+            TIMEOUT: 30m
             APIKEY: ${{secrets.NAIS_DEPLOY_APIKEY}}
-            RESOURCE: .nais/naiserator.yaml
-            CLUSTER: dev-gcp
-            VARS: .nais/dev-gcp.json
+            RESOURCE: .nais/naiserator.yaml,.nais/${{matrix.cluster}}-alerts.yaml
+            CLUSTER: ${{matrix.cluster}}
+            VARS: .nais/${{matrix.cluster}}.json
             IMAGE: ${{needs.bygg.outputs.image}}
         steps:
             -   uses: actions/checkout@v3
-            -   uses: nais/deploy/actions/deploy@master
+            -   uses: nais/deploy/actions/deploy@v1

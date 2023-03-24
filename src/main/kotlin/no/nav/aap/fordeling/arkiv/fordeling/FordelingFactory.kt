@@ -15,6 +15,7 @@ class FordelingFactory(private val cfg: FordelingConfig, private val fordelere: 
         log.info("Kan fordele følgende tema:\n${
             fordelere
                 .filter { it !is ManuellFordeler }
+                .filter{currentCluster in it.clusters() }
                 .map { Pair(it.javaClass.simpleName, it.tema()) }
                 .map { "${it.second} -> ${it.first}" }
         }")

@@ -83,7 +83,7 @@ class FordelingHendelseKonsument(
                 jp.metrikker(it.fordelingstype, topic)
                 val nyjp = arkiv.hentJournalpost(jp.journalpostId)
                 if (jp.status != nyjp?.status)  {  // test siden vi ikke oppdaterer
-                    log.warn("Journalpost ${jp.journalpostId} med brevkode ${nyjp.hovedDokumentBrevkode} RACE condition")
+                    log.warn("Journalpost ${jp.journalpostId} vs  ${nyjp?.journalpostId} RACE condition")
                 }
             }
 

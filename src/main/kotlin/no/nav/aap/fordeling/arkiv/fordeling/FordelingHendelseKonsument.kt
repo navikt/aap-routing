@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Companion.INGEN_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
@@ -42,7 +44,8 @@ class FordelingHendelseKonsument(
             exclude = [IrrecoverableIntegrationException::class],
             autoStartDltHandler = "true",
             autoCreateTopics = "false")
-    fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
+    
+    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
             if (isProd() && count.getAndIncrement() > 0) { // TODO safetyNet
@@ -50,17 +53,12 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
-            val jp = arkiv.hentJournalpost("${h.journalpostId}")
+            log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null)  {
                 log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
-                inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
-                return
-            }
-
-            if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} fordeles IKKE")
+                inc(FORDELINGTS, TOPIC,topic,KANAL,hendelse.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
 
@@ -71,29 +69,38 @@ class FordelingHendelseKonsument(
                 return
             }
 
+            if (!beslutter.skalFordele(jp)) {
+                log.info("Journalpost ${jp.journalpostId} fordeles IKKE")
+                return
+            }
 
-            jp.run {
-                if (fordeler.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
-                   log.info("Fordeler $journalpostId med brevkode $hovedDokumentBrevkode")
-                    fordeler.fordel(this, enhet.navEnhet(this)).also {
-                        with("${it.msg()} ($fnr)") {
-                            log.info(this)
-                            slack.jippiHvisDev(this)
-                            metrikker(it.fordelingstype,topic)
-                        }
-                    }
-                }
-                else {
-                    log.info("Ingen fordeling av $journalpostId, sett 'fordeling.enabled=true' for å aktivere")
-                }
-            }
+            fordel(jp,topic)
+
         }.onFailure {
-            with("Fordeling av journalpost ${h.journalpostId} feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
-                log.warn("$this (${it.javaClass.simpleName})", it)
-                slack.okHvisdev("$this. (${it.message})")
-            }
-            throw it
+            fordelFeilet(hendelse, antallForsøk, topic, it)
         }
+    }
+
+    private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =
+        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall.let { "$it." } ?: "1."} gang på topic $topic") {
+            log.warn("$this (${t.javaClass.simpleName})", t)
+            slack.okHvisdev("$this. (${t.message})")
+            throw t
+        }
+
+    private fun fordel(jp: Journalpost, topic: String) = if (fordeler.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
+        log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+        fordeler.fordel(jp, enhet.navEnhet(jp)).also {
+            with("${it.msg()} (${jp.fnr})") {
+                log.info(this)
+                slack.jippiHvisDev(this)
+                jp.metrikker(it.fordelingstype, topic)
+            }
+        }
+    }
+    else {
+        log.info("Ingen fordeling av ${jp.journalpostId}, sett 'fordeling.enabled=true' for å aktivere")
+        INGEN_FORDELING
     }
 
     @DltHandler

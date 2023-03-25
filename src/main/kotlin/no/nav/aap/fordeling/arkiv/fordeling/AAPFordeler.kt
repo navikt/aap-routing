@@ -4,12 +4,11 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
+import no.nav.aap.fordeling.arkiv.fordeling.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
-import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,9 +18,9 @@ class AAPFordeler(
         protected val  manuell: ManuellFordelingFactory) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
-    override  val cfg = FordelerConfig.of(devClusters(),AAP)  // For NOW
+    override  val cfg = DEV_AAP  // For NOW
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordel(jp,enhet)
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet?): FordelingResultat =
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet?)  =
         enhet?.let {e ->
             runCatching {
                 when (jp.hovedDokumentBrevkode) {

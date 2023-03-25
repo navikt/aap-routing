@@ -69,18 +69,20 @@ class FordelingHendelseKonsument(
                 return
             }
 
+
+
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE")
                 inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
                 return
             }
-            
+
 
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
                 val nyjp = arkiv.hentJournalpost(jp.journalpostId)
-                if (nyjp?.status == JOURNALFOERT)  {
+                if (jp.status != nyjp?.status)  {  // test siden vi ikke oppdaterer
                     log.warn("Journalpost ${jp.journalpostId} med brevkode ${nyjp.hovedDokumentBrevkode} RACE condition")
                 }
             }

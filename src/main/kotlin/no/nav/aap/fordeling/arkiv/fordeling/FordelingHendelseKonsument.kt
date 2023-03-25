@@ -45,6 +45,11 @@ class FordelingHendelseKonsument(
     fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
+            if (isProd() && count.getAndIncrement() > 0) { // TODO safetyNet
+                log.info("Sikkerhetsnett")
+                return
+            }
+
             log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${h.journalpostId}")
 

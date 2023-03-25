@@ -10,11 +10,8 @@ import org.springframework.stereotype.Component
 @Component
 class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFordeler(oppgave) {
     override val log = getLogger(AAPManuellFordelerProd::class.java)
-
-    override fun tema() = listOf(AAP)
-    override fun clusters() = prodClusters()
-
+    override val cfg= FordelerConfig.of(prodClusters(),AAP)
     override fun opprettFordeling(jp: Journalpost) = log.info("Liksom oppretter fordelingsoppgave")
     override fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) =  log.info("Liksom oppretter journalføringsoppgave")
-    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), tema=${tema()}, clusters=${clusters().asList()}"
+    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), cfg=$cfg"
 }

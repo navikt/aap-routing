@@ -19,8 +19,7 @@ class AAPFordeler(
         protected val  manuell: ManuellFordelingFactory) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
-    override fun clusters() = devClusters()  // For NOW
-    override fun tema() = listOf(AAP)
+    override  val cfg = FordelerConfig.of(devClusters(),AAP)  // For NOW
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordel(jp,enhet)
     override fun fordel(jp: Journalpost, enhet: NAVEnhet?): FordelingResultat =
         enhet?.let {e ->
@@ -37,7 +36,7 @@ class AAPFordeler(
                     }
 
                     else -> {
-                        log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${tema()}, forsøker manuelt")
+                        log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${jp.tema}, forsøker manuelt")
                         manuell.fordel(jp,enhet)
                     }
                 }
@@ -85,6 +84,6 @@ class AAPFordeler(
     }
 
     override fun toString(): String {
-        return "AAPFordeler(arena=$arena, arkiv=$arkiv, tema=${tema()}, clusters=${clusters().asList()}, manuelle=$manuell)"
+        return "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"
     }
 }

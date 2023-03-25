@@ -6,6 +6,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
+import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import org.springframework.stereotype.Component
@@ -13,8 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
-    override fun clusters() = devClusters()  // For NOW
-
+    override val cfg = FordelerConfig.of(devClusters(),AAP) // For NOW
 
     override fun fordel(jp: Journalpost, enhet: NAVEnhet?) =
         enhet?.let {
@@ -65,5 +65,5 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
         }
       protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp)
     protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet)
-    override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, tema=${tema()}, clusters=${clusters().asList()})"
+    override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, cfg=$cfg)"
 }

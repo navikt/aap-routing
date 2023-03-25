@@ -5,7 +5,7 @@ import no.nav.boot.conditionals.ConditionalOnGCP
 
 @ConditionalOnGCP
 class MottattAwareFordelingBeslutter(private val cfg: FordelingConfig): FordelingBeslutter {
-    override fun skalFordele(jp: Journalpost) = cfg.isEnabled && jp.status == MOTTATT
+    override fun skalFordele(jp: Journalpost) = cfg.isEnabled //&& jp.status == MOTTATT
 }
 
 interface FordelingBeslutter {

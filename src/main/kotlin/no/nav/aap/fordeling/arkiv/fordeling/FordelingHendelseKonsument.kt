@@ -74,6 +74,7 @@ class FordelingHendelseKonsument(
                 inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
                 return
             }
+            
 
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
             fordel(jp).also {

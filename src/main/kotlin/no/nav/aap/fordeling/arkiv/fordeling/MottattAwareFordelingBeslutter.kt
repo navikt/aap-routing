@@ -4,10 +4,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.boot.conditionals.ConditionalOnGCP
 
 @ConditionalOnGCP
-class MottattAwareFordelingBeslutter: FordelingBeslutter {
-
-    override fun skalFordele(jp: Journalpost) = jp.status == MOTTATT
-
+class MottattAwareFordelingBeslutter(private val cfg: FordelingConfig): FordelingBeslutter {
+    override fun skalFordele(jp: Journalpost) = cfg.isEnabled && jp.status == MOTTATT
 }
 
 interface FordelingBeslutter {

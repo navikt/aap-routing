@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Companion.INGEN_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
@@ -73,6 +72,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
+            log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
             fordel(jp,topic)
 
         }.onFailure {
@@ -81,22 +81,20 @@ class FordelingHendelseKonsument(
     }
 
     @DltHandler
-    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
+    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn(this)
             slack.okHvisdev(this)
         }
-    }
 
     private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =
-        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall.let { "$it." } ?: "1."} gang på topic $topic") {
+        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)
             slack.okHvisdev("$this. (${t.message})")
             throw t
         }
 
-    private fun fordel(jp: Journalpost, topic: String) = if (fordeler.isEnabled()) {  // TODO en MOTTATT sjekk, kanskje ?
-        log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+    private fun fordel(jp: Journalpost, topic: String) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
             with("${it.msg()} (${jp.fnr})") {
                 log.info(this)
@@ -104,12 +102,6 @@ class FordelingHendelseKonsument(
                 jp.metrikker(it.fordelingstype, topic)
             }
         }
-    }
-    else {
-        log.info("Ingen fordeling av ${jp.journalpostId}, sett 'fordeling.enabled=true' for å aktivere")
-        INGEN_FORDELING
-    }
-
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 
 }

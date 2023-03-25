@@ -23,7 +23,6 @@ class FordelingFactory(private val cf: FordelingConfig, private val fordelere: L
         }")
     }
 
-    fun isEnabled() = cf.isEnabled
     fun kanFordele(tema: String, status: String) = fordelerFor(tema) != INGEN_FORDELER && status == MOTTATT.name
 
     private fun fordelerFor(tema: String) =

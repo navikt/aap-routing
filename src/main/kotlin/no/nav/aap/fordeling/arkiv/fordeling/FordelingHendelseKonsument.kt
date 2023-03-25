@@ -80,6 +80,14 @@ class FordelingHendelseKonsument(
         }
     }
 
+    @DltHandler
+    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
+        with("Gir opp fordeling av journalpost ${h.journalpostId}") {
+            log.warn(this)
+            slack.okHvisdev(this)
+        }
+    }
+
     private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)
@@ -100,14 +108,6 @@ class FordelingHendelseKonsument(
     else {
         log.info("Ingen fordeling av ${jp.journalpostId}, sett 'fordeling.enabled=true' for å aktivere")
         INGEN_FORDELING
-    }
-
-    @DltHandler
-    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
-        with("Gir opp fordeling av journalpost ${h.journalpostId}") {
-            log.warn(this)
-            slack.okHvisdev(this)
-        }
     }
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()

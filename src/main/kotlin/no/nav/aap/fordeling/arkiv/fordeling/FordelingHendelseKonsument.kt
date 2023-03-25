@@ -14,6 +14,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.MDCUtil
 import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -46,14 +47,12 @@ class FordelingHendelseKonsument(
 
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-
-
-
-            log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            MDCUtil.callId()
+            log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null)  {
-                log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
+                log.warn("Ingen journalpost kunne leses fra JOARK, lar dette fanges opp av sikkerhetsnettet")
                 inc(FORDELINGTS, TOPIC,topic,KANAL,hendelse.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
@@ -64,23 +63,13 @@ class FordelingHendelseKonsument(
                 jp.metrikker(DIREKTE_MANUELL,topic)
                 return
             }
+
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE")
                 inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
                 return
             }
 
-
-/*
-            if (isProd() && !jp.erMeldekort()) { // TODO safetyNet
-                if (count.getAndIncrement() > 1) {
-                    return
-                }
-                else {
-                    log.info("Fordeler journalpost som ikke er meldekort ${jp.journalpostId}")
-                }
-            }
-*/
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
             fordel(jp,topic)
 

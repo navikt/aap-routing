@@ -54,12 +54,12 @@ class AAPFordeler(
 
     private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
-            log.info("Arena har IKKE aktiv sak for ${jp.fnr}")
+            log.info("Arena har IKKE aktiv sak for ${jp.fnr}, oppdaterer og ferdigstiller journalpost ${jp.journalpostId}")
             ferdigstillStandard(jp,enhet)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         }
         else {
-            with("Har aktiv sak for ${jp.fnr}, skal IKKE opprett oppgave i Arena") {
+            with("Arena har aktiv sak for ${jp.fnr}, skal IKKE opprett oppgave i Arena") {
                 log.info(this)
                 throw ArenaSakException(this)
             }

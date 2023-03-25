@@ -53,7 +53,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null)  {

@@ -47,8 +47,8 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
-            if (isProd() && count.getAndIncrement() > 0) { // TODO safetyNet
-                log.info("Sikkerhetsnett")
+            if (isProd() && count.getAndIncrement() > 1) { // TODO safetyNet
+                log.info("Sikkerhetsnett ${count.get()}")
                 return
             }
 

@@ -48,7 +48,7 @@ class FordelingHendelseKonsument(
         runCatching {
 
             if (isProd() && count.getAndIncrement() > 1) { // TODO safetyNet
-                log.info("Sikkerhetsnett ${count.get()}")
+               // log.info("Sikkerhetsnett ${count.get()}")
                 return
             }
 

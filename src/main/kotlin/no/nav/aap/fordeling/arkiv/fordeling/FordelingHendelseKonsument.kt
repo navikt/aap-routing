@@ -13,8 +13,11 @@ import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
+import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil
+import no.nav.aap.util.MDCUtil.NAV_CALL_ID
+import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -47,7 +50,7 @@ class FordelingHendelseKonsument(
 
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-            MDCUtil.callId()
+            toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 

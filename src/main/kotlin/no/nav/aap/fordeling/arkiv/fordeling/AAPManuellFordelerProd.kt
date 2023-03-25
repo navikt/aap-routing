@@ -12,5 +12,5 @@ class AAPManuellFordelerProd(private val oppgave: OppgaveClient) : AAPManuellFor
     override val cfg = PROD_AAP
     override fun opprettFordeling(jp: Journalpost) = log.info("Liksom oppretter fordelingsoppgave")
     override fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) =  log.info("Liksom oppretter journalføringsoppgave")
-    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), cfg=$cfg"
+    override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), cfg=$cfg)"
 }

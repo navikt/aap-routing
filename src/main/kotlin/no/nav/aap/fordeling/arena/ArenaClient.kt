@@ -6,13 +6,12 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import org.springframework.stereotype.Component
 
 @Component
-class ArenaClient(private val a: ArenaWebClientAdapter) {
+class ArenaClient(private val adapter: ArenaWebClientAdapter) {
     fun harAktivSak(fnr: Fødselsnummer) = nyesteAktiveSak(fnr) != null
     fun opprettOppgave(journalpost: Journalpost, enhet: NAVEnhet) =
-        a.opprettArenaOppgave(journalpost.opprettArenaOppgaveData(enhet))
+        adapter.opprettArenaOppgave(journalpost.opprettArenaOppgaveData(enhet))
 
-    fun nyesteAktiveSak(fnr: Fødselsnummer) = a.nyesteArenaSak(fnr)
-    override fun toString(): String {
-        return "ArenaClient(adapter=$a)"
-    }
+    fun nyesteAktiveSak(fnr: Fødselsnummer) = adapter.nyesteArenaSak(fnr)
+    override fun toString() = "ArenaClient(adapter=$adapter)"
+
 }

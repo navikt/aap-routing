@@ -7,6 +7,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.JOURNALFOERT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -74,7 +76,15 @@ class FordelingHendelseKonsument(
             }
 
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
-            fordel(jp,topic)
+            fordel(jp).also {
+                jp.metrikker(it.fordelingstype, topic)
+                val nyjp = arkiv.hentJournalpost(jp.journalpostId)
+                if (nyjp?.status == JOURNALFOERT)  {
+                    log.warn("Journalpost ${jp.journalpostId} med brevkode ${nyjp.hovedDokumentBrevkode} RACE condition")
+                }
+            }
+
+
 
         }.onFailure {
             fordelFeilet(hendelse, antallForsøk, topic, it)
@@ -95,12 +105,11 @@ class FordelingHendelseKonsument(
             throw t
         }
 
-    private fun fordel(jp: Journalpost, topic: String) =
+    private fun fordel(jp: Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
             with("${it.msg()} (${jp.fnr})") {
                 log.info(this)
                 slack.jippiHvisDev(this)
-                jp.metrikker(it.fordelingstype, topic)
             }
         }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()

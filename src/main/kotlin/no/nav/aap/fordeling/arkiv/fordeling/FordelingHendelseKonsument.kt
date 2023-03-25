@@ -5,8 +5,8 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -47,7 +47,11 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
-
+            if (!beslutter.skalFordele(hendelse)) {
+                log.info("Journalpost ${hendelse.journalpostId} med status ${hendelse.journalpostStatus}  fordeles IKKE")
+                inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
+                return
+            }
 
             log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
@@ -66,11 +70,7 @@ class FordelingHendelseKonsument(
             }
 
 
-            if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost med status ${jp.status} ${jp.journalpostId} fordeles IKKE")
-                jp.metrikker(INGEN,topic)
-                return
-            }
+
 /*
             if (isProd() && !jp.erMeldekort()) { // TODO safetyNet
                 if (count.getAndIncrement() > 1) {

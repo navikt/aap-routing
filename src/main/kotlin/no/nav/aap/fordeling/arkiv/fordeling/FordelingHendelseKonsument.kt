@@ -47,10 +47,7 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
-            if (isProd() && count.getAndIncrement() > 1) { // TODO safetyNet
-               // log.info("Sikkerhetsnett ${count.get()}")
-                return
-            }
+
 
             log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
@@ -68,12 +65,22 @@ class FordelingHendelseKonsument(
                 return
             }
 
+
             if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} fordeles IKKE")
+                log.info("Journalpost med status ${jp.status} ${jp.journalpostId} fordeles IKKE")
                 jp.metrikker(INGEN,topic)
                 return
             }
-
+/*
+            if (isProd() && !jp.erMeldekort()) { // TODO safetyNet
+                if (count.getAndIncrement() > 1) {
+                    return
+                }
+                else {
+                    log.info("Fordeler journalpost som ikke er meldekort ${jp.journalpostId}")
+                }
+            }
+*/
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
             fordel(jp,topic)
 

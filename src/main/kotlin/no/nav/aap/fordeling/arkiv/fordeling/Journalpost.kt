@@ -55,7 +55,7 @@ data class Journalpost(
 
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
-
+    fun erMeldekort() = tittel?.contains("Meldekort",true) ?: false
     fun opprettArenaOppgaveData(enhet: NAVEnhet) =
         ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 

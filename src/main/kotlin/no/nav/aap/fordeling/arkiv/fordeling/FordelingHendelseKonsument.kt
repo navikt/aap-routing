@@ -47,11 +47,7 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
 
-            if (!beslutter.skalFordele(hendelse)) {
-                log.info("Journalpost ${hendelse.journalpostId} med status ${hendelse.journalpostStatus}  fordeles IKKE")
-                inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
-                return
-            }
+
 
             log.info("Mottatt journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
@@ -68,7 +64,11 @@ class FordelingHendelseKonsument(
                 jp.metrikker(DIREKTE_MANUELL,topic)
                 return
             }
-
+            if (!beslutter.skalFordele(jp)) {
+                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE")
+                inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
+                return
+            }
 
 
 /*

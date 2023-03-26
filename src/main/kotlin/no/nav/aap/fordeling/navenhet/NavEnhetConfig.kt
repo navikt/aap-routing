@@ -5,16 +5,15 @@ import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.bind.DefaultValue
 import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(NAVENHET)
 class NavEnhetConfig(
-        @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("true") enabled: Boolean,
-        @DefaultValue(ENHET_PATH) val enhet: String,
-        @DefaultValue(AKTIVE_PATH) val aktive: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
+        baseUri: URI,
+        pingPath: String = DEFAULT_PING_PATH,
+        enabled: Boolean = true,
+        val enhet: String = ENHET_PATH,
+        val aktive: String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun aktiveEnheterUri(b: UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
     fun enhetUri(b: UriBuilder) = b.path(enhet).build()

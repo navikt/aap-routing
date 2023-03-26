@@ -5,17 +5,16 @@ import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.bind.DefaultValue
 import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(DOKARKIV)
 class DokarkivConfig(
-        @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("false") enabled: Boolean,
-        @DefaultValue(DOK_PATH) val dokPath: String,
-        @DefaultValue(DEFAULT_FERDIGSTILL_PATH) val ferdigstillPath: String,
-        @DefaultValue(DEFAULT_OPPDATER_PATH) val oppdaterPath: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
+        baseUri: URI,
+        pingPath: String = DEFAULT_PING_PATH,
+        enabled: Boolean = false,
+        val dokPath: String = DOK_PATH,
+        val ferdigstillPath: String = DEFAULT_FERDIGSTILL_PATH,
+        val oppdaterPath: String = DEFAULT_OPPDATER_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun dokUri(b: UriBuilder, journalpostId: String, dokumentInfoId:String, variantFormat: VariantFormat) = b.path(dokPath).build(journalpostId,dokumentInfoId,variantFormat.name)
 

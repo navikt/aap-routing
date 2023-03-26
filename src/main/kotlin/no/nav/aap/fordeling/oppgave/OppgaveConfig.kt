@@ -6,17 +6,16 @@ import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
 import no.nav.aap.rest.AbstractRestConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.bind.DefaultValue
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(OPPGAVE)
 class OppgaveConfig(
-        @DefaultValue(DEFAULT_PING_PATH) pingPath: String,
-        @DefaultValue("false") enabled: Boolean,
-        @DefaultValue("true") val oppslagEnabled: Boolean,
-        @DefaultValue(DEFAULT_OPPGAVE_PATH) val oppgavePath: String,
-        baseUri: URI) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {
+        baseUri: URI,
+        pingPath: String = DEFAULT_PING_PATH,
+        enabled: Boolean = false,
+        val oppslagEnabled: Boolean = true,
+        val oppgavePath: String = DEFAULT_OPPGAVE_PATH) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {
     fun oppgaveUri(b: UriBuilder, id: String) =
         b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID, id).path(oppgavePath).build()
 

@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
 import io.netty.handler.timeout.WriteTimeoutHandler
@@ -59,7 +59,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Bean
     fun meterRegistryCustomizer() =
-        MeterRegistryCustomizer<MeterRegistry> {
+        MeterRegistryCustomizer<PrometheusMeterRegistry> {
             registry -> registry.forEachMeter { log.info("Registry er ${it.javaClass.name}") }
         }
     @Bean

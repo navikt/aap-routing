@@ -66,7 +66,7 @@ class FordelingHendelseKonsument(
             }
 
             if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE (tittel=${jp.tittel},meldekort=${jp.erMeldekort()}")
+                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE (tittel='${jp.tittel}',meldekort=${jp.erMeldekort()}")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
                 return
             }

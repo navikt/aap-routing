@@ -64,7 +64,7 @@ data class Journalpost(
                     Pair(TEMA, tema),
                     Pair(TOPIC, topic),
                     Pair(FORDELINGSTYPE, type.name),
-                    Pair(TITTEL, tittel ?: "Ukjent tittel"),
+                    Pair(TITTEL, tittel ?: if (hovedDokumentTittel.contains("Meldekort", ignoreCase = true)) "Meldekort" else "Ukjent tittel"),
                     Pair(KANAL, kanal),
                     Pair(BREVKODE, hovedDokumentBrevkode)))
 

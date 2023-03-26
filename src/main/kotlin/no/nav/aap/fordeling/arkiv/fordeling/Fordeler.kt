@@ -33,5 +33,4 @@ data class FordelerConfig(val clusters: List<Cluster>, val tema: List<String>) {
 
 interface ManuellFordeler : Fordeler
 
-class ArenaSakException(msg: String) : RuntimeException(msg)
 class ManuellFordelingException(msg: String, cause: Throwable? = null) : RuntimeException(msg, cause)

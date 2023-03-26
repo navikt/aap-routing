@@ -24,6 +24,7 @@ class AAPFordeler(
         enhet?.let {e ->
             runCatching {
                 when (jp.hovedDokumentBrevkode) {
+
                     STANDARD.kode -> {
                         log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
                         fordelStandard(jp, e)
@@ -31,12 +32,12 @@ class AAPFordeler(
 
                     STANDARD_ETTERSENDING.kode -> {
                         log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
-                        fordelEttersending(jp)
+                        fordelEttersending(jp,e)
                     }
 
                     else -> {
                         log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${jp.tema}, forsøker manuelt")
-                        manuell.fordel(jp,enhet)
+                        manuell.fordel(jp,e)
                     }
                 }
             }.getOrElse {
@@ -59,24 +60,24 @@ class AAPFordeler(
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         }
         else {
-            with("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena") {
-                log.info(this)
-                throw ArenaSakException(this)
-            }
-         }
+            log.info("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena, til manuell fordeling")
+            manuell.fordel(jp,enhet)
+        }
 
     protected fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) {
         arena.opprettOppgave(jp, enhet).run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
         }
     }
-    private fun fordelEttersending(jp: Journalpost) =
+    private fun fordelEttersending(jp: Journalpost,enhet: NAVEnhet) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
             ferdigstillEttersending(jp,this)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling", jp.hovedDokumentBrevkode, jp.journalpostId)
-        } ?: throw ArenaSakException("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost").also {
-            log.warn(it.message,it)
+        } ?: run {
+            log.warn("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost, til manuell fordeling")
+            manuell.fordel(jp,enhet)
         }
+
 
     protected fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) {
         arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)

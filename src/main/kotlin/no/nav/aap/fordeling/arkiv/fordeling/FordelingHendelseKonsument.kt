@@ -7,8 +7,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.JOURNALFOERT
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -17,11 +15,9 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.MDCUtil
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
-import no.nav.boot.conditionals.Cluster.Companion.isProd
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -69,21 +65,16 @@ class FordelingHendelseKonsument(
                 return
             }
 
-
-
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE")
                 inc(FORDELINGTS, FORDELINGSTYPE,ALLEREDE_JOURNALFØRT.name,TOPIC, topic)
                 return
             }
 
-
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
             }
-
-
 
         }.onFailure {
             fordelFeilet(hendelse, antallForsøk, topic, it)
@@ -94,21 +85,19 @@ class FordelingHendelseKonsument(
     fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn(this)
-            slack.okHvisdev(this)
+            slack.feilHvisDev(this)
         }
 
     private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)
-            slack.okHvisdev("$this. (${t.message})")
+            slack.feilHvisDev("$this. (${t.message})")
             throw t
         }
 
     private fun fordel(jp: Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            with("${it.msg()}") {
-                slack.jippiHvisDev(this)
-            }
+            slack.meldingHvisDev(it.msg())
         }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 

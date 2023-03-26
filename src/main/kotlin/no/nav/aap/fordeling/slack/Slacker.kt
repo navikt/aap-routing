@@ -21,21 +21,21 @@ class Slacker(private val cfg: SlackConfig) {
             ok(melding)
         }
         else Unit
-    fun okHvisdev(melding: String) =
+    fun feilHvisDev(melding: String) =
         if (cluster in devClusters()) {
             feil(melding)
         }
         else Unit
 
-    fun jippiHvisDev(melding: String) =
+    fun meldingHvisDev(melding: String) =
         if (cluster in devClusters()) {
-            jippi(melding)
+            rocket(melding)
         }
         else Unit
 
     fun ok(melding: String) = melding("$OK$melding")
     fun feil(melding: String) = melding("$ERROR$melding")
-    fun jippi(melding: String) = melding("$ROCKET$melding")
+    fun rocket(melding: String) = melding("$ROCKET$melding")
 
     private fun melding(melding: String) =
         with(cfg) {

@@ -60,7 +60,7 @@ class AAPFordeler(
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         }
         else {
-            log.info("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena, til manuell fordeling")
+            log.info("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena, sender til manuell fordeling")
             manuell.fordel(jp,enhet)
         }
 
@@ -72,9 +72,9 @@ class AAPFordeler(
     private fun fordelEttersending(jp: Journalpost,enhet: NAVEnhet) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
             ferdigstillEttersending(jp,this)
-            FordelingResultat(AUTOMATISK, "Vellykket fordeling", jp.hovedDokumentBrevkode, jp.journalpostId)
+            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ettersending  ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         } ?: run {
-            log.warn("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost, til manuell fordeling")
+            log.warn("Arena har IKKE aktiv sak for ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost, sender til manuell fordeling")
             manuell.fordel(jp,enhet)
         }
 

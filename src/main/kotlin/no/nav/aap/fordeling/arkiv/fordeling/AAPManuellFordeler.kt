@@ -37,7 +37,7 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
 
     private fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
-            log.info("Oppretter en manuell journalføringsoppgave for journalpost $journalpostId")
+            log.info("Oppretter en journalføringsoppgave for journalpost $journalpostId")
            opprettJournalføring(this, enhet)
             with("Journalføringsoppgave opprettet")  {
                 FordelingResultat(MANUELL_JOURNALFØRING, this, hovedDokumentBrevkode, journalpostId).also {

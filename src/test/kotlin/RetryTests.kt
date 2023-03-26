@@ -25,7 +25,7 @@ class RetryTests {
     @BeforeEach
     fun beforeEach() {
         egenServer = MockWebServer()
-        with(EgenAnsattConfig(egenServer.url("/").toUri(), SKJERMING_PATH, DEFAULT_PING_PATH, true)) {
+        with(EgenAnsattConfig(egenServer.url("/").toUri())) {
             client = EgenAnsattClient(EgenAnsattWebClientAdapter(WebClient.builder().baseUrl("$baseUri").build(), this))
         }
     }

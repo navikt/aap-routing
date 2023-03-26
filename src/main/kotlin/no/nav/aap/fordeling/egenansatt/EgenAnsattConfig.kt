@@ -17,8 +17,8 @@ class EgenAnsattConfig(
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
-        const val DEFAULT_PING_PATH = "internal/health/liveness"
-        const val SKJERMING_PATH = "skjermet"
-        const val EGENANSATT = "egenansatt"
+        private const val DEFAULT_PING_PATH = "internal/health/liveness"
+        private const val SKJERMING_PATH = "skjermet"
+        private const val EGENANSATT = "egenansatt"
     }
 }

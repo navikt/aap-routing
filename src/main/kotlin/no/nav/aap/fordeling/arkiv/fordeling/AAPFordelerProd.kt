@@ -17,6 +17,6 @@ class AAPFordelerProd(
     override fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) = log.info("Liksom  ferdigstilling av søknad")
     override fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) = log.info("Liksom ferdigstilling av ettersending")
     override fun toString(): String {
-        return "AAPFordelerProd($arena=$arena), cfg=$cfg, manuell=${manuell}"
+        return "AAPFordelerProd($arena=$arena), cfg=$cfg, manuell=${manuell})"
     }
 }

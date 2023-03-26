@@ -78,7 +78,7 @@ class FordelingHendelseKonsument(
             }
 
 
-            log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+            log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
                 val nyjp = arkiv.hentJournalpost(jp.journalpostId)
@@ -110,8 +110,7 @@ class FordelingHendelseKonsument(
 
     private fun fordel(jp: Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            with("${it.msg()} (${jp.fnr})") {
-                log.info(this)
+            with("${it.msg()}") {
                 slack.jippiHvisDev(this)
             }
         }

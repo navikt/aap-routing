@@ -10,11 +10,9 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalpostType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.util.MetrikkLabels.DISKRESJONSKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
@@ -66,8 +64,6 @@ data class Journalpost(
                     Pair(FORDELINGSTYPE, type.name),
                     Pair(TITTEL, tittel ?: "Ukjent tittel"),
                     Pair(KANAL, kanal),
-                    Pair(BREVKODE, hovedDokumentBrevkode),
-                    Pair(DISKRESJONSKODE,diskresjonskode),
-                    Pair(EGENANSATT, egenAnsatt)))
+                    Pair(BREVKODE, hovedDokumentBrevkode)))
 
 }

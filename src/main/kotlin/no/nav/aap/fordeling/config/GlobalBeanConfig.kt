@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import io.micrometer.core.instrument.MeterRegistry
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
 import io.netty.handler.timeout.WriteTimeoutHandler
@@ -33,6 +34,7 @@ import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
@@ -55,8 +57,11 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-
-
+    @Bean
+    fun meterRegistryCustomizer() =
+        MeterRegistryCustomizer<MeterRegistry> {
+            registry -> registry.forEachMeter { log.info("Registry er ${it.javaClass.name}") }
+        }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()

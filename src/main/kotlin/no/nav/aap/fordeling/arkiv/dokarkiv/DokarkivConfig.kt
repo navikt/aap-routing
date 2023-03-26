@@ -10,8 +10,8 @@ import org.springframework.web.util.UriBuilder
 @ConfigurationProperties(DOKARKIV)
 class DokarkivConfig(
         baseUri: URI,
-        pingPath: String = DEFAULT_PING_PATH,
         enabled: Boolean = false,
+        pingPath: String = DEFAULT_PING_PATH,
         val dokPath: String = DOK_PATH,
         val ferdigstillPath: String = DEFAULT_FERDIGSTILL_PATH,
         val oppdaterPath: String = DEFAULT_OPPDATER_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {

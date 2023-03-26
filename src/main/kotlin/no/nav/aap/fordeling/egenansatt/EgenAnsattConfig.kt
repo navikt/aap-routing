@@ -3,14 +3,15 @@ package no.nav.aap.fordeling.egenansatt
 import java.net.URI
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.rest.AbstractRestConfig
+import org.aspectj.weaver.tools.cache.SimpleCacheFactory.enabled
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(EGENANSATT)
 class EgenAnsattConfig(
         baseUri: URI,
-        pingPath: String = DEFAULT_PING_PATH,
         enabled: Boolean = true,
+        pingPath: String = DEFAULT_PING_PATH,
         val path: String = SKJERMING_PATH) : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled) {
 
     fun skjermetUri(b: UriBuilder) = b.path(path).build()

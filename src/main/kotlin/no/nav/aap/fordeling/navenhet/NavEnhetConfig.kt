@@ -10,8 +10,8 @@ import org.springframework.web.util.UriBuilder
 @ConfigurationProperties(NAVENHET)
 class NavEnhetConfig(
         baseUri: URI,
-        pingPath: String = DEFAULT_PING_PATH,
         enabled: Boolean = true,
+        pingPath: String = DEFAULT_PING_PATH,
         val enhet: String = ENHET_PATH,
         val aktive: String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 

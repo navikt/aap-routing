@@ -26,17 +26,17 @@ class AAPFordeler(
                 when (jp.hovedDokumentBrevkode) {
 
                     STANDARD.kode -> {
-                        log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelStandard(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Forsøker automatisk journalføring av ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelEttersending(jp,e)
                     }
 
                     else -> {
-                        log.info("Brevkode ${jp.hovedDokumentBrevkode} ikke konfigurert for automatisk fordeling for ${jp.tema}, forsøker manuelt")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
                         manuell.fordel(jp,e)
                     }
                 }

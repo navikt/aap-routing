@@ -43,9 +43,8 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
             runCatching {
                 log.info("Oppretter fordelingsoppgave for $journalpostId")
                 opprettFordeling(this)
-                with("Fordelingsoppgave opprettet")  {
-                    FordelingResultat(MANUELL_FORDELING, this, hovedDokumentBrevkode, journalpostId).also {
-                    }}
+                FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, journalpostId).also {
+                }
             }.getOrElse {
                 with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId") {
                     log.warn(this)
@@ -53,7 +52,11 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
             }
         }
-    protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp)
-    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet)
+    protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp).also {
+        log.info("Opprettet fordelingsoppgave for ${jp.journalpostId}")
+    }
+    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet).also {
+        log.info("Opprettet journalføringsoppgave for ${jp.journalpostId}")
+    }
     override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, cfg=$cfg)"
 }

@@ -74,7 +74,6 @@ class FordelingHendelseKonsument(
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
-                log.info(it.msg())
             }
 
         }.onFailure {
@@ -99,7 +98,7 @@ class FordelingHendelseKonsument(
     private fun fordel(jp: Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
             slack.meldingHvisDev(it.msg())
+            log.info(it.msg())
         }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
-
 }

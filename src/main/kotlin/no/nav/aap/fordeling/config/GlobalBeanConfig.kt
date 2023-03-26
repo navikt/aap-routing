@@ -64,7 +64,6 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             registry.config().commonTags("region", "someRegionName")
         }
     }
-}
 
 @Bean
     fun swagger(p: BuildProperties): OpenAPI {

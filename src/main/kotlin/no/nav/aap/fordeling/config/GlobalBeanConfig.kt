@@ -61,7 +61,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    @Bean
+    //@Bean
     fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
         reg.config().meterFilter(replaceTagValues(BREVKODE, {
             if (it.contains("Meldekort")) it.uppercase() else it

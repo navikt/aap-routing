@@ -57,9 +57,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    @Bean fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry>? {
-        return MeterRegistryCustomizer { registry: MeterRegistry -> registry.config().commonTags("region", "europe-north-1") }
-    }
+    @Bean fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> =
+        MeterRegistryCustomizer { it.config().commonTags("region", "europe-north-1") }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()

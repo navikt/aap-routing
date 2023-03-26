@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
+import no.nav.aap.rest.AbstractWebClientAdapter.Companion.log
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
@@ -35,7 +36,6 @@ import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -185,5 +186,15 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 next.exchange(ClientRequest.from(req)
                     .header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build())
             }
+    }
+}
+
+@Component
+class Jalla(private val r: MeterRegistry)  {
+
+    private val log = getLogger(Jalla::class.java)
+
+    init {
+        log.info("XXXX ${r.meters}")
     }
 }

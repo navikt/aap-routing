@@ -58,7 +58,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
     @Bean
-    fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer {
+    fun metricsCommonTags(): MeterRegistryCustomizer<PrometheusMeterRegistry> = MeterRegistryCustomizer {
         registry -> run {
         log.info("XXXXX ${registry.meters.size}")
         registry.forEachMeter {

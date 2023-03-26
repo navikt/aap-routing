@@ -74,6 +74,7 @@ class FordelingHendelseKonsument(
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
+                log.info(it.msg())
             }
 
         }.onFailure {

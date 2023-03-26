@@ -53,7 +53,6 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 opprettFordeling(this)
                 with("Fordelingsoppgave opprettet")  {
                     FordelingResultat(MANUELL_FORDELING, this, hovedDokumentBrevkode, journalpostId).also {
-                        log.info(it.msg())
                     }}
             }.getOrElse {
                 with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId") {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.config.MeterFilter
+import io.micrometer.core.instrument.config.MeterFilter.*
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
 import io.netty.handler.timeout.WriteTimeoutHandler
@@ -12,8 +14,10 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.time.Duration.ofSeconds
+import java.util.*
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
+import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -57,8 +61,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    @Bean fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> =
-        MeterRegistryCustomizer { it.config().commonTags("region", "europe-north-1") }
+    @Bean
+    fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
+        reg.config().meterFilter(replaceTagValues(BREVKODE, {
+            if (it.contains("Meldekort")) it.uppercase() else it
+        }))
+    }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()
@@ -87,6 +95,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 .filter(correlatingFilterFunction(applicationName))
                 .filter(monkey)
         }
+
 
 
     @Bean

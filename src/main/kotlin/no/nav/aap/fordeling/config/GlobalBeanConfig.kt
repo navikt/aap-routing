@@ -60,7 +60,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Bean
     fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer {
         registry -> run {
-        log.info("XXXXX")
+        log.info("XXXXX ${registry.meters.size}")
         registry.forEachMeter {
             log.info("Meter er $it")
         }

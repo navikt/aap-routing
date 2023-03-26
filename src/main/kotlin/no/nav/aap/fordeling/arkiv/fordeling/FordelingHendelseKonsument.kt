@@ -81,10 +81,6 @@ class FordelingHendelseKonsument(
             log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
-                val nyjp = arkiv.hentJournalpost(jp.journalpostId)
-                if (jp.status != nyjp?.status)  {  // test siden vi ikke oppdaterer
-                    log.warn("Journalpost ${jp.journalpostId} vs  ${nyjp?.journalpostId} RACE condition")
-                }
             }
 
 

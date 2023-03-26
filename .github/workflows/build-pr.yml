@@ -37,7 +37,7 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)-PR${{ steps.kompiler-pr.outputs.image }}" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)" >> $GITHUB_ENV
 
 
             -   name: Login GAR
@@ -47,24 +47,28 @@ jobs:
                     identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
                     team: aap
 
-            -   name: Kompiler
+            -   name: Kompiler, bygg og deploy PR image
                 id: kompiler-pr
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
                     ./mvnw  -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} --batch-mode --settings .github/.m2/settings.xml package jib:build 
 
     deploy:
-        name: Deploy PR til dev-gcp
+        strategy:
+            matrix:
+                cluster: [ dev-gcp, prod-gcp ]
+        name: Deploy PR til ${{matrix.cluster}}
         needs: bygg
         runs-on: ubuntu-latest
-        environment: pr:dev-gcp:aap
+        environment: pr:${{matrix.cluster}}:aap
         env:
             PRINT_PAYLOAD: true
+            TIMEOUT: 30m
             APIKEY: ${{secrets.NAIS_DEPLOY_APIKEY}}
-            RESOURCE: .nais/naiserator.yaml
-            CLUSTER: dev-gcp
-            VARS: .nais/dev-gcp.json
+            RESOURCE: .nais/naiserator.yaml,.nais/${{matrix.cluster}}-alerts.yaml
+            CLUSTER: ${{matrix.cluster}}
+            VARS: .nais/${{matrix.cluster}}.json
             IMAGE: ${{needs.bygg.outputs.image}}
         steps:
             -   uses: actions/checkout@v3
-            -   uses: nais/deploy/actions/deploy@master
+            -   uses: nais/deploy/actions/deploy@v1

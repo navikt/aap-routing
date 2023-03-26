@@ -4,8 +4,6 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.DEFAULT_PING_PATH
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.SKJERMING_PATH
 import no.nav.aap.fordeling.egenansatt.EgenAnsattWebClientAdapter
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +23,7 @@ class RetryTests {
     @BeforeEach
     fun beforeEach() {
         egenServer = MockWebServer()
-        with(EgenAnsattConfig(egenServer.url("/").toUri(), SKJERMING_PATH, DEFAULT_PING_PATH, true)) {
+        with(EgenAnsattConfig(egenServer.url("/").toUri())) {
             client = EgenAnsattClient(EgenAnsattWebClientAdapter(WebClient.builder().baseUrl("$baseUri").build(), this))
         }
     }
@@ -50,7 +48,7 @@ class RetryTests {
     @Test
     @DisplayName("Error 400  ingen retry")
     fun ingenRetry400() {
-        egenServer.expect("error",BAD_REQUEST)
+        egenServer.expect("false",BAD_REQUEST)
         assertThrows<IrrecoverableIntegrationException> {client.erEgenAnsatt(FIKTIVTFNR)  }
     }
 }

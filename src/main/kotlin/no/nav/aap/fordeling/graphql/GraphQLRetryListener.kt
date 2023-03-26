@@ -16,7 +16,7 @@ class GraphQLRetryListener(registry: RetryRegistry, slacker: Slacker) {
             eventPublisher.onError {
                 with("Retry event error $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.okHvisdev(this)
+                    slacker.feilHvisDev(this)
                 }
             }
             eventPublisher.onSuccess {
@@ -28,13 +28,13 @@ class GraphQLRetryListener(registry: RetryRegistry, slacker: Slacker) {
             eventPublisher.onIgnoredError() {
                 with("Retry event ignore $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.okHvisdev(this)
+                    slacker.feilHvisDev(this)
                 }
             }
             registry.retry(GRAPHQL).eventPublisher.onRetry {
                 with("Retry event $it") {
                     log.warn(this,it.lastThrowable)
-                    slacker.okHvisdev(this)
+                    slacker.feilHvisDev(this)
                 }
             }
         }

@@ -55,7 +55,7 @@ data class Journalpost(
 
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
-
+    fun erMeldekort() = tittel?.contains("Meldekort",true) ?: false
     fun opprettArenaOppgaveData(enhet: NAVEnhet) =
         ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 
@@ -69,8 +69,7 @@ data class Journalpost(
                     Pair(KANAL, kanal),
                     Pair(BREVKODE, second),
                     Pair(DISKRESJONSKODE,diskresjonskode),
-                    Pair(EGENANSATT, egenAnsatt),
-                    Pair("mottatt",status)))
+                    Pair(EGENANSATT, egenAnsatt)))
         }
 
     private fun fixBrevkodeOgMeldekort(): Pair<String,String>  {

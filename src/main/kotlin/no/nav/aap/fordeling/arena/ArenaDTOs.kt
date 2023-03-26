@@ -13,6 +13,5 @@ object ArenaDTOs {
             val fnr: Fødselsnummer,
             val enhet: String,
             val tittel: String,
-            val titler: List<String> = emptyList(),
-                                      )
+            val titler: List<String> = emptyList())
 }

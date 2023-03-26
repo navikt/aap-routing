@@ -25,21 +25,20 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
         .bodyValue(kriterium)
         .exchangeToMono { it.toResponse<List<Map<String,String>>>(log)}
         .retryWhen(cf.retrySpec(log,cf.enhet))
-        .doOnSuccess { log.info("Nav enhet oppslag med $kriterium mot NORG2 OK. Respons $it") }
+        .doOnSuccess { log.trace("Nav enhet oppslag mot NORG2 OK.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
         ?.map { NavOrg(it["enhetNr"]!!, it["status"]!!) }
         ?.filterNot(::untatt)
         ?.firstOrNull { it in enheter }
         ?.let { NAVEnhet(it.enhetNr) }
-        ?: throw IrrecoverableIntegrationException("Ingen Nav enhet for $kriterium fra NORG2")
 
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
         .exchangeToMono { it.toResponse<List<Map<String,Any>>>(log)}
         .retryWhen(cf.retrySpec(log,cf.aktive))
-        .doOnSuccess { log.info("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
+        .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block() ?.map {  NavOrg( "${it["enhetNr"]}", "${it["status"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")

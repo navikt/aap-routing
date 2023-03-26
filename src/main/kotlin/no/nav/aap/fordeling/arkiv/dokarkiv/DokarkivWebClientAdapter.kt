@@ -60,9 +60,8 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient: WebClient, val cf
 
         }
         else {
-            "Ferdigstilte ikke journalpost $journalpostId".also {
-                log.info(it)
-            }
+            log.info("Ferdigstilte ikke journalpost $journalpostId")
+            "Ingen ferdigstiling"
         }
 
     fun søknad(jp: Journalpost) = dokument(jp.journalpostId,søknadDokumentId(jp),JSON)

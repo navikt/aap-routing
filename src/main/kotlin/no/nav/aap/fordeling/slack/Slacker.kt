@@ -5,10 +5,8 @@ import no.nav.aap.fordeling.slack.SlackConfig.Companion.ERROR
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
-import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
-import no.nav.boot.conditionals.Cluster.DEV_GCP
 import org.slf4j.LoggerFactory.*
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.DefaultValue
@@ -23,21 +21,21 @@ class Slacker(private val cfg: SlackConfig) {
             ok(melding)
         }
         else Unit
-    fun okHvisdev(melding: String) =
+    fun feilHvisDev(melding: String) =
         if (cluster in devClusters()) {
             feil(melding)
         }
         else Unit
 
-    fun jippiHvisDev(melding: String) =
+    fun meldingHvisDev(melding: String) =
         if (cluster in devClusters()) {
-            jippi(melding)
+            rocket(melding)
         }
         else Unit
 
     fun ok(melding: String) = melding("$OK$melding")
     fun feil(melding: String) = melding("$ERROR$melding")
-    fun jippi(melding: String) = melding("$ROCKET$melding")
+    fun rocket(melding: String) = melding("$ROCKET$melding")
 
     private fun melding(melding: String) =
         with(cfg) {

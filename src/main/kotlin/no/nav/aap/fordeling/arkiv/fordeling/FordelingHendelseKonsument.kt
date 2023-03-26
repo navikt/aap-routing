@@ -1,21 +1,23 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import io.micrometer.observation.annotation.Observed
+import java.util.concurrent.atomic.AtomicInteger
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
+import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.Metrikker
+import no.nav.aap.util.MDCUtil.NAV_CALL_ID
+import no.nav.aap.util.MDCUtil.toMDC
+import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -28,12 +30,14 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 @ConditionalOnGCP
 class FordelingHendelseKonsument(
-        private val factory: FordelingFactory,
+        private val fordeler: FordelingFactory,
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
+        private val beslutter: FordelingBeslutter,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
+    private val count = AtomicInteger(0)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
@@ -41,15 +45,16 @@ class FordelingHendelseKonsument(
             exclude = [IrrecoverableIntegrationException::class],
             autoStartDltHandler = "true",
             autoCreateTopics = "false")
-    fun listen(h: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) n: Int?, @Header(RECEIVED_TOPIC) topic: String) {
+
+    fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
-           val fordeler =  factory.fordelerFor(h.tema())
-            log.info("Mottatt journalpost ${h.journalpostId} med tema ${h.tema()} på $topic for ${n?.let { "$it." } ?: "1."} gang.")
-            val jp = arkiv.hentJournalpost("${h.journalpostId}")
+            toMDC(NAV_CALL_ID, CallIdGenerator.create())
+            log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null)  {
-                log.warn("Ingen journalpost, lar dette fanges opp av sikkerhetsnettet")
-                Metrikker.inc(FORDELINGTS, TOPIC,topic,KANAL,h.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
+                log.warn("Ingen journalpost kunne leses fra JOARK, lar dette fanges opp av sikkerhetsnettet")
+                inc(FORDELINGTS, TOPIC,topic,KANAL,hendelse.mottaksKanal,FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
 
@@ -60,38 +65,40 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            jp.run {
-                if (factory.isEnabled()) {  // TODO en MOTTATT sjekk kanskje ?
-                   log.info("Fordeler $journalpostId med brevkode $hovedDokumentBrevkode")
-                    factory.fordelerFor(h.tema()).fordel(this, enhet.navEnhet(this)).also {
-                        with("${it.msg()} ($fnr)") {
-                            log.info(this)
-                            slack.jippiHvisDev(this)
-                            metrikker(it.fordelingstype,topic)
-                        }
-                    }
-                }
-                else {
-                    log.info("Ingen fordeling av $journalpostId, enten disabled eller allerede endelig journalført")
-                }
+            if (!beslutter.skalFordele(jp)) {
+                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE")
+                jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
+                return
             }
+
+            log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
+            fordel(jp).also {
+                jp.metrikker(it.fordelingstype, topic)
+            }
+
         }.onFailure {
-            with("Fordeling av journalpost ${h.journalpostId} feilet for ${n?.let { "$it." } ?: "1."} gang på topic $topic") {
-                log.warn("$this (${it.javaClass.simpleName})", it)
-                slack.okHvisdev("$this. (${it.message})")
-            }
-            throw it
+            fordelFeilet(hendelse, antallForsøk, topic, it)
         }
     }
 
     @DltHandler
-    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) {
+    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.warn(this)
-            slack.okHvisdev(this)
+            slack.feilHvisDev(this)
         }
-    }
 
+    private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =
+        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
+            log.warn("$this (${t.javaClass.simpleName})", t)
+            slack.feilHvisDev("$this. (${t.message})")
+            throw t
+        }
+
+    private fun fordel(jp: Journalpost) =
+        fordeler.fordel(jp, enhet.navEnhet(jp)).also {
+            slack.meldingHvisDev(it.msg())
+            log.info(it.msg())
+        }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
-
 }

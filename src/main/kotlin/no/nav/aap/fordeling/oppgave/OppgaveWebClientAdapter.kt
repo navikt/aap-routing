@@ -20,7 +20,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .uri { cf.oppgaveUri(it, journalpostId) }
                 .exchangeToMono { it.toResponse<OppgaveRespons>(log)}
                 .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
-                .doOnSuccess { log.info("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
+                .doOnSuccess { log.trace("Oppgave oppslag journalpost  $journalpostId OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${t.message})", t) }
                 .block()?.antallTreffTotalt?.let { it > 0 }
                 ?: throw IrrecoverableIntegrationException("Null respons fra opslag oppgave $journalpostId")
@@ -39,7 +39,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient: WebClient, val cf: 
                 .bodyValue(data)
                 .exchangeToMono { it.toResponse<Any>(log)}
                 .retryWhen(cf.retrySpec(log,object{}.javaClass.enclosingMethod.name.lowercase()))
-                .doOnSuccess { log.info("Opprett oppgave fra $data OK. Respons $it") }
+                .doOnSuccess { log.trace("Opprett oppgave fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Opprett oppgave fra $data feilet (${t.message})", t) }
                 .block() ?: throw IrrecoverableIntegrationException("Null respons fra opprett oppgave fra $data")
         }

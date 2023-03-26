@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.config
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.*
@@ -56,13 +57,16 @@ import reactor.util.retry.Retry.fixedDelay
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
-
     @Bean
-    fun meterRegistryCustomizer() =
-        MeterRegistryCustomizer<PrometheusMeterRegistry> {
-            registry -> registry.forEachMeter { log.info("Registry er ${it.javaClass.name}") }
+    fun metricsCommonTags(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer {
+        registry -> run {
+            log.info("XXXXX")
+            registry.config().commonTags("region", "someRegionName")
         }
-    @Bean
+    }
+}
+
+@Bean
     fun swagger(p: BuildProperties): OpenAPI {
         return OpenAPI()
             .info(Info()

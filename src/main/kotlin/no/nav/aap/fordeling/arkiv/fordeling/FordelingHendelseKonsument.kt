@@ -71,7 +71,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            log.info("Fordeler ${jp.journalpostId} (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
+            log.info("Forsøker fordeling av ${jp.journalpostId} (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
             }

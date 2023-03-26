@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil
@@ -26,8 +27,10 @@ class ManuellFordelingFactory(private val config: FordelingConfig, private val f
         (fordelere
             .filter{currentCluster in it.cfg.clusters }
             .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER)
-
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet?) = fordelerFor(jp.tema).fordel(jp,enhet)
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet?): FordelingResultat {
+        log.info("Fordeler journalpost ${jp.journalpostId} manuelt")
+        return fordelerFor(jp.tema).fordel(jp, enhet)
+    }
 
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = fordel(jp,enhet)
 

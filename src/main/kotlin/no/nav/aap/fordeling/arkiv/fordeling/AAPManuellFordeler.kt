@@ -19,6 +19,7 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
         enhet?.let {
             with(jp) {
                 if (oppgave.harOppgave(journalpostId)) {
+                    log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.journalpostId}")
                     FordelingResultat(INGEN, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, journalpostId)
                 }
                 else {
@@ -33,7 +34,6 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
 
     private fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
-            log.info("Oppretter en journalføringsoppgave for journalpost $journalpostId")
             opprettJournalføring(this, enhet)
             FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, journalpostId)
         }
@@ -41,7 +41,6 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
     private fun fordelingsOppgave(jp: Journalpost) =
         with(jp) {
             runCatching {
-                log.info("Oppretter fordelingsoppgave for $journalpostId")
                 opprettFordeling(this)
                 FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, journalpostId).also {
                 }
@@ -52,11 +51,17 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
             }
         }
-    protected fun opprettFordeling(jp: Journalpost) = oppgave.opprettFordelingOppgave(jp).also {
-        log.info("Opprettet fordelingsoppgave for ${jp.journalpostId}")
+    protected fun opprettFordeling(jp: Journalpost)  {
+        log.info("Oppretter fordelingsoppgave for ${jp.journalpostId}")
+        oppgave.opprettFordelingOppgave(jp).also {
+            log.info("Opprettet fordelingsoppgave for ${jp.journalpostId}")
+        }
     }
-    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet) = oppgave.opprettJournalføringOppgave(jp,enhet).also {
-        log.info("Opprettet journalføringsoppgave for ${jp.journalpostId}")
+    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet)  {
+        log.info("Oppretter en journalføringsoppgave for journalpost ${jp.journalpostId}")
+        oppgave.opprettJournalføringOppgave(jp,enhet).also {
+            log.info("Opprettet journalføringsoppgave for ${jp.journalpostId}")
+        }
     }
     override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, cfg=$cfg)"
 }

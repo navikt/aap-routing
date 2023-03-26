@@ -27,10 +27,8 @@ class ManuellFordelingFactory(private val config: FordelingConfig, private val f
             .filter{currentCluster in it.cfg.clusters }
             .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER)
 
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet?) :FordelingResultat {
-        log.info("Fordeler journalpost ${jp.journalpostId} manuelt")
-        return fordelerFor(jp.tema).fordel(jp,enhet)
-    }
+    override fun fordel(jp: Journalpost, enhet: NAVEnhet?) = fordelerFor(jp.tema).fordel(jp,enhet)
+
     override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = fordel(jp,enhet)
 
     override fun toString() = "ManuellFordelingFactory(cfg=$cfg, fordelere=$fordelere)"

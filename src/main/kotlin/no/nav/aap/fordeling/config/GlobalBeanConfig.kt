@@ -57,16 +57,6 @@ import reactor.util.retry.Retry.fixedDelay
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
-    @Bean
-    fun metricsCommonTags(): MeterRegistryCustomizer<PrometheusMeterRegistry> = MeterRegistryCustomizer {
-        registry -> run {
-        log.info("XXXXX ${registry.meters.size}")
-        registry.forEachMeter {
-            log.info("Meter er $it")
-        }
-        registry.config().commonTags("region", "someRegionName")
-        }
-    }
 
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {

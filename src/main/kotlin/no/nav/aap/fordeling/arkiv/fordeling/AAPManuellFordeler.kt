@@ -19,11 +19,7 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
         enhet?.let {
             with(jp) {
                 if (oppgave.harOppgave(journalpostId)) {
-                    with("Det finnes allerede en journalføringsoppgave, oppretter ingen ny") {
-                        FordelingResultat(INGEN, this, hovedDokumentBrevkode, journalpostId).also {
-                            log.info(it.msg())
-                        }
-                    }
+                    FordelingResultat(INGEN, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, journalpostId)
                 }
                 else {
                     runCatching {
@@ -38,12 +34,8 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
     private fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             log.info("Oppretter en journalføringsoppgave for journalpost $journalpostId")
-           opprettJournalføring(this, enhet)
-            with("Journalføringsoppgave opprettet")  {
-                FordelingResultat(MANUELL_JOURNALFØRING, this, hovedDokumentBrevkode, journalpostId).also {
-                    log.info(it.msg())
-                }
-            }
+            opprettJournalføring(this, enhet)
+            FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, journalpostId)
         }
 
     private fun fordelingsOppgave(jp: Journalpost) =

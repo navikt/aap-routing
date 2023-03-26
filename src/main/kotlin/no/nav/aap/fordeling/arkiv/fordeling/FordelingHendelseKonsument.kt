@@ -66,12 +66,12 @@ class FordelingHendelseKonsument(
             }
 
             if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE (tittel='${jp.tittel}',meldekort=${jp.erMeldekort()}")
+                log.info("Journalpost ${jp.journalpostId} med status ${jp.status}  fordeles IKKE (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'),meldekort=${jp.erMeldekort()}")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
                 return
             }
 
-            log.info("Fordeler ${jp.journalpostId} med brevkode ${jp.hovedDokumentBrevkode}, meldekort=${jp.erMeldekort()}")
+            log.info("Fordeler ${jp.journalpostId} (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
             }

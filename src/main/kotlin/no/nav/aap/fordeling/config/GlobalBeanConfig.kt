@@ -18,6 +18,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
+import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -61,11 +62,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    //@Bean
+    @Bean
     fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
-        reg.config().meterFilter(replaceTagValues(BREVKODE, {
-            if (it.contains("Meldekort")) it.uppercase() else it
-        }))
+        reg.config()
+            .meterFilter(replaceTagValues(TITTEL, {
+                if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
+            })).meterFilter(replaceTagValues(BREVKODE,{
+                if (it.startsWith("korrigert meldekort")) "Korrigert meldekort" else it}))
     }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {

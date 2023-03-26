@@ -60,28 +60,14 @@ data class Journalpost(
         ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 
      fun metrikker(type: FordelingType, topic: String) =
-        with(fixBrevkodeOgMeldekort()) {
-            Metrikker.inc(FORDELINGTS, listOf<Pair<String, Any>>(
+            Metrikker.inc(FORDELINGTS, listOf(
                     Pair(TEMA, tema),
                     Pair(TOPIC, topic),
                     Pair(FORDELINGSTYPE, type.name),
-                    Pair(TITTEL, first),
+                    Pair(TITTEL, tittel ?: "Ukjent tittel"),
                     Pair(KANAL, kanal),
-                    Pair(BREVKODE, second),
+                    Pair(BREVKODE, hovedDokumentBrevkode),
                     Pair(DISKRESJONSKODE,diskresjonskode),
                     Pair(EGENANSATT, egenAnsatt)))
-        }
-
-    private fun fixBrevkodeOgMeldekort(): Pair<String,String>  {
-        val tittel = fixMeldekort(tittel?.let { if (it.startsWith("Meldekort for uke", ignoreCase = true)) "Meldekort" else it } ?: "Ingen tittel")
-        val brevkode = fixBrevkode(tittel)
-        return Pair(tittel,brevkode)
-    }
-
-    private fun fixMeldekort(tittel: String) = if (tittel.startsWith("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else tittel
-
-    private fun fixBrevkode(tittel: String) =
-        if (hovedDokumentBrevkode.startsWith("ukjent brevkode", ignoreCase = true) && tittel.contains("meldekort", ignoreCase = true)) "Meldekort"
-        else hovedDokumentBrevkode
 
 }

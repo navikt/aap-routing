@@ -4,8 +4,6 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.DEFAULT_PING_PATH
-import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.SKJERMING_PATH
 import no.nav.aap.fordeling.egenansatt.EgenAnsattWebClientAdapter
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat

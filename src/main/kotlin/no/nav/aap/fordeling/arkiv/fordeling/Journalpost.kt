@@ -46,7 +46,9 @@ data class Journalpost(
     val diskresjonskode = bruker?.diskresjonskode ?: ANY
 
     @JsonIgnore
-    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode
+    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: tittel?.let {
+        if (it.contains("meldeplikt", ignoreCase = true)) "Meldeplikt" else "Ukjent brevkode"
+    } ?: "Ukjent brevkode"
 
     @JsonIgnore
     val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: "Ukjent tittel"
@@ -64,10 +66,6 @@ data class Journalpost(
                     Pair(FORDELINGSTYPE, type.name),
                     Pair(TITTEL, tittel ?: "Ukjent tittel"),
                     Pair(KANAL, kanal),
-                    Pair(BREVKODE, hovedDokumentBrevkode?.
-                    let {
-                        tittel?.let {
-                            if (it.contains("meldeplikt", ignoreCase = true)) "Meldeplikt" else "Ukjent brevkode"
-                        } ?: "Ukjent brevkode"} ?: "Ukjent brevkode")))
+                    Pair(BREVKODE, hovedDokumentBrevkode)))
 
 }

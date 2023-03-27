@@ -77,5 +77,5 @@ class TestController(
 
 
     @PostMapping("opprettarenaoppgave")
-    fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arenaAdapter.opprettArenaOppgave(data)
+    fun arenaOpprettOppgave(@RequestBody data: ArenaOpprettOppgaveData) = arenaAdapter.opprettArenaOppgave(data,"666")
 }

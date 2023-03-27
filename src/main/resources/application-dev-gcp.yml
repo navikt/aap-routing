@@ -2,6 +2,7 @@ fordeling:
     topics:
         backoff: 2000
 arena:
+    enabled: true
     readenabled: true
 oppgave:
     enabled: true

@@ -1,12 +1,11 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
-import no.nav.boot.conditionals.ConditionalOnGCP
 import org.springframework.stereotype.Component
 
 @Component
-class MottattAwareFordelingBeslutter(private val cfg: FordelingConfig): FordelingBeslutter {
-    override fun skalFordele(jp: Journalpost) = cfg.isEnabled && jp.status == MOTTATT
+class DefaultFordelingBeslutter(private val cfg: FordelingConfig): FordelingBeslutter {
+    override fun skalFordele(jp: Journalpost) = cfg.isEnabled && jp.status == MOTTATT  && !jp.erMeldekort()
 }
 
 interface FordelingBeslutter {

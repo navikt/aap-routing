@@ -24,21 +24,21 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
                 else {
                     runCatching {
-                        journalføringsOppgave(jp,it)
+                        opprettJournalføringsOppgave(jp,it)
                     }.getOrElse {
-                        fordelingsOppgave(jp)
+                        opprettFordelingsOppgave(jp)
                     }
                 }
             }
-        }?: fordelingsOppgave(jp)
+        }?: opprettFordelingsOppgave(jp)
 
-    private fun journalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
+    private fun opprettJournalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
         with(jp) {
             opprettJournalføring(this, enhet)
             FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, journalpostId)
         }
 
-    private fun fordelingsOppgave(jp: Journalpost) =
+    private fun opprettFordelingsOppgave(jp: Journalpost) =
         with(jp) {
             runCatching {
                 opprettFordeling(this)

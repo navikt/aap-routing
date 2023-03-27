@@ -37,7 +37,6 @@ class FordelingHendelseKonsument(
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
-    private val count = AtomicInteger(0)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
@@ -97,7 +96,7 @@ class FordelingHendelseKonsument(
 
     private fun fordel(jp: Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev(it.msg())
+            slack.meldingHvisDev("${it.msg()} (${jp.fnr})")
             log.info(it.msg())
         }
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()

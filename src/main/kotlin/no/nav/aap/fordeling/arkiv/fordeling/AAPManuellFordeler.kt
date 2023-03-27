@@ -26,6 +26,7 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                     runCatching {
                         opprettJournalføringsOppgave(jp,it)
                     }.getOrElse {
+                        log.warn("Opprettelse av journalføringsoppgave feilet", it)
                         opprettFordelingsOppgave(jp)
                     }
                 }

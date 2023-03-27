@@ -24,6 +24,9 @@ class SAFGraphQLAdapter(
             mapper.tilJournalpost(it)
         }
 
+    fun hentJournalpostRAW(journalpostId: String) =
+        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())
+
     companion object {
         private fun String.asIdent() = mapOf(ID to this)
         private const val JOURNALPOST_QUERY = "query-journalpost.graphql"

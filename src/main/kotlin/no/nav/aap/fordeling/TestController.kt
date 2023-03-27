@@ -50,7 +50,7 @@ class TestController(
         arkivAdapter.ferdigstillJournalpost(journalpostId)
 
     @GetMapping("safjournalpost")
-    fun safjournalpost(@RequestParam journalpostId: String) = safAdapter.hentJournalpost(journalpostId)
+    fun safjournalpost(@RequestParam journalpostId: String) = safAdapter.hentJournalpostRAW(journalpostId)
 
     @GetMapping("journalpost")
     fun journalpost(@RequestParam journalpostId: String) = arkivClient.hentJournalpost(journalpostId)

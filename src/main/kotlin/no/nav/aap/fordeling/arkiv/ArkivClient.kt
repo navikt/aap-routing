@@ -18,5 +18,5 @@ class ArkivClient(private val dokarkiv: DokarkivWebClientAdapter, private val sa
         dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId, journalpost.oppdateringsData(sakNr))
 
     private fun Journalpost.oppdateringsData(saksNr: String) =
-        OppdateringData(tittel, avsenderMottager ?: bruker, bruker, Sak(saksNr), tema.uppercase())
+        OppdateringData(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), Sak(saksNr), tema.uppercase())
 }

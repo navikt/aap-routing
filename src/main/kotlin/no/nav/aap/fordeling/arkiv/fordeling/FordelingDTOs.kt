@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 
@@ -82,10 +83,12 @@ object FordelingDTOs {
 
         data class OppdateringData(
                 val tittel: String?,
-                val avsenderMottaker: Bruker?,
-                val bruker: Bruker?,
+                val avsenderMottaker: BrukerDTO?,
+                val bruker: BrukerDTO?,
                 val sak: Sak? = null,
                 val tema: String) {
+
+
 
             data class Sak(val fagsakId: String, val sakstype: String = FAGSAK, val fagsaksystem: String = FAGSAKSYSTEM)
         }
@@ -103,7 +106,9 @@ object FordelingDTOs {
             }
         }
 
-        data class Bruker(val fnr: Fødselsnummer, val diskresjonskode: Diskresjonskode = ANY, val erEgenAnsatt: Boolean = false)
+        data class Bruker(val fnr: Fødselsnummer, val diskresjonskode: Diskresjonskode = ANY, val erEgenAnsatt: Boolean = false) {
+            fun tilDTO() = BrukerDTO(fnr.fnr,FNR)
+        }
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 

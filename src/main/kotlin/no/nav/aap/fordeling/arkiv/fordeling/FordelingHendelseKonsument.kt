@@ -70,7 +70,7 @@ class FordelingHendelseKonsument(
                 return
             }
 
-            log.info("Begynner fordeling av ${jp.journalpostId} (tema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
+            log.info("Begynner fordeling av ${jp.journalpostId} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
             }

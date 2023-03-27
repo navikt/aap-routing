@@ -65,6 +65,7 @@ class AAPFordeler(
         }
 
     protected fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) {
+       log.info("Oppretter Arena oppgave for journalpost ${jp.journalpostId}")
         arena.opprettOppgave(jp, enhet).run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
         }

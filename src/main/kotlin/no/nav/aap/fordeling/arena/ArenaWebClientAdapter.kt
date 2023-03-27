@@ -34,7 +34,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             null
         }
 
-    fun opprettArenaOppgave(data: ArenaOpprettOppgaveData) =
+    fun opprettArenaOppgave(data: ArenaOpprettOppgaveData, journalpostId: String) =
         if (cf.isEnabled) {
             webClient.post()
                 .uri(cf::oppgaveUri)
@@ -43,13 +43,13 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
                 .bodyValue(data)
                 .exchangeToMono { it.toResponse<ArenaOpprettetOppgave>(log)}
                 .retryWhen(cf.retrySpec(log,cf.oppgavePath))
-                .doOnSuccess { log.info("Arena opprettet oppgave OK. Respons $it") }
+                .doOnSuccess { log.info("Arena opprettet oppgave for journalpost $journalpostId OK. Respons $it") }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet for konfig $cf  (${t.message})", t) }
-                .block() ?: throw IrrecoverableIntegrationException("Null respons for opprettelse av oppgave")
+                .block() ?: throw IrrecoverableIntegrationException("Null respons for opprettelse av oppgave for journalpost $journalpostId")
         }
         else {
             EMPTY.also {
-                log.info("Opprettet IKKE arena oppgave")
+                log.info("Opprettet IKKE arena oppgave for journalpost $journalpostId, set arena.enabled=true for å enable")
             }
         }
 

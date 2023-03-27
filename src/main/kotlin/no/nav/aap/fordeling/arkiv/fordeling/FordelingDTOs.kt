@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import com.fasterxml.jackson.annotation.JsonSetter
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -112,7 +113,7 @@ object FordelingDTOs {
 
         data class DokumentInfo(val dokumentInfoId: String, val tittel: String?, val brevkode: String?)
 
-        data class BrukerDTO(val id: String?, val idType: BrukerType?) {
+        data class BrukerDTO(val id: String?, @JsonSetter("idType") val type: BrukerType?) {
             enum class BrukerType {
                 FNR,
                 AKTOERID,

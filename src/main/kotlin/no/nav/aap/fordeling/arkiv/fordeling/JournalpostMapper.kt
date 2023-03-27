@@ -44,11 +44,11 @@ class JournalpostMapper(private val pdl: PDLClient, private val egen: EgenAnsatt
     private fun BrukerDTO.fødselsnummer(journalpostId: String, kind: String) =
         with(this) {
             id?.let {
-                when(idType) {
+                when(type) {
                     AKTOERID -> AktørId(it).fødselsnummer(journalpostId)
                     FNR -> Fødselsnummer(it)
                     else -> null.also {
-                        log.warn("IdType $idType ikke støttet for $kind med id $it i journalpost $journalpostId")
+                        log.warn("IdType $type ikke støttet for $kind med id $it i journalpost $journalpostId")
                     }
                 }
             }

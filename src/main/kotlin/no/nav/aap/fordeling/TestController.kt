@@ -15,6 +15,7 @@ import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.ConditionalOnDev
 import no.nav.security.token.support.spring.UnprotectedRestController
 import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
+@ConditionalOnDev
 class TestController(
         private val pdlAdapter: PDLWebClientAdapter,
         private val egenClient: EgenAnsattClient,

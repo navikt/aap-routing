@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
@@ -29,7 +30,8 @@ class TestController(
         private val arkivClient: ArkivClient,
         private val oppgaveClient: OppgaveClient,
         private val arenaAdapter: ArenaWebClientAdapter,
-        private val orgClient: NavEnhetClient) {
+        private val orgClient: NavEnhetClient,
+        private val safAdapter: SAFGraphQLAdapter) {
 
     private val log = getLogger(javaClass)
 
@@ -44,6 +46,9 @@ class TestController(
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId: String) =
         arkivAdapter.ferdigstillJournalpost(journalpostId)
+
+    @GetMapping("safjournalpost")
+    fun safjournalpost(@RequestParam journalpostId: String) = safAdapter.hentJournalpost(journalpostId)
 
     @GetMapping("journalpost")
     fun journalpost(@RequestParam journalpostId: String) = arkivClient.hentJournalpost(journalpostId)

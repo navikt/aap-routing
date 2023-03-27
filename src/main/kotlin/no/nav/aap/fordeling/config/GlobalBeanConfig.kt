@@ -124,7 +124,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @ConditionalOnNotProd
     @Bean
-    fun notProdHttpClient() = HttpClient.create().wiretap("webClientLogger", TRACE, TEXTUAL)
+    fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)
         .doOnConnected {
             it.addHandlerFirst(WriteTimeoutHandler(90, SECONDS))
         }

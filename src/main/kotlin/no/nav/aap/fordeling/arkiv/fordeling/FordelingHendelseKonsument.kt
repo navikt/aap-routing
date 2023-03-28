@@ -57,7 +57,6 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
-            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,RECOVERABLE, monkeyIn(prodClusters(),5))
             log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
@@ -78,9 +77,6 @@ class FordelingHendelseKonsument(
                 log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
                 slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
             }
-
-
-           monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
 
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")

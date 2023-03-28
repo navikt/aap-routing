@@ -5,7 +5,12 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import java.util.*
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
+import no.nav.aap.fordeling.util.ChaosMonkeyCriteria
+import no.nav.aap.fordeling.util.ChaosMonkeyCriteria.monkeyIn
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
+import no.nav.boot.conditionals.Cluster.Companion.prodClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -21,7 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
-class SAFBeanConfig {
+class SAFBeanConfig(private val monkey: ChaosMonkey) {
 
     @Bean
     @Qualifier(SAF)
@@ -29,6 +34,7 @@ class SAFBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
+            .filter(monkey.chaosMonkeyRequestFilterFunction(monkeyIn(prodClusters(), 10),RECOVERABLE))
             .build()
 
     @Bean

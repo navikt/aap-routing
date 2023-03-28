@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalpostType
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
@@ -34,7 +35,7 @@ data class Journalpost(
         val fnr: Fødselsnummer,
         val bruker: Bruker?,
         val avsenderMottager: AvsenderMottaker?,
-        val kanal: String,
+        val kanal: Kanal,
         val relevanteDatoer: Set<RelevantDato>,
         val dokumenter: Set<DokumentInfo>,
         val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {

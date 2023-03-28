@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -42,11 +43,14 @@ object FordelingDTOs {
             val behandlingstema: String?,
             val bruker: BrukerDTO?,
             val avsenderMottaker: AvsenderMottakerDTO?,
-            val kanal: String,
+            val kanal: Kanal,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>,
             val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
+        enum class Kanal {
+            NAV_NO, EESSI, NAV_NO_CHAT,EKST_OPS, SCAN_IM, @JsonEnumDefaultValue UKJENT
+        }
 
 
         enum class JournalpostType {
@@ -87,7 +91,8 @@ object FordelingDTOs {
                 val avsenderMottaker: BrukerDTO?,
                 val bruker: BrukerDTO?,
                 val sak: Sak? = null,
-                val tema: String) {
+                val tema: String,
+                                  ) {
 
 
 

@@ -44,7 +44,7 @@ object FordelingDTOs {
             val bruker: BrukerDTO?,
             val avsenderMottaker: AvsenderMottakerDTO?,
             val kanal: Kanal,
-            @JsonAlias("kanal") val råkanal: String,
+            @JsonAlias("kanal") val råkanal: String?,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>,
             val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {

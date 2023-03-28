@@ -17,6 +17,7 @@ import java.time.Duration.ofSeconds
 import java.util.*
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
+import no.nav.aap.fordeling.config.ChaosMonkeyConfig.Companion.MONKEY
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
@@ -37,9 +38,12 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenRespons
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
+import org.checkerframework.checker.units.qual.t
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
@@ -68,7 +72,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             .meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
             })).meterFilter(replaceTagValues(BREVKODE,{
-                if (it.startsWith("korrigert meldekort")) "Korrigert meldekort" else it}))
+                if (it.contains("korrigert meldekort")) "Korrigert meldekort" else it}))
     }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {
@@ -84,32 +88,21 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    @ConditionalOnNotProd
-    fun notProdChaosMonkey() = ChaosMonkey(DEV_MONKEY)
-
-    @Bean
-    @ConditionalOnProd
-    fun prodChaosMonkey() = ChaosMonkey(PROD_MONKEY)
-
-    @Bean
-    fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
+    @ConditionalOnProperty("chaos.monkey.enabled", havingValue = "true")
+    fun webClientMonkeyCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
                 .filter(monkey)
         }
 
-
-
     @Bean
-    @ConditionalOnNotProd
-    @Qualifier(MONKEY)
-    fun notProdFilterMonkey() = chaosMonkeyRequestFilterFunction(DEV_FILTER_MONKEY)
-
-    @Bean
-    @ConditionalOnProd
-    @Qualifier(MONKEY)
-    fun prodFilterMonkey() = chaosMonkeyRequestFilterFunction(PROD_FILTER_MONKEY)
+    @ConditionalOnProperty("chaos.monkey.enabled", havingValue = "false")
+    fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
+        WebClientCustomizer { b ->
+            b.clientConnector(ReactorClientHttpConnector(client))
+                .filter(correlatingFilterFunction(applicationName))
+        }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private interface IgnoreUnknown
@@ -176,23 +169,6 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     companion object {
-
-        private const val MONKEY = "monkey"
-
-        val NO_MONKEY = { false }
-
-        val DEV_MONKEY = NO_MONKEY // monkey(DEV_GCP)
-
-        val DEV_FILTER_MONKEY =  NO_MONKEY //monkey(DEV_GCP)
-
-        val PROD_MONKEY = NO_MONKEY
-
-        val PROD_FILTER_MONKEY =  NO_MONKEY //monkey(PROD_GCP)
-
-        val LOCAL_MONKEY =   monkey(LOCAL)
-
-
-        private fun monkey(vararg clusters: Cluster) = { -> nextInt(1, 5) == 1 && currentCluster in clusters.asList() }
         fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

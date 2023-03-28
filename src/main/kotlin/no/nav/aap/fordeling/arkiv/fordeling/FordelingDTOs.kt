@@ -44,13 +44,12 @@ object FordelingDTOs {
             val bruker: BrukerDTO?,
             val avsenderMottaker: AvsenderMottakerDTO?,
             val kanal: Kanal,
-            @JsonAlias("kanal") val råkanal: String?,
             val relevanteDatoer: Set<RelevantDato>,
             val dokumenter: Set<DokumentInfo>,
             val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
         enum class Kanal {
-            NAV_NO, EESSI, NAV_NO_CHAT,EKST_OPS, SKAN_IM, @JsonEnumDefaultValue UKJENT
+            NAV_NO, EESSI, NAV_NO_CHAT,EKST_OPPS, SKAN_IM, @JsonEnumDefaultValue UKJENT
         }
 
 

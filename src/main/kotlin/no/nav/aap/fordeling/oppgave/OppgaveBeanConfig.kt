@@ -1,11 +1,9 @@
 package no.nav.aap.fordeling.oppgave
 
-import no.nav.aap.fordeling.config.ChaosMonkeyConfig.Companion.monkeyIn
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.util.ChaosMonkey
-import no.nav.boot.conditionals.Cluster.Companion.notProdClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties

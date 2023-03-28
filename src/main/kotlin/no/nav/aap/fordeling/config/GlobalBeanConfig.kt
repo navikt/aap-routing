@@ -15,9 +15,10 @@ import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.*
 import java.util.concurrent.TimeUnit.*
-import no.nav.aap.fordeling.config.ChaosMonkeyConfig.Companion.MONKEY
+import no.nav.aap.fordeling.config.ChaosMonkeyConfig.MONKEY
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
+import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.toResponse
@@ -56,6 +57,9 @@ import reactor.util.retry.Retry.fixedDelay
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+    @Bean
+    fun monkey = ChaosMonkey()
 
     @Bean
     fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->

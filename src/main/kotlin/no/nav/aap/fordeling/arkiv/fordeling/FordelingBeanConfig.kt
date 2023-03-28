@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import java.util.*
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
@@ -61,6 +62,12 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }))
+
+    override fun configureCustomizers(configurer: CustomizersConfigurer) {
+        configurer.customizeErrorHandler {
+            it.addNotRetryableExceptions(IrrecoverableIntegrationException::class.java)
+        }
+    }
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {
         override fun retryTopicNamesProviderFactory() = namingProviderFactory

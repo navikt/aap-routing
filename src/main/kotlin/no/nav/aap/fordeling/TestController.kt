@@ -11,6 +11,8 @@ import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
+import no.nav.aap.fordeling.oppgave.OppgaveWebClientAdapter
+import no.nav.aap.fordeling.oppgave.OpprettOppgaveData
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.util.Constants.AAP
@@ -31,9 +33,9 @@ class TestController(
         private val arkivAdapter: DokarkivWebClientAdapter,
         private val arkivClient: ArkivClient,
         private val oppgaveClient: OppgaveClient,
+        private val oppgaveAdapter: OppgaveWebClientAdapter,
         private val arenaAdapter: ArenaWebClientAdapter,
-        private val orgClient: NavEnhetClient,
-        private val safAdapter: SAFGraphQLAdapter) {
+        private val orgClient: NavEnhetClient) {
 
     private val log = getLogger(javaClass)
 
@@ -49,14 +51,14 @@ class TestController(
     fun ferdigstillJournalpost(@RequestParam journalpostId: String) =
         arkivAdapter.ferdigstillJournalpost(journalpostId)
 
-    @GetMapping("safjournalpost")
-    fun safjournalpost(@RequestParam journalpostId: String) = safAdapter.hentJournalpostRAW(journalpostId)
-
     @GetMapping("journalpost")
     fun journalpost(@RequestParam journalpostId: String) = arkivClient.hentJournalpost(journalpostId)
 
     @GetMapping("hargosysoppgave")
     fun gosysHarOppgave(@RequestParam journalpostId: String) = oppgaveClient.harOppgave(journalpostId)
+
+    @PostMapping("opprettgosysoppgave")
+    fun opprettGosysOppgave(@RequestParam journalpostId: String, @RequestBody data: OpprettOppgaveData) = oppgaveAdapter.opprettOppgave(data)
 
     @GetMapping("nyestearenasak")
     fun nyesteArenaSak(@RequestParam fnr: Fødselsnummer) = arenaAdapter.nyesteArenaSak(fnr)

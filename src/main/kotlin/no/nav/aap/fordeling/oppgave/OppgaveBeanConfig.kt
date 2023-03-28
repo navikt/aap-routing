@@ -24,7 +24,7 @@ class OppgaveBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveFlow)
-            .filter(chaosMonkeyRequestFilterFunction(monkeyIn(notProdClusters(),2)))
+        //    .filter(chaosMonkeyRequestFilterFunction(monkeyIn(notProdClusters(),2)))
             .build()
 
     @Bean

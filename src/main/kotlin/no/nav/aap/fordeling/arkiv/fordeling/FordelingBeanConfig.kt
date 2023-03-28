@@ -67,6 +67,7 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
         configurer.customizeErrorHandler {
             it.addNotRetryableExceptions(IrrecoverableIntegrationException::class.java)
         }
+        configurer.customizeDeadLetterPublishingRecoverer { it.setThrowIfNoDestinationReturned(false) }
     }
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {

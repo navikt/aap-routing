@@ -6,13 +6,16 @@ import org.springframework.stereotype.Component
 
 @Component
 class DefaultFordelingBeslutter(private val cfg: FordelingConfig): FordelingBeslutter {
-    override fun skalFordele(jp: Journalpost) = cfg.isEnabled
-            && jp.status == MOTTATT
-            && !jp.erMeldekort()
-            && jp.kanal !in IGNORERTE_KANALER
+    override fun skalFordele(jp: Journalpost) =
+        with(jp) {
+            cfg.isEnabled
+                    && status == MOTTATT
+                    && !erMeldekort()
+                    && kanal !in HÅNDTERES_AV_ANDRE
+        }
 
     companion object {
-        private val IGNORERTE_KANALER = listOf(EESSI, NAV_NO_CHAT)
+        private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT)
     }
 }
 

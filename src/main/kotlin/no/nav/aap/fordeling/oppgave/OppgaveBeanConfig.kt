@@ -4,7 +4,7 @@ import no.nav.aap.fordeling.config.ChaosMonkeyConfig.Companion.monkeyIn
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
+import no.nav.aap.util.ChaosMonkey
 import no.nav.boot.conditionals.Cluster.Companion.notProdClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -20,11 +20,11 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveWebClient(builder: Builder, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow: ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder: Builder, monkey: ChaosMonkey, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow: ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveFlow)
-        //    .filter(chaosMonkeyRequestFilterFunction(monkeyIn(notProdClusters(),2)))
+          //  .filter(monkey.chaosMonkeyRequestFilterFunction(monkeyIn(notProdClusters(),2)))
             .build()
 
     @Bean

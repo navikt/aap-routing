@@ -77,7 +77,8 @@ class FordelingHendelseKonsument(
                 slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
             }
 
-            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
+
+          //  monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
 
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")

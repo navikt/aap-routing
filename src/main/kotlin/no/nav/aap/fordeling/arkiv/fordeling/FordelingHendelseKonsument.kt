@@ -66,7 +66,7 @@ class FordelingHendelseKonsument(
             }
 
             if (jp.kanal == UKJENT)  {
-                log.warn("UKjent kanal ${jp.kanal} for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
+                log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
             }
 
             if (!beslutter.skalFordele(jp)) {

@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
-@ConditionalOnDev
 class TestController(
         private val pdlAdapter: PDLWebClientAdapter,
         private val egenClient: EgenAnsattClient,

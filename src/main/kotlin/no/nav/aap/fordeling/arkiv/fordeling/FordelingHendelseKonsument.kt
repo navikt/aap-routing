@@ -69,6 +69,10 @@ class FordelingHendelseKonsument(
                 log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
             }
 
+            if (jp.erMeldekort()) {
+                log.info("Meldekort brevkode er ${jp.hovedDokumentBrevkode},  dokumenter er ${jp.dokumenter}")
+            }
+
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status ${jp.status} skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'),meldekort=${jp.erMeldekort()}")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)

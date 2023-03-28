@@ -34,6 +34,7 @@ class TestController(
         private val oppgaveClient: OppgaveClient,
         private val oppgaveAdapter: OppgaveWebClientAdapter,
         private val arenaAdapter: ArenaWebClientAdapter,
+        private val safAdapter: SAFGraphQLAdapter,
         private val orgClient: NavEnhetClient) {
 
     private val log = getLogger(javaClass)
@@ -41,6 +42,10 @@ class TestController(
     @PostMapping("oppdaterogferdigstilljournalpost")
     fun oppdaterOgFerdigstillJournalpost(@RequestBody data: OppdateringData, @RequestParam journalpostId: String) =
         arkivAdapter.oppdaterOgFerdigstillJournalpost(journalpostId, data)
+
+    @GetMapping("safjournalpost")
+    fun safjournalpost(@RequestParam journalpostId: String) = safAdapter.hentJournalpostRAW(journalpostId)
+
 
     @PostMapping("oppdaterjournalpost")
     fun oppdaterJournalpost(@RequestParam journalpostId: String, @RequestBody data: OppdateringData) =

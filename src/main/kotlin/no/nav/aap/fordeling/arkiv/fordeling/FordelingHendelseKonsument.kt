@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
+import no.nav.aap.fordeling.config.ChaosMonkeyConfig.Companion.NO_MONKEY
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -15,6 +16,8 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.CallIdGenerator
+import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
@@ -35,6 +38,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val beslutter: FordelingBeslutter,
+        private val monkey: ChaosMonkey,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -49,6 +53,7 @@ class FordelingHendelseKonsument(
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
+            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,RECOVERABLE,NO_MONKEY)
             log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 

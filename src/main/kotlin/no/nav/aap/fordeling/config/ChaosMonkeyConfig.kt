@@ -5,7 +5,6 @@ import io.netty.handler.logging.LogLevel.*
 import java.util.*
 import java.util.concurrent.TimeUnit.*
 import kotlin.random.Random.Default.nextInt
-import no.nav.aap.rest.AbstractWebClientAdapter.Companion.chaosMonkeyRequestFilterFunction
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster
@@ -36,12 +35,12 @@ class ChaosMonkeyConfig {
     @Bean
     @ConditionalOnNotProd
     @Qualifier(MONKEY)
-    fun notProdFilterMonkey() = chaosMonkeyRequestFilterFunction(DEV_FILTER_MONKEY)
+    fun notProdFilterMonkey(monkey: ChaosMonkey) = monkey.chaosMonkeyRequestFilterFunction(DEV_FILTER_MONKEY)
 
     @Bean
     @ConditionalOnProd
     @Qualifier(MONKEY)
-    fun prodFilterMonkey() = chaosMonkeyRequestFilterFunction(PROD_FILTER_MONKEY)
+    fun prodFilterMonkey(monkey: ChaosMonkey) = monkey.chaosMonkeyRequestFilterFunction(PROD_FILTER_MONKEY)
 
 
     companion object {

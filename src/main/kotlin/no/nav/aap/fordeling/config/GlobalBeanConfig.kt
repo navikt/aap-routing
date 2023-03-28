@@ -71,7 +71,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
         reg.config()
             .meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
-            })).meterFilter(replaceTagValues(BREVKODE,{
+            })).meterFilter(replaceTagValues(TITTEL,{
                 if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it}))
     }
     @Bean

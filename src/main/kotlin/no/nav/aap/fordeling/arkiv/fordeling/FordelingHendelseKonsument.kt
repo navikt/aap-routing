@@ -29,6 +29,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
+import org.springframework.kafka.retrytopic.DltStrategy.FAIL_ON_ERROR
 import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS
 import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC
 import org.springframework.kafka.support.KafkaHeaders.*
@@ -49,6 +50,7 @@ class FordelingHendelseKonsument(
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             exclude = [IrrecoverableIntegrationException::class],
+            dltStrategy = FAIL_ON_ERROR,
             autoStartDltHandler = "true",
             autoCreateTopics = "false")
 
@@ -78,7 +80,7 @@ class FordelingHendelseKonsument(
             }
 
 
-          //  monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
+           monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
 
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")

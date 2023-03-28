@@ -49,7 +49,7 @@ object FordelingDTOs {
             val tilleggsopplysninger: Set<Tilleggsopplysning> = emptySet()) {
 
         enum class Kanal {
-            NAV_NO, EESSI, NAV_NO_CHAT,EKST_OPS, SCAN_IM, @JsonEnumDefaultValue UKJENT
+            NAV_NO, EESSI, NAV_NO_CHAT,EKST_OPS, SKAN_IM, @JsonEnumDefaultValue UKJENT
         }
 
 

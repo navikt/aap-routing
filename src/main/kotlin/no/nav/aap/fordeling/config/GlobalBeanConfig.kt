@@ -72,7 +72,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
             .meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
             })).meterFilter(replaceTagValues(BREVKODE,{
-                if (it.contains("korrigert meldekort")) "Korrigert meldekort" else it}))
+                if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it}))
     }
     @Bean
     fun swagger(p: BuildProperties): OpenAPI {

@@ -10,6 +10,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
+import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
 import org.springframework.beans.factory.annotation.Qualifier
@@ -59,6 +60,6 @@ class ChaosMonkeyConfig {
 
         val LOCAL_MONKEY =   monkeyIn(arrayOf(LOCAL))
 
-         fun monkeyIn(clusters: Array<Cluster>, n: Int = 5) = { -> nextInt(1, n) == 1 && currentCluster in clusters.asList() }
+         fun monkeyIn(clusters: Array<Cluster> = devClusters(), n: Int = 5) = { -> nextInt(1, n) == 1 && currentCluster in clusters.asList() }
     }
 }

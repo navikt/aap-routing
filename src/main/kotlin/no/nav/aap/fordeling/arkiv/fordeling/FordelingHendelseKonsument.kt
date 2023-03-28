@@ -99,10 +99,10 @@ class FordelingHendelseKonsument(
     }
 
     @DltHandler
-    fun dlt(h: JournalfoeringHendelseRecord, @Header(DLT_ORIGINAL_TIMESTAMP) timestamp: String?, @Header(EXCEPTION_STACKTRACE) trace: String?) =
-        with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig mottatt $timestamp") {
+    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) =
+        with("Gir opp fordeling av journalpost ${h.journalpostId}") {
             log.error(this)
-          //  slack.feil(this)
+            slack.feil(this)
         }
 
     private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =

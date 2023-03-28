@@ -67,6 +67,7 @@ class FordelingHendelseKonsument(
 
             if (jp.kanal == UKJENT)  {
                 log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
+                slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
             }
 
             if (!beslutter.skalFordele(jp)) {
@@ -74,7 +75,7 @@ class FordelingHendelseKonsument(
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
                 return
             }
-
+            slack.ok("Begynner fordeling av ${jp.journalpostId}")
             log.info("Begynner fordeling av ${jp.journalpostId} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
@@ -86,10 +87,10 @@ class FordelingHendelseKonsument(
     }
 
     @DltHandler
-    fun dlt(h: JournalfoeringHendelseRecord, @Header(EXCEPTION_STACKTRACE) trace: String?) =
-        with("Gir opp fordeling av journalpost ${h.journalpostId}") {
-            log.warn(this)
-            slack.feilHvisDev(this)
+    fun dlt(h: JournalfoeringHendelseRecord, @Header(DLT_ORIGINAL_TIMESTAMP) timestamp: String, @Header(EXCEPTION_STACKTRACE) trace: String?) =
+        with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig mottatt $timestamp") {
+            log.error(this)
+            slack.feil(this)
         }
 
     private fun fordelFeilet(hendelse: JournalfoeringHendelseRecord, antall: Int?, topic: String, t: Throwable) : Nothing =

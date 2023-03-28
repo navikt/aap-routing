@@ -59,7 +59,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     private val log = getLogger(GlobalBeanConfig::class.java)
 
     @Bean
-    fun monkey = ChaosMonkey()
+    fun monkey() = ChaosMonkey()
 
     @Bean
     fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->

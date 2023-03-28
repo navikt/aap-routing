@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.config
+package no.nav.aap.fordeling.util
 
 
 import kotlin.random.Random.Default.nextInt
@@ -9,7 +9,7 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
 
 
-object  ChaosMonkeyConfig {
+object  ChaosMonkeyCriteria {
         const val MONKEY = "chaos-monkey"
 
         val NO_MONKEY = { false }

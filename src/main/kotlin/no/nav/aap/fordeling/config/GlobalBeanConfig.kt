@@ -15,7 +15,7 @@ import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.*
 import java.util.concurrent.TimeUnit.*
-import no.nav.aap.fordeling.config.ChaosMonkeyConfig.MONKEY
+import no.nav.aap.fordeling.util.ChaosMonkeyCriteria.MONKEY
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey

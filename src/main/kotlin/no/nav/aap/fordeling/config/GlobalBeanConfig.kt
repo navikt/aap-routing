@@ -98,7 +98,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Bean
     @ConditionalOnProperty("chaos.monkey.enabled", havingValue = "false")
-    fun webClientCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
+    fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))

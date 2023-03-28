@@ -59,7 +59,7 @@ class FordelingHendelseKonsument(
             }
 
             if (jp.bruker == null) {
-                log.warn("Ingen bruker er satt på journalposten, går direkte til manuell journalføring")
+                log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
                 fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 jp.metrikker(DIREKTE_MANUELL,topic)
                 return
@@ -71,11 +71,11 @@ class FordelingHendelseKonsument(
             }
 
             if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} med status ${jp.status} skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'),meldekort=${jp.erMeldekort()}")
+                log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
                 return
             }
-            slack.ok("Begynner fordeling av ${jp.journalpostId}")
+
             log.info("Begynner fordeling av ${jp.journalpostId} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)

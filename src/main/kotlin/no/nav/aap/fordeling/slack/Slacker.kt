@@ -42,7 +42,7 @@ class Slacker(private val cfg: SlackConfig) {
             if (enabled) {
                 runCatching {
                     with(slack.methods(token).chatPostMessage {
-                        it.channel(kanal).text(melding + " (${currentCluster().name.lowercase()}")
+                        it.channel(kanal).text(melding + " (Cluster: ${currentCluster().name.lowercase()})")
                     }) {
                         if (!isOk) {
                             LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")

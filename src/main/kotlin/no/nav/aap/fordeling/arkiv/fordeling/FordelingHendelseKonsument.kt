@@ -7,6 +7,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -62,6 +63,10 @@ class FordelingHendelseKonsument(
                 fordeler.fordelManuelt(jp, FORDELINGSENHET)
                 jp.metrikker(DIREKTE_MANUELL,topic)
                 return
+            }
+
+            if (jp.kanal == UKJENT)  {
+                log.warn("UKjent kanal ${jp.kanal} for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
             }
 
             if (!beslutter.skalFordele(jp)) {

@@ -17,6 +17,7 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.IRRECOVERABLE
 import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
@@ -75,6 +76,8 @@ class FordelingHendelseKonsument(
                 log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
                 slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
             }
+
+            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName,IRRECOVERABLE, monkeyIn(prodClusters(),10))
 
             if (!beslutter.skalFordele(jp)) {
                 log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")

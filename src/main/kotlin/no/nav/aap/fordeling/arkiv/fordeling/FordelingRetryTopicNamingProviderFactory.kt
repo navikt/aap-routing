@@ -21,7 +21,7 @@ class FordelingRetryTopicNamingProviderFactory(private val cf : FordelingConfig)
                     override fun getTopicName(topic : String) = topic
                 }
             }
-            return object : SuffixingRetryTopicNamesProvider(p) { // retry
+            return object : SuffixingRetryTopicNamesProvider(p) {
                 override fun getTopicName(topic : String) = retry
             }
         }

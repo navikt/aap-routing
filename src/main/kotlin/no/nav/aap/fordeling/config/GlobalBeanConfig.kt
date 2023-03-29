@@ -18,10 +18,12 @@ import java.util.concurrent.TimeUnit.*
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.toResponse
 import no.nav.boot.conditionals.Cluster.*
+import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
 import no.nav.security.token.support.client.core.OAuth2ClientException
@@ -80,10 +82,11 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    fun webClientCustomizer(client: HttpClient) =
+    fun webClientCustomizer(client: HttpClient, monkey: ChaosMonkey) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
+                .filter(monkey.chaosMonkeyRequestFilterFunction(monkey.criteria(devClusters(), 10), RECOVERABLE))
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

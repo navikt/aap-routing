@@ -14,10 +14,13 @@ import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.CallIdGenerator
+import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
+import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -35,6 +38,7 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val beslutter: FordelingBeslutter,
+        private val monkey: ChaosMonkey,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
@@ -49,6 +53,7 @@ class FordelingHendelseKonsument(
 
     fun listen(hendelse: JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk: Int?, @Header(RECEIVED_TOPIC) topic: String) {
         runCatching {
+            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(Cluster.devClusters(),10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")

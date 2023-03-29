@@ -123,13 +123,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun sanitizer() = SanitizingFunction {
         with(it) {
             if (key.contains("jwk", ignoreCase = true)) {
-                withValue("XXXXXXXXX");
+                withValue(MASK);
             }
             if (key.contains("private-key", ignoreCase = true)) {
-                withValue("XXXXXXXXX");
+                withValue(MASK);
             }
             if (key.contains("password", ignoreCase = true)) {
-                withValue("XXXXXXXXX");
+                withValue(MASK);
             }
         }
         it
@@ -173,6 +173,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     companion object {
+
+        private const val MASK = "******"
         fun ClientConfigurationProperties.clientCredentialFlow(service : OAuth2AccessTokenService, key : String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

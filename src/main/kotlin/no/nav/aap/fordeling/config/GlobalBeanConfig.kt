@@ -123,13 +123,13 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun sanitizer() = SanitizingFunction {
         with(it) {
             if (key.contains("jwk", ignoreCase = true)) {
-                withValue(MASK);
+                return@SanitizingFunction withValue(MASK);
             }
             if (key.contains("private-key", ignoreCase = true)) {
-                withValue(MASK);
+                return@SanitizingFunction withValue(MASK);
             }
             if (key.contains("password", ignoreCase = true)) {
-                withValue(MASK);
+                return@SanitizingFunction withValue(MASK);
             }
         }
         it

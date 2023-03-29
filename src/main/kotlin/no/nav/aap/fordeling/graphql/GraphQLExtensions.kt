@@ -49,7 +49,7 @@ object GraphQLExtensions {
 
     }
 
-    abstract class RecoverableGraphQLException(status: HttpStatus, msg: String) : RecoverableIntegrationException("${status.value()}-$msg", null) {
-        class UnhandledGraphQL(status: HttpStatus, msg: String) : RecoverableGraphQLException(status, msg)
+    abstract class RecoverableGraphQLException(status: HttpStatus, msg: String, cause: Throwable?) : RecoverableIntegrationException("${status.value()}-$msg", cause = cause) {
+        class UnhandledGraphQL(status: HttpStatus, msg: String, cause: Throwable? = null) : RecoverableGraphQLException(status, msg, cause)
     }
 }

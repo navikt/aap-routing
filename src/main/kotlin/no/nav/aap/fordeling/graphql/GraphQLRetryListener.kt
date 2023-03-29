@@ -23,7 +23,7 @@ class GraphQLRetryListener(private val registry: RetryRegistry, private val slac
                     }
                 }
                 onSuccess {
-                    with("Vellykket retry på forsøk ${it.numberOfRetryAttempts} for '${it.name.uppercase()}' etter exception ${it.lastThrowable}") {
+                    with("Vellykket retry på forsøk ${it.numberOfRetryAttempts} for '${it.name.uppercase()}' etter exception ${it.lastThrowable.javaClass.name}") {
                         log.info(this)
                         slacker.okHvisDev(this)
                     }

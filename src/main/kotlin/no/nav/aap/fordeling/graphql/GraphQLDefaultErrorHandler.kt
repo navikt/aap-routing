@@ -17,15 +17,8 @@ class GraphQLDefaultErrorHandler : GraphQLErrorHandler {
 
     override fun handle(e: Throwable): Nothing {
         when (e) {
-            is GraphQLErrorsException ->
-                 e.oversett().also {
-                     log.warn("GraphQL oppslag feilet, håndtert",it)
-                     throw it
-                 }
-            else ->  e.also {
-                log.warn("GraphQL oppslag feilet, ${it.javaClass.simpleName} ikke håndtert",it)
-                throw UnhandledGraphQL(INTERNAL_SERVER_ERROR,"GraphQL oppslag feilet", it)
-            }
+            is GraphQLErrorsException -> throw e.oversett()
+            else -> throw UnhandledGraphQL(INTERNAL_SERVER_ERROR,"GraphQL oppslag feilet", e)
         }
     }
 }

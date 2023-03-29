@@ -26,8 +26,7 @@ class NavEnhetBeanConfig {
             .build()
 
     @Bean
-    fun cacheListener() =
-        RemovalListener<Any, Any> { _, _, cause -> log.info("Cache removal $cause") }
+    fun cacheListener() = RemovalListener<Any, Any> { _, _, cause -> log.info("Cache removal $cause") }
 
     @Bean
     @ConditionalOnGCP

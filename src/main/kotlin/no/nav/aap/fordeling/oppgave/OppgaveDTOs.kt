@@ -20,10 +20,7 @@ object OppgaveDTOs {
 fun Journalpost.opprettOppgaveData(oppgaveType : OppgaveType, tema : String, enhetNr : String? = null) =
     OpprettOppgaveData(fnr.fnr, journalpostId, behandlingstema, enhetNr, tittel, oppgaveType.verdi, tema.uppercase())
 
-enum class OppgaveType(val verdi : String) {
-    JOURNALFØRINGSOPPGAVE("JFR"),
-    FORDELINGSOPPGAVE("FDR")
-}
+enum class OppgaveType(val verdi : String) { JOURNALFØRINGSOPPGAVE("JFR"), FORDELINGSOPPGAVE("FDR") }
 
 data class OpprettOppgaveData(
     val personident : String,
@@ -42,12 +39,12 @@ data class OpprettOppgaveData(
     companion object {
         private const val NORMAL_PRIORITET = "NORM"
         private const val SISTE_ARBEIDSTIME = 12
-        private fun dagerTilFrist(time : Int) = if (time < SISTE_ARBEIDSTIME) 1 else 2
 
+        private fun Int.dagerTilFrist() = if (this < SISTE_ARBEIDSTIME) 1 else 2
         private fun frist() =
             with(now()) {
                 addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
-                    dagerTilFrist(hour)).toInstant()
+                    hour.dagerTilFrist()).toInstant()
                     .atZone(systemDefault()).toLocalDate()
             }
     }

@@ -18,7 +18,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, v
         .uri(cf::skjermetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
-        .bodyValue(Ident(fnr))
+        .bodyValue(fnr.toIdent())
         .exchangeToMono { it.toResponse<Boolean>(log) }
         .retryWhen(cf.retrySpec(log, cf.path))
         .doOnSuccess { log.trace("Egen ansatt oppslag OK. Respons $it") }
@@ -27,5 +27,8 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, v
 
     override fun toString() = "EgenAnsattWebClientAdapter(cf=$cf), ${super.toString()})"
 
-    private data class Ident(val personident : String)
+    companion object {
+        private fun String.toIdent() = Ident(this)
+        private data class Ident(val personident : String)
+    }
 }

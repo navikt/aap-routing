@@ -62,11 +62,11 @@ class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopi
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }))
 
-    override fun configureCustomizers(configurer : CustomizersConfigurer) {
-        configurer.customizeErrorHandler {
+    override fun configureCustomizers(c : CustomizersConfigurer) {
+        c.customizeErrorHandler {
             it.addNotRetryableExceptions(IrrecoverableIntegrationException::class.java)
         }
-        configurer.customizeDeadLetterPublishingRecoverer { it.setThrowIfNoDestinationReturned(false) }
+        c.customizeDeadLetterPublishingRecoverer { it.setThrowIfNoDestinationReturned(false) }
     }
 
     override fun createComponentFactory() = object : RetryTopicComponentFactory() {

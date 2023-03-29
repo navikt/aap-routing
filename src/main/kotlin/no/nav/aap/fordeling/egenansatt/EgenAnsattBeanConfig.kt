@@ -19,15 +19,15 @@ class EgenAnsattBeanConfig {
 
     @Bean
     @Qualifier(EGENANSATT)
-    fun egenAnsattWebClient(builder : Builder, cfg : EgenAnsattConfig, @Qualifier(EGENANSATT) egenAnsattClientCredentialFlow : ExchangeFilterFunction) =
+    fun egenAnsattWebClient(builder : Builder, cfg : EgenAnsattConfig, @Qualifier(EGENANSATT) egenAnsattFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
-            .filter(egenAnsattClientCredentialFlow)
+            .filter(egenAnsattFlow)
             .build()
 
     @Bean
     @Qualifier(EGENANSATT)
-    fun egenAnsattClientCredentialFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
+    fun egenAnsattFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, EGENANSATT)
 
     @Bean

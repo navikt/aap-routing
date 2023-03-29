@@ -26,7 +26,7 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveClientCredentialFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
+    fun oppgaveFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, OPPGAVE)
 
     @Bean

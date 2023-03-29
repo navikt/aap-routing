@@ -26,14 +26,13 @@ class PDLWebClientAdapter(
 
     @Retry(name = PDL)
     fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
-    private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
-
-    private fun AktørId.asIdent() = mapOf(IDENT to id)
 
     override fun toString() =
         "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg, ${super.toString()}]"
 
     companion object {
+        private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
+        private fun AktørId.asIdent() = mapOf(IDENT to id)
         private const val IDENT = "ident"
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"

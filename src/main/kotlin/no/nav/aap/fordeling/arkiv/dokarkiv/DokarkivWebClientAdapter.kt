@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.dokarkiv
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.dokarkiv.VariantFormat.JSON
+import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat.JSON
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
@@ -76,8 +76,8 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
 
     private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().dokumentInfoId
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
-}
 
-enum class VariantFormat {
-    JSON, ARKIV
+    enum class VariantFormat {
+        JSON, ARKIV
+    }
 }

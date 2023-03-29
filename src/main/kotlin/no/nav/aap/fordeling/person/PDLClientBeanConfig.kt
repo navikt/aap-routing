@@ -20,20 +20,20 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 class PDLClientBeanConfig {
     @Bean
     @Qualifier(PDL)
-    fun pdlWebClient(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlClientCredentialFlow : ExchangeFilterFunction) =
+    fun pdlWebClient(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlFlow : ExchangeFilterFunction) =
         b.baseUrl("${cfg.baseUri}")
             .filter(temaFilterFunction())
-            .filter(pdlClientCredentialFlow)
+            .filter(pdlFlow)
             .build()
 
     @Bean
     @Qualifier(PDL)
-    fun pdlClientCredentialFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
+    fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, PDL)
 
     @Bean
     @Qualifier(PDL)
-    fun pdlGraphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         GraphQLWebClient.newInstance(client, mapper)
 
     @Bean

@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.oppgave
 
-import java.net.URI
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
@@ -8,19 +7,20 @@ import no.nav.aap.rest.AbstractRestConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriBuilder
+import java.net.URI
 
 @ConfigurationProperties(OPPGAVE)
 class OppgaveConfig(
-        baseUri: URI,
-        pingPath: String = DEFAULT_PING_PATH,
-        enabled: Boolean = false,
-        val oppslagEnabled: Boolean = true,
-        val oppgavePath: String = DEFAULT_OPPGAVE_PATH) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {
-    fun oppgaveUri(b: UriBuilder, id: String) =
+    baseUri : URI,
+    pingPath : String = DEFAULT_PING_PATH,
+    enabled : Boolean = false,
+    val oppslagEnabled : Boolean = true,
+    val oppgavePath : String = DEFAULT_OPPGAVE_PATH) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {
+    fun oppgaveUri(b : UriBuilder, id : String) =
         b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID, id).path(oppgavePath).build()
 
-    fun opprettOppgaveUri(b: UriBuilder) = b.path(oppgavePath).build()
-    override fun toString(): String {
+    fun opprettOppgaveUri(b : UriBuilder) = b.path(oppgavePath).build()
+    override fun toString() : String {
         return "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()})"
     }
 
@@ -37,6 +37,5 @@ class OppgaveConfig(
         private const val OPPGAVETYPE = "oppgavetype"
         private const val JOURNALPOSTID = "journalpostId"
         private const val ÅPEN = "AAPEN"
-
     }
 }

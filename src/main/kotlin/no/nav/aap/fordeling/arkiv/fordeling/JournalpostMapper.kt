@@ -15,36 +15,34 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class JournalpostMapper(private val pdl: PDLClient, private val egen: EgenAnsattClient) {
+class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsattClient) {
 
     private val log = LoggerFactory.getLogger(JournalpostMapper::class.java)
 
-
-
-    fun tilJournalpost(dto: JournalpostDTO) =
+    fun tilJournalpost(dto : JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker?.fødselsnummer(journalpostId,"'bruker'")
-            val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId,"'avsenderMottaker'")
+            val brukerFnr = bruker?.fødselsnummer(journalpostId, "'bruker'")
+            val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId, "'avsenderMottaker'")
             Journalpost(tittel,
-                    journalfoerendeEnhet,
-                    journalpostId,
-                    journalstatus,
-                    journalpostType,
-                    tema.lowercase(),
-                    behandlingstema,
-                    brukerFnr ?: FIKTIVTFNR,
-                    brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it),egen.erEgenAnsatt(it)) },
-                    avsenderMottakerFnr?.let { AvsenderMottaker(it) },
-                    kanal,
-                    relevanteDatoer,
-                    dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
-                    tilleggsopplysninger)
+                journalfoerendeEnhet,
+                journalpostId,
+                journalstatus,
+                journalpostType,
+                tema.lowercase(),
+                behandlingstema,
+                brukerFnr ?: FIKTIVTFNR,
+                brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
+                avsenderMottakerFnr?.let { AvsenderMottaker(it) },
+                kanal,
+                relevanteDatoer,
+                dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
+                tilleggsopplysninger)
         }
 
-    private fun BrukerDTO.fødselsnummer(journalpostId: String, kind: String) =
+    private fun BrukerDTO.fødselsnummer(journalpostId : String, kind : String) =
         with(this) {
             id?.let {
-                when(idType) {
+                when (idType) {
                     AKTOERID -> AktørId(it).fødselsnummer(journalpostId)
                     FNR -> Fødselsnummer(it)
                     else -> null.also {
@@ -53,10 +51,11 @@ class JournalpostMapper(private val pdl: PDLClient, private val egen: EgenAnsatt
                 }
             }
         }
-    private fun AktørId.fødselsnummer(journalpostId: String) = pdl.fnr(this)?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
+
+    private fun AktørId.fødselsnummer(journalpostId : String) =
+        pdl.fnr(this) ?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
     companion object {
         val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
     }
-
 }

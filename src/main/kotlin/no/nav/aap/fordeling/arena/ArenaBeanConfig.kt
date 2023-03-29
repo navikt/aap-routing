@@ -18,7 +18,7 @@ class ArenaBeanConfig {
 
     @Bean
     @Qualifier(ARENA)
-    fun arenaWebClient(builder: Builder, @Qualifier(ARENA) arenaFlow: ExchangeFilterFunction, cfg: ArenaConfig) =
+    fun arenaWebClient(builder : Builder, @Qualifier(ARENA) arenaFlow : ExchangeFilterFunction, cfg : ArenaConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(arenaFlow)
@@ -26,10 +26,10 @@ class ArenaBeanConfig {
 
     @Bean
     @Qualifier(ARENA)
-    fun arenaFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun arenaFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, ARENA)
 
     @Bean
     @ConditionalOnGCP
-    fun arenaHealthIndicator(adapter: ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun arenaHealthIndicator(adapter : ArenaWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

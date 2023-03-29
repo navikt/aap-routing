@@ -16,33 +16,33 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: ArenaConfig) :
-    AbstractWebClientAdapter(webClient, cf) {
+class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : ArenaConfig) : AbstractWebClientAdapter(webClient, cf) {
 
-    fun nyesteArenaSak(fnr: Fødselsnummer) =
+    fun nyesteArenaSak(fnr : Fødselsnummer) =
         if (cf.oppslagEnabled) {
             webClient.get()
                 .uri { cf.nyesteSakUri(it, fnr) }
                 .accept(APPLICATION_JSON)
-                .exchangeToMono { it.toResponse<String>(log)}
-                .retryWhen(cf.retrySpec(log,cf.nyesteSakPath))
+                .exchangeToMono { it.toResponse<String>(log) }
+                .retryWhen(cf.retrySpec(log, cf.nyesteSakPath))
                 .doOnSuccess { log.info("Arena oppslag nyeste oppgavce OK. Respons $it") }
                 .doOnError { t -> log.warn("Arena nyeste aktive sak oppslag feilet (${t.message})", t) }
                 .block()
-        }  else {
+        }
+        else {
             log.info("Slo IKKE opp arena sak")
             null
         }
 
-    fun opprettArenaOppgave(data: ArenaOpprettOppgaveData, journalpostId: String) =
+    fun opprettArenaOppgave(data : ArenaOpprettOppgaveData, journalpostId : String) =
         if (cf.isEnabled) {
             webClient.post()
                 .uri(cf::oppgaveUri)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .exchangeToMono { it.toResponse<ArenaOpprettetOppgave>(log)}
-                .retryWhen(cf.retrySpec(log,cf.oppgavePath))
+                .exchangeToMono { it.toResponse<ArenaOpprettetOppgave>(log) }
+                .retryWhen(cf.retrySpec(log, cf.oppgavePath))
                 .doOnSuccess { log.info("Arena opprettet oppgave for journalpost $journalpostId OK. Respons $it") }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet for konfig $cf  (${t.message})", t) }
                 .block() ?: throw IrrecoverableIntegrationException("Null respons for opprettelse av oppgave for journalpost $journalpostId")
@@ -53,7 +53,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient: WebClient, val cf: Aren
             }
         }
 
-    override fun toString(): String {
+    override fun toString() : String {
         return "ArenaWebClientAdapter(cf=$cf)"
     }
 }

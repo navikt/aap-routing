@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import java.util.*
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
@@ -27,28 +26,28 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Configuration
 @EnableScheduling
 @EnableRetry
-class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopicNamingProviderFactory) :
-    RetryTopicConfigurationSupport() {
+class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
 
     @Component
-    class FordelingPingable(admin: KafkaAdmin, p: KafkaProperties, cfg: FordelingConfig) :
+    class FordelingPingable(admin : KafkaAdmin, p : KafkaProperties, cfg : FordelingConfig) :
         KafkaPingable(admin, p.bootstrapServers, cfg)
 
     @Bean
     @ConditionalOnGCP
-    fun fordelerHealthIndicator(adapter: FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun fordelerHealthIndicator(adapter : FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
 
     @Bean(FORDELING)
-    fun fordelingListenerContainerFactory(p: KafkaProperties, fordeler: FordelingFactory) =
+    fun fordelingListenerContainerFactory(p : KafkaProperties, fordeler : FordelingFactory) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
                     with(it.value()) {
-                        !(fordeler.kanFordele(temaNytt,journalpostStatus))
+                        !(fordeler.kanFordele(temaNytt, journalpostStatus))
                     }
                 }
             })
@@ -56,14 +55,14 @@ class FordelingBeanConfig(private val namingProviderFactory: FordelingRetryTopic
         }
 
     @Bean
-    fun defaultRetryTopicKafkaTemplate(p: KafkaProperties) =
+    fun defaultRetryTopicKafkaTemplate(p : KafkaProperties) =
         KafkaTemplate(DefaultKafkaProducerFactory<String, JournalfoeringHendelseRecord>(p.buildProducerProperties()
             .apply {
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
             }))
 
-    override fun configureCustomizers(configurer: CustomizersConfigurer) {
+    override fun configureCustomizers(configurer : CustomizersConfigurer) {
         configurer.customizeErrorHandler {
             it.addNotRetryableExceptions(IrrecoverableIntegrationException::class.java)
         }

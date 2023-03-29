@@ -13,23 +13,22 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class PDLWebClientAdapter(
-        @Qualifier(PDL) val client: WebClient,
-        @Qualifier(PDL) val graphQL: GraphQLWebClient,
-        cfg: PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
+    @Qualifier(PDL) val client : WebClient,
+    @Qualifier(PDL) val graphQL : GraphQLWebClient,
+    cfg : PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = PDL)
-    fun fnr(aktørId: AktørId) = query<Identer>(graphQL, IDENT_QUERY, aktørId.asIdent())?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT_QUERY, aktørId.asIdent())?.fnr()
 
     @Retry(name = PDL)
-    fun diskresjonskode(fnr: Fødselsnummer) =
+    fun diskresjonskode(fnr : Fødselsnummer) =
         query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = PDL)
-    fun geoTilknytning(fnr: Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
     private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
 
     private fun AktørId.asIdent() = mapOf(IDENT to id)
-
 
     override fun toString() =
         "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg]"
@@ -39,6 +38,5 @@ class PDLWebClientAdapter(
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
         private const val IDENT_QUERY = "query-ident.graphql"
-
     }
 }

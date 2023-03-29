@@ -18,19 +18,18 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveWebClient(builder: Builder, monkey: ChaosMonkey, cfg: OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow: ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder : Builder, monkey : ChaosMonkey, cfg : OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveFlow)
-          //  .filter(monkey.chaosMonkeyRequestFilterFunction(monkeyIn(notProdClusters(),2)))
             .build()
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun oppgaveClientCredentialFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, OPPGAVE)
 
     @Bean
     @ConditionalOnGCP
-    fun oppgaveHealthIndicator(adapter: OppgaveWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
+    fun oppgaveHealthIndicator(adapter : OppgaveWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

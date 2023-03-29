@@ -8,16 +8,17 @@ import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.BYDEL
 import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.KOMMUNE
 import no.nav.aap.fordeling.person.PDLGeoTilknytning.PDLGeoType.UTLAND
 
-data class Identer(val identer: List<Ident>) {
-    data class Ident(val ident: Fødselsnummer)
+data class Identer(val identer : List<Ident>) {
+    data class Ident(val ident : Fødselsnummer)
 
     fun fnr() = identer.first().ident
 }
+
 data class PDLGeoTilknytning(
-        val gtType: PDLGeoType?,
-        val gtKommune: String?,
-        val gtBydel: String?,
-        val gtLand: String?) {
+    val gtType : PDLGeoType?,
+    val gtKommune : String?,
+    val gtBydel : String?,
+    val gtLand : String?) {
 
     enum class PDLGeoType {
         KOMMUNE,
@@ -40,9 +41,9 @@ enum class Diskresjonskode {
     ANY
 }
 
-data class PDLAdressebeskyttelse(val adressebeskyttelse: List<PDLGradering>) {
+data class PDLAdressebeskyttelse(val adressebeskyttelse : List<PDLGradering>) {
     fun tilDiskresjonskode() = adressebeskyttelse.firstOrNull()?.tilDiskresjonskode() ?: ANY
-    data class PDLGradering(val gradering: PDLDiskresjonskode) {
+    data class PDLGradering(val gradering : PDLDiskresjonskode) {
         fun tilDiskresjonskode() = gradering.tilDiskresjonskode()
         enum class PDLDiskresjonskode {
             FORTROLIG,

@@ -9,21 +9,21 @@ import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
+
 @Component
-class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient: WebClient, val cf: EgenAnsattConfig) :
+class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, val cf : EgenAnsattConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-    fun erEgenAnsatt(fnr: String) = webClient.post()
+    fun erEgenAnsatt(fnr : String) = webClient.post()
         .uri(cf::skjermetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(Ident(fnr))
-        .exchangeToMono { it.toResponse<Boolean>(log)}
+        .exchangeToMono { it.toResponse<Boolean>(log) }
         .retryWhen(cf.retrySpec(log, cf.path))
         .doOnSuccess { log.trace("Egen ansatt oppslag OK. Respons $it") }
         .doOnError { t -> log.warn("Egen ansatt oppslag feilet", t) }
         .block() ?: throw IrrecoverableIntegrationException("Null respons fra egen ansatt")
 
-    private data class Ident(val personident: String)
-
+    private data class Ident(val personident : String)
 }

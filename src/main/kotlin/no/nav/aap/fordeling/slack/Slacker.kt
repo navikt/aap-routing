@@ -13,31 +13,32 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 import org.springframework.stereotype.Component
 
 @Component
-class Slacker(private val cfg: SlackConfig) {
+class Slacker(private val cfg : SlackConfig) {
 
     private val cluster = currentCluster()
-    fun okHvisDev(melding: String) =
+    fun okHvisDev(melding : String) =
         if (cluster in devClusters()) {
             ok(melding)
         }
         else Unit
-    fun feilHvisDev(melding: String) =
+
+    fun feilHvisDev(melding : String) =
         if (cluster in devClusters()) {
             feil(melding)
         }
         else Unit
 
-    fun meldingHvisDev(melding: String) =
+    fun meldingHvisDev(melding : String) =
         if (cluster in devClusters()) {
             rocket(melding)
         }
         else Unit
 
-    fun ok(melding: String) = melding("$OK$melding")
-    fun feil(melding: String) = melding("$ERROR$melding")
-    fun rocket(melding: String) = melding("$ROCKET$melding")
+    fun ok(melding : String) = melding("$OK$melding")
+    fun feil(melding : String) = melding("$ERROR$melding")
+    fun rocket(melding : String) = melding("$ROCKET$melding")
 
-    private fun melding(melding: String) =
+    private fun melding(melding : String) =
         with(cfg) {
             if (enabled) {
                 runCatching {
@@ -64,7 +65,7 @@ class Slacker(private val cfg: SlackConfig) {
 }
 
 @ConfigurationProperties(SLACK)
-data class SlackConfig(val kanal: String, val token: String, @DefaultValue("true") val enabled: Boolean) {
+data class SlackConfig(val kanal : String, val token : String, @DefaultValue("true") val enabled : Boolean) {
     companion object {
         private fun String.emoji() = ":$this: "
         const val SLACK = "slack"

@@ -9,14 +9,14 @@ import no.nav.aap.util.LoggerUtil
 import org.springframework.stereotype.Component
 
 @Component
-class ArkivClient(private val dokarkiv: DokarkivWebClientAdapter, private val saf: SAFGraphQLAdapter) {
+class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)
 
-    fun hentJournalpost(journalpostId: String) = saf.hentJournalpost(journalpostId)
-    fun oppdaterOgFerdigstillJournalpost(journalpost: Journalpost, sakNr: String) =
+    fun hentJournalpost(journalpostId : String) = saf.hentJournalpost(journalpostId)
+    fun oppdaterOgFerdigstillJournalpost(journalpost : Journalpost, sakNr : String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId, journalpost.oppdateringsData(sakNr))
 
-    private fun Journalpost.oppdateringsData(saksNr: String) =
+    private fun Journalpost.oppdateringsData(saksNr : String) =
         OppdateringData(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), Sak(saksNr), tema.uppercase())
 }

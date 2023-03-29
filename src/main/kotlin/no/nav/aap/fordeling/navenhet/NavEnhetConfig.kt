@@ -1,22 +1,22 @@
 package no.nav.aap.fordeling.navenhet
 
-import java.net.URI
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
+import java.net.URI
 
 @ConfigurationProperties(NAVENHET)
 class NavEnhetConfig(
-        baseUri: URI,
-        enabled: Boolean = true,
-        pingPath: String = DEFAULT_PING_PATH,
-        val enhet: String = ENHET_PATH,
-        val aktive: String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
+    baseUri : URI,
+    enabled : Boolean = true,
+    pingPath : String = DEFAULT_PING_PATH,
+    val enhet : String = ENHET_PATH,
+    val aktive : String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
-    fun aktiveEnheterUri(b: UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
-    fun enhetUri(b: UriBuilder) = b.path(enhet).build()
+    fun aktiveEnheterUri(b : UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
+    fun enhetUri(b : UriBuilder) = b.path(enhet).build()
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 

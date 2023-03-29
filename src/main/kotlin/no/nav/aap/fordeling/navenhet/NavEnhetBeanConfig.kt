@@ -20,7 +20,7 @@ class NavEnhetBeanConfig {
 
     @Bean
     @Qualifier(NAVENHET)
-    fun navEnhetWebClient(builder: Builder, cfg: NavEnhetConfig) =
+    fun navEnhetWebClient(builder : Builder, cfg : NavEnhetConfig) =
         builder
             .baseUrl("${cfg.baseUri}")
             .build()
@@ -31,6 +31,6 @@ class NavEnhetBeanConfig {
 
     @Bean
     @ConditionalOnGCP
-    fun navEnhetHealthIndicator(adapter: NavEnhetWebClientAdapter) =
+    fun navEnhetHealthIndicator(adapter : NavEnhetWebClientAdapter) =
         object : AbstractPingableHealthIndicator(adapter) {}
 }

@@ -4,6 +4,6 @@ import no.nav.aap.api.felles.Fødselsnummer
 import org.springframework.stereotype.Component
 
 @Component
-class EgenAnsattClient(private val a: EgenAnsattWebClientAdapter) {
-    fun erEgenAnsatt(fnr: Fødselsnummer) = a.erEgenAnsatt(fnr.fnr)
+class EgenAnsattClient(private val a : EgenAnsattWebClientAdapter) {
+    fun erEgenAnsatt(fnr : Fødselsnummer) = a.erEgenAnsatt(fnr.fnr)
 }

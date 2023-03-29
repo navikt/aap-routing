@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.dokarkiv
 
-import java.util.*
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
@@ -16,13 +15,14 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode.*
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient.Builder
+import java.util.*
 
 @Configuration
 class DokarkivBeanConfig {
 
     @Bean
     @Qualifier(DOKARKIV)
-    fun dokarkivWebClient(builder: Builder, cfg: DokarkivConfig, @Qualifier(DOKARKIV) dokarkivFlow: ExchangeFilterFunction) =
+    fun dokarkivWebClient(builder : Builder, cfg : DokarkivConfig, @Qualifier(DOKARKIV) dokarkivFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(dokarkivFlow)
@@ -30,11 +30,11 @@ class DokarkivBeanConfig {
 
     @Bean
     @Qualifier(DOKARKIV)
-    fun dokarkivFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun dokarkivFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, DOKARKIV)
 
     @Bean
     @ConditionalOnGCP
-    fun dokarkivHealthIndicator(adapter: DokarkivWebClientAdapter) =
+    fun dokarkivHealthIndicator(adapter : DokarkivWebClientAdapter) =
         object : AbstractPingableHealthIndicator(adapter) {}
 }

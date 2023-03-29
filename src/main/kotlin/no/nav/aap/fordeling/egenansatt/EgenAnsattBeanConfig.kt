@@ -19,7 +19,7 @@ class EgenAnsattBeanConfig {
 
     @Bean
     @Qualifier(EGENANSATT)
-    fun egenAnsattWebClient(builder: Builder, cfg: EgenAnsattConfig, @Qualifier(EGENANSATT) egenAnsattClientCredentialFlow: ExchangeFilterFunction) =
+    fun egenAnsattWebClient(builder : Builder, cfg : EgenAnsattConfig, @Qualifier(EGENANSATT) egenAnsattClientCredentialFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(egenAnsattClientCredentialFlow)
@@ -27,11 +27,11 @@ class EgenAnsattBeanConfig {
 
     @Bean
     @Qualifier(EGENANSATT)
-    fun egenAnsattClientCredentialFlow(cfg: ClientConfigurationProperties, service: OAuth2AccessTokenService) =
+    fun egenAnsattClientCredentialFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, EGENANSATT)
 
     @Bean
     @ConditionalOnGCP
-    fun egenAnsattHealthIndicator(adapter: EgenAnsattWebClientAdapter) =
+    fun egenAnsattHealthIndicator(adapter : EgenAnsattWebClientAdapter) =
         object : AbstractPingableHealthIndicator(adapter) {}
 }

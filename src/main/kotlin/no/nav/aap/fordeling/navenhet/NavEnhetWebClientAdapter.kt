@@ -13,18 +13,17 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf: NavEnhetConfig) :
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val cf : NavEnhetConfig) :
     AbstractWebClientAdapter(webClient, cf) {
 
-
-    fun navEnhet(kriterium: EnhetsKriteria, enheter: List<NavOrg>) = webClient
+    fun navEnhet(kriterium : EnhetsKriteria, enheter : List<NavOrg>) = webClient
         .post()
         .uri(cf::enhetUri)
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
-        .exchangeToMono { it.toResponse<List<Map<String,String>>>(log)}
-        .retryWhen(cf.retrySpec(log,cf.enhet))
+        .exchangeToMono { it.toResponse<List<Map<String, String>>>(log) }
+        .retryWhen(cf.retrySpec(log, cf.enhet))
         .doOnSuccess { log.trace("Nav enhet oppslag mot NORG2 OK.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
@@ -36,15 +35,15 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient: WebClient, val cf
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
-        .exchangeToMono { it.toResponse<List<Map<String,Any>>>(log)}
-        .retryWhen(cf.retrySpec(log,cf.aktive))
+        .exchangeToMono { it.toResponse<List<Map<String, Any>>>(log) }
+        .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
-        .block() ?.map {  NavOrg( "${it["enhetNr"]}", "${it["status"]}") }
+        .block()?.map { NavOrg("${it["enhetNr"]}", "${it["status"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")
-        private fun untatt(org: NavOrg) = org.enhetNr in UNTATTE_ENHETER
+        private fun untatt(org : NavOrg) = org.enhetNr in UNTATTE_ENHETER
     }
 }

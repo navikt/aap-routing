@@ -11,11 +11,11 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellFordeler {
+class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler {
     val log = getLogger(AAPManuellFordeler::class.java)
     override val cfg = DEV_AAP // For NOW
-    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = fordel(jp,enhet)
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet?) =
+    override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordel(jp, enhet)
+    override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
         enhet?.let {
             with(jp) {
                 if (oppgave.harOppgave(journalpostId)) {
@@ -24,22 +24,22 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
                 else {
                     runCatching {
-                        opprettJournalføringsOppgave(jp,it)
+                        opprettJournalføringsOppgave(jp, it)
                     }.getOrElse {
                         log.warn("Opprettelse av journalføringsoppgave feilet", it)
                         opprettFordelingsOppgave(jp)
                     }
                 }
             }
-        }?: opprettFordelingsOppgave(jp)
+        } ?: opprettFordelingsOppgave(jp)
 
-    private fun opprettJournalføringsOppgave(jp: Journalpost, enhet: NAVEnhet) =
+    private fun opprettJournalføringsOppgave(jp : Journalpost, enhet : NAVEnhet) =
         with(jp) {
             opprettJournalføring(this, enhet)
             FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, journalpostId)
         }
 
-    private fun opprettFordelingsOppgave(jp: Journalpost) =
+    private fun opprettFordelingsOppgave(jp : Journalpost) =
         with(jp) {
             runCatching {
                 opprettFordeling(this)
@@ -52,17 +52,20 @@ open class AAPManuellFordeler(private val oppgave: OppgaveClient) : ManuellForde
                 }
             }
         }
-    protected fun opprettFordeling(jp: Journalpost)  {
+
+    protected fun opprettFordeling(jp : Journalpost) {
         log.info("Oppretter fordelingsoppgave for ${jp.journalpostId}")
         oppgave.opprettFordelingOppgave(jp).also {
             log.info("Opprettet fordelingsoppgave for ${jp.journalpostId}")
         }
     }
-    protected fun opprettJournalføring(jp: Journalpost, enhet: NAVEnhet)  {
+
+    protected fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) {
         log.info("Oppretter en journalføringsoppgave for journalpost ${jp.journalpostId}")
-        oppgave.opprettJournalføringOppgave(jp,enhet).also {
+        oppgave.opprettJournalføringOppgave(jp, enhet).also {
             log.info("Opprettet journalføringsoppgave for ${jp.journalpostId}")
         }
     }
+
     override fun toString() = "AAPManuellFordeler(oppgave=$oppgave, cfg=$cfg)"
 }

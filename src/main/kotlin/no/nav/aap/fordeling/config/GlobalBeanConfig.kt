@@ -11,10 +11,6 @@ import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
-import java.time.Duration
-import java.time.Duration.ofSeconds
-import java.util.*
-import java.util.concurrent.TimeUnit.*
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -51,9 +47,13 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
+import java.time.Duration
+import java.time.Duration.ofSeconds
+import java.util.*
+import java.util.concurrent.TimeUnit.*
 
 @Configuration
-class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName: String) {
+class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
@@ -61,15 +61,17 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun monkey() = ChaosMonkey()
 
     @Bean
-    fun meterRegistryCustomizer(): MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
+    fun meterRegistryCustomizer() : MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
         reg.config()
             .meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
-            })).meterFilter(replaceTagValues(TITTEL,{
-                if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it}))
+            })).meterFilter(replaceTagValues(TITTEL, {
+                if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it
+            }))
     }
+
     @Bean
-    fun swagger(p: BuildProperties): OpenAPI {
+    fun swagger(p : BuildProperties) : OpenAPI {
         return OpenAPI()
             .info(Info()
                 .title("AAP routing")
@@ -82,7 +84,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    fun webClientCustomizer(client: HttpClient, monkey: ChaosMonkey) =
+    fun webClientCustomizer(client : HttpClient, monkey : ChaosMonkey) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
@@ -117,19 +119,19 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun configMatcher() = object : ClientConfigurationPropertiesMatcher {}
 
     @Bean
-    fun retryingOAuth2HttpClient(b: WebClient.Builder) = RetryingWebClientOAuth2HttpClient(b.build())
+    fun retryingOAuth2HttpClient(b : WebClient.Builder) = RetryingWebClientOAuth2HttpClient(b.build())
 
-    class RetryingWebClientOAuth2HttpClient(private val client: WebClient) : OAuth2HttpClient {
+    class RetryingWebClientOAuth2HttpClient(private val client : WebClient) : OAuth2HttpClient {
 
         private val log = getLogger(GlobalBeanConfig::class.java)
 
-        override fun post(req: OAuth2HttpRequest) =
+        override fun post(req : OAuth2HttpRequest) =
             with(req) {
                 client.post()
                     .uri(tokenEndpointUrl)
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
-                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(log)}
+                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(log) }
                     .retryWhen(retry())
                     .onErrorMap { e ->
                         e as? OAuth2ClientException
@@ -145,7 +147,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 .filter { it is OAuth2ClientException }
                 .doBeforeRetry {
                     log.info("Retry kall mot token endpoint feilet med  ${it.failure().message} for ${it.totalRetriesInARow() + 1} gang, prøver igjen",
-                            it.failure())
+                        it.failure())
                 }
                 .onRetryExhaustedThrow { _, spec ->
                     spec.failure()
@@ -154,7 +156,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     companion object {
-        fun ClientConfigurationProperties.clientCredentialFlow(service: OAuth2AccessTokenService, key: String) =
+        fun ClientConfigurationProperties.clientCredentialFlow(service : OAuth2AccessTokenService, key : String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)
                     .header(AUTHORIZATION, service.bearerToken(registration[key.lowercase()], req.url())).build())

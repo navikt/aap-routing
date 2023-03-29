@@ -12,16 +12,13 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPFordeler(
-        private val arena: ArenaClient,
-        private val arkiv: ArkivClient,
-        protected val  manuell: ManuellFordelingFactory) : Fordeler {
+class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
-    override  val cfg = DEV_AAP  // For NOW
-    override fun fordelManuelt(jp: Journalpost, enhet: NAVEnhet?) = manuell.fordel(jp,enhet)
-    override fun fordel(jp: Journalpost, enhet: NAVEnhet?)  =
-        enhet?.let {e ->
+    override val cfg = DEV_AAP  // For NOW
+    override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = manuell.fordel(jp, enhet)
+    override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
+        enhet?.let { e ->
             runCatching {
                 when (jp.hovedDokumentBrevkode) {
 
@@ -32,12 +29,12 @@ class AAPFordeler(
 
                     STANDARD_ETTERSENDING.kode -> {
                         log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
-                        fordelEttersending(jp,e)
+                        fordelEttersending(jp, e)
                     }
 
                     else -> {
                         log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
-                        manuell.fordel(jp,e)
+                        manuell.fordel(jp, e)
                     }
                 }
             }.getOrElse {
@@ -50,41 +47,40 @@ class AAPFordeler(
                     throw it
                 }
             }
-        } ?:  manuell.fordel(jp)
+        } ?: manuell.fordel(jp)
 
-
-    private fun fordelStandard(jp: Journalpost, enhet: NAVEnhet) =
+    private fun fordelStandard(jp : Journalpost, enhet : NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
             log.info("Arena har IKKE aktiv sak for ${jp.fnr}, oppretter oppgave i Arena, pppdaterer og ferdigstiller journalpost ${jp.journalpostId}")
-            ferdigstillStandard(jp,enhet)
+            ferdigstillStandard(jp, enhet)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         }
         else {
             log.info("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena, sender til manuell fordeling")
-            manuell.fordel(jp,enhet)
+            manuell.fordel(jp, enhet)
         }
 
-    protected fun ferdigstillStandard(jp: Journalpost, enhet: NAVEnhet) {
-       log.info("Oppretter Arena oppgave for journalpost ${jp.journalpostId}")
+    protected fun ferdigstillStandard(jp : Journalpost, enhet : NAVEnhet) {
+        log.info("Oppretter Arena oppgave for journalpost ${jp.journalpostId}")
         arena.opprettOppgave(jp, enhet).run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
         }
     }
-    private fun fordelEttersending(jp: Journalpost,enhet: NAVEnhet) =
+
+    private fun fordelEttersending(jp : Journalpost, enhet : NAVEnhet) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
-            ferdigstillEttersending(jp,this)
+            ferdigstillEttersending(jp, this)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ettersending  ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
         } ?: run {
             log.warn("Arena har IKKE aktiv sak for ettersending ${jp.fnr}, kan ikke oppdatere og ferdigstille journalpost, sender til manuell fordeling")
-            manuell.fordel(jp,enhet)
+            manuell.fordel(jp, enhet)
         }
 
-
-    protected fun ferdigstillEttersending(jp: Journalpost, nyesteSak: String) {
+    protected fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) {
         arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
     }
 
-    override fun toString(): String {
+    override fun toString() : String {
         return "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"
     }
 }

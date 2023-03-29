@@ -12,19 +12,16 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class SAFGraphQLAdapter(
-        @Qualifier(SAF) private val graphQL: GraphQLWebClient,
-        @Qualifier(SAF) webClient: WebClient,
-        private val mapper: JournalpostMapper,
-        cf: SAFConfig) : AbstractGraphQLAdapter(webClient, cf) {
+class SAFGraphQLAdapter(@Qualifier(SAF) private val graphQL : GraphQLWebClient, @Qualifier(SAF) webClient : WebClient, private val mapper : JournalpostMapper,
+                        cf : SAFConfig) : AbstractGraphQLAdapter(webClient, cf) {
 
     @Retry(name = SAF)
-    fun hentJournalpost(journalpostId: String) =
-        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent(),"Journalpost $journalpostId")?.let {
+    fun hentJournalpost(journalpostId : String) =
+        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent(), "Journalpost $journalpostId")?.let {
             mapper.tilJournalpost(it)
         }
 
-    fun hentJournalpostRAW(journalpostId: String) =
+    fun hentJournalpostRAW(journalpostId : String) =
         query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())
 
     companion object {

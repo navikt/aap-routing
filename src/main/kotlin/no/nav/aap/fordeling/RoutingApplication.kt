@@ -13,8 +13,8 @@ import org.springframework.boot.runApplication
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
 class RoutingApplication
 
-fun main(args: Array<String>) {
+fun main(args : Array<String>) {
     runApplication<RoutingApplication>(*args) {
-            setAdditionalProfiles(*profiler())
+        setAdditionalProfiles(*profiler())
     }
 }

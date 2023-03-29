@@ -122,8 +122,14 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     @Bean
     fun sanitizer() = SanitizingFunction {
         with(it) {
-            if (key.equals("spring.main.banner-mode")) {
-                return@SanitizingFunction withValue("XXXXXXXXX");
+            if (key.contains("jwk", ignoreCase = true)) {
+                withValue("XXXXXXXXX");
+            }
+            if (key.contains("private-key", ignoreCase = true)) {
+                withValue("XXXXXXXXX");
+            }
+            if (key.contains("password", ignoreCase = true)) {
+                withValue("XXXXXXXXX");
             }
         }
         it

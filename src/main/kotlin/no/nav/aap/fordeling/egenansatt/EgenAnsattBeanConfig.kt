@@ -3,6 +3,10 @@ package no.nav.aap.fordeling.egenansatt
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.util.ChaosMonkey
+import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
+import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion.prodClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -15,7 +19,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
-class EgenAnsattBeanConfig {
+class EgenAnsattBeanConfig(private val monkey: ChaosMonkey) {
 
     @Bean
     @Qualifier(EGENANSATT)
@@ -23,6 +27,7 @@ class EgenAnsattBeanConfig {
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(egenAnsattClientCredentialFlow)
+            .filter(monkey.chaosMonkeyRequestFilterFunction(monkey.criteria(prodClusters(), 10), RECOVERABLE))
             .build()
 
     @Bean

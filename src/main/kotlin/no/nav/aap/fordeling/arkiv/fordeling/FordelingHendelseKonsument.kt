@@ -7,23 +7,17 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
-import no.nav.aap.fordeling.util.ChaosMonkeyCriteria.NO_MONKEY
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
-import no.nav.aap.fordeling.util.ChaosMonkeyCriteria.monkeyIn
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.util.CallIdGenerator
-import no.nav.aap.util.ChaosMonkey
-import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.IRRECOVERABLE
-import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
-import no.nav.boot.conditionals.Cluster.Companion.prodClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import org.springframework.kafka.annotation.DltHandler
@@ -41,7 +35,6 @@ class FordelingHendelseKonsument(
         private val arkiv: ArkivClient,
         private val enhet: NavEnhetUtvelger,
         private val beslutter: FordelingBeslutter,
-        private val monkey: ChaosMonkey,
         private val slack: Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)

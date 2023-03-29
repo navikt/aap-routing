@@ -15,7 +15,6 @@ import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.*
 import java.util.concurrent.TimeUnit.*
-import no.nav.aap.fordeling.util.ChaosMonkeyCriteria.MONKEY
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -32,10 +31,8 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenRespons
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
@@ -83,16 +80,6 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    @ConditionalOnProperty("chaos.monkey.enabled", havingValue = "true")
-    fun webClientMonkeyCustomizer(client: HttpClient,@Qualifier(MONKEY) monkey: ExchangeFilterFunction) =
-        WebClientCustomizer { b ->
-            b.clientConnector(ReactorClientHttpConnector(client))
-                .filter(correlatingFilterFunction(applicationName))
-                .filter(monkey)
-        }
-
-    @Bean
-    @ConditionalOnProperty("chaos.monkey.enabled", havingValue = "false")
     fun webClientCustomizer(client: HttpClient) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))

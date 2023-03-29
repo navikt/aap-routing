@@ -40,21 +40,21 @@ class Slacker(private val cfg : SlackConfig) {
 
     private fun melding(melding : String) =
         with(cfg) {
-            if (enabled) {
-                runCatching {
-                    with(slack.methods(token).chatPostMessage {
-                        it.channel(kanal).text(melding + " (Cluster: ${currentCluster().name.lowercase()})")
-                    }) {
-                        if (!isOk) {
-                            LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
-                        }
-                    }
-                }.getOrElse {
-                    LOG.warn("Fikk ikke kontakt med Slack-API", it)
-                }
-            }
-            else {
+            if (!enabled) {
                 LOG.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
+                return
+            }
+
+            runCatching {
+                with(slack.methods(token).chatPostMessage {
+                    it.channel(kanal).text(melding + " (Cluster: ${currentCluster().name.lowercase()})")
+                }) {
+                    if (!isOk) {
+                        LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
+                    }
+                }
+            }.getOrElse {
+                LOG.warn("Fikk ikke kontakt med Slack-API", it)
             }
         }
 

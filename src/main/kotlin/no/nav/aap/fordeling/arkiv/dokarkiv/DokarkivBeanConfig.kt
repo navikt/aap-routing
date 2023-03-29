@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient.Builder
 import java.util.*
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class DokarkivBeanConfig {
 
     @Bean

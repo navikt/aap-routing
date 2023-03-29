@@ -53,7 +53,7 @@ import java.time.Duration.ofSeconds
 import java.util.*
 import java.util.concurrent.TimeUnit.*
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)

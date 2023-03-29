@@ -6,5 +6,4 @@ object MetrikkLabels {
     const val FORDELINGSTYPE = "type"
     const val KANAL = "kanal"
     const val BREVKODE = "brevkode"
-    const val DISKRESJONSKODE = "Diskresjonskode"
 }

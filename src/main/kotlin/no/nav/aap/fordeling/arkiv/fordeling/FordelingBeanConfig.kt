@@ -28,7 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
 import java.util.*
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableScheduling
 @EnableRetry
 class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {

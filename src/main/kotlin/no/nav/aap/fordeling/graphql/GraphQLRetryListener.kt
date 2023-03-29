@@ -18,8 +18,8 @@ class GraphQLRetryListener(private val registry: RetryRegistry, private val slac
     }
 
     private fun GraphQLRetryListener.register(cfg: String) {
-        log.info("Registrerer retry listener for $cfg")
-        with(registry.retry(SAF)) {
+        log.info("Registrerer retry listener for ${cfg.uppercase()}")
+        with(registry.retry(cfg)) {
             eventPublisher.onError {
                 with("Retry event error $it") {
                     log.warn(this, it.lastThrowable)
@@ -38,7 +38,7 @@ class GraphQLRetryListener(private val registry: RetryRegistry, private val slac
                     slacker.feilHvisDev(this)
                 }
             }
-            registry.retry(GRAPHQL).eventPublisher.onRetry {
+            eventPublisher.onRetry {
                 with("Retry event ${cfg.uppercase()} $it") {
                     log.warn(this, it.lastThrowable)
                     slacker.feilHvisDev(this)

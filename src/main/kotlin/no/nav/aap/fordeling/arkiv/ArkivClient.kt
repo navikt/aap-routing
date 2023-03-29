@@ -19,4 +19,6 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     private fun Journalpost.oppdateringsData(saksNr : String) =
         OppdateringData(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), Sak(saksNr), tema.uppercase())
+
+    override fun toString() = "ArkivClient(dokarkiv=$dokarkiv, saf=$saf)"
 }

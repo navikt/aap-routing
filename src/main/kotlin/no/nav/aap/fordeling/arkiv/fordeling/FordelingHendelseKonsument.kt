@@ -115,4 +115,5 @@ class FordelingHendelseKonsument(
         }
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
+    override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$beslutter, monkey=$monkey, slack=$slack)"
 }

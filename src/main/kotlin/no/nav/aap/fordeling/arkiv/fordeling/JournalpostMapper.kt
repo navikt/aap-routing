@@ -55,6 +55,8 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
     private fun AktørId.fødselsnummer(journalpostId : String) =
         pdl.fnr(this) ?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
+    override fun toString() = "JournalpostMapper(pdl=$pdl, egen=$egen)"
+
     companion object {
         val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
     }

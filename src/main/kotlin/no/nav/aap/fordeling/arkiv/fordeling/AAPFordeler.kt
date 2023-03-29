@@ -80,7 +80,5 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
         arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
     }
 
-    override fun toString() : String {
-        return "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"
-    }
+    override fun toString() = "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"
 }

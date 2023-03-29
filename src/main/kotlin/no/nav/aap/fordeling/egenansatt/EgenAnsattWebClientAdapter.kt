@@ -25,5 +25,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, v
         .doOnError { t -> log.warn("Egen ansatt oppslag feilet", t) }
         .block() ?: throw IrrecoverableIntegrationException("Null respons fra egen ansatt")
 
+    override fun toString() = "EgenAnsattWebClientAdapter(cf=$cf)"
+
     private data class Ident(val personident : String)
 }

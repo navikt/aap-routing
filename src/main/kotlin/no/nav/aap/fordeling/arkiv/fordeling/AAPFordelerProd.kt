@@ -17,7 +17,5 @@ class AAPFordelerProd(private val arena : ArenaClient, arkiv : ArkivClient, manu
     override fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) =
         log.info("Liksom ferdigstilling av ettersending med journalpostId ${jp.journalpostId}")
 
-    override fun toString() : String {
-        return "AAPFordelerProd($arena=$arena), cfg=$cfg, manuell=${manuell})"
-    }
+    override fun toString() = "AAPFordelerProd($arena=$arena), cfg=$cfg, manuell=${manuell})"
 }

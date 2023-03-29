@@ -15,6 +15,8 @@ class DefaultFordelingBeslutter(private val cfg : FordelingConfig) : FordelingBe
                 && kanal !in HÅNDTERES_AV_ANDRE
         }
 
+    override fun toString() = "DefaultFordelingBeslutter(cfg=$cfg)"
+
     companion object {
         private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT)
     }

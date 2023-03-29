@@ -31,7 +31,7 @@ class PDLWebClientAdapter(
     private fun AktørId.asIdent() = mapOf(IDENT to id)
 
     override fun toString() =
-        "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg]"
+        "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg, ${super.toString()}]"
 
     companion object {
         private const val IDENT = "ident"

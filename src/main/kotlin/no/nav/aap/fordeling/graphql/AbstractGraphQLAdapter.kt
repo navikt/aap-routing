@@ -40,7 +40,7 @@ abstract class AbstractGraphQLAdapter(client : WebClient, cfg : AbstractRestConf
             .toBodilessEntity()
             .block().run { emptyMap<String, String>() }
 
-    override fun toString() = "AbstractGraphQLAdapter(handler=$handler)"
+    override fun toString() = "handler=$handler"
 
     companion object {
         const val GRAPHQL = "graphql"

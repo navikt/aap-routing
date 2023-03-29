@@ -75,6 +75,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av journalpost $journalpostId")
 
     private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().dokumentInfoId
+    override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 }
 
 enum class VariantFormat {

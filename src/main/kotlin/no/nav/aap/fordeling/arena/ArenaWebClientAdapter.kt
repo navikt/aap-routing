@@ -53,7 +53,5 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
             }
         }
 
-    override fun toString() : String {
-        return "ArenaWebClientAdapter(cf=$cf)"
-    }
+    override fun toString() = "ArenaWebClientAdapter(cf=$cf), ${super.toString()})"
 }

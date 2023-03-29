@@ -42,6 +42,10 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .block()?.map { NavOrg("${it["enhetNr"]}", "${it["status"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
+    override fun toString() : String {
+        return "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"
+    }
+
     companion object {
         private val UNTATTE_ENHETER = listOf("1891", "1893")
         private fun untatt(org : NavOrg) = org.enhetNr in UNTATTE_ENHETER

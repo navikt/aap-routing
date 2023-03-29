@@ -9,14 +9,14 @@ import org.springframework.web.reactive.function.client.WebClient
 
 abstract class AbstractGraphQLAdapter(client: WebClient, cfg: AbstractRestConfig, val handler: GraphQLErrorHandler = GraphQLDefaultErrorHandler()) : AbstractWebClientAdapter(client, cfg) {
 
-    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, String>) =
+    protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, String>, extra: String? = null) =
         runCatching {
             graphQL.post(query, args, T::class.java).block().also {
                 log.trace("Slo opp ${T::class.java.simpleName} $it")
             }
-        }.getOrElse {
-            log.warn("SAF query $query feilet",it)
-            handler.handle(it)
+        }.getOrElse { t ->
+            log.warn("SAF query $query feilet. ${extra?.let { " ($it)" } ?: ""}",t)
+            handler.handle(t)
         }
 
     protected inline fun <reified T> query(graphQL: GraphQLWebClient, query: String, args: Map<String, List<String>>) =

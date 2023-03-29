@@ -20,7 +20,7 @@ class SAFGraphQLAdapter(
 
     @Retry(name = SAF)
     fun hentJournalpost(journalpostId: String) =
-        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())?.let {
+        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent(),"Journalpost $journalpostId")?.let {
             mapper.tilJournalpost(it)
         }
 

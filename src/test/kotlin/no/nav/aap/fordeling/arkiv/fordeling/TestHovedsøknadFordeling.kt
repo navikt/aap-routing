@@ -1,5 +1,16 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.mockito.Mockito.*
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arena.ArenaClient
@@ -21,20 +32,9 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AU
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTO_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.Constants.AAP
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import org.mockito.Mockito.*
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 
 @TestInstance(PER_CLASS)
-class TestFordeling {
+class TestHovedsøknadFordeling {
 
     val arena : ArenaClient = mock()
     val arkiv : ArkivClient = mock()

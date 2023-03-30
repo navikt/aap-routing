@@ -54,13 +54,13 @@ class TestHovedsøknadFordeling {
     fun beforeEach() {
         reset(arena, arkiv, oppgave, prodFordeler)
         whenever(prodFordeler.cfg).thenReturn(PROD_AAP)
+        whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
     }
 
     @Test
     @DisplayName("Factory for hovedsøknad skal bruke riktig fordeler")
     fun factoryFordelerAutomatisk() {
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
-        whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
         with(FordelingFactory(listOf(fordeler, prodFordeler))) {
             assertThat(kanFordele(AAP, MOTTATT.name))
             assertThat(fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
@@ -86,7 +86,6 @@ class TestHovedsøknadFordeling {
     @DisplayName("Hhovedsøknad uten arenasak oppretter oppgave og journalfører automatisk")
     fun hovedSøknadUtenArenasak() {
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
-        whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
         assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
         verify(arena).harAktivSak(FIKTIVTFNR)
         verify(arena).opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
@@ -99,7 +98,6 @@ class TestHovedsøknadFordeling {
     fun automatiskFeiler() {
         whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(false)
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
-        whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
         whenever(arkiv.oppdaterOgFerdigstillJournalpost(JP, ARENASAK)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
         verify(arena).harAktivSak(FIKTIVTFNR)

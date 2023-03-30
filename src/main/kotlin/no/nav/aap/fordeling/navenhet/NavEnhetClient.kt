@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.navenhet
 
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.fordeling.person.Diskresjonskode
-import org.springframework.cache.annotation.Cacheable
-import org.springframework.stereotype.Component
 
 @Component
 class NavEnhetClient(private val a : NavEnhetWebClientAdapter) {

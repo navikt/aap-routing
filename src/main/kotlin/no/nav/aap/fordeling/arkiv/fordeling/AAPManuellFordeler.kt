@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
@@ -9,7 +10,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
-import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = DEV_AAP) : ManuellFordeler {

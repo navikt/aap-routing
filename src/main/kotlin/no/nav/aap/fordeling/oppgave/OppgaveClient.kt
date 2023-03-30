@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.oppgave
 
+import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
-import org.springframework.stereotype.Component
 
 @Component
 class OppgaveClient(private val adapter : OppgaveWebClientAdapter) {

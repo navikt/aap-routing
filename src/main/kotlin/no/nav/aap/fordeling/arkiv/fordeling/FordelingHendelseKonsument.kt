@@ -1,5 +1,17 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.springframework.kafka.annotation.DltHandler
+import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.annotation.RetryableTopic
+import org.springframework.kafka.retrytopic.DltStrategy.FAIL_ON_ERROR
+import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS
+import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC
+import org.springframework.kafka.support.KafkaHeaders.EXCEPTION_STACKTRACE
+import org.springframework.kafka.support.KafkaHeaders.ORIGINAL_TIMESTAMP
+import org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC
+import org.springframework.kafka.support.KafkaHeaders.TOPIC
+import org.springframework.messaging.handler.annotation.Header
+import org.springframework.retry.annotation.Backoff
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
@@ -23,15 +35,6 @@ import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import org.springframework.kafka.annotation.DltHandler
-import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.annotation.RetryableTopic
-import org.springframework.kafka.retrytopic.DltStrategy.FAIL_ON_ERROR
-import org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS
-import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC
-import org.springframework.kafka.support.KafkaHeaders.*
-import org.springframework.messaging.handler.annotation.Header
-import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,

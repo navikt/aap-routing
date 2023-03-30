@@ -2,11 +2,11 @@ package no.nav.aap.fordeling.graphql
 
 import io.github.resilience4j.retry.RetryRegistry
 import io.github.resilience4j.springboot3.retry.autoconfigure.RetryProperties
-import no.nav.aap.fordeling.slack.Slacker
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
+import no.nav.aap.fordeling.slack.Slacker
 
 @Component
 class GraphQLRetryListener(private val registry : RetryRegistry, private val slacker : Slacker,

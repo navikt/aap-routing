@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.config
 
-import no.nav.aap.health.Pingable
 import org.springframework.kafka.core.KafkaAdmin
+import no.nav.aap.health.Pingable
 
 abstract class KafkaPingable(
     private val admin : KafkaAdmin,

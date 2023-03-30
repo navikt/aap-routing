@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType
@@ -20,7 +21,6 @@ import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.Metrikker
-import org.springframework.kafka.support.KafkaHeaders.TOPIC
 
 typealias AvsenderMottaker = Bruker
 

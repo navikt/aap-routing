@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
-import no.nav.aap.fordeling.graphql.GraphQLExtensions.oversett
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.stereotype.Component
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
+import no.nav.aap.fordeling.graphql.GraphQLExtensions.oversett
 
 @Component
 class GraphQLDefaultErrorHandler : GraphQLErrorHandler {

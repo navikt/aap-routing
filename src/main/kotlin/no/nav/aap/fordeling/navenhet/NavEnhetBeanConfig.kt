@@ -1,15 +1,15 @@
 package no.nav.aap.fordeling.navenhet
 
 import com.github.benmanes.caffeine.cache.RemovalListener
-import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
-import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.util.LoggerUtil
-import no.nav.boot.conditionals.ConditionalOnGCP
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient.Builder
+import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
+import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.util.LoggerUtil
+import no.nav.boot.conditionals.ConditionalOnGCP
 
 @Configuration(proxyBeanMethods = false)
 @EnableCaching

@@ -147,8 +147,7 @@ class TestFordeling {
         private val ARENASAK = "456"
         private val OPPRETTET = ArenaOpprettetOppgave("123", ARENASAK)
         private val dokumenter = setOf(DokumentInfo("123", STANDARD.tittel, STANDARD.kode))
-        private val JP = Journalpost(
-            STANDARD.tittel, AUTO_ENHET, "42",
+        private val JP = Journalpost(STANDARD.tittel, AUTO_ENHET, "42",
             MOTTATT, I, AAP, null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO,
             emptySet(), dokumenter)
     }

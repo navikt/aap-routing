@@ -1,9 +1,9 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.config.KafkaConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.config.KafkaConfig
 
 @ConfigurationProperties(FORDELING)
 data class FordelingConfig(@NestedConfigurationProperty val topics : FordelingTopics = FordelingTopics(),

@@ -1,11 +1,11 @@
 package no.nav.aap.fordeling.arena
 
 import java.net.URI
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.web.util.UriBuilder
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.rest.AbstractRestConfig
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(ARENA)
 class ArenaConfig(baseUri : URI, enabled : Boolean = false, pingPath : String = DEFAULT_PING_PATH, val oppslagEnabled : Boolean = true,

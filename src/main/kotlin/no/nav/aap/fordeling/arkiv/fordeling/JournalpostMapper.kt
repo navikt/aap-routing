@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
@@ -11,8 +13,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerD
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.person.PDLClient
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Component
 
 @Component
 class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsattClient) {

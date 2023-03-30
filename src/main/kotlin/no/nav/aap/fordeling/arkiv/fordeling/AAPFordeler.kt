@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
@@ -11,7 +12,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Ford
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
-import org.springframework.stereotype.Component
 
 @Component
 class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory,

@@ -1,5 +1,8 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.ApplicationListener
+import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
@@ -7,9 +10,6 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.ApplicationListener
-import org.springframework.stereotype.Component
 
 @Component
 class ManuellFordelingFactory(private val fordelere : List<ManuellFordeler>) : ManuellFordeler, ApplicationListener<ApplicationReadyEvent> {

@@ -1,5 +1,9 @@
 package no.nav.aap.fordeling.navenhet
 
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.Companion.untatt
@@ -8,10 +12,6 @@ import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.toResponse
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val cf : NavEnhetConfig) : AbstractWebClientAdapter(webClient, cf) {

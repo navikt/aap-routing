@@ -14,6 +14,23 @@ import io.swagger.v3.oas.models.info.License
 import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.SECONDS
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
+import org.springframework.boot.actuate.endpoint.SanitizingFunction
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
+import org.springframework.boot.info.BuildProperties
+import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.reactive.function.client.ClientRequest
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
+import reactor.util.retry.Retry.fixedDelay
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
@@ -32,23 +49,6 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenRespons
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
-import org.springframework.boot.actuate.endpoint.SanitizingFunction
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
-import org.springframework.boot.info.BuildProperties
-import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.reactive.function.client.ClientRequest
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction
-import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
-import reactor.util.retry.Retry.fixedDelay
 
 @Configuration(proxyBeanMethods = false)
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {

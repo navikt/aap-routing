@@ -2,14 +2,14 @@ package no.nav.aap.fordeling.person
 
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) val graphQL : GraphQLWebClient, cfg : PDLConfig)

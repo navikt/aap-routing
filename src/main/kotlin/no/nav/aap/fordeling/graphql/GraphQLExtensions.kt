@@ -1,6 +1,12 @@
 package no.nav.aap.fordeling.graphql
 
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.BAD_REQUEST
+import org.springframework.http.HttpStatus.FORBIDDEN
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.HttpStatus.UNAUTHORIZED
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.api.felles.error.RecoverableIntegrationException
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.BadGraphQL
@@ -9,12 +15,6 @@ import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLExcept
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.IrrecoverableGraphQLException.UnauthorizedGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
 import no.nav.aap.util.LoggerUtil
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.FORBIDDEN
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.HttpStatus.UNAUTHORIZED
 
 object GraphQLExtensions {
 

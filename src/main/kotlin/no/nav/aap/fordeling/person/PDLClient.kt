@@ -1,8 +1,8 @@
 package no.nav.aap.fordeling.person
 
+import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
-import org.springframework.stereotype.Component
 
 @Component
 class PDLClient(private val a : PDLWebClientAdapter) {

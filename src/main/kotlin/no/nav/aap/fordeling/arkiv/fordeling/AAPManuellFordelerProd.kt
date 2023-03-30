@@ -1,11 +1,11 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.PROD_AAP
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
-import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordelerProd(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = PROD_AAP) : AAPManuellFordeler(oppgave) {

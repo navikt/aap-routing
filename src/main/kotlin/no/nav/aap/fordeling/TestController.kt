@@ -1,5 +1,10 @@
 package no.nav.aap.fordeling
 
+import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
@@ -18,11 +23,6 @@ import no.nav.aap.fordeling.person.PDLWebClientAdapter
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.security.token.support.spring.UnprotectedRestController
-import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 
 @UnprotectedRestController(value = ["/dev"])
 class TestController(

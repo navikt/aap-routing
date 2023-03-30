@@ -65,8 +65,21 @@ class TestHovedsøknadFordeling {
             assertThat(kanFordele(AAP, MOTTATT.name))
             assertThat(fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
         }
+        verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
         verify(prodFordeler, times(3)).cfg
         verifyNoMoreInteractions(prodFordeler)
+    }
+
+    @Test
+    @DisplayName("Factory for manuell fordeling av hovedsøknad oppretter fordelingsoppgave når opprettelse av journalføringsoppgave feilet")
+    fun factory() {
+        whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
+        assertThat(ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))).fordel(JP,
+            AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
+        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).opprettFordelingOppgave(JP)
+        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
+        verifyNoMoreInteractions(oppgave)
     }
 
     @Test
@@ -124,18 +137,6 @@ class TestHovedsøknadFordeling {
     fun fordelingsOppgaveVedException() {
         whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
-        verify(oppgave).harOppgave(JP.journalpostId)
-        verify(oppgave).opprettFordelingOppgave(JP)
-        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verifyNoMoreInteractions(oppgave)
-    }
-
-    @Test
-    @DisplayName("Manuell fordeling via factory oppretter fordelingsoppgave når opprettelse av journalføringsoppgave feilet")
-    fun factory() {
-        whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
-        assertThat(ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))).fordel(JP,
-            AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
         verify(oppgave).harOppgave(JP.journalpostId)
         verify(oppgave).opprettFordelingOppgave(JP)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)

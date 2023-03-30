@@ -32,7 +32,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
-import no.nav.boot.conditionals.Cluster
+import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 
@@ -53,7 +53,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
                @Header(RECEIVED_TOPIC) topic : String) {
         runCatching {
-            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(Cluster.devClusters(), 10))
+            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(devClusters(), 10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Behandler journalpost ${hendelse.journalpostId} med tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")

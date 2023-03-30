@@ -26,7 +26,9 @@ class ManuellFordelingFactory(private val fordelere : List<ManuellFordeler>) : M
     private fun fordelerFor(tema : String) =
         (fordelere
             .filter { currentCluster in it.cfg.clusters }
-            .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER)
+            .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER.also {
+            log.warn("Ingen manuell fordeler for $tema i $currentCluster")
+        })
 
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) : FordelingResultat {
         log.info("Fordeler journalpost ${jp.journalpostId} manuelt")

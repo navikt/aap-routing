@@ -72,7 +72,7 @@ class TestHovedsøknadFordeling {
 
     @Test
     @DisplayName("Factory for manuell fordeling av hovedsøknad oppretter fordelingsoppgave når opprettelse av journalføringsoppgave feilet")
-    fun factory() {
+    fun manuellFactoryFordelerManuelt() {
         whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))).fordel(JP,
             AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
@@ -94,7 +94,7 @@ class TestHovedsøknadFordeling {
     }
 
     @Test
-    @DisplayName("Hhovedsøknad automatisk feiler, går til manuell")
+    @DisplayName("Hovedsøknad arkivering feiler, går til manuell")
     fun automatiskFeiler() {
         whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(false)
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)

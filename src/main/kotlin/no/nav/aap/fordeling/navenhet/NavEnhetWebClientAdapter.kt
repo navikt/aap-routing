@@ -2,8 +2,8 @@ package no.nav.aap.fordeling.navenhet
 
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.Companion.untatt
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.untatt
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.WebClientExtensions.toResponse

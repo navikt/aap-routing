@@ -16,7 +16,9 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
 
     private val log = getLogger(AAPFordeler::class.java)
     override val cfg = DEV_AAP  // For NOW
+
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = manuell.fordel(jp, enhet)
+
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
         enhet?.let { e ->
             runCatching {

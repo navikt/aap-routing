@@ -14,18 +14,9 @@ data class Identer(val identer : List<Ident>) {
     fun fnr() = identer.first().ident
 }
 
-data class PDLGeoTilknytning(
-    val gtType : PDLGeoType?,
-    val gtKommune : String?,
-    val gtBydel : String?,
-    val gtLand : String?) {
+data class PDLGeoTilknytning(val gtType : PDLGeoType?, val gtKommune : String?, val gtBydel : String?, val gtLand : String?) {
 
-    enum class PDLGeoType {
-        KOMMUNE,
-        BYDEL,
-        UTLAND,
-        UDEFINERT
-    }
+    enum class PDLGeoType { KOMMUNE, BYDEL, UTLAND, UDEFINERT }
 
     fun gt() = when (gtType) {
         KOMMUNE -> gtKommune
@@ -35,20 +26,17 @@ data class PDLGeoTilknytning(
     }
 }
 
-enum class Diskresjonskode {
-    SPFO,
-    SPSF,
-    ANY
-}
+enum class Diskresjonskode { SPFO, SPSF, ANY }
 
 data class PDLAdressebeskyttelse(val adressebeskyttelse : List<PDLGradering>) {
+
     fun tilDiskresjonskode() = adressebeskyttelse.firstOrNull()?.tilDiskresjonskode() ?: ANY
+
     data class PDLGradering(val gradering : PDLDiskresjonskode) {
+
         fun tilDiskresjonskode() = gradering.tilDiskresjonskode()
         enum class PDLDiskresjonskode {
-            FORTROLIG,
-            STRENGT_FORTROLIG,
-            STRENGT_FORTROLIG_UTLAND;
+            FORTROLIG, STRENGT_FORTROLIG, STRENGT_FORTROLIG_UTLAND;
 
             fun tilDiskresjonskode() =
                 when (this) {

@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 
-data class EnhetsKriteria(
-    val geografiskOmraade : String?,
-    val skjermet : Boolean = false,
-    val tema : String,
-    val diskresjonskode : Diskresjonskode = ANY) {
+data class EnhetsKriteria(val geografiskOmraade : String?, val skjermet : Boolean = false, val tema : String, val diskresjonskode : Diskresjonskode = ANY) {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class NavOrg(val enhetNr : String, val status : String) {
 
         companion object {
+
             private val UNTATTE_ENHETER = listOf("1891", "1893")
             fun untatt(org : NavOrg) = org.enhetNr in UNTATTE_ENHETER
         }
 
         data class NAVEnhet(val enhetNr : String) {
             companion object {
+
                 private const val FORDELINGKONTOR = "4303"
                 const val AUTO_ENHET = "9999"
                 val AUTOMATISK_JOURNALFØRING_ENHET = NAVEnhet(AUTO_ENHET)

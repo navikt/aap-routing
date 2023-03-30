@@ -11,9 +11,11 @@ class EgenAnsattConfig(baseUri : URI, enabled : Boolean = true, pingPath : Strin
     : AbstractRestConfig(baseUri, pingPath, EGENANSATT, enabled) {
 
     fun skjermetUri(b : UriBuilder) = b.path(path).build()
+
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
+
         private const val DEFAULT_PING_PATH = "internal/health/liveness"
         private const val SKJERMING_PATH = "skjermet"
         const val EGENANSATT = "egenansatt"

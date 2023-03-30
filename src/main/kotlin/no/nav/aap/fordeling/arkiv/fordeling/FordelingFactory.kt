@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, ApplicationListener<ApplicationReadyEvent> {
 
-    val log = LoggerUtil.getLogger(FordelingFactory::class.java)
+    private val log = LoggerUtil.getLogger(FordelingFactory::class.java)
     override val cfg = FordelerConfig(fordelere.flatMap { it.cfg.clusters }, listOf(AAP))
 
     override fun onApplicationEvent(event : ApplicationReadyEvent) = log.info("Kan fordele følgende tema:\n${
@@ -33,6 +33,8 @@ class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, Appli
             .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER)
 
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordelManuelt(jp, enhet)
+
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordel(jp, enhet)
+
     override fun toString() = "FordelingFactory(fordelere=$fordelere)"
 }

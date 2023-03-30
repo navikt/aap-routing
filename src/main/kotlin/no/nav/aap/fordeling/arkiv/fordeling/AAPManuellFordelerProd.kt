@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordelerProd(private val oppgave : OppgaveClient) : AAPManuellFordeler(oppgave) {
+
     override val log = getLogger(AAPManuellFordelerProd::class.java)
     override val cfg = PROD_AAP
+
     override fun opprettFordeling(jp : Journalpost) = log.info("Liksom oppretter fordelingsoppgave for journalpost ${jp.journalpostId}")
+
     override fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) =
         log.info("Liksom oppretter journalføringsoppgave for journalpost ${jp.journalpostId}")
 

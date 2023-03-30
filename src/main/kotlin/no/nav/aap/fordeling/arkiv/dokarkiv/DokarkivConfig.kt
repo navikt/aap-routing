@@ -9,22 +9,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
 
 @ConfigurationProperties(DOKARKIV)
-class DokarkivConfig(
-    baseUri : URI,
-    enabled : Boolean = false,
-    pingPath : String = DEFAULT_PING_PATH,
-    val dokPath : String = DOK_PATH,
-    val ferdigstillPath : String = DEFAULT_FERDIGSTILL_PATH,
-    val oppdaterPath : String = DEFAULT_OPPDATER_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
+class DokarkivConfig(baseUri : URI, enabled : Boolean = false, pingPath : String = DEFAULT_PING_PATH,
+                     val dokPath : String = DOK_PATH, val ferdigstillPath : String = DEFAULT_FERDIGSTILL_PATH,
+                     val oppdaterPath : String = DEFAULT_OPPDATER_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun dokUri(b : UriBuilder, journalpostId : String, dokumentInfoId : String, variantFormat : VariantFormat) =
         b.path(dokPath).build(journalpostId, dokumentInfoId, variantFormat.name)
 
     fun ferdigstillUri(b : UriBuilder, journalpostId : String) = b.path(ferdigstillPath).build(journalpostId)
+
     fun oppdaterJournlpostUri(b : UriBuilder, journalpostId : String) = b.path(oppdaterPath).build(journalpostId)
-    override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
+
+    override fun toString() = "DokarkivConfig(dokPath='$dokPath', ferdigstillPath='$ferdigstillPath', oppdaterPath='$oppdaterPath')"
 
     companion object {
+
         const val DOKARKIV = "dokarkiv"
         private const val DOK_PATH = "/rest/hentdokument/{journalpostId}/{dokumentInfoId}/{variantFormat}"
         private const val PATH_PREFIX = "rest/journalpostapi/v1/journalpost/"

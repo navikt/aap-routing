@@ -16,26 +16,27 @@ class OppgaveConfig(
     enabled : Boolean = false,
     val oppslagEnabled : Boolean = true,
     val oppgavePath : String = DEFAULT_OPPGAVE_PATH) : AbstractRestConfig(baseUri, pingPath, OPPGAVE, enabled) {
+
     fun oppgaveUri(b : UriBuilder, id : String) =
         b.queryParams(OPPGAVE_PARAMS).queryParam(JOURNALPOSTID, id).path(oppgavePath).build()
 
     fun opprettOppgaveUri(b : UriBuilder) = b.path(oppgavePath).build()
-    override fun toString() : String {
-        return "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()})"
-    }
+
+    override fun toString() = "OppgaveConfig(oppslagEnabled=$oppslagEnabled, oppgavePath='$oppgavePath'), ${super.toString()})"
 
     companion object {
+
         const val OPPGAVE = "oppgave"
-        private val OPPGAVE_PARAMS = LinkedMultiValueMap<String, String>().apply {
-            add(STATUSKATEGORI, ÅPEN)
-            add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE.verdi)
-            add(OPPGAVETYPE, FORDELINGSOPPGAVE.verdi)
-        }
         private const val DEFAULT_PING_PATH = "internal/alive"
         private const val DEFAULT_OPPGAVE_PATH = "api/v1/oppgaver"
         private const val STATUSKATEGORI = "statuskategori"
         private const val OPPGAVETYPE = "oppgavetype"
         private const val JOURNALPOSTID = "journalpostId"
         private const val ÅPEN = "AAPEN"
+        private val OPPGAVE_PARAMS = LinkedMultiValueMap<String, String>().apply {
+            add(STATUSKATEGORI, ÅPEN)
+            add(OPPGAVETYPE, JOURNALFØRINGSOPPGAVE.verdi)
+            add(OPPGAVETYPE, FORDELINGSOPPGAVE.verdi)
+        }
     }
 }

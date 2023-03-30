@@ -9,14 +9,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 data class FordelingConfig(@NestedConfigurationProperty val topics : FordelingTopics = FordelingTopics(),
                            val enabled : Boolean = true) : KafkaConfig(FORDELING, enabled) {
 
-    data class FordelingTopics(
-        val main : String = DEFAULT_MAIN,
-        val retry : String = RETRY_TOPIC,
-        val dlt : String = DLT_TOPIC,
-        val backoff : Int = DEFAULT_BACKOFF,
-        val retries : Int = DEFAULT_RETRIES)
+    data class FordelingTopics(val main : String = DEFAULT_MAIN, val retry : String = RETRY_TOPIC,
+                               val dlt : String = DLT_TOPIC, val backoff : Int = DEFAULT_BACKOFF, val retries : Int = DEFAULT_RETRIES)
 
     companion object {
+
         const val FORDELING = "fordeling"
         private const val DEFAULT_BACKOFF = 30000
         private const val DEFAULT_RETRIES = 24

@@ -37,6 +37,7 @@ data class OpprettOppgaveData(
     val opprettetAvEnhetsnr : String = AUTO_ENHET) {
 
     companion object {
+
         private const val NORMAL_PRIORITET = "NORM"
         private const val SISTE_ARBEIDSTIME = 12
 

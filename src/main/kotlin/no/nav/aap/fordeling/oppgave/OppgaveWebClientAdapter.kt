@@ -4,6 +4,7 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -13,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient
 @Component
 class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf : OppgaveConfig) :
     AbstractWebClientAdapter(webClient, cf) {
+
+    private val log = LoggerUtil.getLogger(OppgaveWebClientAdapter::class.java)
 
     fun harOppgave(journalpostId : String) =
         if (cf.oppslagEnabled) {

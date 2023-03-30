@@ -12,9 +12,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler {
+
     val log = getLogger(AAPManuellFordeler::class.java)
     override val cfg = DEV_AAP // For NOW
+
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordel(jp, enhet)
+
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
         enhet?.let {
             with(jp) {

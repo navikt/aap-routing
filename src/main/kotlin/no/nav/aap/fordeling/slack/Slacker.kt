@@ -34,11 +34,13 @@ class Slacker(private val cfg : SlackConfig) {
         }
         else Unit
 
-    fun ok(melding : String) = melding("$OK$melding")
-    fun feil(melding : String) = melding("$ERROR$melding")
-    fun rocket(melding : String) = melding("$ROCKET$melding")
+    fun ok(melding : String) = send("$OK$melding")
 
-    private fun melding(melding : String) =
+    fun feil(melding : String) = send("$ERROR$melding")
+
+    fun rocket(melding : String) = send("$ROCKET$melding")
+
+    private fun send(melding : String) =
         with(cfg) {
             if (!enabled) {
                 LOG.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
@@ -59,6 +61,7 @@ class Slacker(private val cfg : SlackConfig) {
         }
 
     companion object {
+
         private val LOG = getLogger(Slacker::class.java)
         private val slack = Slack.getInstance()
     }
@@ -66,7 +69,9 @@ class Slacker(private val cfg : SlackConfig) {
 
 @ConfigurationProperties(SLACK)
 data class SlackConfig(val kanal : String, val token : String, @DefaultValue("true") val enabled : Boolean) {
+
     companion object {
+
         private fun String.emoji() = ":$this: "
         const val SLACK = "slack"
         val ROCKET = "rocket".emoji()

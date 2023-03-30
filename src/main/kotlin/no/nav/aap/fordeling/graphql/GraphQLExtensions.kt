@@ -42,16 +42,17 @@ object GraphQLExtensions {
         }
 
     abstract class IrrecoverableGraphQLException(status : HttpStatus, msg : String) : IrrecoverableIntegrationException("$msg (${status.value()})",
-        null,
-        null) {
+        null, null) {
+
         class NotFoundGraphQL(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
         class BadGraphQL(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
         class UnauthenticatedGraphQL(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
         class UnauthorizedGraphQL(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
     }
 
-    abstract class RecoverableGraphQLException(status : HttpStatus, msg : String,
-                                               cause : Throwable?) : RecoverableIntegrationException("${status.value()}-$msg", cause = cause) {
+    abstract class RecoverableGraphQLException(status : HttpStatus, msg : String, cause : Throwable?)
+        : RecoverableIntegrationException("${status.value()}-$msg", cause = cause) {
+
         class UnhandledGraphQL(status : HttpStatus, msg : String, cause : Throwable? = null) : RecoverableGraphQLException(status, msg, cause)
     }
 }

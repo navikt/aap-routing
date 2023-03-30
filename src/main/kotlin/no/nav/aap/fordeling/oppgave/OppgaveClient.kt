@@ -7,11 +7,14 @@ import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
 import org.springframework.stereotype.Component
 
 @Component
-class OppgaveClient(private val a : OppgaveWebClientAdapter) {
-    fun harOppgave(journalpostId : String) = a.harOppgave(journalpostId)
-    fun opprettJournalføringOppgave(jp : Journalpost, navEnhet : NAVEnhet) =
-        a.opprettOppgave(jp.opprettOppgaveData(JOURNALFØRINGSOPPGAVE, jp.tema, navEnhet.enhetNr))
+class OppgaveClient(private val adapter : OppgaveWebClientAdapter) {
 
-    fun opprettFordelingOppgave(jp : Journalpost) = a.opprettOppgave(jp.opprettOppgaveData(FORDELINGSOPPGAVE, jp.tema))
-    override fun toString() = "OppgaveClient(a=$a)"
+    fun harOppgave(journalpostId : String) = adapter.harOppgave(journalpostId)
+
+    fun opprettJournalføringOppgave(jp : Journalpost, navEnhet : NAVEnhet) =
+        adapter.opprettOppgave(jp.opprettOppgaveData(JOURNALFØRINGSOPPGAVE, jp.tema, navEnhet.enhetNr))
+
+    fun opprettFordelingOppgave(jp : Journalpost) = adapter.opprettOppgave(jp.opprettOppgaveData(FORDELINGSOPPGAVE, jp.tema))
+
+    override fun toString() = "OppgaveClient(adapter=$adapter)"
 }

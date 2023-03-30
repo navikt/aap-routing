@@ -119,16 +119,16 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun configMatcher() = object : ClientConfigurationPropertiesMatcher {}
 
     @Bean
-    fun sanitizer() = SanitizingFunction {
+    fun propertyKeySanitizingFunction() = SanitizingFunction {
         with(it) {
             if (key.contains("jwk", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK);
+                return@SanitizingFunction withValue(MASK)
             }
             if (key.contains("private-key", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK);
+                return@SanitizingFunction withValue(MASK)
             }
             if (key.contains("password", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK);
+                return@SanitizingFunction withValue(MASK)
             }
         }
         it

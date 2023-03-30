@@ -24,7 +24,6 @@ class ManuellFordelingFactory(private val config : FordelingConfig, private val 
             .map { "${it.javaClass.simpleName} -> ${it.cfg.tema}" }
     }")
 
-    fun isEnabled() = config.isEnabled
     private fun fordelerFor(tema : String) =
         (fordelere
             .filter { currentCluster in it.cfg.clusters }

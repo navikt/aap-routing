@@ -58,6 +58,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
     override fun toString() = "JournalpostMapper(pdl=$pdl, egen=$egen)"
 
     companion object {
+
         val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
     }
 }

@@ -34,13 +34,8 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(
-    private val fordeler : FordelingFactory,
-    private val arkiv : ArkivClient,
-    private val enhet : NavEnhetUtvelger,
-    private val beslutter : FordelingBeslutter,
-    private val monkey : ChaosMonkey,
-    private val slack : Slacker) {
+class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
+                                 private val beslutter : FordelingBeslutter, private val monkey : ChaosMonkey, private val slack : Slacker) {
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -115,5 +110,6 @@ class FordelingHendelseKonsument(
         }
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
+
     override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$beslutter, monkey=$monkey, slack=$slack)"
 }

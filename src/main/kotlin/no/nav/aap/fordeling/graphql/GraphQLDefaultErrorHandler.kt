@@ -3,14 +3,11 @@ package no.nav.aap.fordeling.graphql
 import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.RecoverableGraphQLException.UnhandledGraphQL
 import no.nav.aap.fordeling.graphql.GraphQLExtensions.oversett
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.stereotype.Component
 
 @Component
 class GraphQLDefaultErrorHandler : GraphQLErrorHandler {
-
-    private val log = LoggerFactory.getLogger(GraphQLDefaultErrorHandler::class.java)
 
     override fun handle(e : Throwable, query : String) : Nothing {
         when (e) {

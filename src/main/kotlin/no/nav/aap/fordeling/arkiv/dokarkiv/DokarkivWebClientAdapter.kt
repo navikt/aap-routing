@@ -10,6 +10,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val cf : DokarkivConfig, private val mapper : ObjectMapper) :
-    AbstractWebClientAdapter(webClient, cf) {
+class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val cf : DokarkivConfig,
+                               private val mapper : ObjectMapper) : AbstractWebClientAdapter(webClient, cf) {
+
+    private val log = LoggerUtil.getLogger(DokarkivWebClientAdapter::class.java)
 
     fun oppdaterOgFerdigstillJournalpost(journalpostId : String, data : OppdateringData) =
         with(journalpostId) {
@@ -42,7 +45,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
         }
         else {
             EMPTY.also {
-                log.info("Oppdaterte ikke journalpost med $data")
+                log.info("Oppdaterte ikke journalpost $journalpostId, sett dokarkiv.enabled=true for  aktivere")
             }
         }
 
@@ -60,7 +63,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved ferdigstilling av journalpost $journalpostId")
         }
         else {
-            log.info("Ferdigstilte ikke journalpost $journalpostId")
+            log.info("Ferdigstilte ikke journalpost $journalpostId, sett dokarkiv.enabled=true for  aktivere")
             "Ingen ferdigstiling"
         }
 
@@ -78,7 +81,5 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
     private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().dokumentInfoId
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 
-    enum class VariantFormat {
-        JSON, ARKIV
-    }
+    enum class VariantFormat { JSON, ARKIV }
 }

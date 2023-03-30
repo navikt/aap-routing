@@ -14,6 +14,7 @@ class AAPFordelerProd(private val arena : ArenaClient, arkiv : ArkivClient, manu
 
     override val cfg = PROD_AAP
     override fun opprettOppgaveiArena(jp : Journalpost, enhet : NAVEnhet) = log.info("Liksom ferdigstilling av søknad med journalpostId ${jp.journalpostId}")
+
     override fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) =
         log.info("Liksom ferdigstilling av ettersending med journalpostId ${jp.journalpostId}")
 

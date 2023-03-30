@@ -6,8 +6,9 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.N
 import org.springframework.stereotype.Component
 
 @Component
-class DefaultFordelingBeslutter(private val cfg : FordelingConfig) : FordelingBeslutter {
-    override fun skalFordele(jp : Journalpost) =
+class FordelingBeslutter(private val cfg : FordelingConfig) {
+
+    fun skalFordele(jp : Journalpost) =
         with(jp) {
             cfg.isEnabled
                 && status == MOTTATT
@@ -18,11 +19,7 @@ class DefaultFordelingBeslutter(private val cfg : FordelingConfig) : FordelingBe
     override fun toString() = "DefaultFordelingBeslutter(cfg=$cfg)"
 
     companion object {
+
         private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT)
     }
-}
-
-interface FordelingBeslutter {
-
-    fun skalFordele(jp : Journalpost) : Boolean
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
+
     val log = getLogger(javaClass)
 
     fun navEnhet(jp : Journalpost) =

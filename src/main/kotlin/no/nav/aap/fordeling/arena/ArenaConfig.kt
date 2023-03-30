@@ -12,10 +12,13 @@ class ArenaConfig(baseUri : URI, enabled : Boolean = false, pingPath : String = 
                   val nyesteSakPath : String = NYESTE_PATH, val oppgavePath : String = OPPGAVE_PATH) : AbstractRestConfig(baseUri, pingPath, ARENA, enabled) {
 
     fun nyesteSakUri(b : UriBuilder, fnr : Fødselsnummer) = b.path(nyesteSakPath).build(fnr.fnr)
+
     fun oppgaveUri(b : UriBuilder) = b.path(oppgavePath).build()
+
     override fun toString() = "ArenaConfig(oppslagEnabled=$oppslagEnabled, nyesteSakPath='$nyesteSakPath', oppgavePath='$oppgavePath' ${super.toString()})"
 
     companion object {
+
         private const val NYESTE_PATH = "arena/nyesteaktivesak/{fnr}"
         private const val OPPGAVE_PATH = "arena/opprettoppgave"
         private const val DEFAULT_PING_PATH = "actuator/health"

@@ -7,8 +7,11 @@ abstract class KafkaPingable(
     private val admin : KafkaAdmin,
     private val bootstrapServers : List<String>,
     private val cfg : KafkaConfig) : Pingable {
+
     override fun isEnabled() = cfg.isEnabled
+
     override fun pingEndpoint() = "$bootstrapServers"
+
     override fun name() = cfg.name
 
     override fun ping() : Map<String, String> {

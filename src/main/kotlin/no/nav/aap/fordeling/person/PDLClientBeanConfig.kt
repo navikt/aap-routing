@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration
 class PDLClientBeanConfig {
+
     @Bean
     @Qualifier(PDL)
     fun pdlWebClient(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlFlow : ExchangeFilterFunction) =

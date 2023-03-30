@@ -16,11 +16,13 @@ class NavEnhetConfig(
     val aktive : String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun aktiveEnheterUri(b : UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
+
     fun enhetUri(b : UriBuilder) = b.path(enhet).build()
 
     override fun toString() = "${javaClass.simpleName} [pingPath=$pingPath,enabled=$isEnabled,baseUri=$baseUri]"
 
     companion object {
+
         const val NAVENHET = "navorg"
         private const val ENHETSLISTE = "enhetStatusListe"
         private const val AKTIV = "AKTIV"

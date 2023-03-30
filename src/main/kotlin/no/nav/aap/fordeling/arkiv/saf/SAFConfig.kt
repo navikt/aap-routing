@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(SAF)
 class SAFConfig(baseUri : URI, enabled : Boolean = true) : AbstractRestConfig(baseUri, "", SAF, enabled, DEFAULT) {
+
     companion object {
+
         const val SAF = "saf"
     }
 }

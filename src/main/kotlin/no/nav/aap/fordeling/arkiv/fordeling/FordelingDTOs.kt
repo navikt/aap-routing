@@ -15,6 +15,7 @@ typealias AvsenderMottakerDTO = BrukerDTO
 object FordelingDTOs {
 
     data class FordelingResultat(val fordelingstype : FordelingType, val msg : String, val brevkode : String, val journalpostId : String = "0") {
+
         fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
         enum class FordelingType {
             AUTOMATISK,
@@ -28,6 +29,7 @@ object FordelingDTOs {
         }
 
         companion object {
+
             val INGEN_FORDELING = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
         }
     }
@@ -100,11 +102,13 @@ object FordelingDTOs {
 
         data class OppdateringRespons(val journalpostId : String) {
             companion object {
+
                 val EMPTY = OppdateringRespons("0")
             }
         }
 
         data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false) {
+
             fun tilDTO() = BrukerDTO(fnr.fnr, FNR)
         }
 
@@ -123,6 +127,7 @@ object FordelingDTOs {
         }
 
         companion object {
+
             private const val FAGSAK = "FAGSAK"
             private const val FAGSAKSYSTEM = "AO01"
         }

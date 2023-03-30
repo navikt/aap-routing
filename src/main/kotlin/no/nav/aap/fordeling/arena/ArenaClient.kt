@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArenaClient(private val adapter : ArenaWebClientAdapter) {
+
     fun harAktivSak(fnr : Fødselsnummer) = nyesteAktiveSak(fnr) != null
-    fun opprettOppgave(jp : Journalpost, enhet : NAVEnhet) =
-        adapter.opprettArenaOppgave(jp.opprettArenaOppgaveData(enhet), jp.journalpostId)
+
+    fun opprettOppgave(jp : Journalpost, enhet : NAVEnhet) = adapter.opprettArenaOppgave(jp.opprettArenaOppgaveData(enhet), jp.journalpostId)
 
     fun nyesteAktiveSak(fnr : Fødselsnummer) = adapter.nyesteArenaSak(fnr)
+
     override fun toString() = "ArenaClient(adapter=$adapter)"
 }

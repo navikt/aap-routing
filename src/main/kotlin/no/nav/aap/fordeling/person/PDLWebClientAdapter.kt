@@ -12,10 +12,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class PDLWebClientAdapter(
-    @Qualifier(PDL) val client : WebClient,
-    @Qualifier(PDL) val graphQL : GraphQLWebClient,
-    cfg : PDLConfig) : AbstractGraphQLAdapter(client, cfg) {
+class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) val graphQL : GraphQLWebClient, cfg : PDLConfig)
+    : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = PDL)
     fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT_QUERY, aktørId.asIdent())?.fnr()
@@ -31,6 +29,7 @@ class PDLWebClientAdapter(
         "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg, ${super.toString()}]"
 
     companion object {
+
         private fun Fødselsnummer.asIdent() = mapOf(IDENT to fnr)
         private fun AktørId.asIdent() = mapOf(IDENT to id)
         private const val IDENT = "ident"

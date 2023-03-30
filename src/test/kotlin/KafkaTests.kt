@@ -1,4 +1,4 @@
-import no.nav.aap.fordeling.arkiv.fordeling.DefaultFordelingBeslutter
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,17 +10,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @EmbeddedKafka
 @ExtendWith(SpringExtension::class)
-@ContextConfiguration(classes = [DefaultFordelingBeslutter::class, FordelingConfig::class])
+@ContextConfiguration(classes = [FordelingBeslutter::class, FordelingConfig::class])
 //@SpringJUnitConfig(classes = [MottattAwareFordelingBeslutter::class])
 public class KafkaTests {
 
     @Autowired
-    lateinit var broker: EmbeddedKafkaBroker
+    lateinit var broker : EmbeddedKafkaBroker
 
     @Test
     fun test() {
         val brokerList = broker.brokersAsString;
         println("XXXX  " + broker)
     }
-
 }

@@ -6,6 +6,7 @@ import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.Companion.untatt
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val cf : NavEnhetConfig) :
-    AbstractWebClientAdapter(webClient, cf) {
+class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val cf : NavEnhetConfig) : AbstractWebClientAdapter(webClient, cf) {
+
+    private val log = LoggerUtil.getLogger(NavEnhetWebClientAdapter::class.java)
 
     fun navEnhet(kriterium : EnhetsKriteria, enheter : List<NavOrg>) = webClient
         .post()
@@ -42,7 +44,5 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .block()?.map { NavOrg("${it["enhetNr"]}", "${it["status"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
-    override fun toString() : String {
-        return "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"
-    }
+    override fun toString() = "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"
 }

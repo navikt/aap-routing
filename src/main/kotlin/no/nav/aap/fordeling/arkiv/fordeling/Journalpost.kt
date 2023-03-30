@@ -24,21 +24,10 @@ import org.springframework.kafka.support.KafkaHeaders.TOPIC
 
 typealias AvsenderMottaker = Bruker
 
-data class Journalpost(
-    val tittel : String?,
-    val journalførendeEnhet : String?,
-    val journalpostId : String,
-    val status : JournalStatus,
-    val type : JournalpostType,
-    val tema : String,
-    val behandlingstema : String?,
-    val fnr : Fødselsnummer,
-    val bruker : Bruker?,
-    val avsenderMottager : AvsenderMottaker?,
-    val kanal : Kanal,
-    val relevanteDatoer : Set<RelevantDato>,
-    val dokumenter : Set<DokumentInfo>,
-    val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
+data class Journalpost(val tittel : String?, val journalførendeEnhet : String?, val journalpostId : String, val status : JournalStatus,
+                       val type : JournalpostType, val tema : String, val behandlingstema : String?, val fnr : Fødselsnummer,
+                       val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal, val relevanteDatoer : Set<RelevantDato>,
+                       val dokumenter : Set<DokumentInfo>, val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
 
     @JsonIgnore
     val egenAnsatt = bruker?.erEgenAnsatt ?: false
@@ -54,7 +43,9 @@ data class Journalpost(
 
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
+
     fun erMeldekort() = tittel?.contains("Meldekort", true) ?: false
+
     fun opprettArenaOppgaveData(enhet : NAVEnhet) =
         ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 

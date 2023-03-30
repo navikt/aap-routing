@@ -30,11 +30,9 @@ class DokarkivBeanConfig {
 
     @Bean
     @Qualifier(DOKARKIV)
-    fun dokarkivFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
-        cfg.clientCredentialFlow(service, DOKARKIV)
+    fun dokarkivFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, DOKARKIV)
 
     @Bean
     @ConditionalOnGCP
-    fun dokarkivHealthIndicator(adapter : DokarkivWebClientAdapter) =
-        object : AbstractPingableHealthIndicator(adapter) {}
+    fun dokarkivHealthIndicator(adapter : DokarkivWebClientAdapter) = object : AbstractPingableHealthIndicator(adapter) {}
 }

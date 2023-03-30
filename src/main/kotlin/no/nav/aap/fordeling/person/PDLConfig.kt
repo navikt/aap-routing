@@ -12,6 +12,7 @@ class PDLConfig(baseUri : URI, enabled : Boolean = true) : AbstractRestConfig(ba
     override fun toString() = "$javaClass.simpleName [baseUri=$baseUri, pingEndpoint=$pingEndpoint]"
 
     companion object {
+
         const val PDL = "pdl"
     }
 }

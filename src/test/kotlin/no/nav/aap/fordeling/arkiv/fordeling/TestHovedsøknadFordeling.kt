@@ -95,6 +95,24 @@ class TestHovedsøknadFordeling {
     }
 
     @Test
+    @DisplayName("Hhovedsøknad automatisk feiler, går til manuell")
+    fun automatiskFeiler() {
+        whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(false)
+        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
+        whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
+        whenever(arkiv.oppdaterOgFerdigstillJournalpost(JP, ARENASAK)).thenThrow(IrrecoverableIntegrationException::class.java)
+        assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
+        verify(arena).harAktivSak(FIKTIVTFNR)
+        verify(arena).opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
+        verifyNoMoreInteractions(arena)
+        verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
+        verifyNoMoreInteractions(arkiv)
+        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
+        verify(oppgave).harOppgave(JP.journalpostId)
+        verifyNoMoreInteractions(oppgave)
+    }
+
+    @Test
     @DisplayName("Hovedsøknad med eksisterende arenasak går til manuell fordeling")
     fun hovedSøknadMedArenasak() {
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(true)

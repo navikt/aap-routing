@@ -26,8 +26,8 @@ typealias AvsenderMottaker = Bruker
 
 data class Journalpost(val tittel : String?, val journalførendeEnhet : String?, val journalpostId : String, val status : JournalStatus,
                        val type : JournalpostType, val tema : String, val behandlingstema : String?, val fnr : Fødselsnummer,
-                       val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal, val relevanteDatoer : Set<RelevantDato>,
-                       val dokumenter : Set<DokumentInfo>, val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
+                       val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal, val relevanteDatoer : Set<RelevantDato> = emptySet(),
+                       val dokumenter : Set<DokumentInfo> = emptySet(), val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
 
     @JsonIgnore
     val egenAnsatt = bruker?.erEgenAnsatt ?: false

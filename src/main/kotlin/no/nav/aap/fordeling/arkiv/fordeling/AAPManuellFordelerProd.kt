@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.PROD_AAP
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
@@ -7,10 +8,9 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordelerProd(private val oppgave : OppgaveClient) : AAPManuellFordeler(oppgave) {
+class AAPManuellFordelerProd(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = PROD_AAP) : AAPManuellFordeler(oppgave) {
 
     override val log = getLogger(AAPManuellFordelerProd::class.java)
-    override val cfg = PROD_AAP
 
     override fun opprettFordeling(jp : Journalpost) = log.info("Liksom oppretter fordelingsoppgave for journalpost ${jp.journalpostId}")
 

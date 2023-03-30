@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 class ManuellFordelingFactory(private val fordelere : List<ManuellFordeler>) : ManuellFordeler, ApplicationListener<ApplicationReadyEvent> {
 
     val log = LoggerUtil.getLogger(ManuellFordelingFactory::class.java)
-    override val cfg = FordelerConfig(fordelere.flatMap { it.cfg.clusters }, listOf(AAP))
+    override val cfg = FordelerConfig(fordelere.flatMap { it.cfg.clusters }.toSet(), listOf(AAP))
 
     override fun onApplicationEvent(event : ApplicationReadyEvent) = log.info("Kan manuelt fordele følgende tema:\n${
         fordelere

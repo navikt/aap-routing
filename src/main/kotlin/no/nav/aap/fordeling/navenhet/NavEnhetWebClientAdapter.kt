@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.navenhet
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.untatt
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.WebClientExtensions.toResponse
@@ -44,10 +45,5 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
 
     override fun toString() : String {
         return "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"
-    }
-
-    companion object {
-        private val UNTATTE_ENHETER = listOf("1891", "1893")
-        private fun untatt(org : NavOrg) = org.enhetNr in UNTATTE_ENHETER
     }
 }

@@ -11,6 +11,7 @@ import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
+import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
@@ -68,6 +69,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
             })).meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it
+            })).meterFilter(replaceTagValues(BREVKODE, {
+                if (it.contains("Ukjent brevkode", ignoreCase = true)) "Meldekort (antagelig)" else it
             }))
     }
 

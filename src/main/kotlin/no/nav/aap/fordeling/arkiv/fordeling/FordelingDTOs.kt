@@ -93,17 +93,9 @@ object FordelingDTOs {
             val avsenderMottaker : BrukerDTO?,
             val bruker : BrukerDTO?,
             val sak : Sak? = null,
-            val tema : String,
-                                  ) {
+            val tema : String) {
 
             data class Sak(val fagsakId : String, val sakstype : String = FAGSAK, val fagsaksystem : String = FAGSAKSYSTEM)
-        }
-
-        data class JournalførendeEnhet private constructor(val journalfoerendeEnhet : String) {
-            companion object {
-                const val AUTO_ENHET = "9999"
-                val AUTOMATISK_JOURNALFØRING = JournalførendeEnhet(AUTO_ENHET)
-            }
         }
 
         data class OppdateringRespons(val journalpostId : String) {

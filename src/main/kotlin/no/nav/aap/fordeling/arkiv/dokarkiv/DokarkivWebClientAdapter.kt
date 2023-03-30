@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat.JSON
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalførendeEnhet.Companion.AUTOMATISK_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.WebClientExtensions.toResponse
 import org.springframework.beans.factory.annotation.Qualifier
@@ -51,7 +51,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .uri { cf.ferdigstillUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
-                .bodyValue(AUTOMATISK_JOURNALFØRING)
+                .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET)
                 .exchangeToMono { it.toResponse<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }

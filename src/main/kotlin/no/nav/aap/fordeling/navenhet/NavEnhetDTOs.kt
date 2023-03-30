@@ -21,8 +21,12 @@ data class EnhetsKriteria(
     data class NavOrg(val enhetNr : String, val status : String) {
         data class NAVEnhet(val enhetNr : String) {
             companion object {
-                private const val FORDELING = "4303"
-                val FORDELINGSENHET = NAVEnhet(FORDELING)
+                private const val FORDELINGKONTOR = "4303"
+                fun untatt(org : NavOrg) = org.enhetNr in UNTATTE_ENHETER
+                const val AUTO_ENHET = "9999"
+                private val UNTATTE_ENHETER = listOf("1891", "1893")
+                val AUTOMATISK_JOURNALFØRING_ENHET = NAVEnhet(AUTO_ENHET)
+                val FORDELINGSENHET = NAVEnhet(FORDELINGKONTOR)
             }
         }
     }

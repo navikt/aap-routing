@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.dokarkiv
 
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
+import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties

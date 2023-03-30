@@ -33,13 +33,11 @@ class SAFBeanConfig {
 
     @Bean
     @Qualifier(SAF)
-    fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) =
-        GraphQLWebClient.newInstance(client, mapper)
+    fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(SAF)
-    fun safFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
-        cfg.clientCredentialFlow(service, SAF)
+    fun safFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, SAF)
 
     @Bean
     @ConditionalOnGCP

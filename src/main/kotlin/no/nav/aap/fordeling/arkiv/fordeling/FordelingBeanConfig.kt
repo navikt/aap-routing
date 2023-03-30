@@ -26,7 +26,6 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Configuration(proxyBeanMethods = false)
 @EnableScheduling

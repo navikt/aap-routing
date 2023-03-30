@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.oppgave
 
+import java.net.URI
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
@@ -7,7 +8,6 @@ import no.nav.aap.rest.AbstractRestConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriBuilder
-import java.net.URI
 
 @ConfigurationProperties(OPPGAVE)
 class OppgaveConfig(

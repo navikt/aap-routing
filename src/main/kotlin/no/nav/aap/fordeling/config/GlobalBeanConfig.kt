@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.config.MeterFilter.*
+import io.micrometer.core.instrument.config.MeterFilter.replaceTagValues
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
-import io.netty.handler.logging.LogLevel.*
+import io.netty.handler.logging.LogLevel.TRACE
 import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
+import java.time.Duration
+import java.time.Duration.ofSeconds
+import java.util.concurrent.TimeUnit.SECONDS
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
@@ -19,7 +22,6 @@ import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.toResponse
-import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
@@ -38,21 +40,15 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpHeaders.*
-import org.springframework.http.HttpStatus.*
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction.*
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
-import java.time.Duration
-import java.time.Duration.ofSeconds
-import java.util.*
-import java.util.concurrent.TimeUnit.*
 
 @Configuration(proxyBeanMethods = false)
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {

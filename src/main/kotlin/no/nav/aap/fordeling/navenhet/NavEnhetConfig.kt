@@ -1,11 +1,11 @@
 package no.nav.aap.fordeling.navenhet
 
+import java.net.URI
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
-import java.net.URI
 
 @ConfigurationProperties(NAVENHET)
 class NavEnhetConfig(

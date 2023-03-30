@@ -1,13 +1,13 @@
 package no.nav.aap.fordeling.oppgave
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTO_ENHET
 import java.time.LocalDate
 import java.time.LocalDateTime.now
 import java.time.ZoneId.systemDefault
-import java.util.*
+import java.util.Date
+import no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTO_ENHET
 
 object OppgaveDTOs {
 

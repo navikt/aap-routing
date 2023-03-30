@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.person
 
+import java.net.URI
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT
 import org.springframework.boot.context.properties.ConfigurationProperties
-import java.net.URI
 
 @ConfigurationProperties(PDL)
 class PDLConfig(baseUri : URI, enabled : Boolean = true) : AbstractRestConfig(baseUri, "", PDL, enabled, DEFAULT) {

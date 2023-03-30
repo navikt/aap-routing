@@ -26,8 +26,7 @@ class ArenaBeanConfig {
 
     @Bean
     @Qualifier(ARENA)
-    fun arenaFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
-        cfg.clientCredentialFlow(service, ARENA)
+    fun arenaFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) = cfg.clientCredentialFlow(service, ARENA)
 
     @Bean
     @ConditionalOnGCP

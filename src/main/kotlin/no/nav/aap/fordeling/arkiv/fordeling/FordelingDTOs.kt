@@ -2,13 +2,13 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
+import java.time.LocalDateTime
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
-import java.time.LocalDateTime
 
 typealias AvsenderMottakerDTO = BrukerDTO
 

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.*
 import org.springframework.web.reactive.function.client.WebClient.Builder
 
 @Configuration(proxyBeanMethods = false)

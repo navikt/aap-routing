@@ -1,10 +1,10 @@
 package no.nav.aap.fordeling.egenansatt
 
+import java.net.URI
 import no.nav.aap.fordeling.egenansatt.EgenAnsattConfig.Companion.EGENANSATT
 import no.nav.aap.rest.AbstractRestConfig
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
-import java.net.URI
 
 @ConfigurationProperties(EGENANSATT)
 class EgenAnsattConfig(baseUri : URI, enabled : Boolean = true, pingPath : String = DEFAULT_PING_PATH, val path : String = SKJERMING_PATH)

@@ -14,7 +14,7 @@ class AAPFordelerProd(private val arena : ArenaClient, arkiv : ArkivClient, manu
 
     val log = getLogger(AAPFordelerProd::class.java)
 
-    override fun opprettOppgaveIArena(jp : Journalpost, enhet : NAVEnhet) = log.info("Liksom ferdigstilling av søknad med journalpostId ${jp.journalpostId}")
+    override fun opprettArenaOppgave(jp : Journalpost, enhet : NAVEnhet) = log.info("Liksom ferdigstilling av søknad med journalpostId ${jp.journalpostId}")
 
     override fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) =
         log.info("Liksom ferdigstilling av ettersending med journalpostId ${jp.journalpostId}")

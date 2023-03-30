@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
@@ -11,10 +12,10 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import org.springframework.stereotype.Component
 
 @Component
-class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler {
+class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = DEV_AAP) : ManuellFordeler {
 
     val log = getLogger(AAPManuellFordeler::class.java)
-    override val cfg = DEV_AAP // For NOW
+    // For NOW
 
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordel(jp, enhet)
 

@@ -4,18 +4,20 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 import org.springframework.stereotype.Component
 
 @Component
-class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory) : Fordeler {
+class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory,
+                  override val cfg : FordelerConfig = DEV_AAP) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
-    override val cfg = DEV_AAP  // For NOW
 
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = manuell.fordel(jp, enhet)
 
@@ -25,17 +27,17 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                 when (jp.hovedDokumentBrevkode) {
 
                     STANDARD.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' i cluster $currentCluster")
                         fordelSoknad(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' i cluster $currentCluster")
                         fordelEttersending(jp, e)
                     }
 
                     else -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert i cluster $currentCluster, gjør manuell fordeling")
                         manuell.fordel(jp, e)
                     }
                 }

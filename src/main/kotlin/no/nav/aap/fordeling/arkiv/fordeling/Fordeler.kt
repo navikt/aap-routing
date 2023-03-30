@@ -26,12 +26,13 @@ interface Fordeler {
         }
     }
 
-    data class FordelerConfig(val clusters : List<Cluster>, val tema : List<String>) {
+    data class FordelerConfig(val clusters : Set<Cluster>, val tema : List<String>) {
         companion object {
 
+            val LOCAL = of(arrayOf(Cluster.LOCAL), AAP)
             val DEV_AAP = of(devClusters(), AAP)
             val PROD_AAP = of(prodClusters(), AAP)
-            fun of(clusters : Array<Cluster>, vararg tema : String) = FordelerConfig(clusters.toList(), tema.toList())
+            fun of(clusters : Array<Cluster>, vararg tema : String) = FordelerConfig(clusters.toSet(), tema.toList())
         }
     }
 }

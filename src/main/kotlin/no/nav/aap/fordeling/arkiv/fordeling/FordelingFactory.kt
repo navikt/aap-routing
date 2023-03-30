@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, ApplicationListener<ApplicationReadyEvent> {
 
     private val log = LoggerUtil.getLogger(FordelingFactory::class.java)
-    override val cfg = FordelerConfig(fordelere.flatMap { it.cfg.clusters }, listOf(AAP))
+    override val cfg = FordelerConfig(fordelere.flatMap { it.cfg.clusters }.toSet(), listOf(AAP))
 
     override fun onApplicationEvent(event : ApplicationReadyEvent) = log.info("Kan fordele følgende tema:\n${
         fordelere

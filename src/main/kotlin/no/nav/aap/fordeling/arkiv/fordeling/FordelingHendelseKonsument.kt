@@ -17,7 +17,9 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.DIREKTE_MANUELL
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN_JOURNALPOST
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.JOURNALFOERT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
@@ -63,6 +65,12 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                 inc(FORDELINGTS, TOPIC, topic, KANAL, hendelse.mottaksKanal, FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
+    
+            if (jp.status == JOURNALFOERT) {
+                log.info("Journalpost ${jp.journalpostId}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+                jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
+                return
+            }
 
             if (jp.bruker == null) {
                 log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
@@ -71,15 +79,15 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                 return
             }
 
+            if (!beslutter.skalFordele(jp)) {
+                log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+                jp.metrikker(INGEN, topic)
+                return
+            }
+
             if (jp.kanal == UKJENT) {
                 log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
                 slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
-            }
-
-            if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
-                jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
-                return
             }
 
             log.info("Begynner fordeling av ${jp.journalpostId} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")

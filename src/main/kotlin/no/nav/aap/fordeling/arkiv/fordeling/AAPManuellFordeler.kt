@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_OPPGAVE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
 import no.nav.aap.fordeling.navenhet.NAVEnhet
@@ -24,7 +24,9 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg :
             with(jp) {
                 if (oppgave.harOppgave(journalpostId)) {
                     log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.journalpostId}")
-                    FordelingResultat(INGEN, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, journalpostId)
+                    FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny",
+                        hovedDokumentBrevkode,
+                        journalpostId)
                 }
                 else {
                     runCatching {

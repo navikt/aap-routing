@@ -22,6 +22,7 @@ object FordelingDTOs {
             MANUELL_JOURNALFØRING,
             MANUELL_FORDELING,
             INGEN,
+            ALLEREDE_OPPGAVE,
             ALLEREDE_JOURNALFØRT,
             INGEN_JOURNALPOST,
             DIREKTE_MANUELL,

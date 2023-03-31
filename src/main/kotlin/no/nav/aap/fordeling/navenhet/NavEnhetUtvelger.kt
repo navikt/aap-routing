@@ -22,7 +22,7 @@ data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
                 enhetFor(jp)
             }
         } ?: enhetFor(jp)?.let {
-            log.info("Journalførende enhet var ikke satt på journalposten, fra GT oppslag er den ${it.enhetNr}")
+            log.info("Journalførende enhet var ikke satt på journalpost ${jp.journalpostId}, fra GT oppslag er den ${it.enhetNr}")
             it
         }
 

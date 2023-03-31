@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.person
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.Diskresjonskode.SPFO
@@ -14,15 +15,17 @@ data class Identer(val identer : List<Ident>) {
     fun fnr() = identer.first().ident
 }
 
-data class PDLGeoTilknytning(val gtType : PDLGeoType?, val gtKommune : String?, val gtBydel : String?, val gtLand : String?) {
+data class PDLGeoTilknytning(val gtType : PDLGeoType, val gtKommune : String?, val gtBydel : String?, val gtLand : String?) {
 
-    enum class PDLGeoType { KOMMUNE, BYDEL, UTLAND, UDEFINERT }
+    enum class PDLGeoType { KOMMUNE, BYDEL, UTLAND, @JsonEnumDefaultValue
+    UDEFINERT
+    }
 
     fun gt() = when (gtType) {
         KOMMUNE -> gtKommune
         BYDEL -> gtBydel
         UTLAND -> gtLand
-        else -> gtType?.name
+        else -> gtType.name
     }
 }
 

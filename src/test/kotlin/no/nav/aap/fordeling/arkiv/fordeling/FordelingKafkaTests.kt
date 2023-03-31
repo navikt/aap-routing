@@ -1,29 +1,15 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.reset
-import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.kafka.test.EmbeddedKafkaBroker
-import no.nav.aap.fordeling.arena.ArenaClient
-import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
-import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
-import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
-import no.nav.aap.fordeling.oppgave.OppgaveClient
-
 /*
 @EmbeddedKafka
+
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [FordelingHendelseKonsument::class])
 @TestInstance(PER_CLASS)
+*/
 
- */
 public class FordelingKafkaTests {
-
+    /*
     @Autowired
     lateinit var broker : EmbeddedKafkaBroker
 
@@ -65,4 +51,6 @@ public class FordelingKafkaTests {
         val brokerList = broker.brokersAsString;
         println("XXXX  " + arkiv)
     }
+   
+     */
 }

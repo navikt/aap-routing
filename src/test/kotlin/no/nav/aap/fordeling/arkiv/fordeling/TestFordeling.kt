@@ -157,7 +157,7 @@ class TestFordeling {
     }
 
     @Test
-    @DisplayName("Ettersending som har Arena sak skal ferdigstille JP")
+    @DisplayName("Ettersending som HAR Arena sak skal ferdigstille JP")
     fun fordelEttersendingAutomatisk() {
         whenever(arena.nyesteAktiveSak(FIKTIVTFNR)).thenReturn(ARENASAK)
         assertThat(fordeler.fordel(JPES, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)

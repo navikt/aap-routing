@@ -16,8 +16,8 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.LOCAL
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.PROD_AAP
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.ALLEREDE_OPPGAVE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
@@ -133,7 +133,7 @@ class TestFordeling {
     @DisplayName("Manuell fordeling oppretter IKKE journalføringsoppgave når det allerede finnes en")
     fun journalføringsoppgaveFinnes() {
         whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(true)
-        assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(INGEN)
+        assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(ALLEREDE_OPPGAVE)
         verify(oppgave).harOppgave(JP.journalpostId)
         verifyNoMoreInteractions(oppgave)
     }

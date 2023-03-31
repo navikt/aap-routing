@@ -41,9 +41,6 @@ class TestController(
 
     private val log = getLogger(javaClass)
 
-    @GetMapping("org")
-    fun orgAlle() = orgAdapter.aktiveEnheterRAW()
-
     @PostMapping("oppdaterogferdigstilljournalpost")
     fun oppdaterOgFerdigstillJournalpost(@RequestBody data : OppdateringData, @RequestParam journalpostId : String) =
         arkivAdapter.oppdaterOgFerdigstillJournalpost(journalpostId, data)

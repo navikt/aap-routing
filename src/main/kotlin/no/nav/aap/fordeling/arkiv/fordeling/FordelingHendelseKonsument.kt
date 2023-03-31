@@ -24,9 +24,9 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.U
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
-import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGSTYPE
+import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
+import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
@@ -65,7 +65,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                 inc(FORDELINGTS, TOPIC, topic, KANAL, hendelse.mottaksKanal, FORDELINGSTYPE, INGEN_JOURNALPOST.name)
                 return
             }
-    
+
             if (jp.status == JOURNALFOERT) {
                 log.info("Journalpost ${jp.journalpostId}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)

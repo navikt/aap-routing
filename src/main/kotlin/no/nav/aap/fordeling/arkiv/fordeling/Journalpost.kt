@@ -14,11 +14,11 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Relevan
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
-import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE
-import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGTS
-import no.nav.aap.fordeling.util.MetrikkLabels.KANAL
-import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.BREVKODE
+import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGSTYPE
+import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
+import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.TITTEL
 import no.nav.aap.util.Constants.TEMA
 import no.nav.aap.util.Metrikker
 

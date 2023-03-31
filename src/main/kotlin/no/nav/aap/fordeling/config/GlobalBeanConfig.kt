@@ -31,8 +31,13 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
-import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
-import no.nav.aap.fordeling.util.MetrikkLabels.TITTEL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.BREVKODE
+import no.nav.aap.fordeling.util.MetrikkKonstanter.INNLOGGET_TITTEL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.KORRIGERT_MELDEKORT
+import no.nav.aap.fordeling.util.MetrikkKonstanter.MELDEKORT
+import no.nav.aap.fordeling.util.MetrikkKonstanter.MELDEKORT_UKE_TITTEL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.SAMTALE_TITTEL
+import no.nav.aap.fordeling.util.MetrikkKonstanter.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
@@ -62,17 +67,17 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun meterRegistryCustomizer() : MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
         reg.config()
             .meterFilter(replaceTagValues(TITTEL, {
-                if (it.contains("Innlogget chat med NAV", ignoreCase = true)) "Innlogget chat med NAV" else it
+                if (it.contains(INNLOGGET_TITTEL, ignoreCase = true)) INNLOGGET_TITTEL else it
             }))
             .meterFilter(replaceTagValues(TITTEL, {
-                if (it.contains("Samtale med NAV", ignoreCase = true)) "Samtale med NAV" else it
+                if (it.contains(SAMTALE_TITTEL, ignoreCase = true)) SAMTALE_TITTEL else it
             }))
             .meterFilter(replaceTagValues(TITTEL, {
-                if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
+                if (it.contains(MELDEKORT_UKE_TITTEL, ignoreCase = true)) MELDEKORT else it
             })).meterFilter(replaceTagValues(TITTEL, {
-                if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it
+                if (it.contains(KORRIGERT_MELDEKORT, ignoreCase = true)) KORRIGERT_MELDEKORT else it
             })).meterFilter(replaceTagValues(BREVKODE, {
-                if (it.contains("Ukjent brevkode", ignoreCase = true)) "Meldekort (antagelig)" else it
+                if (it.contains("Ukjent brevkode", ignoreCase = true)) "$MELDEKORT (antagelig)" else it
             }))
     }
 

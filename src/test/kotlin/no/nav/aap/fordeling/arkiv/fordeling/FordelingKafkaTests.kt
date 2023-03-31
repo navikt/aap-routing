@@ -51,6 +51,6 @@ public class FordelingKafkaTests {
         val brokerList = broker.brokersAsString;
         println("XXXX  " + arkiv)
     }
-   
+
      */
 }

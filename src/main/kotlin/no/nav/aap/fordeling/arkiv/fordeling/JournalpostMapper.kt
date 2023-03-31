@@ -61,6 +61,6 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
 
     companion object {
 
-        val FIKTIVTFNR = Fødselsnummer("08089403198")  // Fiktivt i tilfelle du lurte
+        val FIKTIVTFNR = Fødselsnummer("19897599387")  // Fiktivt i tilfelle du lurte
     }
 }

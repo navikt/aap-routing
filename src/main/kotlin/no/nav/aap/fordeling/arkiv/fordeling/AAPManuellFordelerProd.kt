@@ -12,10 +12,10 @@ class AAPManuellFordelerProd(private val oppgave : OppgaveClient, override val c
 
     override val log = getLogger(AAPManuellFordelerProd::class.java)
 
-    override fun opprettFordeling(jp : Journalpost) = log.info("Liksom oppretter fordelingsoppgave for journalpost ${jp.journalpostId}")
+    override fun opprettFordeling(jp : Journalpost) = log.info("Dummy oppretter fordelingsoppgave for journalpost ${jp.journalpostId}")
 
     override fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) =
-        log.info("Liksom oppretter journalføringsoppgave for journalpost ${jp.journalpostId}")
+        log.info("Dummy oppretter journalføringsoppgave for journalpost ${jp.journalpostId}")
 
     override fun toString() = "AAPManuellFordelerProd(oppgave=$oppgave), cfg=$cfg)"
 }

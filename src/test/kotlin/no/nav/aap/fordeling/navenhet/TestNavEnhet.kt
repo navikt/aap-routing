@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.navenhet
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -19,6 +20,11 @@ class TestNavEnhet {
 
     val enhet : NavEnhetClient = mock()
     val pdl : PDLClient = mock()
+
+    @BeforeEach
+    fun resetMocks() {
+        reset(enhet, pdl)
+    }
 
     @Test
     @DisplayName("Skal ikke slå opp navenhet om den er satt på JP og aktiv")

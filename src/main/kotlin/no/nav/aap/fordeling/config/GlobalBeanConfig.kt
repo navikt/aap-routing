@@ -62,6 +62,12 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun meterRegistryCustomizer() : MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
         reg.config()
             .meterFilter(replaceTagValues(TITTEL, {
+                if (it.contains("Innlogget chat med NAV", ignoreCase = true)) "Innlogget chat med NAV" else it
+            }))
+            .meterFilter(replaceTagValues(TITTEL, {
+                if (it.contains("Samtale med NAV", ignoreCase = true)) "Samtale med NAV" else it
+            }))
+            .meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("Meldekort for uke", ignoreCase = true)) "Meldekort" else it
             })).meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains("korrigert meldekort", ignoreCase = true)) "Korrigert meldekort" else it

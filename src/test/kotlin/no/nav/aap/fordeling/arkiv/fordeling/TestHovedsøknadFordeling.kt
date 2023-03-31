@@ -25,7 +25,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTF
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.ARENASAK
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.Constants.AAP
 

@@ -13,7 +13,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.toResponse

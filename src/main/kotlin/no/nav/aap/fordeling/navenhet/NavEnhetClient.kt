@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.navenhet
 
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.fordeling.person.Diskresjonskode
 
@@ -15,5 +14,7 @@ class NavEnhetClient(private val a : NavEnhetWebClientAdapter) {
     @Cacheable(NAVENHET)
     fun aktiveEnheter() = a.aktiveEnheter()
 
-    fun erAktiv(enhetNr : String, aktiveEnheter : List<NavOrg>) = aktiveEnheter.any { it.enhetNr == enhetNr }
+    fun erAktiv(enhet : NAVEnhet, aktiveEnheter : List<NAVEnhet>) : Boolean {
+        return enhet in aktiveEnheter
+    }
 }

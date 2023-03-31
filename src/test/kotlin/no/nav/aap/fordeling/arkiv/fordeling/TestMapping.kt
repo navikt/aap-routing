@@ -1,8 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -23,15 +21,6 @@ class TestMapping {
 
     val pdl : PDLClient = mock()
     val egen : EgenAnsattClient = mock()
-
-    @BeforeAll
-    fun beforeAll() {
-    }
-
-    @BeforeEach
-    fun beforeEach() {
-        reset(pdl)
-    }
 
     @Test
     @DisplayName("Mapper skal veksle inn aktørId, sette egen ansatt")

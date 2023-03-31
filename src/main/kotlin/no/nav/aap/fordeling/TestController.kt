@@ -14,6 +14,7 @@ import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.oppgave.OppgaveWebClientAdapter
@@ -72,7 +73,7 @@ class TestController(
     fun aktiveEnheter() = orgClient.aktiveEnheter()
 
     @GetMapping("eraktiv")
-    fun erAktiv(@RequestParam enhetNr : String) = orgClient.erAktiv(enhetNr, aktiveEnheter())
+    fun erAktiv(@RequestParam enhetNr : String) = orgClient.erAktiv(NAVEnhet(enhetNr), aktiveEnheter())
 
     @GetMapping("enhet")
     fun enhet(@RequestParam område : String, @RequestParam skjermet : Boolean, @RequestParam diskresjonekode : Diskresjonskode) =

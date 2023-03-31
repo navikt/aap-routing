@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 

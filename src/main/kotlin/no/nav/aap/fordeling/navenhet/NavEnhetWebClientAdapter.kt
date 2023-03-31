@@ -5,9 +5,6 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.Companion.untatt
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
@@ -18,7 +15,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
 
     private val log = LoggerUtil.getLogger(NavEnhetWebClientAdapter::class.java)
 
-    fun navEnhet(kriterium : EnhetsKriteria, enheter : List<NavOrg>) = webClient
+    fun navEnhet(kriterium : EnhetsKriteria, enheter : List<NAVEnhet>) = webClient
         .post()
         .uri(cf::enhetUri)
         .contentType(APPLICATION_JSON)
@@ -29,10 +26,8 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .doOnSuccess { log.trace("Nav enhet oppslag mot NORG2 OK.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
-        ?.map { NavOrg(it["enhetNr"]!!, it["status"]!!) }
-        ?.filterNot(::untatt)
+        ?.map { NAVEnhet(it["enhetNr"]!!) }
         ?.firstOrNull { it in enheter }
-        ?.let { NAVEnhet(it.enhetNr) }
 
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
@@ -41,7 +36,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
-        .block()?.map { NavOrg("${it["enhetNr"]}", "${it["status"]}") }
+        .block()?.map { NAVEnhet("${it["enhetNr"]}") }
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
     override fun toString() = "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"

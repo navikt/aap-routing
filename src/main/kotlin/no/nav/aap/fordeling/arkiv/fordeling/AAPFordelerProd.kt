@@ -5,7 +5,7 @@ import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.PROD_AAP
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 
 @Component

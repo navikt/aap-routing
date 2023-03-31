@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.of
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.Companion.INGEN_FORDELING
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.devClusters

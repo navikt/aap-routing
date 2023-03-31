@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.navenhet
 
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.ExtensionUtils.whenNull
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -14,10 +13,12 @@ data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
 
     fun navEnhet(jp : Journalpost) =
         jp.journalførendeEnhet?.let { e ->
-            if (enhet.erAktiv(e, enhet.aktiveEnheter())) {
+            if (enhet.erAktiv(NAVEnhet(e), enhet.aktiveEnheter())) {
+                log.info("$enhet ER aktiv")
                 NAVEnhet(e)
             }
             else {
+                log.info("$enhet er IKKE aktiv")
                 enhetFor(jp)
             }
         } ?: enhetFor(jp)?.let {

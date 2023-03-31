@@ -15,7 +15,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet.Companion.AUTO_ENHET
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTO_ENHET
 import no.nav.aap.util.Constants.AAP
 
 object TestData {

@@ -12,7 +12,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.RelevantDato
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Tilleggsopplysning
-import no.nav.aap.fordeling.navenhet.EnhetsKriteria.NavOrg.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.util.MetrikkLabels.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkLabels.FORDELINGSTYPE

@@ -7,7 +7,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.E
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.medKanal
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.medStatus
-import no.nav.aap.fordeling.arkiv.fordeling.TestData.meldekort
+import no.nav.aap.fordeling.arkiv.fordeling.TestData.somMeldekort
 
 class TestFordelingBeslutter {
 
@@ -17,7 +17,7 @@ class TestFordelingBeslutter {
             assertThat(skalFordele(JP)).isTrue()
             assertThat(skalFordele(JP.medStatus(JOURNALFOERT))).isFalse()
             assertThat(skalFordele(JP.medKanal(EESSI))).isFalse()
-            assertThat(skalFordele(JP.meldekort())).isFalse()
+            assertThat(skalFordele(JP.somMeldekort())).isFalse()
         }
         assertThat(FordelingBeslutter(FordelingConfig().copy(enabled = false)).skalFordele(JP)).isFalse()
     }

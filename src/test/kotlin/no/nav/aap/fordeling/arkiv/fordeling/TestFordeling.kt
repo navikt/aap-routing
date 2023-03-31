@@ -24,13 +24,14 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.ARENASAK
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
+import no.nav.aap.fordeling.arkiv.fordeling.TestData.JPES
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.Constants.AAP
 
 @TestInstance(PER_CLASS)
-class TestHovedsøknadFordeling {
+class TestFordeling {
 
     val arena : ArenaClient = mock()
     val arkiv : ArkivClient = mock()
@@ -153,5 +154,29 @@ class TestHovedsøknadFordeling {
         verify(oppgave).opprettFordelingOppgave(JP)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
         verifyNoMoreInteractions(oppgave)
+    }
+
+    @Test
+    @DisplayName("Ettersending som har Arena sak skal ferdigstille JP")
+    fun fordelEttersendingAutomatisk() {
+        whenever(arena.nyesteAktiveSak(FIKTIVTFNR)).thenReturn(ARENASAK)
+        assertThat(fordeler.fordel(JPES, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
+        verify(arkiv).oppdaterOgFerdigstillJournalpost(JPES, ARENASAK)
+    }
+
+    @Test
+    @DisplayName("Ettersending som IKKE har Arena sak skal opprette journalføringsoppgave")
+    fun fordelEttersendingManuellJournalføring() {
+        whenever(arena.nyesteAktiveSak(FIKTIVTFNR)).thenReturn(null)
+        assertThat(fordeler.fordel(JPES, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
+        verify(oppgave).opprettJournalføringOppgave(JPES, AUTOMATISK_JOURNALFØRING_ENHET)
+    }
+
+    @Test
+    @DisplayName("Ettersending som IKKE har Arena sak og som ikke har enhet skal opprette fordelingsoppgave")
+    fun fordelEttersendingManuellFordeling() {
+        whenever(arena.nyesteAktiveSak(FIKTIVTFNR)).thenReturn(null)
+        assertThat(fordeler.fordel(JPES, null).fordelingstype).isEqualTo(MANUELL_FORDELING)
+        verify(oppgave).opprettFordelingOppgave(JPES)
     }
 }

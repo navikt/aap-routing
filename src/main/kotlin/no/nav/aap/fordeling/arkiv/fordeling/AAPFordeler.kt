@@ -11,7 +11,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 
 @Component
 class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory,
@@ -27,17 +26,17 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                 when (jp.hovedDokumentBrevkode) {
 
                     STANDARD.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' i cluster $currentCluster")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelSoknad(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' i cluster $currentCluster")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelEttersending(jp, e)
                     }
 
                     else -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert i cluster $currentCluster, gjør manuell fordeling")
+                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
                         manuell.fordel(jp, e)
                     }
                 }

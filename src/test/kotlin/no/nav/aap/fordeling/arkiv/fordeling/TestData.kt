@@ -1,8 +1,10 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.AktørId
+import no.nav.aap.api.felles.SkjemaType
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
+import no.nav.aap.api.felles.SkjemaType.UTLAND_SØKNAD
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
@@ -29,12 +31,15 @@ object TestData {
     val JP = Journalpost(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
         null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO,
         emptySet(), DOCS)
-    val JPES = somEttersending()
+    val JPES = somSkjema(STANDARD_ETTERSENDING)
+
+    val UTLAND = somSkjema(UTLAND_SØKNAD)
 
     val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
         null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCS)
+    
+    private fun somSkjema(skjema : SkjemaType) = JP.copy(dokumenter = setOf(DOC.copy(tittel = skjema.tittel, brevkode = skjema.kode)))
 
-    private fun somEttersending() = JP.copy(dokumenter = setOf(DOC.copy(tittel = STANDARD_ETTERSENDING.tittel, brevkode = STANDARD_ETTERSENDING.kode)))
     fun Journalpost.medStatus(status : JournalStatus) = copy(status = status)
     fun Journalpost.medKanal(kanal : Kanal) = copy(kanal = kanal)
 

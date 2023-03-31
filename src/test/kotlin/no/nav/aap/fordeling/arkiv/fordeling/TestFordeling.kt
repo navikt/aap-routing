@@ -26,6 +26,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.TestData.ARENASAK
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JPES
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
+import no.nav.aap.fordeling.arkiv.fordeling.TestData.UTLAND
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.Constants.AAP
@@ -178,5 +179,12 @@ class TestFordeling {
         whenever(arena.nyesteAktiveSak(FIKTIVTFNR)).thenReturn(null)
         assertThat(fordeler.fordel(JPES, null).fordelingstype).isEqualTo(MANUELL_FORDELING)
         verify(oppgave).opprettFordelingOppgave(JPES)
+    }
+
+    @Test
+    @DisplayName("Ikke-håndterte brevkoder fordeles manuelt")
+    fun fordelIkkeHåndtertBrevkodeManuelt() {
+        assertThat(fordeler.fordel(UTLAND, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
+        verify(oppgave).opprettJournalføringOppgave(UTLAND, AUTOMATISK_JOURNALFØRING_ENHET)
     }
 }

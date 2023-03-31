@@ -1,8 +1,13 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
@@ -15,12 +20,16 @@ import no.nav.aap.util.Constants.AAP
 
 object TestData {
 
+    val AKTØR = AktørId("1111111111111")
     val ARENASAK = "456"
     val OPPRETTET = ArenaOpprettetOppgave("123", ARENASAK)
-    val dokumenter = setOf(DokumentInfo("123", STANDARD.tittel, STANDARD.kode))
+    val DOCS = setOf(DokumentInfo("123", STANDARD.tittel, STANDARD.kode))
     val JP = Journalpost(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
         null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO,
-        emptySet(), dokumenter)
+        emptySet(), DOCS)
+
+    val JPDTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
+        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCS)
 
     fun Journalpost.withStatus(status : JournalStatus) = copy(status = status)
     fun Journalpost.withKanal(kanal : Kanal) = copy(kanal = kanal)

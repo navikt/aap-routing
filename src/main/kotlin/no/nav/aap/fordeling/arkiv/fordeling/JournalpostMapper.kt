@@ -31,7 +31,10 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 tema.lowercase(),
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
-                brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
+                brukerFnr?.let {
+                    print("XXX")
+                    Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it))
+                },
                 avsenderMottakerFnr?.let { AvsenderMottaker(it) },
                 kanal,
                 relevanteDatoer,

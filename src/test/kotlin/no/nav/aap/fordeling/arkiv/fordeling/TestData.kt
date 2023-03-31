@@ -28,10 +28,12 @@ object TestData {
         null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO,
         emptySet(), DOCS)
 
-    val JPDTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
+    val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", MOTTATT, I, AAP,
         null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCS)
 
     fun Journalpost.withStatus(status : JournalStatus) = copy(status = status)
     fun Journalpost.withKanal(kanal : Kanal) = copy(kanal = kanal)
     fun Journalpost.meldekort() = copy(tittel = "Meldekort")
+
+    fun JournalpostDTO.utenBruker() = copy(bruker = null)
 }

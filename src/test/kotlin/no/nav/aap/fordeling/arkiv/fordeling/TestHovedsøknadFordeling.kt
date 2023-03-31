@@ -154,8 +154,4 @@ class TestHovedsøknadFordeling {
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
         verifyNoMoreInteractions(oppgave)
     }
-
-    companion object {
-
-    }
 }

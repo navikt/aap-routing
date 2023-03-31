@@ -76,7 +76,8 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                 if (it.contains(MELDEKORT_UKE_TITTEL, ignoreCase = true)) MELDEKORT else it
             })).meterFilter(replaceTagValues(TITTEL, {
                 if (it.contains(KORRIGERT_MELDEKORT, ignoreCase = true)) KORRIGERT_MELDEKORT else it
-            })).meterFilter(replaceTagValues(BREVKODE, {
+            }))
+            .meterFilter(replaceTagValues(BREVKODE, {
                 if (it.contains("Ukjent brevkode", ignoreCase = true)) "$MELDEKORT (antagelig)" else it
             }))
     }

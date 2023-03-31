@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatus.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
-
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 @Component
 class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) {
 
@@ -20,6 +20,6 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
 
     companion object {
 
-        private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT)
+        private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT, EKST_OPPS)
     }
 }

@@ -23,7 +23,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .bodyValue(kriterium)
         .exchangeToMono { it.toResponse<List<Map<String, String>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.enhet))
-        .doOnSuccess { log.trace("Nav enhet oppslag mot NORG2 OK.") }
+        .doOnSuccess { log.info("Nav enhet oppslag mot NORG2 OK for kriteria $kriterium.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
         .block()
         ?.map { NAVEnhet(it["enhetNr"]!!) }

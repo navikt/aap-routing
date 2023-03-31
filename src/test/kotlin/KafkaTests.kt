@@ -1,5 +1,3 @@
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,6 +5,8 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig
 
 @EmbeddedKafka
 @ExtendWith(SpringExtension::class)

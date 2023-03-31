@@ -42,10 +42,6 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
     val log = getLogger(FordelingHendelseKonsument::class.java)
 
-    init {
-        slack.meldingHvisDev("Start")
-    }
-
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
         sameIntervalTopicReuseStrategy = SINGLE_TOPIC,

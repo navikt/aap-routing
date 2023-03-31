@@ -6,7 +6,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.E
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
 
 @Component
-class FordelingBeslutter(private val cfg : FordelingConfig) {
+class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) {
 
     fun skalFordele(jp : Journalpost) =
         with(jp) {

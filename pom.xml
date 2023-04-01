@@ -29,7 +29,7 @@
         <slack.version>1.28.0</slack.version>
         <springdoc.version>2.0.3</springdoc.version>
         <testcontainers.version>1.17.6</testcontainers.version>
-        <tokensupport.version>3.0.7</tokensupport.version>
+        <tokensupport.version>3.0.9</tokensupport.version>
     </properties>
     <repositories>
         <repository>

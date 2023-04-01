@@ -28,8 +28,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
 
     fun tilJournalpost(dto : JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker.fnr(journalpostId, "'bruker'")
-            val avsenderMottakerFnr = avsenderMottaker.fnr(journalpostId, "'avsenderMottaker'")
+            val brukerFnr = bruker.fnr("'bruker i $journalpostId'")
             Journalpost(journalpostId,
                 journalstatus.toDomain(),
                 journalfoerendeEnhet?.let(::NAVEnhet),
@@ -38,7 +37,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
                 brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
-                avsenderMottakerFnr?.let(::AvsenderMottaker),
+                avsenderMottaker.fnr("'avsenderMottaker i $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
                 dokumenter.toDomain())
         }
@@ -50,19 +49,19 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
             else -> JournalpostStatus.UKJENT
         }
 
-    private fun BrukerDTO?.fnr(journalpostId : String, kind : String) =
+    private fun BrukerDTO?.fnr(kind : String) =
         this?.let {
             when (idType) {
-                AKTOERID -> AktørId(id).fnr(journalpostId)
+                AKTOERID -> AktørId(id).fnr()
                 FNR -> Fødselsnummer(id)
                 else -> null.also {
-                    log.warn("IdType $idType ikke støttet for $kind med id $id fra journalpost $journalpostId")
+                    log.warn("IdType $idType ikke støttet for $kind med id $id")
                 }
             }
         }
 
-    private fun AktørId.fnr(journalpostId : String) =
-        pdl.fnr(this) ?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
+    private fun AktørId.fnr() =
+        pdl.fnr(this) ?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this")
 
     override fun toString() = "JournalpostMapper(pdl=$pdl, egen=$egen)"
 

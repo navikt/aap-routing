@@ -9,9 +9,9 @@ import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat.JSON
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringRespons.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
@@ -24,20 +24,20 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
 
     private val log = LoggerUtil.getLogger(DokarkivWebClientAdapter::class.java)
 
-    fun oppdaterOgFerdigstillJournalpost(journalpostId : String, data : OppdateringData) =
+    fun oppdaterOgFerdigstillJournalpost(journalpostId : String, data : OppdateringDataDTO) =
         with(journalpostId) {
             oppdaterJournalpost(this, data)
             ferdigstillJournalpost(this)
         }
 
-    fun oppdaterJournalpost(journalpostId : String, data : OppdateringData) =
+    fun oppdaterJournalpost(journalpostId : String, data : OppdateringDataDTO) =
         if (cf.isEnabled) {
             webClient.put()
                 .uri { cf.oppdaterJournlpostUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .exchangeToMono { it.toResponse<OppdateringRespons>(log) }
+                .exchangeToMono { it.toResponse<OppdateringResponsDTO>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppdaterPath))
                 .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId fra $data feilet", t) }

@@ -11,12 +11,11 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
-import no.nav.aap.fordeling.navenhet.NavEnhetWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.oppgave.OppgaveWebClientAdapter
 import no.nav.aap.fordeling.oppgave.OpprettOppgaveData
@@ -31,7 +30,6 @@ class TestController(
     private val pdlAdapter : PDLWebClientAdapter,
     private val egenClient : EgenAnsattClient,
     private val arkivAdapter : DokarkivWebClientAdapter,
-    private val orgAdapter : NavEnhetWebClientAdapter,
     private val arkivClient : ArkivClient,
     private val oppgaveClient : OppgaveClient,
     private val oppgaveAdapter : OppgaveWebClientAdapter,
@@ -42,14 +40,14 @@ class TestController(
     private val log = getLogger(javaClass)
 
     @PostMapping("oppdaterogferdigstilljournalpost")
-    fun oppdaterOgFerdigstillJournalpost(@RequestBody data : OppdateringData, @RequestParam journalpostId : String) =
+    fun oppdaterOgFerdigstillJournalpost(@RequestBody data : OppdateringDataDTO, @RequestParam journalpostId : String) =
         arkivAdapter.oppdaterOgFerdigstillJournalpost(journalpostId, data)
 
     @GetMapping("safjournalpost")
     fun safjournalpost(@RequestParam journalpostId : String) = safAdapter.hentJournalpostRAW(journalpostId)
 
     @PostMapping("oppdaterjournalpost")
-    fun oppdaterJournalpost(@RequestParam journalpostId : String, @RequestBody data : OppdateringData) =
+    fun oppdaterJournalpost(@RequestParam journalpostId : String, @RequestBody data : OppdateringDataDTO) =
         arkivAdapter.oppdaterJournalpost(journalpostId, data)
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])

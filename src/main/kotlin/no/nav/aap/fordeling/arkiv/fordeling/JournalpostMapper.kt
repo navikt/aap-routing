@@ -6,12 +6,18 @@ import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.AKTOERID
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfo
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.AKTOERID
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.FNR
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfoDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.JOURNALFOERT
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
 
 @Component
@@ -24,10 +30,9 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
             val brukerFnr = bruker?.fødselsnummer(journalpostId, "'bruker'")
             val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId, "'avsenderMottaker'")
             Journalpost(tittel,
-                journalfoerendeEnhet,
+                journalfoerendeEnhet?.let(::NAVEnhet),
                 journalpostId,
-                journalstatus,
-                journalpostType,
+                journalstatus.toDomain(),
                 tema.lowercase(),
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
@@ -36,9 +41,14 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 },
                 avsenderMottakerFnr?.let { AvsenderMottaker(it) },
                 kanal,
-                relevanteDatoer,
-                dokumenter.toSortedSet(compareBy(DokumentInfo::dokumentInfoId)),
-                tilleggsopplysninger)
+                dokumenter.toSortedSet(compareBy(DokumentInfoDTO::dokumentInfoId)))
+        }
+
+    private fun JournalStatusDTO.toDomain() =
+        when (this) {
+            MOTTATT -> JournalpostStatus.MOTTATT
+            JOURNALFOERT -> JOURNALFØRT
+            else -> JournalpostStatus.UKJENT
         }
 
     private fun BrukerDTO.fødselsnummer(journalpostId : String, kind : String) =

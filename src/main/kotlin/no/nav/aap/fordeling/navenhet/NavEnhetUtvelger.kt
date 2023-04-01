@@ -12,10 +12,10 @@ data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
     val log = getLogger(javaClass)
 
     fun navEnhet(jp : Journalpost) =
-        jp.journalførendeEnhet?.let { e ->
-            if (enhet.erAktiv(NAVEnhet(e), enhet.aktiveEnheter())) {
+        jp.enhet?.let {
+            if (enhet.erAktiv(it, enhet.aktiveEnheter())) {
                 log.info("$enhet ER aktiv")
-                NAVEnhet(e)
+                it
             }
             else {
                 log.info("$enhet er IKKE aktiv")

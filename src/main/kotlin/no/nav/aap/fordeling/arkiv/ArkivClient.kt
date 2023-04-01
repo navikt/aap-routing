@@ -2,8 +2,8 @@ package no.nav.aap.fordeling.arkiv
 
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringData.Sak
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.util.LoggerUtil
@@ -13,12 +13,12 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)
 
-    fun hentJournalpost(journalpostId : String) = saf.hentJournalpost(journalpostId)
-    fun oppdaterOgFerdigstillJournalpost(journalpost : Journalpost, sakNr : String) =
-        dokarkiv.oppdaterOgFerdigstillJournalpost(journalpost.journalpostId, journalpost.oppdateringsData(sakNr))
+    fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
+    fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =
+        dokarkiv.oppdaterOgFerdigstillJournalpost(jp.journalpostId, jp.oppdateringsData(sakNr))
 
     private fun Journalpost.oppdateringsData(saksNr : String) =
-        OppdateringData(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), Sak(saksNr), tema.uppercase())
+        OppdateringDataDTO(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), SakDTO(saksNr), tema.uppercase())
 
     override fun toString() = "ArkivClient(dokarkiv=$dokarkiv, saf=$saf)"
 }

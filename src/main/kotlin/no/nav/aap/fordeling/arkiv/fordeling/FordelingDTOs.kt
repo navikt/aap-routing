@@ -3,12 +3,8 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import java.time.LocalDateTime
-import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerType.FNR
-import no.nav.aap.fordeling.person.Diskresjonskode
-import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 
 typealias AvsenderMottakerDTO = BrukerDTO
 
@@ -39,48 +35,35 @@ object FordelingDTOs {
         val tittel : String?,
         val journalfoerendeEnhet : String?,
         val journalpostId : String,
-        val journalstatus : JournalStatus,
-        val journalpostType : JournalpostType,
+        val journalstatus : JournalStatusDTO,
+        val journalpostType : JournalpostTypeDTO,
         val tema : String,
         val behandlingstema : String?,
         val bruker : BrukerDTO?,
         val avsenderMottaker : AvsenderMottakerDTO?,
         val kanal : Kanal,
-        val relevanteDatoer : Set<RelevantDato>,
-        val dokumenter : Set<DokumentInfo>,
-        val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
+        val relevanteDatoer : Set<RelevantDatoDTO>,
+        val dokumenter : Set<DokumentInfoDTO>,
+        val tilleggsopplysninger : Set<TilleggsopplysningDTO> = emptySet()) {
 
-        enum class Kanal {
-            NAV_NO, EESSI, NAV_NO_CHAT, EKST_OPPS, SKAN_IM,
+        enum class Kanal { NAV_NO, EESSI, NAV_NO_CHAT, EKST_OPPS, SKAN_IM,
 
             @JsonEnumDefaultValue
             UKJENT
         }
 
-        enum class JournalpostType {
-            I, U, N
-        }
+        enum class JournalpostTypeDTO { I, U, N }
 
-        data class Tilleggsopplysning(val nokkel : String, val verdi : String)
+        data class TilleggsopplysningDTO(val nokkel : String, val verdi : String)
+        enum class JournalStatusDTO { MOTTATT, JOURNALFOERT,
 
-        enum class JournalStatus {
-            MOTTATT,
-            JOURNALFOERT,
-            EKSPEDERT,
-            FERDIGSTILT,
-            UNDER_ARBEID,
-            FEILREGISTRERT,
-            UTGAAR,
-            AVBRUTT,
-            UKJENT_BRUKER,
-            RESERVERT,
-            OPPLASTING_DOKUMENT,
+            @JsonEnumDefaultValue
             UKJENT
         }
 
-        data class RelevantDato(val dato : LocalDateTime, val datotype : RelevantDatoType) {
+        data class RelevantDatoDTO(val dato : LocalDateTime, val datotype : RelevantDatoTypeDTO) {
 
-            enum class RelevantDatoType {
+            enum class RelevantDatoTypeDTO {
                 DATO_OPPRETTET,
                 DATO_SENDT_PRINT,
                 DATO_EKSPEDERT,
@@ -91,32 +74,33 @@ object FordelingDTOs {
             }
         }
 
-        data class OppdateringData(
+        data class OppdateringDataDTO(
             val tittel : String?,
             val avsenderMottaker : BrukerDTO?,
             val bruker : BrukerDTO?,
-            val sak : Sak? = null,
+            val sak : SakDTO? = null,
             val tema : String) {
 
-            data class Sak(val fagsakId : String, val sakstype : String = FAGSAK, val fagsaksystem : String = FAGSAKSYSTEM)
-        }
+            data class SakDTO(val fagsakId : String, val sakstype : String = FAGSAK, val fagsaksystem : String = FAGSAKSYSTEM) {
+                companion object {
 
-        data class OppdateringRespons(val journalpostId : String) {
-            companion object {
-
-                val EMPTY = OppdateringRespons("0")
+                    private const val FAGSAK = "FAGSAK"
+                    private const val FAGSAKSYSTEM = "AO01"
+                }
             }
         }
 
-        data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false) {
+        data class OppdateringResponsDTO(val journalpostId : String) {
+            companion object {
 
-            fun tilDTO() = BrukerDTO(fnr.fnr, FNR)
+                val EMPTY = OppdateringResponsDTO("0")
+            }
         }
 
-        data class DokumentInfo(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
+        data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
 
-        data class BrukerDTO(val id : String?, @JsonAlias("type") val idType : BrukerType?) {
-            enum class BrukerType {
+        data class BrukerDTO(val id : String?, @JsonAlias("type") val idType : BrukerTypeDTO?) {
+            enum class BrukerTypeDTO {
                 FNR,
                 AKTOERID,
                 ORGNR,
@@ -125,12 +109,6 @@ object FordelingDTOs {
                 NULL,
                 UKJENT,
             }
-        }
-
-        companion object {
-
-            private const val FAGSAK = "FAGSAK"
-            private const val FAGSAKSYSTEM = "AO01"
         }
     }
 }

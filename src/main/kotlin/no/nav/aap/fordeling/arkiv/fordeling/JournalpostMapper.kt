@@ -17,7 +17,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
@@ -29,8 +28,8 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
 
     fun tilJournalpost(dto : JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker?.fødselsnummer(journalpostId, "'bruker'")
-            val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId, "'avsenderMottaker'")
+            val brukerFnr = bruker.fnr(journalpostId, "'bruker'")
+            val avsenderMottakerFnr = avsenderMottaker.fnr(journalpostId, "'avsenderMottaker'")
             Journalpost(journalpostId,
                 journalstatus.toDomain(),
                 journalfoerendeEnhet?.let(::NAVEnhet),
@@ -38,10 +37,8 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 tema.lowercase(),
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
-                brukerFnr?.let {
-                    Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it))
-                },
-                avsenderMottakerFnr?.let { AvsenderMottaker(it) },
+                brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
+                avsenderMottakerFnr?.let(::AvsenderMottaker),
                 kanal,
                 dokumenter.toDomain())
         }
@@ -49,24 +46,22 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
     private fun JournalStatusDTO.toDomain() =
         when (this) {
             MOTTATT -> JournalpostStatus.MOTTATT
-            JOURNALFOERT -> JOURNALFØRT
+            JOURNALFOERT -> JournalpostStatus.JOURNALFØRT
             else -> JournalpostStatus.UKJENT
         }
 
-    private fun BrukerDTO.fødselsnummer(journalpostId : String, kind : String) =
-        with(this) {
-            id?.let {
-                when (idType) {
-                    AKTOERID -> AktørId(it).fødselsnummer(journalpostId)
-                    FNR -> Fødselsnummer(it)
-                    else -> null.also {
-                        log.warn("IdType $idType ikke støttet for $kind med id $it i journalpost $journalpostId")
-                    }
+    private fun BrukerDTO?.fnr(journalpostId : String, kind : String) =
+        this?.let {
+            when (idType) {
+                AKTOERID -> AktørId(id).fnr(journalpostId)
+                FNR -> Fødselsnummer(id)
+                else -> null.also {
+                    log.warn("IdType $idType ikke støttet for $kind med id $id fra journalpost $journalpostId")
                 }
             }
         }
 
-    private fun AktørId.fødselsnummer(journalpostId : String) =
+    private fun AktørId.fnr(journalpostId : String) =
         pdl.fnr(this) ?: throw IrrecoverableIntegrationException("Kunne ikke slå opp FNR for aktørid $this i journalpost $journalpostId")
 
     override fun toString() = "JournalpostMapper(pdl=$pdl, egen=$egen)"

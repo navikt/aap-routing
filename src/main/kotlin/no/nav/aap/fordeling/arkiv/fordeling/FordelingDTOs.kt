@@ -77,15 +77,9 @@ object FordelingDTOs {
 
         data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
 
-        data class BrukerDTO(val id : String?, @JsonAlias("type") val idType : BrukerTypeDTO?) {
-            enum class BrukerTypeDTO {
-                FNR,
-                AKTOERID,
-                ORGNR,
-                HPRNR,
-                UTL_ORG,
-                NULL,
-                UKJENT,
+        data class BrukerDTO(val id : String, @JsonAlias("type") val idType : BrukerTypeDTO) {
+            enum class BrukerTypeDTO { FNR, AKTOERID, @JsonEnumDefaultValue
+            UKJENT
             }
         }
     }

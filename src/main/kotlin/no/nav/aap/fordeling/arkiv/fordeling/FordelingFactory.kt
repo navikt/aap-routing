@@ -31,7 +31,7 @@ class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, Appli
             .filterNot { it is ManuellFordeler }
             .filter { currentCluster in it.cfg.clusters }
             .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER.also {
-            log.trace("Ingen fordeler for $tema i $currentCluster")
+            log.trace("Ingen fordeler for {} i {}", tema, currentCluster)
         })
 
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordelManuelt(jp, enhet)

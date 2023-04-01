@@ -24,28 +24,28 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
 
     private val log = LoggerUtil.getLogger(DokarkivWebClientAdapter::class.java)
 
-    fun oppdaterOgFerdigstillJournalpost(journalpostId : String, data : OppdateringDataDTO) =
-        with(journalpostId) {
+    fun oppdaterOgFerdigstillJournalpost(id : String, data : OppdateringDataDTO) =
+        with(id) {
             oppdaterJournalpost(this, data)
             ferdigstillJournalpost(this)
         }
 
-    fun oppdaterJournalpost(journalpostId : String, data : OppdateringDataDTO) =
+    fun oppdaterJournalpost(id : String, data : OppdateringDataDTO) =
         if (cf.isEnabled) {
             webClient.put()
-                .uri { cf.oppdaterJournlpostUri(it, journalpostId) }
+                .uri { cf.oppdaterJournlpostUri(it, id) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
                 .exchangeToMono { it.toResponse<OppdateringResponsDTO>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppdaterPath))
-                .doOnSuccess { log.info("Oppdatering av journalpost $journalpostId fra $data OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppdatering av journalpost $journalpostId fra $data feilet", t) }
-                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost $journalpostId")
+                .doOnSuccess { log.info("Oppdatering av journalpost $id fra $data OK. Respons $it") }
+                .doOnError { t -> log.warn("Oppdatering av journalpost $id fra $data feilet", t) }
+                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost $id")
         }
         else {
             EMPTY.also {
-                log.info("Oppdaterte ikke journalpost $journalpostId, sett dokarkiv.enabled=true for  aktivere")
+                log.info("Oppdaterte ikke journalpost $id, sett dokarkiv.enabled=true for  aktivere")
             }
         }
 
@@ -67,18 +67,17 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             "Ingen ferdigstiling"
         }
 
-    fun søknad(jp : Journalpost) = dokument(jp.id, søknadDokumentId(jp), JSON)
+    fun søknad(jp : Journalpost) = dokument(jp.id, jp.hovedDokument.id, JSON)
 
-    fun dokument(journalpostId : String, dokumentInfoId : String, variantFormat : VariantFormat) =
+    fun dokument(id : String, dokumentId : String, variantFormat : VariantFormat) =
         webClient.get()
-            .uri { cf.dokUri(it, journalpostId, dokumentInfoId, variantFormat) }
+            .uri { cf.dokUri(it, id, dokumentId, variantFormat) }
             .accept(APPLICATION_JSON)
             .exchangeToMono { it.toResponse<ByteArray>(log) }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
-            .doOnSuccess { log.trace("Arkivoppslag returnerte  ${it.size} bytes") }
-            .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av journalpost $journalpostId")
+            .doOnSuccess { log.trace("Arkivoppslag $dokumentId returnerte  ${it.size} bytes") }
+            .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av dokument $dokumentId")
 
-    private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().id
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 
     enum class VariantFormat { JSON, ARKIV }

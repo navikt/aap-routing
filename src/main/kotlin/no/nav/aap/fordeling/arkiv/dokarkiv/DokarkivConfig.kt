@@ -13,12 +13,12 @@ class DokarkivConfig(baseUri : URI, enabled : Boolean = false, pingPath : String
                      val dokPath : String = DOK_PATH, val ferdigstillPath : String = DEFAULT_FERDIGSTILL_PATH,
                      val oppdaterPath : String = DEFAULT_OPPDATER_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
-    fun dokUri(b : UriBuilder, journalpostId : String, dokumentInfoId : String, variantFormat : VariantFormat) =
-        b.path(dokPath).build(journalpostId, dokumentInfoId, variantFormat.name)
+    fun dokUri(b : UriBuilder, id : String, dokumentId : String, variantFormat : VariantFormat) =
+        b.path(dokPath).build(id, dokumentId, variantFormat.name)
 
-    fun ferdigstillUri(b : UriBuilder, journalpostId : String) = b.path(ferdigstillPath).build(journalpostId)
+    fun ferdigstillUri(b : UriBuilder, id : String) = b.path(ferdigstillPath).build(id)
 
-    fun oppdaterJournlpostUri(b : UriBuilder, journalpostId : String) = b.path(oppdaterPath).build(journalpostId)
+    fun oppdaterJournlpostUri(b : UriBuilder, id : String) = b.path(oppdaterPath).build(id)
 
     override fun toString() = "DokarkivConfig(dokPath='$dokPath', ferdigstillPath='$ferdigstillPath', oppdaterPath='$oppdaterPath')"
 

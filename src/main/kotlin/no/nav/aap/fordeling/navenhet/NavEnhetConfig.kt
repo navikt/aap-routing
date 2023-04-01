@@ -8,12 +8,8 @@ import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.util.Constants.JOARK
 
 @ConfigurationProperties(NAVENHET)
-class NavEnhetConfig(
-    baseUri : URI,
-    enabled : Boolean = true,
-    pingPath : String = DEFAULT_PING_PATH,
-    val enhet : String = ENHET_PATH,
-    val aktive : String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
+class NavEnhetConfig(baseUri : URI, enabled : Boolean = true, pingPath : String = DEFAULT_PING_PATH,
+                     val enhet : String = ENHET_PATH, val aktive : String = AKTIVE_PATH) : AbstractRestConfig(baseUri, pingPath, JOARK, enabled) {
 
     fun aktiveEnheterUri(b : UriBuilder) = b.path(aktive).queryParam(ENHETSLISTE, AKTIV).build()
 

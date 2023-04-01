@@ -26,17 +26,17 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                 when (jp.hovedDokumentBrevkode) {
 
                     STANDARD.kode -> {
-                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelSoknad(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelEttersending(jp, e)
                     }
 
                     else -> {
-                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
+                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
                         manuell.fordel(jp, e)
                     }
                 }

@@ -37,6 +37,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
         .block()?.map { NAVEnhet("${it["enhetNr"]}") }
+        ?.filterNot(NAVEnhet::untatt)
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")
 
     override fun toString() = "NavEnhetWebClientAdapter(cf=cf, ${super.toString()})"

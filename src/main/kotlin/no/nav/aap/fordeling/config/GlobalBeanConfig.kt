@@ -164,7 +164,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                         e as? OAuth2ClientException
                             ?: OAuth2ClientException("Uventet feil fra token endpoint $tokenEndpointUrl", e)
                     }
-                    .doOnSuccess { log.trace("Token endpoint $tokenEndpointUrl returnerte OK") }
+                    .doOnSuccess { log.trace("Token endpoint {} returnerte OK", tokenEndpointUrl) }
                     .block()
                     ?: throw OAuth2ClientException("Ingen respons (null) fra token endpoint $tokenEndpointUrl")
             }

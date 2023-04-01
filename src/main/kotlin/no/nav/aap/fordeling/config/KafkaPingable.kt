@@ -15,7 +15,7 @@ abstract class KafkaPingable(
     override fun name() = cfg.name
 
     override fun ping() : Map<String, String> {
-        return cfg.topics().mapIndexedNotNull { ix, topic -> innslag(ix, topic) }
+        return cfg.topics().mapIndexed { ix, topic -> innslag(ix, topic) }
             .associateBy({ it.first }, { it.second })
     }
 

@@ -14,7 +14,5 @@ class NavEnhetClient(private val a : NavEnhetWebClientAdapter) {
     @Cacheable(NAVENHET)
     fun aktiveEnheter() = a.aktiveEnheter()
 
-    fun erAktiv(enhet : NAVEnhet, aktiveEnheter : List<NAVEnhet>) : Boolean {
-        return enhet in aktiveEnheter
-    }
+    fun erAktiv(enhet : NAVEnhet, aktiveEnheter : List<NAVEnhet>) = enhet in aktiveEnheter
 }

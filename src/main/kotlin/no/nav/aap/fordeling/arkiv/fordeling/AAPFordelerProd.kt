@@ -12,7 +12,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 class AAPFordelerProd(private val arena : ArenaClient, arkiv : ArkivClient, manuell : ManuellFordelingFactory,
                       override val cfg : FordelerConfig = PROD_AAP) : AAPFordeler(arena, arkiv, manuell) {
 
-    val log = getLogger(AAPFordelerProd::class.java)
+    private val log = getLogger(AAPFordelerProd::class.java)
 
     override fun opprettArenaOppgave(jp : Journalpost, enhet : NAVEnhet) = log.info("Dummy ferdigstilling av søknad med journalpostId ${jp.id}")
 

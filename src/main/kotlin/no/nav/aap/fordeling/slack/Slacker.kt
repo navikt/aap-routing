@@ -15,7 +15,8 @@ import no.nav.boot.conditionals.Cluster.Companion.devClusters
 @Component
 class Slacker(private val cfg : SlackConfig) {
 
-    private val cluster = currentCluster()
+    private val log = getLogger(Slacker::class.java)
+    
     fun okHvisDev(melding : String) =
         if (cluster in devClusters()) {
             ok(melding)
@@ -43,7 +44,7 @@ class Slacker(private val cfg : SlackConfig) {
     private fun send(melding : String) =
         with(cfg) {
             if (!enabled) {
-                LOG.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
+                log.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
                 return
             }
 
@@ -52,17 +53,17 @@ class Slacker(private val cfg : SlackConfig) {
                     it.channel(kanal).text(melding + " (Cluster: ${currentCluster().name.lowercase()})")
                 }) {
                     if (!isOk) {
-                        LOG.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
+                        log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
                     }
                 }
             }.getOrElse {
-                LOG.warn("Fikk ikke kontakt med Slack-API", it)
+                log.warn("Fikk ikke kontakt med Slack-API", it)
             }
         }
 
     companion object {
 
-        private val LOG = getLogger(Slacker::class.java)
+        private val cluster = currentCluster()
         private val slack = Slack.getInstance()
     }
 }

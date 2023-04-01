@@ -14,7 +14,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 @Component
 class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = DEV_AAP) : ManuellFordeler {
 
-    val log = getLogger(AAPManuellFordeler::class.java)
+    private val log = getLogger(AAPManuellFordeler::class.java)
 
     override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordel(jp, enhet)
 

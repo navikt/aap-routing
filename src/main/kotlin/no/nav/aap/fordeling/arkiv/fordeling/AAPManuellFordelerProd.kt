@@ -10,7 +10,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 @Component
 class AAPManuellFordelerProd(private val oppgave : OppgaveClient, override val cfg : FordelerConfig = PROD_AAP) : AAPManuellFordeler(oppgave) {
 
-    override val log = getLogger(AAPManuellFordelerProd::class.java)
+    private val log = getLogger(AAPManuellFordelerProd::class.java)
 
     override fun opprettFordeling(jp : Journalpost) = log.info("Dummy oppretter fordelingsoppgave for journalpost ${jp.id}")
 

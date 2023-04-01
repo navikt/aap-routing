@@ -42,7 +42,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
                                  private val beslutter : FordelingBeslutter, private val monkey : ChaosMonkey, private val slack : Slacker) {
 
-    val log = getLogger(FordelingHendelseKonsument::class.java)
+    private val log = getLogger(FordelingHendelseKonsument::class.java)
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
@@ -116,8 +116,8 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev("${it.msg()} (${jp.fnr})")
-            log.info(it.msg())
+            slack.meldingHvisDev("${it.asString()} (${jp.fnr})")
+            log.info(it.asString())
         }
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()

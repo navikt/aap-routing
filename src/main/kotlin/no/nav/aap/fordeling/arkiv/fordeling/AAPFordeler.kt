@@ -36,7 +36,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                     }
 
                     else -> {
-                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
+                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fjournalføring/ordeling")
                         manuell.fordel(jp, e)
                     }
                 }

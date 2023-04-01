@@ -31,7 +31,7 @@ class ManuellFordelingFactory(private val fordelere : List<ManuellFordeler>) : M
         })
 
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) : FordelingResultat {
-        log.info("Fordeler journalpost ${jp.journalpostId} manuelt")
+        log.info("Fordeler journalpost ${jp.id} manuelt")
         return fordelerFor(jp.tema).fordel(jp, enhet)
     }
 

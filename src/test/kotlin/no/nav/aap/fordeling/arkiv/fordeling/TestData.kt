@@ -30,7 +30,7 @@ object TestData {
     val OPPRETTET = ArenaOpprettetOppgave("123", ARENASAK)
     val DOC = DokumentInfoDTO("123", STANDARD.tittel, STANDARD.kode)
     val DOCS = setOf(DOC)
-    val JP = Journalpost(STANDARD.tittel, AUTOMATISK_JOURNALFØRING_ENHET, "42", MOTTATT, AAP,
+    val JP = Journalpost("42", MOTTATT, AUTOMATISK_JOURNALFØRING_ENHET, STANDARD.tittel, AAP,
         null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO, DOCS)
     val JPES = somSkjema(STANDARD_ETTERSENDING)
 

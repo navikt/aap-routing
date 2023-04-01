@@ -15,7 +15,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =
-        dokarkiv.oppdaterOgFerdigstillJournalpost(jp.journalpostId, jp.oppdateringsData(sakNr))
+        dokarkiv.oppdaterOgFerdigstillJournalpost(jp.id, jp.oppdateringsData(sakNr))
 
     private fun Journalpost.oppdateringsData(saksNr : String) =
         OppdateringDataDTO(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), SakDTO(saksNr), tema.uppercase())

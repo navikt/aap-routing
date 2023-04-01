@@ -14,6 +14,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.JOURNALFOERT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
@@ -29,10 +30,10 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
         with(dto) {
             val brukerFnr = bruker?.fødselsnummer(journalpostId, "'bruker'")
             val avsenderMottakerFnr = avsenderMottaker?.fødselsnummer(journalpostId, "'avsenderMottaker'")
-            Journalpost(tittel,
-                journalfoerendeEnhet?.let(::NAVEnhet),
-                journalpostId,
+            Journalpost(journalpostId,
                 journalstatus.toDomain(),
+                journalfoerendeEnhet?.let(::NAVEnhet),
+                tittel,
                 tema.lowercase(),
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
@@ -41,8 +42,12 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 },
                 avsenderMottakerFnr?.let { AvsenderMottaker(it) },
                 kanal,
-                dokumenter.toSortedSet(compareBy(DokumentInfoDTO::dokumentInfoId)))
+                dokumenter.toDomain())
         }
+
+    fun Set<DokumentInfoDTO>.toDomain() =
+        map { DokumentInfo(it.dokumentInfoId, it.tittel, it.brevkode) }
+            .toSortedSet(compareBy(DokumentInfo::id))
 
     private fun JournalStatusDTO.toDomain() =
         when (this) {

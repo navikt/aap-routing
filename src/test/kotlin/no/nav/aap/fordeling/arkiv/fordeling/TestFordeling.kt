@@ -74,7 +74,7 @@ class TestFordeling {
         whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))).fordel(JP,
             AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
-        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).harOppgave(JP.id)
         verify(oppgave).opprettFordelingOppgave(JP)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
         verifyNoMoreInteractions(oppgave)
@@ -94,7 +94,7 @@ class TestFordeling {
     @Test
     @DisplayName("Hovedsøknad arkivering feiler, går til manuell")
     fun automatiskFeiler() {
-        whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(false)
+        whenever(oppgave.harOppgave(JP.id)).thenReturn(false)
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
         whenever(arkiv.oppdaterOgFerdigstillJournalpost(JP, ARENASAK)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
@@ -104,7 +104,7 @@ class TestFordeling {
         verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
         verifyNoMoreInteractions(arkiv)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).harOppgave(JP.id)
         verifyNoMoreInteractions(oppgave)
     }
 
@@ -122,19 +122,19 @@ class TestFordeling {
     @Test
     @DisplayName("Manuell fordeling oppretter journalføringsoppgave når det ikke allerede finnes en")
     fun journalføringsOppgave() {
-        whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(false)
+        whenever(oppgave.harOppgave(JP.id)).thenReturn(false)
         assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).harOppgave(JP.id)
         verifyNoMoreInteractions(oppgave)
     }
 
     @Test
     @DisplayName("Manuell fordeling oppretter IKKE journalføringsoppgave når det allerede finnes en")
     fun journalføringsoppgaveFinnes() {
-        whenever(oppgave.harOppgave(JP.journalpostId)).thenReturn(true)
+        whenever(oppgave.harOppgave(JP.id)).thenReturn(true)
         assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(ALLEREDE_OPPGAVE)
-        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).harOppgave(JP.id)
         verifyNoMoreInteractions(oppgave)
     }
 
@@ -151,7 +151,7 @@ class TestFordeling {
     fun fordelingsOppgaveVedException() {
         whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
         assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
-        verify(oppgave).harOppgave(JP.journalpostId)
+        verify(oppgave).harOppgave(JP.id)
         verify(oppgave).opprettFordelingOppgave(JP)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
         verifyNoMoreInteractions(oppgave)

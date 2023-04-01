@@ -67,7 +67,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             }
 
             if (jp.status == JOURNALFØRT) {
-                log.info("Journalpost ${jp.journalpostId}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+                log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
                 jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
                 return
             }
@@ -80,17 +80,17 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             }
 
             if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.journalpostId} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+                log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
                 jp.metrikker(INGEN, topic)
                 return
             }
 
             if (jp.kanal == UKJENT) {
-                log.warn("UKjent kanal for journalpost ${jp.journalpostId}, oppdater enum og vurder håndtering")
-                slack.feil("Ukjent kanal for journalpost ${jp.journalpostId}")
+                log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering")
+                slack.feil("Ukjent kanal for journalpost ${jp.id}")
             }
 
-            log.info("Begynner fordeling av ${jp.journalpostId} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
+            log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
             }

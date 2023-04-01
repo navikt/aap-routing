@@ -7,7 +7,6 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.FNR
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfoDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.navenhet.NAVEnhet
@@ -23,10 +22,10 @@ import no.nav.aap.util.Metrikker
 
 typealias AvsenderMottaker = Bruker
 
-data class Journalpost(val tittel : String?, val enhet : NAVEnhet?, val journalpostId : String, val status : JournalpostStatus,
+data class Journalpost(val id : String, val status : JournalpostStatus, val enhet : NAVEnhet?, val tittel : String?,
                        val tema : String, val behandlingstema : String?, val fnr : Fødselsnummer,
                        val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal,
-                       val dokumenter : Set<DokumentInfoDTO> = emptySet()) {
+                       val dokumenter : Set<DokumentInfo> = emptySet()) {
 
     @JsonIgnore
     val egenAnsatt = bruker?.erEgenAnsatt ?: false
@@ -45,6 +44,7 @@ data class Journalpost(val tittel : String?, val enhet : NAVEnhet?, val journalp
 
     fun erMeldekort() = tittel?.contains("Meldekort", true) ?: false
 
+    // TODO Denne er på feil sted
     fun opprettArenaOppgaveData(enhet : NAVEnhet) = ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 
     fun metrikker(type : FordelingType, topic : String) =
@@ -60,6 +60,8 @@ data class Journalpost(val tittel : String?, val enhet : NAVEnhet?, val journalp
 
         fun tilDTO() = BrukerDTO(fnr.fnr, FNR)
     }
+
+    data class DokumentInfo(val id : String, val tittel : String?, val brevkode : String?)
 
     enum class JournalpostStatus { MOTTATT, JOURNALFØRT, UKJENT }
 }

@@ -26,23 +26,23 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                 when (jp.hovedDokumentBrevkode) {
 
                     STANDARD.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelSoknad(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelEttersending(jp, e)
                     }
 
                     else -> {
-                        log.info("Automatisk journalføring av ${jp.journalpostId} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
+                        log.info("Automatisk journalføring av ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}' ikke konfigurert, gjør manuell fordeling")
                         manuell.fordel(jp, e)
                     }
                 }
             }.getOrElse {
                 if (it !is ManuellFordelingException) {
-                    log.warn("Kunne ikke automatisk fordele journalpost ${jp.journalpostId} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
+                    log.warn("Kunne ikke automatisk fordele journalpost ${jp.id} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
                     manuell.fordel(jp, e)
                 }
                 else {
@@ -54,9 +54,9 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
 
     private fun fordelSoknad(jp : Journalpost, enhet : NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
-            log.info("Arena har IKKE aktiv sak, oppretter oppgave i Arena, 0ppdaterer og ferdigstiller journalpost ${jp.journalpostId}")
+            log.info("Arena har IKKE aktiv sak, oppretter oppgave i Arena, 0ppdaterer og ferdigstiller journalpost ${jp.id}")
             opprettArenaOppgave(jp, enhet)
-            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
+            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.id)
         }
         else {
             log.info("Arena HAR aktiv sak for ${jp.fnr}, oppretter ikke oppgave i Arena, sender til manuell fordeling")
@@ -64,26 +64,26 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
         }
 
     protected fun opprettArenaOppgave(jp : Journalpost, enhet : NAVEnhet) {
-        log.info("Oppretter Arena oppgave for journalpost ${jp.journalpostId}")
+        log.info("Oppretter Arena oppgave for journalpost ${jp.id}")
         arena.opprettOppgave(jp, enhet).run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
         }
-        log.info("Opprettet Arena oppgave for journalpost ${jp.journalpostId}")
+        log.info("Opprettet Arena oppgave for journalpost ${jp.id}")
     }
 
     private fun fordelEttersending(jp : Journalpost, enhet : NAVEnhet) =
         arena.nyesteAktiveSak(jp.fnr)?.run {
             ferdigstillEttersending(jp, this)
-            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ettersending  ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.journalpostId)
+            FordelingResultat(AUTOMATISK, "Vellykket fordeling av ettersending  ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.id)
         } ?: run {
-            log.warn("Arena har IKKE aktiv sak for ettersending ${jp.journalpostId}, kan ikke oppdatere og ferdigstille journalpost, sender til manuell fordeling")
+            log.warn("Arena har IKKE aktiv sak for ettersending ${jp.id}, kan ikke oppdatere og ferdigstille journalpost, sender til manuell fordeling")
             manuell.fordel(jp, enhet)
         }
 
     protected fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) {
-        log.info("Oppdaterer og ferdigstiller ettersending for journalpost ${jp.journalpostId}")
+        log.info("Oppdaterer og ferdigstiller ettersending for journalpost ${jp.id}")
         arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
-        log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.journalpostId}")
+        log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.id}")
     }
 
     override fun toString() = "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"

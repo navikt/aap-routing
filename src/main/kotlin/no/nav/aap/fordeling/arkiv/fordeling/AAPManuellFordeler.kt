@@ -22,11 +22,11 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg :
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
         enhet?.let {
             with(jp) {
-                if (oppgave.harOppgave(journalpostId)) {
-                    log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.journalpostId}")
+                if (oppgave.harOppgave(id)) {
+                    log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.id}")
                     FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny",
                         hovedDokumentBrevkode,
-                        journalpostId)
+                        id)
                 }
                 else {
                     runCatching {
@@ -42,17 +42,17 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg :
     private fun opprettJournalføringsOppgave(jp : Journalpost, enhet : NAVEnhet) =
         with(jp) {
             opprettJournalføring(this, enhet)
-            FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, journalpostId)
+            FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, id)
         }
 
     private fun opprettFordelingsOppgave(jp : Journalpost) =
         with(jp) {
             runCatching {
                 opprettFordeling(this)
-                FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, journalpostId).also {
+                FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, id).also {
                 }
             }.getOrElse {
-                with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $journalpostId") {
+                with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $id") {
                     log.warn(this)
                     throw ManuellFordelingException(this, it)
                 }
@@ -60,16 +60,16 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient, override val cfg :
         }
 
     protected fun opprettFordeling(jp : Journalpost) {
-        log.info("Oppretter fordelingsoppgave for ${jp.journalpostId}")
+        log.info("Oppretter fordelingsoppgave for ${jp.id}")
         oppgave.opprettFordelingOppgave(jp).also {
-            log.info("Opprettet fordelingsoppgave for ${jp.journalpostId}")
+            log.info("Opprettet fordelingsoppgave for ${jp.id}")
         }
     }
 
     protected fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) {
-        log.info("Oppretter en journalføringsoppgave for journalpost ${jp.journalpostId}")
+        log.info("Oppretter en journalføringsoppgave for journalpost ${jp.id}")
         oppgave.opprettJournalføringOppgave(jp, enhet).also {
-            log.info("Opprettet journalføringsoppgave for ${jp.journalpostId}")
+            log.info("Opprettet journalføringsoppgave for ${jp.id}")
         }
     }
 

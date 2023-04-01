@@ -67,7 +67,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             "Ingen ferdigstiling"
         }
 
-    fun søknad(jp : Journalpost) = dokument(jp.journalpostId, søknadDokumentId(jp), JSON)
+    fun søknad(jp : Journalpost) = dokument(jp.id, søknadDokumentId(jp), JSON)
 
     fun dokument(journalpostId : String, dokumentInfoId : String, variantFormat : VariantFormat) =
         webClient.get()
@@ -78,7 +78,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             .doOnSuccess { log.trace("Arkivoppslag returnerte  ${it.size} bytes") }
             .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av journalpost $journalpostId")
 
-    private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().dokumentInfoId
+    private fun søknadDokumentId(jp : Journalpost) = jp.dokumenter.first().id
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 
     enum class VariantFormat { JSON, ARKIV }

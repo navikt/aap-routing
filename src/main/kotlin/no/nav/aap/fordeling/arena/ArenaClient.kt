@@ -10,7 +10,7 @@ class ArenaClient(private val adapter : ArenaWebClientAdapter) {
 
     fun harAktivSak(fnr : Fødselsnummer) = nyesteAktiveSak(fnr) != null
 
-    fun opprettOppgave(jp : Journalpost, enhet : NAVEnhet) = adapter.opprettArenaOppgave(jp.opprettArenaOppgaveData(enhet), jp.journalpostId)
+    fun opprettOppgave(jp : Journalpost, enhet : NAVEnhet) = adapter.opprettArenaOppgave(jp.opprettArenaOppgaveData(enhet), jp.id)
 
     fun nyesteAktiveSak(fnr : Fødselsnummer) = adapter.nyesteArenaSak(fnr)
 

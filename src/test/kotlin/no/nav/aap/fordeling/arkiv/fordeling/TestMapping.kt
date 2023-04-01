@@ -9,7 +9,7 @@ import org.mockito.Mockito.*
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.AKTØR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.DTO
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient

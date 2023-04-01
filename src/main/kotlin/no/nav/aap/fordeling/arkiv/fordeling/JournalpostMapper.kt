@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.AKTOERID
@@ -72,12 +73,10 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
 
     companion object {
 
-        fun Bruker.tilDTO() = BrukerDTO(fnr.fnr, FNR)
+        fun Bruker.toDTO() = BrukerDTO(fnr.fnr, FNR)
 
         fun Set<DokumentInfoDTO>.toDomain() =
             map { (dokumentInfoId, tittel, brevkode) -> DokumentInfo(dokumentInfoId, tittel, brevkode) }
                 .toSortedSet(compareBy(DokumentInfo::id))
-
-        val FIKTIVTFNR = Fødselsnummer("19897599387")  // Fiktivt i tilfelle du lurte
     }
 }

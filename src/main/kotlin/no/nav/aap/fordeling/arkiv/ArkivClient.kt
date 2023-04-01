@@ -5,7 +5,7 @@ import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.tilDTO
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.util.LoggerUtil
 
@@ -19,7 +19,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
         dokarkiv.oppdaterOgFerdigstillJournalpost(jp.id, jp.oppdateringsData(sakNr))
 
     private fun Journalpost.oppdateringsData(saksNr : String) =
-        OppdateringDataDTO(tittel, avsenderMottager?.tilDTO() ?: bruker?.tilDTO(), bruker?.tilDTO(), SakDTO(saksNr), tema.uppercase())
+        OppdateringDataDTO(tittel, avsenderMottager?.toDTO() ?: bruker?.toDTO(), bruker?.toDTO(), SakDTO(saksNr), tema.uppercase())
 
     override fun toString() = "ArkivClient(dokarkiv=$dokarkiv, saf=$saf)"
 }

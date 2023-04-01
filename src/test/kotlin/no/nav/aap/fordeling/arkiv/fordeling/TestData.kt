@@ -19,6 +19,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDomain
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTO_ENHET
 import no.nav.aap.util.Constants.AAP
@@ -28,18 +29,18 @@ object TestData {
     val AKTØR = AktørId("1111111111111")
     val ARENASAK = "456"
     val OPPRETTET = ArenaOpprettetOppgave("123", ARENASAK)
-    val DOC = DokumentInfoDTO("123", STANDARD.tittel, STANDARD.kode)
-    val DOCS = setOf(DOC)
+    val DOCDTO = DokumentInfoDTO("123", STANDARD.tittel, STANDARD.kode)
+    val DOCDTOS = setOf(DOCDTO)
     val JP = Journalpost("42", MOTTATT, AUTOMATISK_JOURNALFØRING_ENHET, STANDARD.tittel, AAP,
-        null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO, DOCS)
+        null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO, DOCDTOS.toDomain())
     val JPES = somSkjema(STANDARD_ETTERSENDING)
 
     val UTLAND = somSkjema(UTLAND_SØKNAD)
 
     val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", JournalStatusDTO.MOTTATT, I, AAP,
-        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCS)
+        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCDTOS)
 
-    private fun somSkjema(skjema : SkjemaType) = JP.copy(dokumenter = setOf(DOC.copy(tittel = skjema.tittel, brevkode = skjema.kode)))
+    private fun somSkjema(skjema : SkjemaType) = JP.copy(dokumenter = setOf(JP.hovedDokument.copy(tittel = skjema.tittel, brevkode = skjema.kode)))
 
     fun Journalpost.medStatus(status : JournalpostStatus) = copy(status = status)
 

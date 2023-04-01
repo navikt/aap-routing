@@ -45,10 +45,6 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 dokumenter.toDomain())
         }
 
-    fun Set<DokumentInfoDTO>.toDomain() =
-        map { DokumentInfo(it.dokumentInfoId, it.tittel, it.brevkode) }
-            .toSortedSet(compareBy(DokumentInfo::id))
-
     private fun JournalStatusDTO.toDomain() =
         when (this) {
             MOTTATT -> JournalpostStatus.MOTTATT
@@ -75,6 +71,12 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
     override fun toString() = "JournalpostMapper(pdl=$pdl, egen=$egen)"
 
     companion object {
+
+        fun Bruker.tilDTO() = BrukerDTO(fnr.fnr, FNR)
+
+        fun Set<DokumentInfoDTO>.toDomain() =
+            map { (dokumentInfoId, tittel, brevkode) -> DokumentInfo(dokumentInfoId, tittel, brevkode) }
+                .toSortedSet(compareBy(DokumentInfo::id))
 
         val FIKTIVTFNR = Fødselsnummer("19897599387")  // Fiktivt i tilfelle du lurte
     }

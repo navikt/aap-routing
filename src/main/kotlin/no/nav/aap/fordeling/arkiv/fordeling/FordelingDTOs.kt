@@ -3,33 +3,11 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import java.time.LocalDateTime
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
 
 typealias AvsenderMottakerDTO = BrukerDTO
 
 object FordelingDTOs {
-
-    data class FordelingResultat(val fordelingstype : FordelingType, val msg : String, val brevkode : String, val journalpostId : String = "0") {
-
-        fun msg() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
-        enum class FordelingType {
-            AUTOMATISK,
-            MANUELL_JOURNALFØRING,
-            MANUELL_FORDELING,
-            INGEN,
-            ALLEREDE_OPPGAVE,
-            ALLEREDE_JOURNALFØRT,
-            INGEN_JOURNALPOST,
-            DIREKTE_MANUELL,
-            FAILED
-        }
-
-        companion object {
-
-            val INGEN_FORDELING = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
-        }
-    }
 
     data class JournalpostDTO(
         val tittel : String?,

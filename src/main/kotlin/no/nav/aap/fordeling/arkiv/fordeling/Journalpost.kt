@@ -1,12 +1,11 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.FordelingResultat.FordelingType
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.FNR
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.navenhet.NAVEnhet
@@ -33,11 +32,14 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     @JsonIgnore
     val diskresjonskode = bruker?.diskresjonskode ?: ANY
 
-    @JsonIgnore
-    val hovedDokumentBrevkode = dokumenter.firstOrNull()?.brevkode ?: "Ukjent brevkode"
+    @JsonValue
+    val hovedDokument = dokumenter.first()
 
     @JsonIgnore
-    val hovedDokumentTittel = dokumenter.firstOrNull()?.tittel ?: "Ukjent tittel"
+    val hovedDokumentBrevkode = hovedDokument.brevkode ?: "Ukjent brevkode"
+
+    @JsonIgnore
+    val hovedDokumentTittel = hovedDokument.tittel ?: "Ukjent tittel"
 
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
@@ -56,10 +58,7 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
             Pair(KANAL, kanal),
             Pair(BREVKODE, hovedDokumentBrevkode)))
 
-    data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false) {
-
-        fun tilDTO() = BrukerDTO(fnr.fnr, FNR)
-    }
+    data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false)
 
     data class DokumentInfo(val id : String, val tittel : String?, val brevkode : String?)
 

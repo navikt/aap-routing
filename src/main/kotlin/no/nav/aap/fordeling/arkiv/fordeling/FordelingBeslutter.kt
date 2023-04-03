@@ -1,12 +1,13 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import org.springframework.stereotype.Component
+import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_ARENA_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_ARENA_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
@@ -16,13 +17,21 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNA
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) {
+class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : FordelingConfig = FordelingConfig()) {
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
-    enum class BeslutningsStatus { TIL_FORDELING, INGEN_FORDELING, TIL_MANUELL_FORDELING }
+    enum class BeslutningsStatus { TIL_KELVIN_FORDELING, TIL_ARENA_FORDELING, INGEN_FORDELING, TIL_MANUELL_ARENA_FORDELING }
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
+
+        kotlin.runCatching {
+            arkiv.hentSøknad(jp).also {
+                log.info("Søknad er $it")
+            }
+
+        }.getOrElse { log.warn("OOPS", it) }
+        
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
         }
@@ -41,9 +50,11 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
             return INGEN_FORDELING
         }
 
+        arkiv.hentJournalpost(jp.hovedDokumentId)
+
         if (jp.bruker == null) {
             log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
-            return TIL_MANUELL_FORDELING
+            return TIL_MANUELL_ARENA_FORDELING
         }
 
         if (jp.status != hendelseStatus.somStatus()) {
@@ -55,7 +66,8 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
         if (jp.kanal == UKJENT) {
             log.warn(stdText(jp, "har ukjent kanal, fordeles likevel"))
         }
-        return TIL_FORDELING
+
+        return TIL_ARENA_FORDELING
     }
 
     private fun stdText(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"

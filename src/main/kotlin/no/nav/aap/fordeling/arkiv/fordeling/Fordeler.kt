@@ -30,8 +30,6 @@ interface Fordeler {
     }
 
     data class FordelingResultat(val fordelingstype : FordelingType, val msg : String, val brevkode : String, val journalpostId : String = "0") {
-
-        fun asString() = "$fordelingstype: $msg for journalpost $journalpostId ($brevkode)"
         enum class FordelingType {
             AUTOMATISK,
             MANUELL_JOURNALFØRING,

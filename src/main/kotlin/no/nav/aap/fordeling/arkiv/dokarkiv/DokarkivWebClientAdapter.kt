@@ -76,7 +76,9 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             .exchangeToMono { it.toResponse<ByteArray>(log) }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
             .doOnSuccess { log.trace("Arkivoppslag $dokumentId returnerte  ${it.size} bytes") }
-            .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av dokument $dokumentId")
+            .block()
+            ?.map { ::String }
+            ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av dokument $dokumentId")
 
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 

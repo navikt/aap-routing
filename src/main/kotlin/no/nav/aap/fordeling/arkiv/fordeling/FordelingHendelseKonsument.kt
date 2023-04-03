@@ -68,6 +68,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             if (hendelse.kanal() in HÅNDTERES_AV_ANDRE) {
                 log.info("Journalpost ${hendelse.journalpostId} fra kanal '${hendelse.mottaksKanal}' skal IKKE fordeles")
                 inc(FORDELINGTS, TOPIC, topic, KANAL, hendelse.mottaksKanal, FORDELINGSTYPE, INGEN_FORDELING.name)
+                return
             }
 
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")

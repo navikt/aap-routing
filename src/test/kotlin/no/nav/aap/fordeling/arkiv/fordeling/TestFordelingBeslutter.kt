@@ -14,11 +14,11 @@ class TestFordelingBeslutter {
     @Test
     fun testBeslutter() {
         with(FordelingBeslutter()) {
-            assertThat(skalFordele(JP)).isTrue()
-            assertThat(skalFordele(JP.medStatus(JOURNALFØRT))).isFalse()
-            assertThat(skalFordele(JP.medKanal(EESSI))).isFalse()
-            assertThat(skalFordele(JP.somMeldekort())).isFalse()
+            assertThat(avgjørFordeling(JP)).isTrue()
+            assertThat(avgjørFordeling(JP.medStatus(JOURNALFØRT))).isFalse()
+            assertThat(avgjørFordeling(JP.medKanal(EESSI))).isFalse()
+            assertThat(avgjørFordeling(JP.somMeldekort())).isFalse()
         }
-        assertThat(FordelingBeslutter(FordelingConfig().copy(enabled = false)).skalFordele(JP)).isFalse()
+        assertThat(FordelingBeslutter(FordelingConfig().copy(enabled = false)).avgjørFordeling(JP)).isFalse()
     }
 }

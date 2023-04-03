@@ -16,15 +16,12 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELIMG
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.MANUELL_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -63,7 +60,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
         runCatching {
             monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(devClusters(), 10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
-            log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null) {
@@ -72,16 +69,26 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                 return
             }
 
-            if (!forutsetninger(jp, topic, hendelse.status())) {
-                log.info("Ingen fordeling, forutsetninger for fordeling ikke oppfylt")
-                return
-            }
+            when (beslutter.avgjørFordeling(jp, hendelse.journalpostStatus, topic)) {
 
-            log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
-            fordel(jp).also {
-                jp.metrikker(it.fordelingstype, topic)
-            }
+                INGEN_FORDELIMG -> {
+                    log.info("Ingen fordeling, forutsetninger for fordeling ikke oppfylt")
+                    return
+                }
 
+                MANUELL_FORDELING -> {
+                    fordeler.fordelManuelt(jp, FORDELINGSENHET)
+                    jp.metrikker(DIREKTE_MANUELL, topic)
+                    return
+                }
+
+                TIL_FORDELING -> {
+                    log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
+                    fordel(jp).also {
+                        jp.metrikker(it.fordelingstype, topic)
+                    }
+                }
+            }
         }.onFailure {
             fordelFeilet(hendelse, antallForsøk, topic, it)
         }
@@ -93,39 +100,6 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             log.error(this)
             slack.feil(this)
         }
-
-    private fun forutsetninger(jp : Journalpost, topic : String, status : JournalpostStatus) : Boolean {
-        if (jp.status == JOURNALFØRT) {
-            log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
-            jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
-            return false
-        }
-
-        if (jp.bruker == null) {
-            log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
-            fordeler.fordelManuelt(jp, FORDELINGSENHET)
-            jp.metrikker(DIREKTE_MANUELL, topic)
-            return false
-        }
-
-        if (!beslutter.skalFordele(jp)) {
-            log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
-            jp.metrikker(INGEN, topic)
-            return false
-        }
-
-        if (jp.status != status) {
-            log.warn("Race condition, status endret fra $status til ${jp.status} mellom tidspunkt for mottatt hendelse og hentet journalpost ${jp.id} fra kanal ${jp.kanal} og brevkode ${jp.hovedDokumentBrevkode}, sjekk om noen andre ferdigstiller")
-            jp.metrikker(RACE, topic)
-            return false
-        }
-
-        if (jp.kanal == UKJENT) {
-            log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering")
-            slack.feil("Ukjent kanal for journalpost ${jp.id}, behandler likevel")
-        }
-        return true
-    }
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
@@ -141,11 +115,6 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
         }
 
     private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
-
-    private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
-
-    private fun JournalfoeringHendelseRecord.status() =
-        JournalpostStatus.values().find { it.name.equals(journalpostStatus, ignoreCase = true) } ?: JournalpostStatus.UKJENT
 
     override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$beslutter, monkey=$monkey, slack=$slack)"
 }

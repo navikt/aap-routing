@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat.JSON
+import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter.VariantFormat.ORIGINAL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
@@ -67,9 +67,9 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             "Ingen ferdigstiling"
         }
 
-    fun søknad(jp : Journalpost) = dokument(jp.id, jp.hovedDokument.id, JSON)
+    fun søknad(jp : Journalpost) = dokument(jp.id, jp.hovedDokument.id, ORIGINAL)
 
-    fun dokument(id : String, dokumentId : String, variantFormat : VariantFormat) =
+    private fun dokument(id : String, dokumentId : String, variantFormat : VariantFormat) =
         webClient.get()
             .uri { cf.dokUri(it, id, dokumentId, variantFormat) }
             .accept(APPLICATION_JSON)
@@ -83,5 +83,5 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
 
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 
-    enum class VariantFormat { JSON, ARKIV }
+    enum class VariantFormat { ORIGINAL, ARKIV }
 }

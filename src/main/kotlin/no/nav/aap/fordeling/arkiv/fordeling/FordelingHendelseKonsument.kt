@@ -94,20 +94,6 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             slack.feil(this)
         }
 
-    private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
-    private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
-        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
-            log.warn("$this (${t.javaClass.simpleName})", t)
-            slack.feilHvisDev("$this. (${t.message})")
-            throw t
-        }
-
-    private fun fordel(jp : Journalpost) =
-        fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev("$it (${jp.fnr})")
-            log.info("$it")
-        }
-
     private fun forutsetninger(jp : Journalpost, topic : String, status : JournalpostStatus) : Boolean {
         if (jp.status == JOURNALFØRT) {
             log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
@@ -136,10 +122,25 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
         if (jp.kanal == UKJENT) {
             log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering")
-            slack.feil("Ukjent kanal for journalpost ${jp.id}")
+            slack.feil("Ukjent kanal for journalpost ${jp.id}, behandler likevel")
         }
         return true
     }
+
+    private fun fordel(jp : Journalpost) =
+        fordeler.fordel(jp, enhet.navEnhet(jp)).also {
+            slack.meldingHvisDev("$it (${jp.fnr})")
+            log.info("$it")
+        }
+
+    private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
+        with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
+            log.warn("$this (${t.javaClass.simpleName})", t)
+            slack.feilHvisDev("$this. (${t.message})")
+            throw t
+        }
+
+    private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
 

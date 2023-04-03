@@ -101,14 +101,14 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
     }
 
     @DltHandler
-    fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : ByteArray?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
+    fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : Long?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig hendelse ble mottatt ${timestamp.asDate()}") {
             val s = timestamp?.let { ::String }
             log.error(this)
             slack.feil(this)
         }
 
-    private fun ByteArray?.asDate() = this?.let { String(it) }
+    private fun Long?.asDate() = this?.let { Date(it) }
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)

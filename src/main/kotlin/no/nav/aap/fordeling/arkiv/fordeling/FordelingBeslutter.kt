@@ -12,7 +12,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.E
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.util.LoggerUtil
@@ -26,14 +25,15 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
 
-        kotlin.runCatching {
-            if (jp.dokumenter.harOriginal()) {
-                arkiv.hentSøknad(jp).also {
-                    log.info("Søknad er OK")
-                }
-            }
+        /* kotlin.runCatching {
+             if (jp.dokumenter.harOriginal()) {
+                 arkiv.hentSøknad(jp).also {
+                     log.info("Søknad er OK")
+                 }
+             }
 
-        }.getOrElse { log.warn("OOPS", it) }
+         }.getOrElse { log.warn("OOPS", it) }
+         */
 
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
@@ -43,16 +43,12 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
             return ingen(jp, topic, "Meldekort håndteres av andre")
         }
 
-        if (jp.kanal in HÅNDTERES_AV_ANDRE) {
-            return ingen(jp, topic, "Kanal ${jp.kanal} håndteres av andre")
-        }
-
         if (jp.status == JOURNALFØRT) {
             log.info(stdText(jp, "Allerede journalført"))
             jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
             return INGEN_FORDELING
         }
-        
+
         if (jp.bruker == null) {
             log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
             return TIL_MANUELL_ARENA_FORDELING
@@ -79,7 +75,6 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
         return INGEN_FORDELING
     }
 
-    private fun Set<DokumentInfo>.harOriginal() = this.any { it.harOriginal() }
     private fun String.somStatus() =
         JournalpostStatus.values().find { it.name.equals(this, ignoreCase = true) } ?: JournalpostStatus.UKJENT
 
@@ -87,6 +82,6 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
     companion object {
 
-        private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT, EKST_OPPS)
+        val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT, EKST_OPPS)
     }
 }

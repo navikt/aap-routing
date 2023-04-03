@@ -22,7 +22,9 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_ARENA_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_KELVIN_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_ARENA_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.Companion.HÅNDTERES_AV_ANDRE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -62,6 +64,12 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(devClusters(), 10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+
+            if (hendelse.kanal() in HÅNDTERES_AV_ANDRE) {
+                log.info("Journalpost ${hendelse.journalpostId} fra kanal '${hendelse.mottaksKanal}' skal IKKE fordeles")
+                inc(FORDELINGTS, TOPIC, topic, KANAL, hendelse.mottaksKanal, FORDELINGSTYPE, INGEN_FORDELING.name)
+            }
+
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null) {
@@ -73,7 +81,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             when (beslutter.avgjørFordeling(jp, hendelse.journalpostStatus, topic)) {
 
                 TIL_KELVIN_FORDELING -> log.warn("Kelvin ikke implementert")
-                
+
                 INGEN_FORDELING -> {
                     log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
                     return
@@ -116,6 +124,8 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             slack.feilHvisDev("$this. (${t.message})")
             throw t
         }
+
+    private fun JournalfoeringHendelseRecord.kanal() = Kanal.values().find { it.name == mottaksKanal } ?: Kanal.UKJENT
 
     private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

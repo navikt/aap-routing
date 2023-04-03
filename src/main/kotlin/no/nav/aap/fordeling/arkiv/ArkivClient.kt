@@ -14,7 +14,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)
 
-    fun hentSøknad(jp : Journalpost) = dokarkiv.søknad(jp)
+    fun hentSøknad(jp : Journalpost) = saf.søknad(jp)
 
     fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =

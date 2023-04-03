@@ -8,9 +8,10 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.AKTOERID
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO.BrukerTypeDTO.FNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.DokumentInfoDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO.AKTOERID
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO.FNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.JOURNALFOERT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
@@ -28,7 +29,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
 
     fun tilJournalpost(dto : JournalpostDTO) =
         with(dto) {
-            val brukerFnr = bruker.fnr("'bruker i $journalpostId'")
+            val brukerFnr = bruker?.id.fnr(bruker?.idType, "'bruker  for $journalpostId'")
             Journalpost(journalpostId,
                 journalstatus.toDomain(),
                 journalfoerendeEnhet?.let(::NAVEnhet),
@@ -37,7 +38,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 behandlingstema,
                 brukerFnr ?: FIKTIVTFNR,
                 brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
-                avsenderMottaker.fnr("'avsenderMottaker i $journalpostId'")?.let(::AvsenderMottaker),
+                avsenderMottaker?.id.fnr(avsenderMottaker?.idType, "'avsenderMottaker for $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
                 dokumenter.toDomain())
         }
@@ -49,13 +50,17 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
             else -> JournalpostStatus.UKJENT
         }
 
-    private fun BrukerDTO?.fnr(kind : String) =
+    private fun String?.fnr(idType : IDTypeDTO?, kind : String) =
         this?.let {
             when (idType) {
-                AKTOERID -> AktørId(id).fnr()
-                FNR -> Fødselsnummer(id)
+                AKTOERID -> AktørId(this).fnr()
+                FNR -> Fødselsnummer(this)
+                null -> null.also {
+                    log.warn("Null idType for $kind med id $this")
+                }
+
                 else -> null.also {
-                    log.warn("IdType $idType ikke støttet for $kind med id $id")
+                    log.warn("IdType $idType ikke støttet for $kind med id $this")
                 }
             }
         }

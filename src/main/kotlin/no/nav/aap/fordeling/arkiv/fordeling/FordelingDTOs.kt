@@ -3,9 +3,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import java.time.LocalDateTime
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
-
-typealias AvsenderMottakerDTO = BrukerDTO
 
 object FordelingDTOs {
 
@@ -77,10 +74,11 @@ object FordelingDTOs {
 
         data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
 
-        data class BrukerDTO(val id : String, @JsonAlias("type") val idType : BrukerTypeDTO) {
-            enum class BrukerTypeDTO { FNR, AKTOERID, @JsonEnumDefaultValue
-            UKJENT
-            }
+        enum class IDTypeDTO { FNR, AKTOERID, @JsonEnumDefaultValue
+        UKJENT
         }
+
+        data class BrukerDTO(val id : String, @JsonAlias("type") val idType : IDTypeDTO)
+        data class AvsenderMottakerDTO(val id : String?, @JsonAlias("type") val idType : IDTypeDTO)
     }
 }

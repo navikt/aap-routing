@@ -73,10 +73,10 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             }
 
             if (!forutsetninger(jp, topic, hendelse.status())) {
-                log.info("Ingen fordeling, forutsetninger ikke oppfylt")
+                log.info("Ingen fordeling, forutsetninger for fordeling ikke oppfylt")
                 return
             }
-            
+
             log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
             fordel(jp).also {
                 jp.metrikker(it.fordelingstype, topic)
@@ -104,8 +104,8 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev("${it.asString()} (${jp.fnr})")
-            log.info(it.asString())
+            slack.meldingHvisDev("$it (${jp.fnr})")
+            log.info("$it")
         }
 
     private fun forutsetninger(jp : Journalpost, topic : String, status : JournalpostStatus) : Boolean {

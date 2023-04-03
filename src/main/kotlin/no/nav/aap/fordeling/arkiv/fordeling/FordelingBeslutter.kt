@@ -28,11 +28,11 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
         }
 
         if (jp.erMeldekort()) {
-            return ingen(jp, topic)
+            return ingen(jp, topic, "Meldekort håndteres av andre")
         }
 
         if (jp.kanal in HÅNDTERES_AV_ANDRE) {
-            return ingen(jp, topic)
+            return ingen(jp, topic, "Kanal ${jp.kanal} håndteres av andre")
         }
 
         if (jp.status == JOURNALFØRT) {
@@ -58,8 +58,8 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
         return TIL_FORDELING
     }
 
-    private fun ingen(jp : Journalpost, topic : String) : BeslutningsStatus {
-        log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+    private fun ingen(jp : Journalpost, topic : String, ekstra : String = "") : BeslutningsStatus {
+        log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'). $ekstra")
         jp.metrikker(INGEN, topic)
         return INGEN_FORDELING
     }

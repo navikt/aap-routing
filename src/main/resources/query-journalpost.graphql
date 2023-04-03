@@ -8,17 +8,12 @@ query journalpost($journalpostId: String!) {
       type
     }
     journalstatus
-        journalposttype
     tema
     behandlingstema
     kanal
     bruker {
       id
       type
-    }
-    relevanteDatoer {
-      dato
-      datotype
     }
     dokumenter {
       dokumentInfoId

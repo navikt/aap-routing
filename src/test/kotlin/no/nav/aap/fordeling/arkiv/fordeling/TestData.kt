@@ -14,7 +14,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Dokumen
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO.AKTOERID
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO.FNR
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalpostTypeDTO.I
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
@@ -38,8 +37,8 @@ object TestData {
 
     val UTLAND = somSkjema(UTLAND_SØKNAD)
 
-    val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", JournalStatusDTO.MOTTATT, I, AAP,
-        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, emptySet(), DOCDTOS)
+    val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", JournalStatusDTO.MOTTATT, AAP,
+        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, DOCDTOS)
 
     private fun somSkjema(skjema : SkjemaType) = JP.copy(dokumenter = setOf(JP.hovedDokument.copy(tittel = skjema.tittel, brevkode = skjema.kode)))
 

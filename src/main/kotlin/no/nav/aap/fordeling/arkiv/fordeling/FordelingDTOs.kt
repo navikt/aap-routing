@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
-import java.time.LocalDateTime
 
 object FordelingDTOs {
 
@@ -11,13 +10,11 @@ object FordelingDTOs {
         val journalfoerendeEnhet : String?,
         val journalpostId : String,
         val journalstatus : JournalStatusDTO,
-        val journalpostType : JournalpostTypeDTO,
         val tema : String,
         val behandlingstema : String?,
         val bruker : BrukerDTO?,
         val avsenderMottaker : AvsenderMottakerDTO?,
         val kanal : Kanal,
-        val relevanteDatoer : Set<RelevantDatoDTO>,
         val dokumenter : Set<DokumentInfoDTO>,
         val tilleggsopplysninger : Set<TilleggsopplysningDTO> = emptySet()) {
 
@@ -27,26 +24,11 @@ object FordelingDTOs {
             UKJENT
         }
 
-        enum class JournalpostTypeDTO { I, U, N }
-
         data class TilleggsopplysningDTO(val nokkel : String, val verdi : String)
         enum class JournalStatusDTO { MOTTATT, JOURNALFOERT,
 
             @JsonEnumDefaultValue
             UKJENT
-        }
-
-        data class RelevantDatoDTO(val dato : LocalDateTime, val datotype : RelevantDatoTypeDTO) {
-
-            enum class RelevantDatoTypeDTO {
-                DATO_OPPRETTET,
-                DATO_SENDT_PRINT,
-                DATO_EKSPEDERT,
-                DATO_JOURNALFOERT,
-                DATO_REGISTRERT,
-                DATO_AVS_RETUR,
-                DATO_DOKUMENT
-            }
         }
 
         data class OppdateringDataDTO(
@@ -74,11 +56,13 @@ object FordelingDTOs {
 
         data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
 
-        enum class IDTypeDTO { FNR, AKTOERID, @JsonEnumDefaultValue
-        UKJENT
+        enum class IDTypeDTO { FNR, AKTOERID,
+
+            @JsonEnumDefaultValue
+            UKJENT
         }
 
         data class BrukerDTO(val id : String, @JsonAlias("type") val idType : IDTypeDTO)
-        data class AvsenderMottakerDTO(val id : String?, @JsonAlias("type") val idType : IDTypeDTO)
+        data class AvsenderMottakerDTO(val id : String?, @JsonAlias("type") val idType : IDTypeDTO?)
     }
 }

@@ -53,13 +53,13 @@ management:
             exposure:
                 include: '*'
     endpoint:
-      health:
+        health:
             show-details: always
-      configprops:
-          show-values: always
-      env:
-          additional-keys-to-sanitize: "client-jwk,jwk,jwks"
-          show-values: always
+        configprops:
+            show-values: always
+        env:
+            additional-keys-to-sanitize: "client-jwk,jwk,jwks"
+            show-values: always
     info:
         os:
             enabled: true

@@ -44,6 +44,8 @@ object GraphQLExtensions {
     abstract class IrrecoverableGraphQLException(status : HttpStatus, msg : String) : IrrecoverableIntegrationException("$msg (${status.value()})",
         null, null) {
 
+        class UnexpectedResponseGraphQLException(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
+
         class NotFoundGraphQLException(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
         class BadGraphQLException(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)
         class UnauthenticatedGraphQLException(status : HttpStatus, msg : String) : IrrecoverableGraphQLException(status, msg)

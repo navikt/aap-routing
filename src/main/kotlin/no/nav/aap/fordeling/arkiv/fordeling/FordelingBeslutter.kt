@@ -27,11 +27,11 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
         kotlin.runCatching {
             arkiv.hentSøknad(jp).also {
-                log.info("Søknad er $it")
+                log.info("Søknad er OK")
             }
 
         }.getOrElse { log.warn("OOPS", it) }
-        
+
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
         }

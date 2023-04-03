@@ -18,7 +18,7 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELIMG
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
@@ -71,7 +71,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
             when (beslutter.avgjørFordeling(jp, hendelse.journalpostStatus, topic)) {
 
-                INGEN_FORDELIMG -> {
+                INGEN_FORDELING -> {
                     log.info("Ingen fordeling, forutsetninger for fordeling ikke oppfylt")
                     return
                 }

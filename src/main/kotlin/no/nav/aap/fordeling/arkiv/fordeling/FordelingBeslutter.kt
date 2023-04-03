@@ -5,6 +5,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Fordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.INGEN_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_GOSYS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
@@ -15,7 +16,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.values
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class FordelingBeslutter(private val inspektør : InspisererendeBeslutter, private val cfg : FordelingConfig = FordelingConfig()) {
+class FordelingBeslutter(private val inspektør : InspisererendeBeslutter = VoidBeslutter(), private val cfg : FordelingConfig = FordelingConfig()) {
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
@@ -48,8 +49,11 @@ class FordelingBeslutter(private val inspektør : InspisererendeBeslutter, priva
             return INGEN_FORDELING
         }
 
+
+        return TIL_ARENA
+
         // TODO Inspiser søknaden, avgjør om dem skal til Arena eller ikke
-        return inspektør.beslutt(jp)
+        //return inspektør.beslutt(jp)
     }
 
     private fun txt(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"

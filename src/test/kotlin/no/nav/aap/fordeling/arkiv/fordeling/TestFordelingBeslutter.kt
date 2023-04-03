@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
@@ -16,7 +15,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.TestData.utenBruker
 
 class TestFordelingBeslutter {
 
-    private val beslutter = FordelingBeslutter(mock(), mapper = ObjectMapper())
+    private val beslutter = FordelingBeslutter(mock())
 
     @Test
     fun testBeslutter() {

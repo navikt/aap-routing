@@ -54,7 +54,7 @@ object FordelingDTOs {
             }
         }
 
-        data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?)
+        data class DokumentInfoDTO(val dokumentInfoId : String, val tittel : String?, val brevkode : String?, val dokumentVarianter : List<DokumentVariant>)
 
         enum class IDTypeDTO { FNR, AKTOERID,
 
@@ -64,5 +64,13 @@ object FordelingDTOs {
 
         data class BrukerDTO(val id : String, @JsonAlias("type") val idType : IDTypeDTO)
         data class AvsenderMottakerDTO(val id : String?, @JsonAlias("type") val idType : IDTypeDTO?)
+    }
+
+    data class DokumentVariant(val variantFormat : VariantFormat) {
+        enum class VariantFormat { ORIGINAL, ARKIV,
+
+            @JsonEnumDefaultValue
+            NA
+        }
     }
 }

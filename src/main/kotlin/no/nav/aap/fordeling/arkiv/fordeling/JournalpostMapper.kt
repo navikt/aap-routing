@@ -77,7 +77,10 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
         fun Bruker.toDTO() = BrukerDTO(fnr.fnr, FNR)
 
         fun Set<DokumentInfoDTO>.toDomain() =
-            map { (dokumentInfoId, tittel, brevkode) -> DokumentInfo(dokumentInfoId, tittel, brevkode) }
-                .toSortedSet(compareBy(DokumentInfo::id))
+            map { (dokumentInfoId, tittel, brevkode, dokumentVarianter) ->
+                DokumentInfo(dokumentInfoId,
+                    tittel,
+                    brevkode, dokumentVarianter.map { it.variantFormat })
+            }.toSortedSet(compareBy(DokumentInfo::id))
     }
 }

@@ -72,7 +72,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             when (beslutter.avgjørFordeling(jp, hendelse.journalpostStatus, topic)) {
 
                 INGEN_FORDELING -> {
-                    log.info("Ingen fordeling, forutsetninger for fordeling ikke oppfylt")
+                    log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
                     return
                 }
 

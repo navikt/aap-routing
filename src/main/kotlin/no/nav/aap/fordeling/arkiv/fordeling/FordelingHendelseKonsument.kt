@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import java.time.Instant
+import java.time.ZoneId
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -108,7 +110,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             slack.feil(this)
         }
 
-    private fun Long?.asDate() = this?.let { Date(it) }
+    private fun Long?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() }
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)

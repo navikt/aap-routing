@@ -75,6 +75,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             .accept(APPLICATION_JSON)
             .exchangeToMono { it.toResponse<ByteArray>(log) }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
+            .doOnError { t -> log.warn("Arkivoppslag feilet", t) }
             .doOnSuccess { log.trace("Arkivoppslag $dokumentId returnerte  ${it.size} bytes") }
             .block()
             ?.map { ::String }

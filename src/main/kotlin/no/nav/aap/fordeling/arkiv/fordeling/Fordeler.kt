@@ -41,6 +41,7 @@ interface Fordeler {
             ALLEREDE_JOURNALFØRT,
             INGEN_JOURNALPOST,
             DIREKTE_MANUELL,
+            RACE,
             FAILED
         }
 

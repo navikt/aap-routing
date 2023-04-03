@@ -18,11 +18,11 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_ARENA_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_KELVIN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_ARENA_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.Companion.HÅNDTERES_AV_ANDRE
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.INGEN_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_GOSYS
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_KELVIN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
@@ -81,20 +81,20 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
 
             when (beslutter.avgjørFordeling(jp, hendelse.journalpostStatus, topic)) {
 
-                TIL_KELVIN_FORDELING -> log.warn("Kelvin ikke implementert")
+                TIL_KELVIN -> log.warn("Kelvin ikke implementert")
 
                 INGEN_FORDELING -> {
                     log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
                     return
                 }
 
-                TIL_MANUELL_ARENA_FORDELING -> {
+                TIL_GOSYS -> {
                     fordeler.fordelManuelt(jp, FORDELINGSENHET)
                     jp.metrikker(DIREKTE_MANUELL, topic)
                     return
                 }
 
-                TIL_ARENA_FORDELING -> {
+                TIL_ARENA -> {
                     log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
                     fordel(jp).also {
                         jp.metrikker(it.fordelingstype, topic)

@@ -5,9 +5,9 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_ARENA_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_ARENA_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.INGEN_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_GOSYS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
@@ -21,9 +21,9 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
-    enum class BeslutningsStatus { TIL_KELVIN_FORDELING, TIL_ARENA_FORDELING, INGEN_FORDELING, TIL_MANUELL_ARENA_FORDELING }
+    enum class FordelingsBeslutning { TIL_KELVIN, TIL_ARENA, INGEN_FORDELING, TIL_GOSYS }
 
-    fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
+    fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : FordelingsBeslutning {
 
         /* kotlin.runCatching {
              if (jp.dokumenter.harOriginal()) {
@@ -51,7 +51,7 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
         if (jp.bruker == null) {
             log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
-            return TIL_MANUELL_ARENA_FORDELING
+            return TIL_GOSYS
         }
 
         if (jp.status != hendelseStatus.somStatus()) {
@@ -64,12 +64,12 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
             log.warn(stdText(jp, "har ukjent kanal, fordeles likevel"))
         }
 
-        return TIL_ARENA_FORDELING
+        return TIL_ARENA
     }
 
     private fun stdText(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
 
-    private fun ingen(jp : Journalpost, topic : String, ekstra : String = "") : BeslutningsStatus {
+    private fun ingen(jp : Journalpost, topic : String, ekstra : String = "") : FordelingsBeslutning {
         log.info("Journalpost ${jp.id} med status '${jp.status}' fra kanal '${jp.kanal}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'). $ekstra")
         jp.metrikker(INGEN, topic)
         return INGEN_FORDELING

@@ -28,7 +28,9 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
         runCatching {
             if (jp.harOriginal()) {
                 arkiv.hentSøknad(jp).also {
-                    log.info("Søknad er OK")
+                    it?.let {
+                        log.info("Søknad er OK" + it.substring(0, 5))
+                    }
                 }
             }
         }.getOrElse { log.warn("OOPS", it) }

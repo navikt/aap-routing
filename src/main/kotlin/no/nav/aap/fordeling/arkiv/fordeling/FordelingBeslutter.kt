@@ -1,43 +1,27 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_GOSYS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.values
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : FordelingConfig = FordelingConfig(), private val mapper : ObjectMapper) {
+class FordelingBeslutter(private val inspektør : InspisererendeBeslutter, private val cfg : FordelingConfig = FordelingConfig()) {
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
     enum class FordelingsBeslutning { TIL_KELVIN, TIL_ARENA, INGEN_FORDELING, TIL_GOSYS }
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : FordelingsBeslutning {
-
-        runCatching {
-            if (jp.harOriginal()) {
-                arkiv.hentSøknad(jp).also {
-                    it?.let {
-                        if (gyldigJson(it)) {
-                            log.info("Søknad er gyldig JSON")
-                        }
-                    }
-                }
-            }
-        }.getOrElse { log.warn("OOPS", it) }
-
 
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
@@ -64,21 +48,9 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
             return INGEN_FORDELING
         }
 
-        if (jp.kanal == UKJENT) {
-            log.warn(txt(jp, "har ukjent kanal, fordeles likevel"))
-        }
-
-        return TIL_ARENA
+        // TODO Inspiser søknaden, avgjør om dem skal til Arena eller ikke
+        return inspektør.beslutt(jp)
     }
-
-    private fun gyldigJson(json : String) =
-        runCatching {
-            mapper.readTree(json)
-            true
-        }.getOrElse {
-            log.warn("Ugyldig json", it)
-            false
-        }
 
     private fun txt(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
 
@@ -89,7 +61,7 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
     }
 
     private fun String.somStatus() =
-        JournalpostStatus.values().find { it.name.equals(this, ignoreCase = true) } ?: JournalpostStatus.UKJENT
+        values().find { it.name.equals(this, ignoreCase = true) } ?: JournalpostStatus.UKJENT
 
     override fun toString() = "DefaultFordelingBeslutter(cfg=$cfg)"
 

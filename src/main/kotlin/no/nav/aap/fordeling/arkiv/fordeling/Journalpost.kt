@@ -7,6 +7,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.navenhet.NAVEnhet
@@ -64,7 +65,10 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
 
     data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false)
 
-    data class DokumentInfo(val id : String, val tittel : String?, val brevkode : String?, val dokumentVarianter : List<VariantFormat>)
+    data class DokumentInfo(val id : String, val tittel : String?, val brevkode : String?, val dokumentVarianter : List<VariantFormat>) {
+
+        fun harOriginal() = dokumentVarianter.contains(ORIGINAL)
+    }
 
     enum class JournalpostStatus { MOTTATT, JOURNALFØRT, UKJENT }
 }

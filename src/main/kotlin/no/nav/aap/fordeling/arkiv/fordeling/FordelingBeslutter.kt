@@ -12,6 +12,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.E
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.util.LoggerUtil
@@ -24,13 +25,15 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
     enum class BeslutningsStatus { TIL_KELVIN_FORDELING, TIL_ARENA_FORDELING, INGEN_FORDELING, TIL_MANUELL_ARENA_FORDELING }
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
-        /*
-                kotlin.runCatching {
-                    arkiv.hentSøknad(jp).also {
-                        log.info("Søknad er OK")
-                    }
 
-                }.getOrElse { log.warn("OOPS", it) }*/
+        kotlin.runCatching {
+            if (jp.dokumenter.harOriginal()) {
+                arkiv.hentSøknad(jp).also {
+                    log.info("Søknad er OK")
+                }
+            }
+
+        }.getOrElse { log.warn("OOPS", it) }
 
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
@@ -78,6 +81,7 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
         return INGEN_FORDELING
     }
 
+    private fun Set<DokumentInfo>.harOriginal() = this.any { it.harOriginal() }
     private fun String.somStatus() =
         JournalpostStatus.values().find { it.name.equals(this, ignoreCase = true) } ?: JournalpostStatus.UKJENT
 

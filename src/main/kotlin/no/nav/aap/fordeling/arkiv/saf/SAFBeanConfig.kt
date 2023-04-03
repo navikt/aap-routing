@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
+import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
@@ -24,6 +25,14 @@ class SAFBeanConfig {
     fun safGraphQLWebClient(builder : Builder, cfg : SAFConfig, @Qualifier(SAF) safFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}/graphql")
+            .filter(safFlow)
+            .build()
+
+    @Bean
+    @Qualifier(SAFDOK)
+    fun safWebClient(builder : Builder, cfg : SAFConfig, @Qualifier(SAF) safFlow : ExchangeFilterFunction) =
+        builder
+            .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
             .build()
 

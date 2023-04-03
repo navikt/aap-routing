@@ -18,5 +18,6 @@ class SAFConfig(baseUri : URI, val dokPath : String = DOK_PATH, enabled : Boolea
 
         private const val DOK_PATH = "/rest/hentdokument/{journalpostId}/{dokumentInfoId}/{variantFormat}"
         const val SAF = "saf"
+        const val SAFDOK = "doksaf"
     }
 }

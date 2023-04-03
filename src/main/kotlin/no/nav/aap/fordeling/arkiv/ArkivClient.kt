@@ -7,14 +7,15 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
+import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val saf : SAFGraphQLAdapter) {
+class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val safdok : SAFWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)
 
-    fun hentSøknad(jp : Journalpost) = saf.søknad(jp)
+    fun hentSøknad(jp : Journalpost) = safdok.originalDokument(jp)
 
     fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =

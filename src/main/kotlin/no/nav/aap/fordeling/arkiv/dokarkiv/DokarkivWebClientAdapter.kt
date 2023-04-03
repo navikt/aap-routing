@@ -8,12 +8,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
@@ -67,20 +64,6 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             log.info("Ferdigstilte ikke journalpost $journalpostId, sett dokarkiv.enabled=true for  aktivere")
             "Ingen ferdigstiling"
         }
-
-    fun søknad(jp : Journalpost) = dokument(jp.id, jp.hovedDokument.id, ORIGINAL)
-
-    private fun dokument(id : String, dokumentId : String, variantFormat : VariantFormat) =
-        webClient.get()
-            .uri { cf.dokUri(it, id, dokumentId, variantFormat) }
-            .accept(APPLICATION_JSON)
-            .exchangeToMono { it.toResponse<ByteArray>(log) }
-            .retryWhen(cf.retrySpec(log, cf.dokPath))
-            .doOnError { t -> log.warn("Arkivoppslag feilet", t) }
-            .doOnSuccess { log.trace("Arkivoppslag $dokumentId returnerte  ${it.size} bytes") }
-            .block()
-            ?.map { ::String }
-            ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved henting av dokument $dokumentId")
 
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 }

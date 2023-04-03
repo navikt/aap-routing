@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
@@ -17,7 +18,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNA
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : FordelingConfig = FordelingConfig()) {
+class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : FordelingConfig = FordelingConfig(), private val mapper : ObjectMapper) {
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
@@ -29,7 +30,9 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
             if (jp.harOriginal()) {
                 arkiv.hentSøknad(jp).also {
                     it?.let {
-                        log.info("Søknad er OK" + it.substring(0, 5))
+                        if (gyldigJson(it)) {
+                            log.info("Søknad er gyldig JSON")
+                        }
                     }
                 }
             }
@@ -67,6 +70,15 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
         return TIL_ARENA
     }
+
+    private fun gyldigJson(json : String) =
+        runCatching {
+            mapper.readTree(json)
+            true
+        }.getOrElse {
+            log.warn("Ugyldig json", it)
+            false
+        }
 
     private fun txt(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
 

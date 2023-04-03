@@ -22,6 +22,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Fordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
@@ -61,7 +62,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
         runCatching {
             monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(devClusters(), 10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
-            log.info("Behandler hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.tema()} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}")
 
             if (jp == null) {
@@ -70,28 +71,12 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                 return
             }
 
-            if (jp.status == JOURNALFØRT) {
-                log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
-                jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
+            if (!preconditions(jp, topic)) {
                 return
             }
 
-            if (jp.bruker == null) {
-                log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
-                fordeler.fordelManuelt(jp, FORDELINGSENHET)
-                jp.metrikker(DIREKTE_MANUELL, topic)
-                return
-            }
-
-            if (!beslutter.skalFordele(jp)) {
-                log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
-                jp.metrikker(INGEN, topic)
-                return
-            }
-
-            if (jp.kanal == UKJENT) {
-                log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering")
-                slack.feil("Ukjent kanal for journalpost ${jp.id}")
+            if (jp.status != hendelse.status()) {
+                log.warn("Race condition, status endret fra ${hendelse.journalpostStatus} til ${jp.status} mellom tidspunkt for mottatt hendelse og hentet journalpost ${jp.id} fra kanal ${jp.kanal} og brevkode ${jp.hovedDokumentBrevkode}, sjekk om noen andre ferdigstiller")
             }
 
             log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
@@ -125,7 +110,36 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             log.info(it.asString())
         }
 
+    private fun preconditions(jp : Journalpost, topic : String) : Boolean {
+        if (jp.status == JOURNALFØRT) {
+            log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+            jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
+            return false
+        }
+
+        if (jp.bruker == null) {
+            log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
+            fordeler.fordelManuelt(jp, FORDELINGSENHET)
+            jp.metrikker(DIREKTE_MANUELL, topic)
+            return false
+        }
+
+        if (!beslutter.skalFordele(jp)) {
+            log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+            jp.metrikker(INGEN, topic)
+            return false
+        }
+
+        if (jp.kanal == UKJENT) {
+            log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering")
+            slack.feil("Ukjent kanal for journalpost ${jp.id}")
+        }
+        return true
+    }
+
     private fun JournalfoeringHendelseRecord.tema() = temaNytt.lowercase()
+
+    private fun JournalfoeringHendelseRecord.status() = JournalpostStatus.values().find { it.name.equals(journalpostStatus, ignoreCase = true) }
 
     override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$beslutter, monkey=$monkey, slack=$slack)"
 }

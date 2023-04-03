@@ -47,7 +47,9 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
         when (this) {
             MOTTATT -> JournalpostStatus.MOTTATT
             JOURNALFOERT -> JournalpostStatus.JOURNALFØRT
-            else -> JournalpostStatus.UKJENT
+            else -> JournalpostStatus.UKJENT.also {
+                log.warn("Ukjent journalpoststatus $this")
+            }
         }
 
     private fun String?.fnr(idType : IDTypeDTO?, kind : String) =

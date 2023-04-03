@@ -19,11 +19,13 @@ query journalpost($journalpostId: String!) {
       dokumentInfoId
       tittel
       brevkode
-        dokumentvarianter
+      dokumentvarianter {
+        variantformat
+      }
     }
     tilleggsopplysninger {
        nokkel
        verdi
-        }
+    }
   }
 }

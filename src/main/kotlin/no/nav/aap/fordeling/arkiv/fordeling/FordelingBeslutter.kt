@@ -52,9 +52,7 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
             jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
             return INGEN_FORDELING
         }
-
-        arkiv.hentJournalpost(jp.hovedDokumentId)
-
+        
         if (jp.bruker == null) {
             log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
             return TIL_MANUELL_ARENA_FORDELING

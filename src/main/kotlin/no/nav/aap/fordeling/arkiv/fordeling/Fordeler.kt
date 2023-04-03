@@ -2,7 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.of
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.INGEN_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.INTET_RESULTAT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.Constants.AAP
@@ -24,8 +24,8 @@ interface Fordeler {
 
         val INGEN_FORDELER = object : Fordeler {
             override val cfg = of(emptyArray())
-            override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = INGEN_FORDELING
-            override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = INGEN_FORDELING
+            override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = INTET_RESULTAT
+            override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = INTET_RESULTAT
         }
     }
 
@@ -47,7 +47,7 @@ interface Fordeler {
 
         companion object {
 
-            val INGEN_FORDELING = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
+            val INTET_RESULTAT = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
         }
     }
 

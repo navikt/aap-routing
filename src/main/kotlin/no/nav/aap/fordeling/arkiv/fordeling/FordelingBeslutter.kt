@@ -24,7 +24,7 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
         if (!cfg.isEnabled) {
-            return ingen(jp, topic)
+            return ingen(jp, topic, "Fordeling er ikke aktivert")
         }
 
         if (jp.erMeldekort()) {
@@ -36,7 +36,7 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
         }
 
         if (jp.status == JOURNALFØRT) {
-            log.info("Journalpost ${jp.id}  er allerde journalført  (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')")
+            log.info(stdText(jp, "Allerede journalført"))
             jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
             return INGEN_FORDELING
         }
@@ -47,19 +47,21 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
         }
 
         if (jp.status != hendelseStatus.somStatus()) {
-            log.warn("Race condition, status endret fra $hendelseStatus til ${jp.status} mellom tidspunkt for mottatt hendelse og hentet journalpost ${jp.id} fra kanal ${jp.kanal} og brevkode ${jp.hovedDokumentBrevkode}, sjekk om noen andre ferdigstiller")
+            log.warn(stdText(jp, "race condition, status endret fra $hendelseStatus til ${jp.status}, sjekk om noen andre ferdigstiller"))
             jp.metrikker(RACE, topic)
             return INGEN_FORDELING
         }
 
         if (jp.kanal == UKJENT) {
-            log.warn("UKjent kanal for journalpost ${jp.id}, oppdater enum og vurder håndtering, fordeler likevel")
+            log.warn(stdText(jp, "har ukjent kanal, fordeles likevel"))
         }
         return TIL_FORDELING
     }
 
+    private fun stdText(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
+
     private fun ingen(jp : Journalpost, topic : String, ekstra : String = "") : BeslutningsStatus {
-        log.info("Journalpost ${jp.id} med status '${jp.status}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'). $ekstra")
+        log.info("Journalpost ${jp.id} med status '${jp.status}' fra kanal '${jp.kanal}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'). $ekstra")
         jp.metrikker(INGEN, topic)
         return INGEN_FORDELING
     }

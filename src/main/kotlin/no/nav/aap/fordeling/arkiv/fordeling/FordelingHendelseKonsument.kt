@@ -40,6 +40,8 @@ import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 
+typealias Epoch = Long
+
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
                                  private val beslutter : FordelingBeslutter, private val monkey : ChaosMonkey, private val slack : Slacker) {
@@ -103,14 +105,13 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
     }
 
     @DltHandler
-    fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : Long?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
+    fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : Epoch?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig hendelse ble mottatt ${timestamp.asDate()}") {
-            val s = timestamp?.let { ::String }
             log.error(this)
             slack.feil(this)
         }
 
-    private fun Long?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() }
+    private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() }
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)

@@ -1,7 +1,7 @@
 fordeling:
     enabled: true
     topics:
-      backoff: 1000
+        backoff: 30000
 oppgave:
     oppslagEnabled: true
 arena:

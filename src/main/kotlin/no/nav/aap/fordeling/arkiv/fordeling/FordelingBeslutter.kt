@@ -5,8 +5,8 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Fordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
@@ -20,7 +20,7 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
 
     private val log = LoggerUtil.getLogger(FordelingBeslutter::class.java)
 
-    enum class BeslutningsStatus { TIL_FORDELING, INGEN_FORDELING, MANUELL_FORDELING }
+    enum class BeslutningsStatus { TIL_FORDELING, INGEN_FORDELING, TIL_MANUELL_FORDELING }
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : BeslutningsStatus {
         if (!cfg.isEnabled) {
@@ -43,7 +43,7 @@ class FordelingBeslutter(private val cfg : FordelingConfig = FordelingConfig()) 
 
         if (jp.bruker == null) {
             log.warn("Ingen bruker er satt på journalposten, sender direkte til manuell journalføring")
-            return MANUELL_FORDELING
+            return TIL_MANUELL_FORDELING
         }
 
         if (jp.status != hendelseStatus.somStatus()) {

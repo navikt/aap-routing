@@ -48,5 +48,7 @@ object TestData {
 
     fun Journalpost.utenEnhet() = copy(enhet = null)
 
+    fun Journalpost.utenBruker() = copy(bruker = null)
+
     fun Journalpost.somMeldekort() = copy(tittel = "Meldekort")
 }

@@ -19,8 +19,8 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.INGEN_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_FORDELING
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.BeslutningsStatus.TIL_MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
@@ -76,7 +76,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
                     return
                 }
 
-                MANUELL_FORDELING -> {
+                TIL_MANUELL_FORDELING -> {
                     fordeler.fordelManuelt(jp, FORDELINGSENHET)
                     jp.metrikker(DIREKTE_MANUELL, topic)
                     return

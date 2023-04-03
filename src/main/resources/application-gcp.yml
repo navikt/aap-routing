@@ -38,9 +38,9 @@ spring:
                 registry:
                     url: ${kafka.schema.registry}
             ssl:
-              endpoint:
-                identification:
-                    algorithm: ''
+                endpoint:
+                    identification:
+                        algorithm: ''
         security:
             protocol: SSL
         ssl:
@@ -64,9 +64,9 @@ spring:
             value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             acks: 1
             properties:
-              max:
-                request:
-                    size: 2000000
+                max:
+                    request:
+                        size: 2000000
 no.nav:
     security:
         jwt:
@@ -135,7 +135,7 @@ dokarkiv:
     base-uri: https://dokarkiv.${env}-fss-pub.nais.io
     scope: api://${env}-fss.teamdokumenthandtering.dokarkiv${suffix}/.default
 saf:
-    base-uri: https://saf.${env}-fss-pub.nais.io/graphql
+    base-uri: https://saf.${env}-fss-pub.nais.io
     scope: api://${env}-fss.teamdokumenthandtering.saf${suffix}/.default
 pdl:
     base-uri: https://pdl-api.${env}-fss-pub.nais.io/graphql

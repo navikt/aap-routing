@@ -25,15 +25,14 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
 
     fun avgjørFordeling(jp : Journalpost, hendelseStatus : String, topic : String) : FordelingsBeslutning {
 
-        /* kotlin.runCatching {
-             if (jp.dokumenter.harOriginal()) {
-                 arkiv.hentSøknad(jp).also {
-                     log.info("Søknad er OK")
-                 }
-             }
+        runCatching {
+            if (jp.harOriginal()) {
+                arkiv.hentSøknad(jp).also {
+                    log.info("Søknad er OK")
+                }
+            }
+        }.getOrElse { log.warn("OOPS", it) }
 
-         }.getOrElse { log.warn("OOPS", it) }
-         */
 
         if (!cfg.isEnabled) {
             return ingen(jp, topic, "Fordeling er ikke aktivert")
@@ -44,7 +43,7 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
         }
 
         if (jp.status == JOURNALFØRT) {
-            log.info(stdText(jp, "Allerede journalført"))
+            log.info(txt(jp, "Allerede journalført"))
             jp.metrikker(ALLEREDE_JOURNALFØRT, topic)
             return INGEN_FORDELING
         }
@@ -55,19 +54,19 @@ class FordelingBeslutter(private val arkiv : ArkivClient, private val cfg : Ford
         }
 
         if (jp.status != hendelseStatus.somStatus()) {
-            log.warn(stdText(jp, "race condition, status endret fra $hendelseStatus til ${jp.status}, sjekk om noen andre ferdigstiller"))
+            log.warn(txt(jp, "race condition, status endret fra $hendelseStatus til ${jp.status}, sjekk om noen andre ferdigstiller"))
             jp.metrikker(RACE, topic)
             return INGEN_FORDELING
         }
 
         if (jp.kanal == UKJENT) {
-            log.warn(stdText(jp, "har ukjent kanal, fordeles likevel"))
+            log.warn(txt(jp, "har ukjent kanal, fordeles likevel"))
         }
 
         return TIL_ARENA
     }
 
-    private fun stdText(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
+    private fun txt(jp : Journalpost, txt : String) = "Journalpost ${jp.id} $txt (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}')"
 
     private fun ingen(jp : Journalpost, topic : String, ekstra : String = "") : FordelingsBeslutning {
         log.info("Journalpost ${jp.id} med status '${jp.status}' fra kanal '${jp.kanal}' skal IKKE fordeles (tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}'). $ekstra")

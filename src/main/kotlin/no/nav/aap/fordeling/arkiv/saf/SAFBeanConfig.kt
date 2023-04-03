@@ -23,7 +23,7 @@ class SAFBeanConfig {
     @Qualifier(SAF)
     fun safGraphQLWebClient(builder : Builder, cfg : SAFConfig, @Qualifier(SAF) safFlow : ExchangeFilterFunction) =
         builder
-            .baseUrl("${cfg.baseUri}")
+            .baseUrl("${cfg.baseUri}/graphql")
             .filter(safFlow)
             .build()
 

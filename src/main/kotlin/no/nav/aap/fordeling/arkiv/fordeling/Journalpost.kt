@@ -51,6 +51,8 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
 
     fun erMeldekort() = tittel?.contains("Meldekort", true) ?: false
 
+    fun harOriginal() = dokumenter.any { it.harOriginal() }
+
     // TODO Denne er på feil sted
     fun opprettArenaOppgaveData(enhet : NAVEnhet) = ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 

@@ -5,7 +5,7 @@ on:
         branches:
             - main
         paths-ignore:
-            - '**.md'
+            - **.md
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/${{ github.event.repository.name }}
@@ -13,8 +13,8 @@ env:
 jobs:
     bygg:
         permissions:
-            contents: "read"
-            id-token: "write"
+            contents: read
+            id-token: write
         runs-on: ubuntu-latest
         outputs:
             image: ${{ steps.kompiler.outputs.image }}
@@ -32,10 +32,10 @@ jobs:
             -   name: Installerer cosign
                 uses: sigstore/cosign-installer@main
                 with:
-                    cosign-release: 'v1.3.1'
+                    cosign-release: v1.3.1
 
             -   name: Verifiserer distroless base-image
-                run:  cosign verify --key distroless.pub gcr.io/distroless/java17
+                run: cosign verify --key distroless.pub gcr.io/distroless/java17
 
             -   name: Setter tag-navn
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
@@ -59,7 +59,7 @@ jobs:
     deploy:
         strategy:
             matrix:
-                cluster: [dev-gcp,prod-gcp]
+                cluster: [ dev-gcp,prod-gcp ]
         name: Deploy til ${{matrix.cluster}}
         needs: bygg
         runs-on: ubuntu-latest
@@ -73,5 +73,5 @@ jobs:
             VARS: .nais/${{matrix.cluster}}.json
             IMAGE: ${{needs.bygg.outputs.image}}
         steps:
-            - uses: actions/checkout@v3
-            - uses: nais/deploy/actions/deploy@v1
+            -   uses: actions/checkout@v3
+            -   uses: nais/deploy/actions/deploy@v1

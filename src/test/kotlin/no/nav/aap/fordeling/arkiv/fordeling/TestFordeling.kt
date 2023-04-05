@@ -21,7 +21,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Fordeling
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.ARENASAK
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JPES
@@ -29,7 +28,6 @@ import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.UTLAND
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
-import no.nav.aap.util.Constants.AAP
 
 @TestInstance(PER_CLASS)
 class TestFordeling {
@@ -60,11 +58,10 @@ class TestFordeling {
     fun factoryFordelerAutomatisk() {
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
         with(FordelingFactory(listOf(fordeler, prodFordeler))) {
-            assertThat(kanFordele(AAP, MOTTATT.name))
             assertThat(fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
         }
         verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
-        verify(prodFordeler, times(3)).cfg
+        verify(prodFordeler, times(2)).cfg
         verifyNoMoreInteractions(prodFordeler)
     }
 

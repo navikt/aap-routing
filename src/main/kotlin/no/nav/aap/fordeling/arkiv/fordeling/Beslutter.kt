@@ -1,19 +1,22 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.ARENA
 
-interface InspisererendeBeslutter {
+interface Beslutter {
 
-    fun beslutt(jp : Journalpost) : FordelingsBeslutning = TIL_ARENA
+    fun beslutt(jp : Journalpost) : FordelingsBeslutning
 }
 
 @Component
-class VoidBeslutter : InspisererendeBeslutter
+class ArenaBeslutter : Beslutter {
+
+    override fun beslutt(jp : Journalpost) = ARENA
+}
 
 /*
-class DefaltInspiserendeBeslutter(val arkiv : ArkivClient, private val mapper : ObjectMapper) : InspisererendeBeslutter {
+class HoveddokumentInspiserendeBeslutter(val arkiv : ArkivClient, private val mapper : ObjectMapper) : InspisererendeBeslutter {
 
 
     private val log = LoggerUtil.getLogger(DefaltInspiserendeBeslutter::class.java)

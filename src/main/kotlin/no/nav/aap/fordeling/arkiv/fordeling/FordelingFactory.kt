@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.INGEN_FORDELER
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil
@@ -24,7 +23,9 @@ class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, Appli
             .map { "${it.javaClass.simpleName} -> ${it.cfg.tema}" }
     }")
 
-    fun kanFordele(tema : String, status : String) = fordelerFor(tema) != INGEN_FORDELER && status == MOTTATT.name
+    override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordelManuelt(jp, enhet)
+
+    override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordel(jp, enhet)
 
     private fun fordelerFor(tema : String) =
         (fordelere
@@ -33,10 +34,6 @@ class FordelingFactory(private val fordelere : List<Fordeler>) : Fordeler, Appli
             .firstOrNull { tema.lowercase() in it.cfg.tema } ?: INGEN_FORDELER.also {
             log.trace("Ingen fordeler for {} i {}", tema, currentCluster)
         })
-
-    override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordelManuelt(jp, enhet)
-
-    override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = fordelerFor(jp.tema).fordel(jp, enhet)
 
     override fun toString() = "FordelingFactory(fordelere=$fordelere)"
 }

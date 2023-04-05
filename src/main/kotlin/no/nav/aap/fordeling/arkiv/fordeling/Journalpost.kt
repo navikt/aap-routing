@@ -41,9 +41,6 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     val hovedDokumentBrevkode = hovedDokument.brevkode ?: "Ukjent brevkode"
 
     @JsonIgnore
-    val hovedDokumentId = hovedDokument.id
-
-    @JsonIgnore
     val hovedDokumentTittel = hovedDokument.tittel ?: "Ukjent tittel"
 
     @JsonIgnore

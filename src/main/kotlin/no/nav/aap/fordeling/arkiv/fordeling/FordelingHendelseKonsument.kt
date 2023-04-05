@@ -18,13 +18,11 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.Companion.HÅNDTERES_AV_ANDRE
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.INGEN_FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_ARENA
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_GOSYS
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingBeslutter.FordelingsBeslutning.TIL_KELVIN
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
@@ -65,7 +63,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
 
-            if (hendelse.kanal() in HÅNDTERES_AV_ANDRE) {
+            if (hendelse.skaIgnoreres()) {
                 log.info("Journalpost ${hendelse.journalpostId} fra kanal '${hendelse.mottaksKanal}' skal IKKE fordeles")
                 inc(FORDELINGTS, TOPIC, topic, KANAL, hendelse.mottaksKanal, FORDELINGSTYPE, INGEN_FORDELING.name)
                 return
@@ -126,7 +124,7 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
             throw t
         }
 
-    private fun JournalfoeringHendelseRecord.kanal() = Kanal.values().find { it.name == mottaksKanal } ?: Kanal.UKJENT
+    private fun JournalfoeringHendelseRecord.skaIgnoreres() = beslutter.skalIgnorere(this)
 
     private fun Epoch?.asDate() = this?.let { Instant.ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

@@ -13,19 +13,10 @@ import org.springframework.kafka.support.KafkaHeaders.ORIGINAL_TIMESTAMP
 import org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
-import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon
-import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon.ARENA
-import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon.GOSYS
-import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon.INGEN_DESTINASJON
-import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon.KELVIN
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingFilter.Companion.status
-import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
-import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.Slacker
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
@@ -82,39 +73,4 @@ class FordelingHendelseKonsument(private val fordeler : DestinasjonFordeler, pri
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 
     override fun toString() = "FordelingHendelseKonsument( arkiv=$arkiv, beslutter=$utvelger, slack=$slack)"
-}
-
-@Component
-class DestinasjonFordeler(private val fordeler : FordelingFactory, private val enhet : NavEnhetUtvelger, private val slack : Slacker) {
-
-    private val log = getLogger(DestinasjonFordeler::class.java)
-
-    fun fordel(jp : Journalpost, destinasjon : Destinasjon) {
-
-        when (destinasjon) {
-
-            KELVIN -> log.warn("Fordeling til Kelvin ikke implementert")
-
-            INGEN_DESTINASJON -> {
-                log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
-            }
-
-            GOSYS -> {
-                fordeler.fordelManuelt(jp, FORDELINGSENHET)
-                jp.metrikker(DIREKTE_MANUELL)
-            }
-
-            ARENA -> {
-                log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
-                fordel(jp)
-            }
-        }
-    }
-
-    private fun fordel(jp : Journalpost) =
-        fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev("$it (${jp.fnr})")
-            log.info("$it")
-            jp.metrikker(it.fordelingstype)
-        }
 }

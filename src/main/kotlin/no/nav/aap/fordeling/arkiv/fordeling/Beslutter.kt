@@ -1,12 +1,12 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.ARENA
+import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon
+import no.nav.aap.fordeling.arkiv.fordeling.DestinasjonUtvelger.Destinasjon.ARENA
 
 interface Beslutter {
 
-    fun beslutt(jp : Journalpost) : FordelingsBeslutning
+    fun beslutt(jp : Journalpost) : Destinasjon
 }
 
 @Component

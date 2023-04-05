@@ -37,7 +37,6 @@ interface Fordeler {
             INGEN,
             ALLEREDE_OPPGAVE,
             ALLEREDE_JOURNALFØRT,
-            INGEN_JOURNALPOST,
             DIREKTE_MANUELL,
             RACE
         }

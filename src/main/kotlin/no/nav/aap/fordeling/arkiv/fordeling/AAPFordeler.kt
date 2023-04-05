@@ -50,7 +50,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                     throw it
                 }
             }
-        } ?: manuell.fordel(jp)
+        } ?: fordelManuelt(jp)
 
     private fun fordelSoknad(jp : Journalpost, enhet : NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {

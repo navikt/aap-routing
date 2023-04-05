@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv
 
 import org.springframework.stereotype.Component
+import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
@@ -17,7 +18,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     fun hentSøknad(jp : Journalpost) = safdok.originalDokument(jp)
 
-    fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
+    fun hentJournalpost(jp : String) = saf.hentJournalpost(jp) ?: throw IrrecoverableIntegrationException("Ingen journalpost fra SAF for journalpost  $jp")
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(jp.id, jp.oppdateringsData(sakNr))
 

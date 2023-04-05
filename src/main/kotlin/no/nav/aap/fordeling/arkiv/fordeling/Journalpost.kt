@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonValue
-import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType
@@ -53,10 +52,9 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     // TODO Denne er på feil sted
     fun opprettArenaOppgaveData(enhet : NAVEnhet) = ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)
 
-    fun metrikker(type : FordelingType, topic : String) =
+    fun metrikker(type : FordelingType) =
         Metrikker.inc(FORDELINGTS, listOf(
             Pair(TEMA, tema),
-            Pair(TOPIC, topic),
             Pair(FORDELINGSTYPE, type.name),
             Pair(TITTEL, tittel ?: "Ukjent tittel"),
             Pair(KANAL, kanal),

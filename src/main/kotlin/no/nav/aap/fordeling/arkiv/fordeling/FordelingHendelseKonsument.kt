@@ -28,8 +28,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 typealias Epoch = Long
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(private val fordeler : DestinasjonFordeler, private val arkiv : ArkivClient,
-                                 private val utvelger : DestinasjonUtvelger, private val slack : Slacker) {
+class FordelingHendelseKonsument(private val fordeler : DestinasjonFordeler, private val arkiv : ArkivClient, private val slack : Slacker) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -48,7 +47,7 @@ class FordelingHendelseKonsument(private val fordeler : DestinasjonFordeler, pri
             with(hendelse) {
                 log.info("Mottatt hendelse for journalpost $journalpostId, tema $temaNytt og status $journalpostStatus på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
                 arkiv.hentJournalpost("$journalpostId").also {
-                    fordeler.fordel(it, utvelger.destinasjon(it, status()))
+                    fordeler.fordel(it, status())
                 }
             }
         }.onFailure {
@@ -72,5 +71,5 @@ class FordelingHendelseKonsument(private val fordeler : DestinasjonFordeler, pri
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 
-    override fun toString() = "FordelingHendelseKonsument( arkiv=$arkiv, beslutter=$utvelger, slack=$slack)"
+    override fun toString() = "FordelingHendelseKonsument( arkiv=$arkiv, fordeler=$fordeler, slack=$slack)"
 }

@@ -14,7 +14,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.TestData.medStatus
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.somMeldekort
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.utenBruker
 
-class TestFordelingBeslutter {
+class TestDestinasjnnUtvelger {
 
     private val beslutter = DestinasjonUtvelger(ArenaBeslutter())
 

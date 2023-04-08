@@ -24,5 +24,6 @@ class SAFWebClientAdapter(@Qualifier(SAFDOK) webClient : WebClient, private val 
             .retryWhen(cf.retrySpec(log, cf.dokPath))
             .doOnError { t -> log.warn("Arkivoppslag feilet for  $id/$dokumentId/$variantFormat", t) }
             .doOnSuccess { log.info("Arkivoppslag $id/$dokumentId/$variantFormat returnerte ${it.size} bytes") }
+            .contextCapture()
             .block()
 }

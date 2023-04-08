@@ -58,6 +58,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
                 .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }
+                .contextCapture()
                 .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved ferdigstilling av journalpost $journalpostId")
         }
         else {

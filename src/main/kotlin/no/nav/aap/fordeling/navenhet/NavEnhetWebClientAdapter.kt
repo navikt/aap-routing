@@ -25,6 +25,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .retryWhen(cf.retrySpec(log, cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag mot NORG2 OK for kriteria $kriterium.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
+        .contextCapture()
         .block()
         ?.map { NAVEnhet(it["enhetNr"]!!) }
         ?.firstOrNull { it in enheter }

@@ -41,7 +41,7 @@
         <appender name="stdout"
                   class="ch.qos.logback.core.ConsoleAppender">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %X{Nav-Call-Id} [%thread] %-5level %logger{70} - %msg%n</Pattern>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %X{Nav-CallId} [%thread] %-5level %logger{70} - %msg%n</Pattern>
             </layout>
         </appender>
         <logger name="secure" level="debug" additivity="false">

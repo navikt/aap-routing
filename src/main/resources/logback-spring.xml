@@ -21,16 +21,16 @@
         </encoder>
     </appender>
     <springProfile name="dev">
-        <logger name="reactor.netty.http.client" level="info" />
-        <logger name="com.github.ben-manes.caffeine" level="trace" />
+        <logger name="reactor.netty.http.client" level="info"/>
+        <logger name="com.github.ben-manes.caffeine" level="trace"/>
         <logger name="no.nav.aap" level="trace"/>
-        <logger name="webClientLogger" level="trace" />
-        <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="warn" />
-        <logger name="io.confluent.kafka.serializers.KafkaAvroSerializerConfig" level="warn" />
-        <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="warn" />
-        <logger name="org.apache.kafka.common.utils.AppInfoParser" level="warn" />
-        <logger name="org.apache.kafka.clients.NetworkClient" level="warn" />
-        <logger name="org.apache.kafka.clients.Metadata" level="warn" />
+        <logger name="webClientLogger" level="trace"/>
+        <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="warn"/>
+        <logger name="io.confluent.kafka.serializers.KafkaAvroSerializerConfig" level="warn"/>
+        <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="warn"/>
+        <logger name="org.apache.kafka.common.utils.AppInfoParser" level="warn"/>
+        <logger name="org.apache.kafka.clients.NetworkClient" level="warn"/>
+        <logger name="org.apache.kafka.clients.Metadata" level="warn"/>
         <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer" level="warn"/>
         <logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
         <logger name="secure" level="debug" additivity="false">
@@ -41,7 +41,7 @@
         <appender name="stdout"
                   class="ch.qos.logback.core.ConsoleAppender">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %X{Nav-CallId} [%thread] %-5level %logger{70} - %msg%n</Pattern>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %X{Nav-Call-Id} [%thread] %-5level %logger{70} - %msg%n</Pattern>
             </layout>
         </appender>
         <logger name="secure" level="debug" additivity="false">

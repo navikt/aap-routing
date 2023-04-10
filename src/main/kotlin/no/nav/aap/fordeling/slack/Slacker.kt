@@ -9,42 +9,25 @@ import no.nav.aap.fordeling.slack.SlackConfig.Companion.OK
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.ROCKET
 import no.nav.aap.fordeling.slack.SlackConfig.Companion.SLACK
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster
 import no.nav.boot.conditionals.Cluster.Companion.currentCluster
-import no.nav.boot.conditionals.Cluster.Companion.devClusters
 
 @Component
-class Slacker(private val cfg : SlackConfig) {
+class Slacker(private val cfg : SlackConfig) : SlackOperations {
 
-    private val log = getLogger(Slacker::class.java)
-    
-    fun okHvisDev(melding : String) =
-        if (cluster in devClusters()) {
-            ok(melding)
-        }
-        else Unit
+    override fun ok(melding : String, vararg clusters : Cluster) = send("$OK$melding", clusters)
 
-    fun feilHvisDev(melding : String) =
-        if (cluster in devClusters()) {
-            feil(melding)
-        }
-        else Unit
+    override fun feil(melding : String, vararg clusters : Cluster) = send("$ERROR$melding", clusters)
 
-    fun meldingHvisDev(melding : String) =
-        if (cluster in devClusters()) {
-            rocket(melding)
-        }
-        else Unit
+    override fun rocket(melding : String, vararg clusters : Cluster) = send("$ROCKET$melding", clusters)
 
-    fun ok(melding : String) = send("$OK$melding")
-
-    fun feil(melding : String) = send("$ERROR$melding")
-
-    fun rocket(melding : String) = send("$ROCKET$melding")
-
-    private fun send(melding : String) =
+    private fun send(melding : String, clusters : Array<out Cluster>) =
         with(cfg) {
             if (!enabled) {
                 log.warn("Sending til slack ikke aktivert, sett slack.enabled: true for aktivering")
+                return
+            }
+            if (currentCluster !in clusters) {
                 return
             }
 
@@ -66,6 +49,15 @@ class Slacker(private val cfg : SlackConfig) {
         private val cluster = currentCluster()
         private val slack = Slack.getInstance()
     }
+}
+
+interface SlackOperations {
+
+    val log get() = getLogger(SlackOperations::class.java)
+
+    fun rocket(melding : String, vararg clusters : Cluster) = log.info(melding)
+    fun feil(melding : String, vararg clusters : Cluster) = log.info(melding)
+    fun ok(melding : String, vararg clusters : Cluster) = log.info(melding)
 }
 
 @ConfigurationProperties(SLACK)

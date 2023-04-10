@@ -26,7 +26,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.Forde
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.KELVIN
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
-import no.nav.aap.fordeling.slack.Slacker
+import no.nav.aap.fordeling.slack.SlackOperations
 import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
@@ -37,6 +37,7 @@ import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
+import no.nav.boot.conditionals.Cluster.*
 import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
@@ -45,7 +46,7 @@ typealias Epoch = Long
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
-                                 private val utvelger : JournalpostDestinasjonUtvelger, private val monkey : ChaosMonkey, private val slack : Slacker) {
+                                 private val utvelger : JournalpostDestinasjonUtvelger, private val monkey : ChaosMonkey, private val slack : SlackOperations) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -103,19 +104,19 @@ class FordelingHendelseKonsument(private val fordeler : FordelingFactory, privat
     fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : Epoch?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
         with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig hendelse ble mottatt ${timestamp.asDate()}") {
             log.error(this)
-            slack.feil(this)
+            slack.feil(this, DEV_GCP, PROD_GCP)
         }
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.meldingHvisDev("$it (${jp.fnr})")
+            slack.rocket("$it (${jp.fnr})", DEV_GCP)
             log.info("$it")
         }
 
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)
-            slack.feilHvisDev("$this. (${t.message})")
+            slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
         }
 

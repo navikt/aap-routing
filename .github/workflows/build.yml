@@ -50,6 +50,9 @@ jobs:
                     identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
                     team: aap
 
+            -   name: Submit Dependency Snapshot
+                uses: advanced-security/maven-dependency-submission-action@v3
+
             -   name: Kompilerer, bygger  og pusher image
                 id: kompiler
                 run: |

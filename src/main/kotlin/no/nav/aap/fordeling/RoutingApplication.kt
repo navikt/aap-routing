@@ -1,11 +1,9 @@
 package no.nav.aap.fordeling
 
-import io.micrometer.context.ContextRegistry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
-import reactor.core.publisher.Hooks
-import no.nav.aap.fordeling.util.MDCAccessor
+import no.nav.aap.fordeling.util.MDCAccessorUtil
 import no.nav.boot.conditionals.Cluster.Companion.profiler
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
@@ -18,8 +16,7 @@ class RoutingApplication
 
 fun main(args : Array<String>) {
     runApplication<RoutingApplication>(*args) {
-        Hooks.enableAutomaticContextPropagation()
+        MDCAccessorUtil.init()
         setAdditionalProfiles(*profiler())
-        ContextRegistry.getInstance().registerThreadLocalAccessor(MDCAccessor())
     }
 }

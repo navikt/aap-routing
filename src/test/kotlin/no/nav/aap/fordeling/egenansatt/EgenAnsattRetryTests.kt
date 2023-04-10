@@ -11,12 +11,21 @@ import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.util.MDCAccessorUtil
 import no.nav.aap.fordeling.utils.MockWebServerExtensions.expect
+import no.nav.aap.util.LoggerUtil
+import no.nav.aap.util.MDCUtil
 
 class EgenAnsattRetryTests {
 
+    private val log = LoggerUtil.getLogger(EgenAnsattRetryTests::class.java)
+
     lateinit var egenServer : MockWebServer
     lateinit var client : EgenAnsattClient
+
+    init {
+        MDCAccessorUtil.init()
+    }
 
     @BeforeEach
     fun beforeEach() {
@@ -28,6 +37,8 @@ class EgenAnsattRetryTests {
 
     @Test
     fun ingenRetry() {
+        MDCUtil.callId()
+        log.info("Main thread")
         egenServer.expect("false")
         assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
     }

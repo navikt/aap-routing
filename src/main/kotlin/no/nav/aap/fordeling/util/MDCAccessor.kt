@@ -1,7 +1,9 @@
 package no.nav.aap.fordeling.util
 
+import io.micrometer.context.ContextRegistry
 import io.micrometer.context.ThreadLocalAccessor
 import org.slf4j.MDC
+import reactor.core.publisher.Hooks
 
 class MDCAccessor : ThreadLocalAccessor<Map<String, String>> {
 
@@ -15,6 +17,14 @@ class MDCAccessor : ThreadLocalAccessor<Map<String, String>> {
 
     companion object {
 
-        const val KEY = "mdc"
+        private const val KEY = "mdc"
+    }
+}
+
+object MDCAccessorUtil {
+
+    fun init() = run {
+        Hooks.enableAutomaticContextPropagation()
+        ContextRegistry.getInstance().registerThreadLocalAccessor(MDCAccessor())
     }
 }

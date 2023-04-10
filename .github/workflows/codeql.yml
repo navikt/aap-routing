@@ -59,6 +59,8 @@ jobs:
             # If this step fails, then you should remove it and run the build manually (see below)
             -   name: Kompilerer
                 id: kompiler
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: ./mvnw --settings .github/.m2/settings.xml  -Drevision=${TAG} package
 
 

@@ -15,8 +15,6 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.LOCAL
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.PROD_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_OPPGAVE
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
@@ -35,61 +33,47 @@ class TestFordeling {
     val arena : ArenaClient = mock()
     val arkiv : ArkivClient = mock()
     val oppgave : OppgaveClient = mock()
-    val prodFordeler : AAPFordelerProd = mock()
 
     lateinit var fordeler : AAPFordeler
-    lateinit var manuellFordeler : AAPManuellFordeler
 
     @BeforeAll
     fun beforeAll() {
-        manuellFordeler = AAPManuellFordeler(oppgave, LOCAL)
-        fordeler = AAPFordeler(arena, arkiv, ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))), LOCAL)
+        fordeler = AAPFordeler(arena, arkiv, AAPManuellFordeler(oppgave))
     }
 
     @BeforeEach
     fun beforeEach() {
-        reset(arena, arkiv, oppgave, prodFordeler)
-        whenever(prodFordeler.cfg).thenReturn(PROD_AAP)
+        reset(arena, arkiv, oppgave)
         whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
     }
 
     @Test
-    @DisplayName("Factory for hovedsøknad skal bruke riktig fordeler")
-    fun factoryFordelerAutomatisk() {
-        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
-        with(FordelingFactory(listOf(fordeler, prodFordeler))) {
-            assertThat(fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
-        }
-        verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
-        verify(prodFordeler, times(2)).cfg
-        verifyNoMoreInteractions(prodFordeler)
-    }
-
-    @Test
-    @DisplayName("Factory for manuell fordeling av hovedsøknad oppretter fordelingsoppgave når opprettelse av journalføringsoppgave feilet")
-    fun manuellFactoryFordelerManuelt() {
-        whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
-        assertThat(ManuellFordelingFactory(listOf(manuellFordeler, AAPManuellFordelerProd(oppgave))).fordel(JP,
-            AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
-        verify(oppgave).harOppgave(JP.id)
-        verify(oppgave).opprettFordelingOppgave(JP)
-        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verifyNoMoreInteractions(oppgave)
-    }
-
-    @Test
-    @DisplayName("Hhovedsøknad uten arenasak oppretter oppgave og journalfører automatisk")
-    fun hovedSøknadUtenArenasak() {
+    @DisplayName("Hovedsøknad uten aktiv arenasak fordeles automatisk")
+    fun hovedsøknadUtenArenasak() {
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
         assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(AUTOMATISK)
-        verify(arena).harAktivSak(FIKTIVTFNR)
-        verify(arena).opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verifyNoMoreInteractions(arena)
         verify(arkiv).oppdaterOgFerdigstillJournalpost(JP, ARENASAK)
+        verifyNoInteractions(oppgave)
+        inOrder(arena, arkiv)
     }
 
     @Test
-    @DisplayName("Hovedsøknad arkivering feiler, går til manuell")
+    @DisplayName("Hovedsøknad med eksisterende arenasak går til manuell journlføring")
+    fun hovedSøknadMedArenasak() {
+        whenever(oppgave.harOppgave(JP.id)).thenReturn(false)
+        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(true)
+        assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
+        verify(arena).harAktivSak(FIKTIVTFNR)
+        verify(oppgave).harOppgave(JP.id)
+        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
+        verifyNoInteractions(arkiv)
+        verifyNoMoreInteractions(oppgave)
+        verifyNoMoreInteractions(arena)
+        inOrder(arena, oppgave)
+    }
+
+    @Test
+    @DisplayName("Hovedsøknad arkivering feiler, oppreter journalføringsoppgave")
     fun automatiskFeiler() {
         whenever(oppgave.harOppgave(JP.id)).thenReturn(false)
         whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(false)
@@ -103,34 +87,15 @@ class TestFordeling {
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
         verify(oppgave).harOppgave(JP.id)
         verifyNoMoreInteractions(oppgave)
+        inOrder(arena, arkiv, oppgave)
     }
-
-    @Test
-    @DisplayName("Hovedsøknad med eksisterende arenasak går til manuell fordeling")
-    fun hovedSøknadMedArenasak() {
-        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(true)
-        assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
-        verify(arena).harAktivSak(FIKTIVTFNR)
-        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verifyNoInteractions(arkiv)
-        verifyNoMoreInteractions(arena)
-    }
-
-    @Test
-    @DisplayName("Manuell fordeling oppretter journalføringsoppgave når det ikke allerede finnes en")
-    fun journalføringsOppgave() {
-        whenever(oppgave.harOppgave(JP.id)).thenReturn(false)
-        assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_JOURNALFØRING)
-        verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)
-        verify(oppgave).harOppgave(JP.id)
-        verifyNoMoreInteractions(oppgave)
-    }
-
+    
     @Test
     @DisplayName("Manuell fordeling oppretter IKKE journalføringsoppgave når det allerede finnes en")
     fun journalføringsoppgaveFinnes() {
+        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(true)
         whenever(oppgave.harOppgave(JP.id)).thenReturn(true)
-        assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(ALLEREDE_OPPGAVE)
+        assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(ALLEREDE_OPPGAVE)
         verify(oppgave).harOppgave(JP.id)
         verifyNoMoreInteractions(oppgave)
     }
@@ -138,7 +103,7 @@ class TestFordeling {
     @Test
     @DisplayName("Manuell fordeling oppretter fordelingsoppgave når enhet ikke er kjent")
     fun fordelingsOppgave() {
-        assertThat(manuellFordeler.fordel(JP, null).fordelingstype).isEqualTo(MANUELL_FORDELING)
+        assertThat(fordeler.fordel(JP, null).fordelingstype).isEqualTo(MANUELL_FORDELING)
         verify(oppgave).opprettFordelingOppgave(JP)
         verifyNoMoreInteractions(oppgave)
     }
@@ -146,8 +111,9 @@ class TestFordeling {
     @Test
     @DisplayName("Manuell fordeling oppretter fordelingsoppgave når opprettelse av journalføringsoppgave feilet")
     fun fordelingsOppgaveVedException() {
+        whenever(arena.harAktivSak(FIKTIVTFNR)).thenReturn(true)
         whenever(oppgave.opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenThrow(IrrecoverableIntegrationException::class.java)
-        assertThat(manuellFordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
+        assertThat(fordeler.fordel(JP, AUTOMATISK_JOURNALFØRING_ENHET).fordelingstype).isEqualTo(MANUELL_FORDELING)
         verify(oppgave).harOppgave(JP.id)
         verify(oppgave).opprettFordelingOppgave(JP)
         verify(oppgave).opprettJournalføringOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)

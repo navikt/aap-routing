@@ -5,16 +5,13 @@ import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelerConfig.Companion.DEV_AAP
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 
 @Component
-class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : ManuellFordelingFactory,
-                  override val cfg : FordelerConfig = DEV_AAP) : Fordeler {
+class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : AAPManuellFordeler) : Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
 
@@ -86,5 +83,5 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
         log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.id}")
     }
 
-    override fun toString() = "AAPFordeler(arena=$arena, arkiv=$arkiv, cfg=$cfg, manuelle=$manuell)"
+    override fun toString() = "AAPFordeler(arena=$arena, arkiv=$arkiv,manuelle=$manuell)"
 }

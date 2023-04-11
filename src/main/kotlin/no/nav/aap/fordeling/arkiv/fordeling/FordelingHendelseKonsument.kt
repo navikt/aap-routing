@@ -45,7 +45,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 typealias Epoch = Long
 
 @ConditionalOnGCP
-class FordelingHendelseKonsument(private val fordeler : FordelingFactory, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
+class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
                                  private val utvelger : JournalpostDestinasjonUtvelger, private val monkey : ChaosMonkey, private val slack : SlackOperations) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)

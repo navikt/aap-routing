@@ -3,8 +3,12 @@ fordeling:
     topics:
         backoff: 30000
 oppgave:
+    enabled: false
     oppslagEnabled: true
 arena:
+    enabled: false
     oppslagEnabled: true
+dokarkiv:
+    enabled: false
 slack:
     kanal: C048CS5J3K4

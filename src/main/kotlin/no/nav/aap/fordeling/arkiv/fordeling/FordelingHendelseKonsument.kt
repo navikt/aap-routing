@@ -110,8 +110,8 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr})", DEV_GCP)
-            log.info("$it (${MDC.get(NAV_CALL_ID)})")
+            slack.rocket("$it (${jp.fnr},${MDC.get(NAV_CALL_ID)})", DEV_GCP)
+            log.info("$it")
         }
 
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =

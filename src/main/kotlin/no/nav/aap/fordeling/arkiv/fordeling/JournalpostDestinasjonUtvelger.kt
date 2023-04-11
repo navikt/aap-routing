@@ -4,12 +4,8 @@ import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.values
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.GOSYS
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
 import no.nav.aap.util.LoggerUtil
@@ -62,13 +58,5 @@ class JournalpostDestinasjonUtvelger(private val beslutter : Beslutter, private 
             jp.metrikker(INGEN, topic)
         }
 
-    private fun String.somStatus() =
-        values().find { it.name.equals(this, ignoreCase = true) } ?: JournalpostStatus.UKJENT
-
     override fun toString() = "DefaultFordelingBeslutter(cfg=$cfg)"
-
-    companion object {
-
-        private val HÅNDTERES_AV_ANDRE = listOf(EESSI, NAV_NO_CHAT, EKST_OPPS)
-    }
 }

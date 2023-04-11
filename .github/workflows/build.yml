@@ -7,6 +7,7 @@ on:
         paths-ignore:
             - '**.md'
 env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     IMAGE_BASE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/aap/${{ github.event.repository.name }}
 
@@ -28,6 +29,13 @@ jobs:
                     java-version: 17
                     distribution: temurin
                     cache: maven
+
+            -   name: Cache SonarCloud packages
+                uses: actions/cache@v3
+                with:
+                    path: ~/.sonar/cache
+                    key: ${{ runner.os }}-sonar
+                    restore-keys: ${{ runner.os }}-sonar
 
             -   name: Installerer cosign
                 uses: sigstore/cosign-installer@main
@@ -59,7 +67,7 @@ jobs:
                 id: kompiler
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
-                    ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}  -Drevision=${TAG} package jib:build
+                    ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}  -Drevision=${TAG} package jib:build org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=navikt_aap-routing
 
     deploy:
         strategy:

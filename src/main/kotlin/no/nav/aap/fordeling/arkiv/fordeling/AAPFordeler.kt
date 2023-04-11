@@ -24,7 +24,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
 
                     STANDARD.kode -> {
                         log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
-                        fordelSoknad(jp, e)
+                        fordelSøknad(jp, e)
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
@@ -49,7 +49,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
             }
         } ?: manuell.fordel(jp)
 
-    private fun fordelSoknad(jp : Journalpost, enhet : NAVEnhet) =
+    private fun fordelSøknad(jp : Journalpost, enhet : NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
             log.info("Arena har IKKE aktiv sak, oppretter oppgave i Arena, 0ppdaterer og ferdigstiller journalpost ${jp.id}")
             opprettArenaOppgave(jp, enhet)

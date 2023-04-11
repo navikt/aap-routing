@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.egenansatt
 
+import io.micrometer.context.ContextRegistry
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -11,10 +12,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
-import no.nav.aap.fordeling.util.MDCAccessorUtil
 import no.nav.aap.fordeling.utils.MockWebServerExtensions.expect
+import no.nav.aap.util.AccessorUtil
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.MDCUtil
+import no.nav.aap.util.RequestAttributesAccessor
 
 class EgenAnsattRetryTests {
 
@@ -24,7 +26,9 @@ class EgenAnsattRetryTests {
     lateinit var client : EgenAnsattClient
 
     init {
-        MDCAccessorUtil.init()
+        AccessorUtil.init()
+        MDCUtil.callId()
+        ContextRegistry.getInstance().registerThreadLocalAccessor(RequestAttributesAccessor())
     }
 
     @BeforeEach
@@ -37,10 +41,10 @@ class EgenAnsattRetryTests {
 
     @Test
     fun ingenRetry() {
-        MDCUtil.callId()
         log.info("Main thread")
         egenServer.expect("false")
         assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
+        assertThat(egenServer.requestCount).isEqualTo(1);
     }
 
     @Test
@@ -48,6 +52,7 @@ class EgenAnsattRetryTests {
     fun retryFunker() {
         egenServer.expect("false", BAD_GATEWAY, BAD_GATEWAY, OK)
         assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
+        assertThat(egenServer.requestCount).isEqualTo(3);
     }
 
     @Test
@@ -55,6 +60,7 @@ class EgenAnsattRetryTests {
     fun retryGirOpp() {
         egenServer.expect(4, BAD_GATEWAY)
         assertThrows<IntegrationException> { client.erEgenAnsatt(FIKTIVTFNR) }
+        assertThat(egenServer.requestCount).isEqualTo(4);
     }
 
     @Test
@@ -62,5 +68,6 @@ class EgenAnsattRetryTests {
     fun ingenRetry400() {
         egenServer.expect("false", BAD_REQUEST)
         assertThrows<IrrecoverableIntegrationException> { client.erEgenAnsatt(FIKTIVTFNR) }
+        assertThat(egenServer.requestCount).isEqualTo(1);
     }
 }

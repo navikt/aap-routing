@@ -14,7 +14,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 
 @Component
 class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val cf : DokarkivConfig,
@@ -35,10 +35,11 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .exchangeToMono { it.toResponse<OppdateringResponsDTO>(log) }
+                .exchangeToMono { it.response<OppdateringResponsDTO>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppdaterPath))
                 .doOnSuccess { log.info("Oppdatering av journalpost $id fra $data OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppdatering av journalpost $id fra $data feilet", t) }
+                .contextCapture()
                 .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost $id")
         }
         else {
@@ -54,7 +55,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
                 .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET)
-                .exchangeToMono { it.toResponse<String>(log) }
+                .exchangeToMono { it.response<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
                 .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }

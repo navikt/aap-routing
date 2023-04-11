@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 
 @Component
 class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf : OppgaveConfig) :
@@ -21,7 +21,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
         if (cf.oppslagEnabled) {
             webClient.get()
                 .uri { cf.oppgaveUri(it, journalpostId) }
-                .exchangeToMono { it.toResponse<OppgaveRespons>(log) }
+                .exchangeToMono { it.response<OppgaveRespons>(log) }
                 .retryWhen(cf.retrySpec(log, object {}.javaClass.enclosingMethod.name.lowercase()))
                 .doOnSuccess { log.trace("Oppgave oppslag journalpost  {} OK. Respons {}", journalpostId, it) }
                 .doOnError { t -> log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${t.message})", t) }
@@ -41,7 +41,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .exchangeToMono { it.toResponse<Any>(log) }
+                .exchangeToMono { it.response<Any>(log) }
                 .retryWhen(cf.retrySpec(log, object {}.javaClass.enclosingMethod.name.lowercase()))
                 .doOnSuccess { log.trace("Opprett oppgave fra {} OK. Respons {}", data, it) }
                 .doOnError { t -> log.warn("Opprett oppgave fra $data feilet (${t.message})", t) }

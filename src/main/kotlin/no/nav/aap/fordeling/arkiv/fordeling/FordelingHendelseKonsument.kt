@@ -32,14 +32,11 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGSTYPE
 import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
 import no.nav.aap.util.CallIdGenerator
-import no.nav.aap.util.ChaosMonkey
-import no.nav.aap.util.ChaosMonkey.MonkeyExceptionType.RECOVERABLE
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
 import no.nav.boot.conditionals.Cluster.*
-import no.nav.boot.conditionals.Cluster.Companion.devClusters
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 
@@ -47,7 +44,7 @@ typealias Epoch = Long
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
-                                 private val utvelger : JournalpostDestinasjonUtvelger, private val monkey : ChaosMonkey, private val slack : SlackOperations) {
+                                 private val utvelger : JournalpostDestinasjonUtvelger, private val slack : SlackOperations) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -62,7 +59,6 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
                @Header(RECEIVED_TOPIC) topic : String) {
         runCatching {
-            monkey.injectFault(FordelingHendelseKonsument::class.java.simpleName, RECOVERABLE, monkey.criteria(devClusters(), 10))
             toMDC(NAV_CALL_ID, CallIdGenerator.create())
             log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
 
@@ -123,5 +119,5 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 
-    override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$utvelger, monkey=$monkey, slack=$slack)"
+    override fun toString() = "FordelingHendelseKonsument(fordeler=$fordeler, arkiv=$arkiv, enhet=$enhet, beslutter=$utvelger, slack=$slack)"
 }

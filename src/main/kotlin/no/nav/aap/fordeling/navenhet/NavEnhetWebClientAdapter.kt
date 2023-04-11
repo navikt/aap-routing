@@ -8,7 +8,7 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 
 @Component
 class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val cf : NavEnhetConfig) : AbstractWebClientAdapter(webClient, cf) {
@@ -21,7 +21,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
-        .exchangeToMono { it.toResponse<List<Map<String, String>>>(log) }
+        .exchangeToMono { it.response<List<Map<String, String>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag mot NORG2 OK for kriteria $kriterium.") }
         .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
@@ -33,7 +33,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
-        .exchangeToMono { it.toResponse<List<Map<String, Any>>>(log) }
+        .exchangeToMono { it.response<List<Map<String, Any>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }

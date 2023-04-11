@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.Varian
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 
 @Component
 class SAFWebClientAdapter(@Qualifier(SAFDOK) webClient : WebClient, private val cf : SAFConfig) : AbstractWebClientAdapter(webClient, cf) {
@@ -20,7 +20,7 @@ class SAFWebClientAdapter(@Qualifier(SAFDOK) webClient : WebClient, private val 
         webClient.get()
             .uri { cf.dokUri(it, id, dokumentId, variantFormat) }
             .accept(APPLICATION_JSON)
-            .exchangeToMono { it.toResponse<ByteArray>(log) }
+            .exchangeToMono { it.response<ByteArray>(log) }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
             .doOnError { t -> log.warn("Arkivoppslag feilet for  $id/$dokumentId/$variantFormat", t) }
             .doOnSuccess { log.info("Arkivoppslag $id/$dokumentId/$variantFormat returnerte ${it.size} bytes") }

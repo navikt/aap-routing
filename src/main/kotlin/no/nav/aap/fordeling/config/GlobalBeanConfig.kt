@@ -42,7 +42,7 @@ import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunct
 import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 import no.nav.boot.conditionals.ConditionalOnNotProd
 import no.nav.boot.conditionals.ConditionalOnProd
 import no.nav.security.token.support.client.core.OAuth2ClientException
@@ -158,7 +158,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .uri(tokenEndpointUrl)
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
-                    .exchangeToMono { it.toResponse<OAuth2AccessTokenResponse>(log) }
+                    .exchangeToMono { it.response<OAuth2AccessTokenResponse>(log) }
                     .retryWhen(retry())
                     .onErrorMap { e ->
                         e as? OAuth2ClientException

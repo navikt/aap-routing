@@ -14,7 +14,7 @@ import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
-import no.nav.aap.util.WebClientExtensions.toResponse
+import no.nav.aap.util.WebClientExtensions.response
 
 @Component
 class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : ArenaConfig) : AbstractWebClientAdapter(webClient, cf) {
@@ -26,7 +26,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
             webClient.get()
                 .uri { cf.nyesteSakUri(it, fnr) }
                 .accept(APPLICATION_JSON)
-                .exchangeToMono { it.toResponse<String>(log) }
+                .exchangeToMono { it.response<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.nyesteSakPath))
                 .doOnSuccess { log.trace("Oppslag av nyeste oppgave fra Arena OK. Respons $it") }
                 .doOnError { t -> log.warn("Oppslag av nyeste oppgave fra Arena feilet (${t.message})", t) }
@@ -45,7 +45,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(data)
-                .exchangeToMono { it.toResponse<ArenaOpprettetOppgave>(log) }
+                .exchangeToMono { it.response<ArenaOpprettetOppgave>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppgavePath))
                 .doOnSuccess { log.trace("Arena opprettet oppgave for journalpost {} OK. Respons {}", journalpostId, it) }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet  (${t.message})", t) }

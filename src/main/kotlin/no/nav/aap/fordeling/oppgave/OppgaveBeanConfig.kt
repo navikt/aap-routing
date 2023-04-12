@@ -17,7 +17,7 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveWebClient(builder : Builder cfg : OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow : ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder : Builder, cfg : OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveFlow)

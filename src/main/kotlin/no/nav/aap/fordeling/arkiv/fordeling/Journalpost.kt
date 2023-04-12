@@ -47,7 +47,7 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
 
-    fun erMeldekort() = hovedDokumentBrevkode == MELDEKORT.kode || tittel?.contains("Meldekort", true) ?: false
+    val erMeldekort = hovedDokumentBrevkode == MELDEKORT.kode || tittel?.contains("Meldekort", true) ?: false
 
     // TODO Denne er på feil sted
     fun opprettArenaOppgaveData(enhet : NAVEnhet) = ArenaOpprettOppgaveData(fnr, enhet.enhetNr, hovedDokumentTittel, vedleggTitler)

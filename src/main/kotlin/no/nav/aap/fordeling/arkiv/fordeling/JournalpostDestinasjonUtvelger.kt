@@ -23,7 +23,7 @@ class JournalpostDestinasjonUtvelger(private val beslutter : Beslutter, private 
             return ingen(jp, topic, "Fordeling er ikke aktivert")
         }
 
-        if (jp.erMeldekort()) {
+        if (jp.erMeldekort) {
             return ingen(jp, topic, "Meldekort håndteres av andre")
         }
 

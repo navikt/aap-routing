@@ -39,7 +39,6 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.MELDEKORT_UKE_TITTEL
 import no.nav.aap.fordeling.util.MetrikkKonstanter.SAMTALE_TITTEL
 import no.nav.aap.fordeling.util.MetrikkKonstanter.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
-import no.nav.aap.util.ChaosMonkey
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.response
@@ -57,9 +56,6 @@ import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPro
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
-
-    @Bean
-    fun monkey() = ChaosMonkey()
 
     @Bean
     fun meterRegistryCustomizer() : MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->
@@ -95,11 +91,10 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     }
 
     @Bean
-    fun webClientCustomizer(client : HttpClient, monkey : ChaosMonkey) =
+    fun webClientCustomizer(client : HttpClient) =
         WebClientCustomizer { b ->
             b.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
-                .filter(monkey.chaosMonkeyRequestFilterFunction())
         }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

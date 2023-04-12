@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.health.AbstractPingableHealthIndicator
-import no.nav.aap.util.ChaosMonkey
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
@@ -18,7 +17,7 @@ class OppgaveBeanConfig {
 
     @Bean
     @Qualifier(OPPGAVE)
-    fun oppgaveWebClient(builder : Builder, monkey : ChaosMonkey, cfg : OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow : ExchangeFilterFunction) =
+    fun oppgaveWebClient(builder : Builder cfg : OppgaveConfig, @Qualifier(OPPGAVE) oppgaveFlow : ExchangeFilterFunction) =
         builder
             .baseUrl("${cfg.baseUri}")
             .filter(oppgaveFlow)

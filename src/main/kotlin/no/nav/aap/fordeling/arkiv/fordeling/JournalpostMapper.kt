@@ -22,6 +22,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Tilleggsopplysning
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
+import no.nav.aap.util.ExtensionUtils.mapToSet
 
 @Component
 class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsattClient) {
@@ -44,10 +45,6 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 dokumenter.toDomain(),
                 tilleggsopplysninger.mapToSet { Tilleggsopplysning(it.nokkel, it.verdi) })
         }
-
-    private inline fun <T, R> Iterable<T>.mapToSet(transform : (T) -> R) : Set<R> {
-        return mapTo(HashSet(), transform)
-    }
 
     private fun JournalStatusDTO.toDomain() =
         when (this) {

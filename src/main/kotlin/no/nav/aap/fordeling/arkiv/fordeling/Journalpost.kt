@@ -27,7 +27,7 @@ typealias AvsenderMottaker = Bruker
 data class Journalpost(val id : String, val status : JournalpostStatus, val enhet : NAVEnhet?, val tittel : String?,
                        val tema : String, val behandlingstema : String?, val fnr : Fødselsnummer,
                        val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal,
-                       val dokumenter : Set<DokumentInfo> = emptySet()) {
+                       val dokumenter : Set<DokumentInfo> = emptySet(), val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
 
     @JsonIgnore
     val egenAnsatt = bruker?.erEgenAnsatt ?: false
@@ -60,6 +60,8 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
             Pair(TITTEL, tittel ?: "Ukjent tittel"),
             Pair(KANAL, kanal),
             Pair(BREVKODE, hovedDokumentBrevkode)))
+
+    data class Tilleggsopplysning(val nokkel : String, val verdi : String)
 
     data class Bruker(val fnr : Fødselsnummer, val diskresjonskode : Diskresjonskode = ANY, val erEgenAnsatt : Boolean = false)
 

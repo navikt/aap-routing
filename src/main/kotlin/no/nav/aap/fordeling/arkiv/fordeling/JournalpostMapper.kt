@@ -18,6 +18,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Journal
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Bruker
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.DokumentInfo
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Tilleggsopplysning
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.person.PDLClient
@@ -40,8 +41,13 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
                 avsenderMottaker?.id.fnr(avsenderMottaker?.idType, "'avsenderMottaker for $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
-                dokumenter.toDomain())
+                dokumenter.toDomain(),
+                tilleggsopplysninger.mapToSet { Tilleggsopplysning(it.nokkel, it.verdi) })
         }
+
+    private inline fun <T, R> Iterable<T>.mapToSet(transform : (T) -> R) : Set<R> {
+        return mapTo(HashSet(), transform)
+    }
 
     private fun JournalStatusDTO.toDomain() =
         when (this) {

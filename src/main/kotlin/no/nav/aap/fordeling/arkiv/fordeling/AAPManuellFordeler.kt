@@ -38,7 +38,7 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
 
     private fun opprettJournalføringsOppgave(jp : Journalpost, enhet : NAVEnhet) =
         with(jp) {
-            opprettJournalføring(this, enhet)
+            // opprettJournalføring(this, enhet)
             FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, id)
         }
 
@@ -58,9 +58,8 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
 
     protected fun opprettFordeling(jp : Journalpost) {
         log.info("Oppretter fordelingsoppgave for ${jp.id}")
-        oppgave.opprettFordelingOppgave(jp).also {
-            log.info("Opprettet fordelingsoppgave for ${jp.id}")
-        }
+        // oppgave.opprettFordelingOppgave(jp)
+        log.info("Opprettet fordelingsoppgave for ${jp.id}")
     }
 
     protected fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) {

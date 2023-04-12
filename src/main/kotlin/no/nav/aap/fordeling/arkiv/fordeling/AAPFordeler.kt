@@ -52,7 +52,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
     private fun fordelSøknad(jp : Journalpost, enhet : NAVEnhet) =
         if (!arena.harAktivSak(jp.fnr)) {
             log.info("Arena har IKKE aktiv sak, oppretter oppgave i Arena, 0ppdaterer og ferdigstiller journalpost ${jp.id}")
-            opprettArenaOppgave(jp, enhet)
+            // opprettArenaOppgaveOgFerdigstill(jp, enhet)
             FordelingResultat(AUTOMATISK, "Vellykket fordeling av ${jp.hovedDokumentBrevkode}", jp.hovedDokumentBrevkode, jp.id)
         }
         else {
@@ -60,7 +60,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
             manuell.fordel(jp, enhet)
         }
 
-    protected fun opprettArenaOppgave(jp : Journalpost, enhet : NAVEnhet) {
+    protected fun opprettArenaOppgaveOgFerdigstill(jp : Journalpost, enhet : NAVEnhet) {
         log.info("Oppretter Arena oppgave for journalpost ${jp.id}")
         arena.opprettOppgave(jp, enhet).run {
             arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
@@ -79,7 +79,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
 
     protected fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) {
         log.info("Oppdaterer og ferdigstiller ettersending for journalpost ${jp.id}")
-        arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
+        //    arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
         log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.id}")
     }
 

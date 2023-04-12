@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.api.felles.SkjemaType.MELDEKORT
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat
@@ -46,7 +47,7 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
 
-    fun erMeldekort() = tittel?.contains("Meldekort", true) ?: false
+    fun erMeldekort() = hovedDokumentBrevkode == MELDEKORT.kode || tittel?.contains("Meldekort", true) ?: false
 
     fun harOriginal() = dokumenter.any { it.harOriginal() }
 

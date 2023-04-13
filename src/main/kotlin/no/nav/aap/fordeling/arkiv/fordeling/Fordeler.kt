@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 
 interface Fordeler {
@@ -26,11 +25,6 @@ interface Fordeler {
             INGEN_JOURNALPOST,
             DIREKTE_MANUELL,
             RACE
-        }
-
-        companion object {
-
-            val INTET_RESULTAT = FordelingResultat(INGEN, "Ingen fordeling utført", "Ingen brevkode")
         }
     }
 }

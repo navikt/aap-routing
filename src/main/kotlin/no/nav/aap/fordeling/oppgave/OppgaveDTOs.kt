@@ -32,7 +32,7 @@ data class OpprettOppgaveData(
     val tema : String,
     val behandlingstype : String? = null,
     val prioritet : String = NORMAL_PRIORITET,
-    val fristFerdigstillelse : LocalDate = frist(),
+    val fristFerdigstillelse : LocalDate = frist,
     val aktivDato : LocalDate = LocalDate.now(),
     val opprettetAvEnhetsnr : String = AUTO_ENHET) {
 
@@ -42,7 +42,7 @@ data class OpprettOppgaveData(
         private const val SISTE_ARBEIDSTIME = 12
 
         private fun Int.dagerTilFrist() = if (this < SISTE_ARBEIDSTIME) 1 else 2
-        private fun frist() =
+        private val frist =
             with(now()) {
                 addWorkingDaysToDate(Date.from(toLocalDate().atStartOfDay(systemDefault()).toInstant()),
                     hour.dagerTilFrist()).toInstant()

@@ -12,6 +12,7 @@ import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.response
@@ -38,24 +39,26 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
             null
         }
 
-    fun opprettArenaOppgave(data : ArenaOpprettOppgaveData, journalpostId : String) =
+    fun opprettArenaOppgave(jp : Journalpost, enhetNr : String) =
         if (cf.isEnabled) {
             webClient.post()
                 .uri(cf::oppgaveUri)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .bodyValue(data)
+                .bodyValue(jp.opprettArenaOppgaveData(enhetNr))
                 .exchangeToMono { it.response<ArenaOpprettetOppgave>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppgavePath))
-                .doOnSuccess { log.trace("Arena opprettet oppgave for journalpost {} OK. Respons {}", journalpostId, it) }
+                .doOnSuccess { log.trace("Arena opprettet oppgave for journalpost {} OK. Respons {}", jp.id, it) }
                 .doOnError { t -> log.warn("Arena opprett oppgave feilet  (${t.message})", t) }
-                .block() ?: throw IrrecoverableIntegrationException("Null respons ved opprettelse av oppgave for journalpost $journalpostId")
+                .block() ?: throw IrrecoverableIntegrationException("Null respons ved opprettelse av oppgave for journalpost ${jp.id}")
         }
         else {
             EMPTY.also {
-                log.info("Opprettet IKKE arena oppgave for journalpost $journalpostId, set arena.enabled=true for å aktivere")
+                log.info("Opprettet IKKE arena oppgave for journalpost ${jp.id}, set arena.enabled=true for å aktivere")
             }
         }
+
+    private fun Journalpost.opprettArenaOppgaveData(enhetNr : String) = ArenaOpprettOppgaveData(fnr, enhetNr, hovedDokumentTittel, vedleggTitler)
 
     override fun toString() = "ArenaWebClientAdapter(cf=$cf), ${super.toString()})"
 }

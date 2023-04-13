@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
@@ -89,5 +89,5 @@ class TestController(
     fun fnr(@RequestParam aktørId : AktørId) = pdlAdapter.fnr(aktørId)
 
     @PostMapping("opprettarenaoppgave")
-    fun arenaOpprettOppgave(@RequestBody data : ArenaOpprettOppgaveData) = arenaAdapter.opprettArenaOppgave(data, "666")
+    fun arenaOpprettOppgave(@RequestBody jp : Journalpost) = arenaAdapter.opprettArenaOppgave(jp, "666")
 }

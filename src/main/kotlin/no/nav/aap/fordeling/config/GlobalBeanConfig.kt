@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.config.MeterFilter.replaceTagValues
+import io.micrometer.observation.ObservationRegistry
+import io.micrometer.observation.aop.ObservedAspect
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.TRACE
 import io.netty.handler.timeout.WriteTimeoutHandler
@@ -58,6 +60,9 @@ import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPro
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+    @Bean
+    fun observedAspect(reg : ObservationRegistry) = ObservedAspect(reg)
 
     @Bean
     fun startupInfoContributor(ctx : ApplicationContext) = StartupInfoContributor(ctx)

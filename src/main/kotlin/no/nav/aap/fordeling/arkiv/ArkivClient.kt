@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv
 
+import io.micrometer.observation.annotation.Observed
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
@@ -11,6 +12,7 @@ import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 
 @Component
+@Observed
 class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val safdok : SAFWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)

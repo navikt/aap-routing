@@ -43,7 +43,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 avsenderMottaker?.id.fnr(avsenderMottaker?.idType, "'avsenderMottaker for $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
                 dokumenter.toDomain(),
-                tilleggsopplysninger.mapToSet { (nokkel, verdi) -> Tilleggsopplysning(nokkel, verdi) })
+                tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) })
         }
 
     private fun JournalStatusDTO.toDomain() =
@@ -80,10 +80,8 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
         fun Bruker.toDTO() = BrukerDTO(fnr.fnr, FNR)
 
         fun Set<DokumentInfoDTO>.toDomain() =
-            map { (dokumentInfoId, tittel, brevkode, dokumentVarianter) ->
-                DokumentInfo(dokumentInfoId,
-                    tittel,
-                    brevkode, dokumentVarianter.map { it.variantFormat })
+            map { (id, tittel, kode, varianter) ->
+                DokumentInfo(id, tittel, kode, varianter.map { it.variantFormat })
             }.toSortedSet(compareBy(DokumentInfo::id))
     }
 }

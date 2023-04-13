@@ -44,6 +44,7 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     @JsonIgnore
     val vedleggTitler = dokumenter.drop(1).mapNotNull { it.tittel }
 
+    @JsonIgnore
     val erMeldekort = hovedDokumentBrevkode == MELDEKORT.kode || tittel?.contains("Meldekort", true) ?: false
 
     fun metrikker(type : FordelingType, topic : String) =

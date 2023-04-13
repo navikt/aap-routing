@@ -17,6 +17,7 @@ spec:
                 -   application: skjermede-personer-pip
                     namespace: nom
             external:
+                -   host: unleash.nais.io
                 -   host: nav-it.slack.com
                 -   host: aap-fss-proxy.{{env}}-fss-pub.nais.io
                 -   host: pdl-api.{{env}}-fss-pub.nais.io

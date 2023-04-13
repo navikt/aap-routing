@@ -21,9 +21,7 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
             with(jp) {
                 if (oppgave.harOppgave(id)) {
                     log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.id}")
-                    FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny",
-                        hovedDokumentBrevkode,
-                        id)
+                    FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, id)
                 }
                 else {
                     runCatching {

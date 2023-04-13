@@ -1,7 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Companion.INTET_RESULTAT
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 
@@ -14,11 +13,6 @@ interface Fordeler {
     companion object {
 
         val FIKTIVTFNR = Fødselsnummer("19897599387")  // Fiktivt i tilfelle du lurte
-
-        val INGEN_FORDELER = object : Fordeler {
-            override fun fordel(jp : Journalpost, enhet : NAVEnhet?) = INTET_RESULTAT
-            override fun fordelManuelt(jp : Journalpost, enhet : NAVEnhet?) = INTET_RESULTAT
-        }
     }
 
     data class FordelingResultat(val fordelingstype : FordelingType, val msg : String, val brevkode : String, val journalpostId : String = "0") {

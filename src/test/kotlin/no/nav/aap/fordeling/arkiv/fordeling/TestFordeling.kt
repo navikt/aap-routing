@@ -40,7 +40,10 @@ class TestFordeling {
 
     @BeforeAll
     fun beforeAll() {
-        fordeler = AAPFordeler(arena, arkiv, AAPManuellFordeler(oppgave), DefaultUnleash(UnleashConfig.builder().build()))
+        fordeler = AAPFordeler(arena,
+            arkiv,
+            AAPManuellFordeler(oppgave),
+            DefaultUnleash(UnleashConfig.builder().appName("routing").unleashAPI("https://unleash.nais.io/api").build()))
     }
 
     @BeforeEach

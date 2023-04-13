@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import io.getunleash.Unleash
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
@@ -12,7 +11,7 @@ import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 
 @Component
-class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : AAPManuellFordeler, private val unleash : Unleash) :
+class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : AAPManuellFordeler) :
     Fordeler {
 
     private val log = getLogger(AAPFordeler::class.java)
@@ -21,7 +20,6 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
 
     override fun fordel(jp : Journalpost, enhet : NAVEnhet?) =
         enhet?.let { e ->
-            log.info("Unleash " + unleash.isEnabled("aap-prod-routing"))
             runCatching {
                 when (jp.hovedDokumentBrevkode) {
 

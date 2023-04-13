@@ -36,6 +36,9 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
     val hovedDokument = dokumenter.first()
 
     @JsonIgnore
+    val hovedDokumentId = hovedDokument.id
+
+    @JsonIgnore
     val hovedDokumentBrevkode = hovedDokument.brevkode ?: "Ukjent brevkode"
 
     @JsonIgnore
@@ -46,6 +49,8 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
 
     @JsonIgnore
     val erMeldekort = hovedDokumentBrevkode == MELDEKORT.kode || tittel?.contains("Meldekort", true) ?: false
+
+    val versjon = tilleggsopplysninger.find { it.nokkel == "versjon" }?.verdi
 
     fun metrikker(type : FordelingType, topic : String) =
         Metrikker.inc(FORDELINGTS, listOf(

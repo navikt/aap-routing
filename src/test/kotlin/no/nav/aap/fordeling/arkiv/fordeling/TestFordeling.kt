@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import io.getunleash.DefaultUnleash
-import io.getunleash.util.UnleashConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -40,10 +38,7 @@ class TestFordeling {
 
     @BeforeAll
     fun beforeAll() {
-        fordeler = AAPFordeler(arena,
-            arkiv,
-            AAPManuellFordeler(oppgave),
-            DefaultUnleash(UnleashConfig.builder().appName("routing").unleashAPI("https://unleash.nais.io/api").build()))
+        fordeler = AAPFordeler(arena, arkiv, AAPManuellFordeler(oppgave))
     }
 
     @BeforeEach

@@ -43,7 +43,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 avsenderMottaker?.id.fnr(avsenderMottaker?.idType, "'avsenderMottaker for $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
                 dokumenter.toDomain(),
-                tilleggsopplysninger.mapToSet { Tilleggsopplysning(it.nokkel, it.verdi) })
+                tilleggsopplysninger.mapToSet { (nokkel, verdi) -> Tilleggsopplysning(nokkel, verdi) })
         }
 
     private fun JournalStatusDTO.toDomain() =

@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.egenansatt
 
-import io.micrometer.context.ContextRegistry
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +15,6 @@ import no.nav.aap.fordeling.utils.MockWebServerExtensions.expect
 import no.nav.aap.util.AccessorUtil
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.MDCUtil
-import no.nav.aap.util.RequestAttributesAccessor
 
 class EgenAnsattRetryTests {
 
@@ -28,7 +26,6 @@ class EgenAnsattRetryTests {
     init {
         AccessorUtil.init()
         MDCUtil.callId()
-        ContextRegistry.getInstance().registerThreadLocalAccessor(RequestAttributesAccessor())
     }
 
     @BeforeEach

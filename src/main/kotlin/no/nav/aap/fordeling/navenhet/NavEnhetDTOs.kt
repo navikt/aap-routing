@@ -9,7 +9,7 @@ data class EnhetsKriteria(val geografiskOmraade : String?, val skjermet : Boolea
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NAVEnhet(val enhetNr : String) {
 
-    fun untatt() = enhetNr in UNTATTE_ENHETER
+    val untatt = enhetNr in UNTATTE_ENHETER
 
     companion object {
 

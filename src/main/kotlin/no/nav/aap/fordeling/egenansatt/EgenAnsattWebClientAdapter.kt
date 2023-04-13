@@ -26,7 +26,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, v
                 .exchangeToMono { it.response<Boolean>(log) }
                 .retryWhen(cf.retrySpec(log, cf.path))
                 .doOnSuccess { log.trace("Egen ansatt oppslag OK. Respons $it") }
-                .doOnError { t -> log.warn("Egen ansatt oppslag feilet", t) }
+                .doOnError { log.warn("Egen ansatt oppslag feilet", it) }
                 .contextCapture()
                 .block() ?: throw IrrecoverableIntegrationException("Null respons fra egen ansatt")
         }

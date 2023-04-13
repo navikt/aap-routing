@@ -24,7 +24,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .exchangeToMono { it.response<List<Map<String, String>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag mot NORG2 OK for kriteria $kriterium.") }
-        .doOnError { t -> log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", t) }
+        .doOnError { log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", it) }
         .contextCapture()
         .block()
         ?.map { NAVEnhet(it["enhetNr"]!!) }
@@ -36,7 +36,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .exchangeToMono { it.response<List<Map<String, Any>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
-        .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
+        .doOnError { log.warn("Aktive enheter oppslag feilet", it) }
         .contextCapture()
         .block()?.map { NAVEnhet("${it["enhetNr"]}") }
         ?.filterNot(NAVEnhet::untatt)

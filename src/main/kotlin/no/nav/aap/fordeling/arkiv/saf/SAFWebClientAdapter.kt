@@ -23,7 +23,7 @@ class SAFWebClientAdapter(@Qualifier(SAFDOK) webClient : WebClient, private val 
             .accept(APPLICATION_JSON)
             .exchangeToMono { it.response<ByteArray>(log) }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
-            .doOnError { t -> log.warn("Arkivoppslag feilet for  $id/$dokumentId/${ORIGINAL.name}", t) }
+            .doOnError { log.warn("Arkivoppslag feilet for  $id/$dokumentId/${ORIGINAL.name}", it) }
             .doOnSuccess { log.info("Arkivoppslag $id/$dokumentId/${ORIGINAL.name} returnerte ${it.size} bytes") }
             .contextCapture()
             .block()

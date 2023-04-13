@@ -30,7 +30,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
                 .exchangeToMono { it.response<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.nyesteSakPath))
                 .doOnSuccess { log.trace("Oppslag av nyeste oppgave fra Arena OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppslag av nyeste oppgave fra Arena feilet (${t.message})", t) }
+                .doOnError { log.warn("Oppslag av nyeste oppgave fra Arena feilet (${it.message})", it) }
                 .contextCapture()
                 .block()
         }
@@ -49,7 +49,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
                 .exchangeToMono { it.response<ArenaOpprettetOppgave>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppgavePath))
                 .doOnSuccess { log.trace("Arena opprettet oppgave for journalpost {} OK. Respons {}", jp.id, it) }
-                .doOnError { t -> log.warn("Arena opprett oppgave feilet  (${t.message})", t) }
+                .doOnError { log.warn("Arena opprett oppgave feilet  (${it.message})", it) }
                 .block() ?: throw IrrecoverableIntegrationException("Null respons ved opprettelse av oppgave for journalpost ${jp.id}")
         }
         else {

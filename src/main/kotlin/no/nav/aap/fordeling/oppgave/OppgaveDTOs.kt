@@ -6,7 +6,6 @@ import java.time.LocalDateTime.now
 import java.time.ZoneId.systemDefault
 import java.util.Date
 import no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTO_ENHET
 
 object OppgaveDTOs {
@@ -16,9 +15,6 @@ object OppgaveDTOs {
         data class Oppgave(val id : Long)
     }
 }
-
-fun Journalpost.opprettOppgaveData(oppgaveType : OppgaveType, tema : String, enhetNr : String? = null) =
-    OpprettOppgaveData(fnr.fnr, id, behandlingstema, enhetNr, tittel, oppgaveType.verdi, tema.uppercase())
 
 enum class OppgaveType(val verdi : String) { JOURNALFØRINGSOPPGAVE("JFR"), FORDELINGSOPPGAVE("FDR") }
 

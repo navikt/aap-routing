@@ -5,6 +5,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons
 import no.nav.aap.rest.AbstractWebClientAdapter
@@ -34,23 +35,26 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
             false
         }
 
-    fun opprettOppgave(data : OpprettOppgaveData) =
+    fun opprettOppgave(jp : Journalpost, oppgaveType : OppgaveType, enhetNr : String? = null) =
         if (cf.isEnabled) {
             webClient.post()
                 .uri(cf::opprettOppgaveUri)
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .bodyValue(data)
+                .bodyValue(jp.opprettOppgaveData(oppgaveType, enhetNr))
                 .exchangeToMono { it.response<Any>(log) }
                 .retryWhen(cf.retrySpec(log, object {}.javaClass.enclosingMethod.name.lowercase()))
-                .doOnSuccess { log.trace("Opprett oppgave fra {} OK. Respons {}", data, it) }
-                .doOnError { log.warn("Opprett oppgave fra $data feilet (${it.message})", it) }
+                .doOnSuccess { log.trace("Opprett oppgave fra {} OK. Respons {}", oppgaveType, it) }
+                .doOnError { log.warn("Opprett oppgave fra $oppgaveType feilet (${it.message})", it) }
                 .contextCapture()
-                .block() ?: throw IrrecoverableIntegrationException("Null respons fra opprett oppgave fra $data")
+                .block() ?: throw IrrecoverableIntegrationException("Null respons fra opprett oppgave fra $oppgaveType")
         }
         else {
-            log.info("Oppretter IKKE oppgave for data $data")
+            log.info("Oppretter IKKE oppgave for data $oppgaveType")
         }
+
+    private fun Journalpost.opprettOppgaveData(oppgaveType : OppgaveType, enhetNr : String?) =
+        OpprettOppgaveData(fnr.fnr, id, behandlingstema, enhetNr, tittel, oppgaveType.verdi, tema.uppercase())
 
     override fun toString() = "OppgaveWebClientAdapter(cf=$cf), ${super.toString()})"
 }

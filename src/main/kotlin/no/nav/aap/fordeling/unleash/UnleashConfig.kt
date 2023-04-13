@@ -14,7 +14,7 @@ import no.nav.boot.conditionals.Cluster.Companion.currentCluster
 class UnleashConfig {
 
     @Bean
-    fun unleashConfig(@Value("\${unleash.endpoint:https://unleash.nais.io/api/}") endpoint : URI) : UnleashConfig {
+    fun unleashCfg(@Value("\${unleash.endpoint:https://unleash.nais.io/api/}") endpoint : URI) : UnleashConfig {
         return UnleashConfig.builder()
             .appName("aap-routing")
             .unleashAPI(endpoint)
@@ -22,7 +22,7 @@ class UnleashConfig {
     }
 
     @Bean
-    fun unleash(cfg : UnleashConfig) = DefaultUnleash(cfg, ByClusterStrategy())
+    fun defaultUnleash(cfg : UnleashConfig) = DefaultUnleash(cfg, ByClusterStrategy())
 }
 
 private class ByClusterStrategy : Strategy {

@@ -20,6 +20,7 @@ import org.springframework.boot.actuate.endpoint.SanitizingFunction
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -40,6 +41,7 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.SAMTALE_TITTEL
 import no.nav.aap.fordeling.util.MetrikkKonstanter.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.StartupInfoContributor
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.response
 import no.nav.boot.conditionals.ConditionalOnNotProd
@@ -56,6 +58,9 @@ import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPro
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+    @Bean
+    fun startupInfoContributor(ctx : ApplicationContext) = StartupInfoContributor(ctx)
 
     @Bean
     fun meterRegistryCustomizer() : MeterRegistryCustomizer<MeterRegistry> = MeterRegistryCustomizer { reg ->

@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import io.getunleash.DefaultUnleash
+import io.getunleash.util.UnleashConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +40,7 @@ class TestFordeling {
 
     @BeforeAll
     fun beforeAll() {
-        fordeler = AAPFordeler(arena, arkiv, AAPManuellFordeler(oppgave))
+        fordeler = AAPFordeler(arena, arkiv, AAPManuellFordeler(oppgave), DefaultUnleash(UnleashConfig.builder().build()))
     }
 
     @BeforeEach
@@ -89,7 +91,7 @@ class TestFordeling {
         verifyNoMoreInteractions(oppgave)
         inOrder(arena, arkiv, oppgave)
     }
-    
+
     @Test
     @DisplayName("Manuell fordeling oppretter IKKE journalføringsoppgave når det allerede finnes en")
     fun journalføringsoppgaveFinnes() {

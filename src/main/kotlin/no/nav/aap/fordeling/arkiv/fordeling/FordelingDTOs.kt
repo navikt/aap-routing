@@ -25,10 +25,8 @@ object FordelingDTOs {
         }
 
         data class TilleggsopplysningDTO(val nokkel : String, val verdi : String)
-        enum class JournalStatusDTO { MOTTATT, JOURNALFOERT,
-
-            @JsonEnumDefaultValue
-            UKJENT
+        enum class JournalStatusDTO { MOTTATT, JOURNALFOERT, @JsonEnumDefaultValue
+        UKJENT
         }
 
         data class OppdateringDataDTO(

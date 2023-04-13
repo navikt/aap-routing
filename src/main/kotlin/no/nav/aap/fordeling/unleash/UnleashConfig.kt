@@ -31,8 +31,5 @@ private class ByClusterStrategy : Strategy {
 
     override fun getName() = "byCluster"
 
-    override fun isEnabled(parameters : Map<String, String>) : Boolean {
-        log.info("Parameters $parameters")
-        return currentCluster.name.equals(parameters["cluster"], ignoreCase = true)
-    }
+    override fun isEnabled(parameters : Map<String, String>) = currentCluster.name.equals(parameters["cluster"], ignoreCase = true)
 }

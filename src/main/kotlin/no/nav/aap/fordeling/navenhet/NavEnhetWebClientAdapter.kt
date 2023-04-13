@@ -37,6 +37,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { t -> log.warn("Aktive enheter oppslag feilet", t) }
+        .contextCapture()
         .block()?.map { NAVEnhet("${it["enhetNr"]}") }
         ?.filterNot(NAVEnhet::untatt)
         ?: throw IrrecoverableIntegrationException("Kunne ikke hente aktive enheter")

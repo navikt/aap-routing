@@ -21,8 +21,7 @@ class SAFGraphQLAdapter(@Qualifier(SAF) private val graphQL : GraphQLWebClient, 
             mapper.tilJournalpost(it)
         }
 
-    fun hentJournalpostRAW(journalpostId : String) =
-        query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())
+    fun hentJournalpostRAW(journalpostId : String) = query<JournalpostDTO>(graphQL, JOURNALPOST_QUERY, journalpostId.asIdent())
 
     override fun toString() = "SAFGraphQLAdapter(graphQL=$graphQL, mapper=$mapper, ${super.toString()})"
 

@@ -30,7 +30,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
                 ?: throw IrrecoverableIntegrationException("Null respons fra opslag oppgave $journalpostId")
         }
         else {
-            log.info("Slår IKKE opp oppgave ")
+            log.info("Slår IKKE opp oppgave")
             false
         }
 

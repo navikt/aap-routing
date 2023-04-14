@@ -17,10 +17,11 @@ abstract class BootAbstractGraphQLAdapter(client : WebClient, cfg : AbstractRest
             graphQL
                 .document(ClassPathResource(query).getContentAsString(Charset.defaultCharset()))
                 .variables(args)
-                .execute()
+                .retrieve("hentPerson")
+                .toEntity(T::class.java)
                 .contextCapture()
                 .block()
-                ?.toEntity(T::class.java).also {
+                ?.also {
                     log.trace("Slo opp {} {}", T::class.java.simpleName, it)
                 }
         }.getOrElse {

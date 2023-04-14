@@ -8,6 +8,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.Fordeling
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster.Companion.isProd
 
 @Component
 class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler {
@@ -55,16 +56,26 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
         }
 
     protected fun opprettFordeling(jp : Journalpost) {
-        log.info("Oppretter fordelingsoppgave for ${jp.id}")
-        oppgave.opprettFordelingOppgave(jp).also {
-            log.info("Opprettet fordelingsoppgave for ${jp.id}")
+        if (isProd()) {
+            log.info("Ingen opprettelse av fordelingsoppgave i prod foreløpig")
+        }
+        else {
+            log.info("Oppretter fordelingsoppgave for ${jp.id}")
+            oppgave.opprettFordelingOppgave(jp).also {
+                log.info("Opprettet fordelingsoppgave for ${jp.id}")
+            }
         }
     }
 
     protected fun opprettJournalføring(jp : Journalpost, enhet : NAVEnhet) {
-        log.info("Oppretter en journalføringsoppgave for journalpost ${jp.id}")
-        oppgave.opprettJournalføringOppgave(jp, enhet).also {
-            log.info("Opprettet journalføringsoppgave for ${jp.id}")
+        if (isProd()) {
+            log.info("Ingen opprettelse av journalføringsoppgave i prod foreløpig")
+        }
+        else {
+            log.info("Oppretter en journalføringsoppgave for journalpost ${jp.id}")
+            oppgave.opprettJournalføringOppgave(jp, enhet).also {
+                log.info("Opprettet journalføringsoppgave for ${jp.id}")
+            }
         }
     }
 

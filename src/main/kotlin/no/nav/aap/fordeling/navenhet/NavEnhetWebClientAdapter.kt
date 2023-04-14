@@ -35,7 +35,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .accept(APPLICATION_JSON)
         .exchangeToMono { it.response<List<Map<String, Any>>>(log) }
         .retryWhen(cf.retrySpec(log, cf.aktive))
-        .doOnSuccess { log.trace("Aktive enheter oppslag  NORG2 OK. Respons med ${it.size} innslag") }
+        .doOnSuccess { log.trace("Aktive enheter oppslag NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { log.warn("Aktive enheter oppslag feilet", it) }
         .contextCapture()
         .block()?.map { NAVEnhet("${it["enhetNr"]}") }

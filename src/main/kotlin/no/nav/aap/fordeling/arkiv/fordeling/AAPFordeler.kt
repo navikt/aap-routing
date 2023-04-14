@@ -9,6 +9,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.boot.conditionals.Cluster.Companion.isProd
 
 @Component
 class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClient, protected val manuell : AAPManuellFordeler) :
@@ -62,11 +63,16 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
         }
 
     protected fun opprettArenaOppgaveOgFerdigstill(jp : Journalpost, enhet : NAVEnhet) {
-        log.info("Oppretter Arena oppgave for journalpost ${jp.id}")
-        arena.opprettOppgave(jp, enhet).run {
-            arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
+        if (isProd()) {
+            log.info("Oppretter ingen Arena oppgave for journalpost ${jp.id} i prod foreløpig")
         }
-        log.info("Opprettet Arena oppgave for journalpost ${jp.id}")
+        else {
+            log.info("Oppretter Arena oppgave for journalpost ${jp.id}")
+            arena.opprettOppgave(jp, enhet).run {
+                arkiv.oppdaterOgFerdigstillJournalpost(jp, arenaSakId)
+            }
+            log.info("Opprettet Arena oppgave for journalpost ${jp.id}")
+        }
     }
 
     private fun fordelEttersending(jp : Journalpost, enhet : NAVEnhet) =
@@ -79,9 +85,14 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
         }
 
     protected fun ferdigstillEttersending(jp : Journalpost, nyesteSak : String) {
-        log.info("Oppdaterer og ferdigstiller ettersending for journalpost ${jp.id}")
-        arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
-        log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.id}")
+        if (isProd()) {
+            log.info("Ingen Oppdaterting og ferdigstilling av ettersending for journalpost ${jp.id} i prod")
+        }
+        else {
+            log.info("Oppdaterer og ferdigstiller ettersending for journalpost ${jp.id}")
+            arkiv.oppdaterOgFerdigstillJournalpost(jp, nyesteSak)
+            log.info("Oppdaterert og ferdigstilt ettersending for journalpost ${jp.id}")
+        }
     }
 
     override fun toString() = "AAPFordeler(arena=$arena, arkiv=$arkiv,manuelle=$manuell)"

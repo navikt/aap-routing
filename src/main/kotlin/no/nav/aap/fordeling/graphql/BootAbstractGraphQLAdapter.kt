@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.graphql
 
-import java.nio.charset.Charset.defaultCharset
-import org.springframework.core.io.ClassPathResource
 import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN
@@ -15,12 +13,14 @@ abstract class BootAbstractGraphQLAdapter(client : WebClient, cfg : AbstractRest
     protected inline fun <reified T> query(graphQL : HttpGraphQlClient, query : String, args : Map<String, String>, info : String? = null) =
         runCatching {
             graphQL
-                .document(ClassPathResource(query).getContentAsString(defaultCharset()))
+                .documentName(query)
                 .variables(args)
-                .retrieve("hentPerson")
-                .toEntity(T::class.java).also {
+                .execute()
+                .contextCapture()
+                .block()
+                ?.toEntity(T::class.java).also {
                     log.trace("Slo opp {} {}", T::class.java.simpleName, it)
-                }.block()
+                }
         }.getOrElse {
             log.warn("Query $query feilet. ${info?.let { " ($it)" } ?: ""}", it)
             handler.handle(it, query)

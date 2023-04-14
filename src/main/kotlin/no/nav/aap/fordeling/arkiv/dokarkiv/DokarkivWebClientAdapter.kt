@@ -56,7 +56,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .uri { cf.ferdigstillUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
-                .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET)
+                .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET.toDTO())
                 .exchangeToMono { it.response<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }

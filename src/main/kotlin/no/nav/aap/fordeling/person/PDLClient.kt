@@ -6,7 +6,7 @@ import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 
 @Component
-@Observed
+@Observed(name = "PDL")
 class PDLClient(private val a : PDLWebClientAdapter) {
 
     fun geoTilknytning(fnr : Fødselsnummer) = a.geoTilknytning(fnr)

@@ -9,7 +9,7 @@ import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 
 @Component
-@Observed
+@Observed(name = "Arkiv")
 class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val safdok : SAFWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     val log = LoggerUtil.getLogger(ArkivClient::class.java)

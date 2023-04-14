@@ -113,7 +113,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
     private fun fordelFeilet(hendelse : JournalfoeringHendelseRecord, antall : Int?, topic : String, t : Throwable) : Nothing =
         with("Fordeling av journalpost ${hendelse.journalpostId} feilet for ${antall?.let { "$it." } ?: "1."} gang på topic $topic") {
             log.warn("$this (${t.javaClass.simpleName})", t)
-            slack.feil("$this. (${t.message})", DEV_GCP)
+            // slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
         }
 

@@ -39,14 +39,14 @@ class GraphQLRetryListener(private val registry : RetryRegistry, private val sla
                 onIgnoredError {
                     with("Ingen retry for ${it.lastThrowable.javaClass.name}  for '${it.name.uppercase()}'") {
                         log.warn(this, it.lastThrowable)
-                        slacker.feil(this, DEV_GCP)
+                        // slacker.feil(this, DEV_GCP)
                     }
                 }
 
                 onRetry {
                     with("Gjør retry for ${it.numberOfRetryAttempts}. gang pga. ${it.lastThrowable.javaClass.name} for '${it.name.uppercase()}'") {
                         log.warn(this, it.lastThrowable)
-                        slacker.feil(this, DEV_GCP)
+                        //   slacker.feil(this, DEV_GCP)
                     }
                 }
             }

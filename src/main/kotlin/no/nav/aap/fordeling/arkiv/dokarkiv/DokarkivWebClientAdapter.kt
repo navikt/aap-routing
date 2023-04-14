@@ -14,7 +14,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Oppdate
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDTO
-import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTO_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.response
@@ -56,7 +56,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .uri { cf.ferdigstillUri(it, journalpostId) }
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
-                .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET)
+                .bodyValue(AUTO_ENHET)
                 .exchangeToMono { it.response<String>(log) }
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }

@@ -7,7 +7,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 
 @Component
 @Observed(contextualName = "PDL")
-class PDLClient(private val a : PDLWebClientAdapter) {
+class PDLClient(private val a : PDLBootWebClientAdapter) {
 
     fun geoTilknytning(fnr : Fødselsnummer) = a.geoTilknytning(fnr)
 

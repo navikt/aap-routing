@@ -5,6 +5,7 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
@@ -34,8 +35,13 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
-    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+    fun pdlGraphQlClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         GraphQLWebClient.newInstance(client, mapper)
+
+    @Bean
+    @Qualifier(PDL)
+    fun pdlHttpGraphQlClient(@Qualifier(PDL) client : WebClient) =
+        HttpGraphQlClient.builder(client).build()
 
     @Bean
     @ConditionalOnGCP

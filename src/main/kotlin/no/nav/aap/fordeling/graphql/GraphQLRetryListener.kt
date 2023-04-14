@@ -25,7 +25,7 @@ class GraphQLRetryListener(private val registry : RetryRegistry, private val sla
                 onError {
                     with("Retry event error $it") {
                         log.warn(this, it.lastThrowable)
-                        slacker.feil(this, DEV_GCP)
+                        //  slacker.feil(this, DEV_GCP)
                     }
                 }
 

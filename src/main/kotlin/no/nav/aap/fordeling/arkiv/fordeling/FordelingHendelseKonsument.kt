@@ -117,22 +117,8 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
             throw t
         }
 
-    private fun kibanaLink() = "<${kibanaURL()}|Sjekk kibana"
-
     private fun kibanaURL() =
-
-        "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/" +
-            "?_g=(" +
-            "filters:!()," +
-            "refreshInterval:(pause:!t,value:60000)," +
-            "time:(from:now-15m,to:now))" +
-            "&_a=(" +
-            "columns:!(level,message,envclass,application,pod)," +
-            "filters:!()," +
-            "interval:auto," +
-            "query:(language:kuery," +
-            "query:%22" + MDCUtil.callId() + "%22)," +
-            "sort:!(!('@timestamp',desc)))"
+        "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(level,message,envclass,application,pod),filters:!(),interval:auto,query:(language:kuery,query:%22${MDCUtil.callId()}%22),sort:!(!('@timestamp',desc)))"
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

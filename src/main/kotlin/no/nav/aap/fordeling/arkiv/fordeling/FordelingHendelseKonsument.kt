@@ -2,7 +2,6 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import java.time.Instant.*
 import java.time.ZoneId.*
-import org.slf4j.MDC
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -107,7 +106,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr}, ${MDC.get(NAV_CALL_ID)})", DEV_GCP)
+            slack.rocket("$it (${jp.fnr}, ${kibanaURL()}", DEV_GCP)
             log.info("$it")
         }
 

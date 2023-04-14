@@ -50,18 +50,8 @@ class TestMapping {
         "sort:!(!('@timestamp',desc))" +
         ")"
 
-    val u1 = "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/" +
-        "?_g=(" +
-        "filters:!()," +
-        "refreshInterval:(pause:!t,value:60000)," +
-        "time:(from:now-15h,to:now))" +
-        "&_a=(" +
-        "columns:!(level,message,envclass,application,pod)," +
-        "filters:!()," +
-        "interval:auto," +
-        "query:(language:kuery," +
-        "query:%22" + MDCUtil.callId() + "%22)," +
-        "sort:!(!('@timestamp',desc)))"
+    val u1 =
+        "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15h,to:now))&_a=(columns:!(level,message,envclass,application,pod),filters:!(),interval:auto,query:(language:kuery,query:%22${MDCUtil.callId()}%22),sort:!(!('@timestamp',desc)))"
 
     @Test
     fun doit() {

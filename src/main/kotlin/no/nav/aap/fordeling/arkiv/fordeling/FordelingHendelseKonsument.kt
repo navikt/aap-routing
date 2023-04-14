@@ -33,6 +33,7 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.MDCUtil
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
@@ -116,6 +117,23 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
             slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
         }
+
+    private fun kibanaLink() = "<${kibanaURL()}|Sjekk kibana"
+
+    private fun kibanaURL() =
+
+        "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/" +
+            "?_g=(" +
+            "filters:!()," +
+            "refreshInterval:(pause:!t,value:60000)," +
+            "time:(from:now-15m,to:now))" +
+            "&_a=(" +
+            "columns:!(level,message,envclass,application,pod)," +
+            "filters:!()," +
+            "interval:auto," +
+            "query:(language:kuery," +
+            "query:%22" + MDCUtil.callId() + "%22)," +
+            "sort:!(!('@timestamp',desc)))"
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

@@ -10,7 +10,6 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
@@ -36,16 +35,8 @@ class TestController(
 
     private val log = getLogger(javaClass)
 
-    @PostMapping("oppdaterogferdigstilljournalpost")
-    fun oppdaterOgFerdigstillJournalpost(@RequestBody data : OppdateringDataDTO, @RequestParam journalpostId : String) =
-        arkivAdapter.oppdaterOgFerdigstillJournalpost(journalpostId, data)
-
     @GetMapping("safjournalpost")
     fun safjournalpost(@RequestParam journalpostId : String) = safAdapter.hentJournalpostRAW(journalpostId)
-
-    @PostMapping("oppdaterjournalpost")
-    fun oppdaterJournalpost(@RequestParam journalpostId : String, @RequestBody data : OppdateringDataDTO) =
-        arkivAdapter.oppdaterJournalpost(journalpostId, data)
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =

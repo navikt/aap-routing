@@ -3,10 +3,7 @@ package no.nav.aap.fordeling.arkiv
 import io.micrometer.observation.annotation.Observed
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 import no.nav.aap.util.LoggerUtil
@@ -21,10 +18,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =
-        dokarkiv.oppdaterOgFerdigstillJournalpost(jp.id, jp.oppdateringsData(sakNr))
-
-    private fun Journalpost.oppdateringsData(saksNr : String) =
-        OppdateringDataDTO(tittel, avsenderMottager?.toDTO() ?: bruker?.toDTO(), bruker?.toDTO(), SakDTO(saksNr), tema.uppercase())
+        dokarkiv.oppdaterOgFerdigstillJournalpost(jp, sakNr)
 
     override fun toString() = "ArkivClient(dokarkiv=$dokarkiv, saf=$saf)"
 }

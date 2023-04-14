@@ -9,8 +9,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
+import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO
 import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
+import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
@@ -22,29 +25,28 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
 
     private val log = LoggerUtil.getLogger(DokarkivWebClientAdapter::class.java)
 
-    fun oppdaterOgFerdigstillJournalpost(id : String, data : OppdateringDataDTO) =
-        with(id) {
-            oppdaterJournalpost(this, data)
-            ferdigstillJournalpost(this)
+    fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, saksNr : String) =
+        with(jp) {
+            oppdaterJournalpost(this, saksNr)
+            ferdigstillJournalpost(this.id)
         }
 
-    fun oppdaterJournalpost(id : String, data : OppdateringDataDTO) =
+    fun oppdaterJournalpost(jp : Journalpost, saksNr : String) =
         if (cf.isEnabled) {
             webClient.put()
-                .uri { cf.oppdaterJournlpostUri(it, id) }
+                .uri { cf.oppdaterJournlpostUri(it, jp.id) }
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .bodyValue(data)
+                .bodyValue(jp.oppdateringsData(saksNr))
                 .exchangeToMono { it.response<OppdateringResponsDTO>(log) }
                 .retryWhen(cf.retrySpec(log, cf.oppdaterPath))
-                .doOnSuccess { log.info("Oppdatering av journalpost $id fra $data OK. Respons $it") }
-                .doOnError { t -> log.warn("Oppdatering av journalpost $id fra $data feilet", t) }
+                .doOnSuccess { log.info("Oppdatering av journalpost ${jp.id} OK. Respons $it") }
                 .contextCapture()
-                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost $id")
+                .block() ?: IrrecoverableIntegrationException("Null respons fra dokarkiv ved oppdatering av journalpost ${jp.id}")
         }
         else {
             EMPTY.also {
-                log.info("Oppdaterte ikke journalpost $id, sett dokarkiv.enabled=true for  aktivere")
+                log.info("Oppdaterte ikke journalpost ${jp.id}, sett dokarkiv.enabled=true for  aktivere")
             }
         }
 
@@ -66,6 +68,9 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
             log.info("Ferdigstilte ikke journalpost $journalpostId, sett dokarkiv.enabled=true for  aktivere")
             "Ingen ferdigstiling"
         }
+
+    private fun Journalpost.oppdateringsData(saksNr : String) =
+        OppdateringDataDTO(tittel, avsenderMottager?.toDTO() ?: bruker?.toDTO(), bruker?.toDTO(), SakDTO(saksNr), tema.uppercase())
 
     override fun toString() = "DokarkivWebClientAdapter(cf=$cf, mapper=$mapper), ${super.toString()})"
 }

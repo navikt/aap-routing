@@ -2,6 +2,7 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import java.time.Instant.*
 import java.time.ZoneId.*
+import org.slf4j.MDC
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -105,7 +106,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr}, ${kibanaLink()})", DEV_GCP)
+            slack.rocket("$it (${jp.fnr}, ${MDC.get(NAV_CALL_ID)})", DEV_GCP)
             log.info("$it")
         }
 
@@ -115,34 +116,6 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
             slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
         }
-
-    private fun kibanaLink() = "<${kibanaURL()}|Sjekk kibana"
-
-    private fun kibanaURL() =
-        "https://logs.adeo.no/s/nav-logs-legacy/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(level,message,envclass,application,pod),filters:!(),index:'7304a984-dbca-4e06-bd4b-70e5c7c97f59',interval:auto,query:(language:kuery,query:%223f82ced0-e55b-4a87-a363-a8b129ff5897%22),sort:!(!('@timestamp',desc)))"
-
-    /*
-        String.format(
-            "https://logs.adeo.no/app/kibana#/discover" +
-                "?_g=(" +
-                "refreshInterval:(pause:!t,value:0)," +
-                "time:(from:'%s',to:'%s')" +
-                ")" +
-                "&_a=(" +
-                "columns:!(_source)," +
-                "index:'logstash-*'," +
-                "interval:auto," +
-                "query:(" +
-                "language:lucene," +
-                "query:'%%22%s%%22'" +
-                ")," +
-                "sort:!(!('@timestamp',desc))" +
-                ")",
-            LocalDateTime.now().minusMinutes(15).format(ISO_LOCAL_DATE_TIME),
-            LocalDateTime.now().plusMinutes(15).format(ISO_LOCAL_DATE_TIME),
-            MDC.get(NAV_CALL_ID))
-
-     */
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

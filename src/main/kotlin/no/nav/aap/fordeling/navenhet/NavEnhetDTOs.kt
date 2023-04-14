@@ -1,14 +1,15 @@
 package no.nav.aap.fordeling.navenhet
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonValue
 import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 
 data class EnhetsKriteria(val geografiskOmraade : String?, val skjermet : Boolean = false, val tema : String, val diskresjonskode : Diskresjonskode = ANY)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class NAVEnhet(val enhetNr : String) {
-
+data class NAVEnhet(@JsonValue val enhetNr : String) {
+    
     val untatt = enhetNr in UNTATTE_ENHETER
 
     companion object {

@@ -8,7 +8,7 @@ import no.nav.aap.fordeling.oppgave.OppgaveType.FORDELINGSOPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveType.JOURNALFØRINGSOPPGAVE
 
 @Component
-@Observed(name = "Oppgave")
+@Observed(contextualName = "Oppgave")
 class OppgaveClient(private val adapter : OppgaveWebClientAdapter) {
 
     fun harOppgave(journalpostId : String) = adapter.harOppgave(journalpostId)

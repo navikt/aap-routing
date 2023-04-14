@@ -7,7 +7,7 @@ import no.nav.aap.fordeling.navenhet.NavEnhetConfig.Companion.NAVENHET
 import no.nav.aap.fordeling.person.Diskresjonskode
 
 @Component
-@Observed(name = "Norg")
+@Observed(contextualName = "Norg")
 class NavEnhetClient(private val a : NavEnhetWebClientAdapter) {
 
     fun navEnhet(område : String?, skjermet : Boolean, diskresjonskode : Diskresjonskode, tema : String) =

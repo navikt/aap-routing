@@ -44,7 +44,8 @@ typealias Epoch = Long
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
-                                 private val utvelger : JournalpostDestinasjonUtvelger, private val slack : SlackOperations) {
+                                 private val utvelger : JournalpostDestinasjonUtvelger, private val slack : SlackOperations,
+                                 private val cfg : FordelingConfig) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 
@@ -99,7 +100,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     @DltHandler
     fun dlt(h : JournalfoeringHendelseRecord, @Header(ORIGINAL_TIMESTAMP) timestamp : Epoch?, @Header(EXCEPTION_STACKTRACE) trace : String?) =
-        with("Gir opp fordeling av journalpost ${h.journalpostId}, opprinnelig hendelse ble mottatt ${timestamp.asDate()}") {
+        with("Gir opp fordeling av journalpost ${h.journalpostId} etter ${cfg.topics.retries} forsøk, opprinnelig hendelse ble mottatt ${timestamp.asDate()}") {
             log.error(this)
             slack.feil(this, DEV_GCP, PROD_GCP)
         }

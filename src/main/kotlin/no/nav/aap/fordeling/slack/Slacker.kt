@@ -32,8 +32,8 @@ class Slacker(private val cfg : SlackConfig) : SlackOperations {
             }
 
             runCatching {
-                with(slack.methods(token).chatPostMessage {
-                    it.channel(kanal).text(melding + " (Cluster: ${currentCluster().name.lowercase()})")
+                with(SLACK.methods(token).chatPostMessage {
+                    it.channel(kanal).text(melding)
                 }) {
                     if (!isOk) {
                         log.warn("Klarte ikke sende melding til Slack-kanal: $kanal. Fikk respons $this")
@@ -46,8 +46,7 @@ class Slacker(private val cfg : SlackConfig) : SlackOperations {
 
     companion object {
 
-        private val cluster = currentCluster()
-        private val slack = Slack.getInstance()
+        private val SLACK = Slack.getInstance()
     }
 }
 

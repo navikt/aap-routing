@@ -19,7 +19,7 @@
         <bekk-nocommons.version>0.15.0</bekk-nocommons.version>
         <confluent.version>7.3.1</confluent.version>
         <conditionals.version>5.0.6</conditionals.version>
-        <domain.version>2.0.55</domain.version>
+        <domain.version>2.0.56</domain.version>
         <dokumenthåndtering.version>08271806</dokumenthåndtering.version>
         <graphql.version>2.0.1</graphql.version>
         <jib.version>3.3.1</jib.version>

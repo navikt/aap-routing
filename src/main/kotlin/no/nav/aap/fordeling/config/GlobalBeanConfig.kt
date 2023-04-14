@@ -18,7 +18,6 @@ import java.time.Duration.ofSeconds
 import java.util.concurrent.TimeUnit.SECONDS
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
-import org.springframework.boot.actuate.endpoint.SanitizingFunction
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
@@ -43,6 +42,7 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.SAMTALE_TITTEL
 import no.nav.aap.fordeling.util.MetrikkKonstanter.TITTEL
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.aap.util.PropertyValueSanitzer
 import no.nav.aap.util.StartupInfoContributor
 import no.nav.aap.util.TokenExtensions.bearerToken
 import no.nav.aap.util.WebClientExtensions.response
@@ -135,20 +135,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     fun configMatcher() = object : ClientConfigurationPropertiesMatcher {}
 
     @Bean
-    fun propertyKeySanitizingFunction() = SanitizingFunction {
-        with(it) {
-            if (key.contains("jwk", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK)
-            }
-            if (key.contains("private-key", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK)
-            }
-            if (key.contains("password", ignoreCase = true)) {
-                return@SanitizingFunction withValue(MASK)
-            }
-        }
-        it
-    }
+    fun propertyKeySanitizingFunction() = PropertyValueSanitzer()
 
     @Bean
     fun retryingOAuth2HttpClient(b : WebClient.Builder) = RetryingWebClientOAuth2HttpClient(b.build())

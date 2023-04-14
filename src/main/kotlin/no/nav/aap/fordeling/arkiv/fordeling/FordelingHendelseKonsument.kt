@@ -1,7 +1,9 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import java.time.Instant.*
+import java.time.LocalDateTime
 import java.time.ZoneId.*
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import org.slf4j.MDC
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -106,7 +108,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr},${MDC.get(NAV_CALL_ID)})", DEV_GCP)
+            slack.rocket("$it (${jp.fnr}, ${kibanaURL()})", DEV_GCP)
             log.info("$it")
         }
 
@@ -116,6 +118,26 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
             slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
         }
+
+    private fun kibanaURL() = String.format(
+        "https://logs.adeo.no/app/kibana#/discover" +
+            "?_g=(" +
+            "refreshInterval:(pause:!t,value:0)," +
+            "time:(from:'%s',to:'%s')" +
+            ")" +
+            "&_a=(" +
+            "columns:!(_source)," +
+            "index:'logstash-*'," +
+            "interval:auto," +
+            "query:(" +
+            "language:lucene," +
+            "query:'%%22%s%%22'" +
+            ")," +
+            "sort:!(!('@timestamp',desc))" +
+            ")",
+        LocalDateTime.now().minusMinutes(15).format(ISO_LOCAL_DATE_TIME),
+        LocalDateTime.now().plusMinutes(15).format(ISO_LOCAL_DATE_TIME),
+        MDC.get(NAV_CALL_ID))
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(systemDefault()).toLocalDateTime() }
 

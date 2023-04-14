@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.graphql
 
+import java.nio.charset.Charset
+import org.springframework.core.io.ClassPathResource
 import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN
@@ -13,7 +15,7 @@ abstract class BootAbstractGraphQLAdapter(client : WebClient, cfg : AbstractRest
     protected inline fun <reified T> query(graphQL : HttpGraphQlClient, query : String, args : Map<String, String>, info : String? = null) =
         runCatching {
             graphQL
-                .documentName(query)
+                .document(ClassPathResource(query).getContentAsString(Charset.defaultCharset()))
                 .variables(args)
                 .execute()
                 .contextCapture()

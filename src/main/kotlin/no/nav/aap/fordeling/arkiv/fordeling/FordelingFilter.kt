@@ -14,11 +14,20 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 @Component
 class FordelingFilter(private val ignorerteKanaler : List<Kanal> = HÅNDTERES_AV_ANDRE) {
 
-    fun kanFordele(h : JournalfoeringHendelseRecord) = h.kanal() !in ignorerteKanaler && h.temaNytt.lowercase() == AAP && h.status() == MOTTATT
+    fun kanFordele(hendelse : JournalfoeringHendelseRecord) =
+        with(hendelse) {
+            !fraIgnorertKanal() && erAAP() && erMottatt()
+        }
 
-    private fun JournalfoeringHendelseRecord.kanal() = Kanal.values().find { it.name == mottaksKanal } ?: UKJENT
+    private fun JournalfoeringHendelseRecord.fraIgnorertKanal() = kanal() in ignorerteKanaler
 
     companion object {
+
+        private fun JournalfoeringHendelseRecord.erMottatt() = status() == MOTTATT
+
+        private fun JournalfoeringHendelseRecord.kanal() = Kanal.values().find { it.name == mottaksKanal } ?: UKJENT
+
+        private fun JournalfoeringHendelseRecord.erAAP() = temaNytt.lowercase() == AAP
 
         fun JournalfoeringHendelseRecord.status() =
             JournalpostStatus.values().find { it.name.equals(this.journalpostStatus, ignoreCase = true) } ?: JournalpostStatus.UKJENT

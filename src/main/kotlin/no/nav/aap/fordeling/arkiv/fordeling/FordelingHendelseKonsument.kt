@@ -73,7 +73,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
             when (utvelger.destinasjon(jp, hendelse.status(), topic)) {
 
-                KELVIN -> log.warn("Fordeling til Kelvin ikke implementert")
+                KELVIN -> throw NotImplementedError("Fordeling til Kelvin ikke implementert")
 
                 INGEN_DESTINASJON -> {
                     log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")

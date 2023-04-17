@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import java.util.UUID
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.SkjemaType
 import no.nav.aap.api.felles.SkjemaType.STANDARD
@@ -34,13 +35,13 @@ object TestData {
     val DOCDTO = DokumentInfoDTO("123", STANDARD.tittel, STANDARD.kode, listOf(DokumentVariant(VariantFormat.ORIGINAL)))
     val DOCDTOS = setOf(DOCDTO)
     val JP = Journalpost("42", MOTTATT, AUTOMATISK_JOURNALFØRING_ENHET, STANDARD.tittel, AAP,
-        null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO, DOCDTOS.toDomain())
+        null, FIKTIVTFNR, Bruker(FIKTIVTFNR), AvsenderMottaker(FIKTIVTFNR), NAV_NO, UUID.randomUUID(), DOCDTOS.toDomain())
     val JPES = somSkjema(STANDARD_ETTERSENDING)
 
     val UTLAND = somSkjema(UTLAND_SØKNAD)
 
     val DTO = JournalpostDTO(STANDARD.tittel, AUTO_ENHET, "42", JournalStatusDTO.MOTTATT, AAP,
-        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, DOCDTOS)
+        null, BrukerDTO(AKTØR.id, AKTOERID), AvsenderMottakerDTO(FIKTIVTFNR.fnr, FNR), NAV_NO, DOCDTOS, UUID.randomUUID().toString())
 
     private fun somSkjema(skjema : SkjemaType) = JP.copy(dokumenter = setOf(JP.hovedDokument.copy(tittel = skjema.tittel, brevkode = skjema.kode)))
 

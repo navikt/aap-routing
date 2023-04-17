@@ -3,6 +3,7 @@ query journalpost($journalpostId: String!) {
     tittel
     journalfoerendeEnhet
     journalpostId
+        eksternReferanseId
     avsenderMottaker {
       id
       type

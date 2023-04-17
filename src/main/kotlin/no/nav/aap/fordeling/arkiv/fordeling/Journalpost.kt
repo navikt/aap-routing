@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.util.UUID
 import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.SkjemaType.MELDEKORT
@@ -24,6 +25,7 @@ typealias AvsenderMottaker = Bruker
 data class Journalpost(val id : String, val status : JournalpostStatus, val enhet : NAVEnhet?, val tittel : String?,
                        val tema : String, val behandlingstema : String?, val fnr : Fødselsnummer,
                        val bruker : Bruker?, val avsenderMottager : AvsenderMottaker?, val kanal : Kanal,
+                       val eksternReferanseId : UUID?,
                        val dokumenter : Set<DokumentInfo> = emptySet(), val tilleggsopplysninger : Set<Tilleggsopplysning> = emptySet()) {
 
     @JsonIgnore

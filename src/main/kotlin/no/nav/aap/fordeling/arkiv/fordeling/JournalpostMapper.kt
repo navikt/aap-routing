@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
+import java.util.UUID
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
@@ -42,6 +43,7 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 brukerFnr?.let { Bruker(it, pdl.diskresjonskode(it), egen.erEgenAnsatt(it)) },
                 avsenderMottaker?.id.fnr(avsenderMottaker?.idType, "'avsenderMottaker for $journalpostId'")?.let(::AvsenderMottaker),
                 kanal,
+                eksternReferanseId.toUUID(),
                 dokumenter.toDomain(),
                 tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) })
         }
@@ -53,6 +55,13 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
             else -> JournalpostStatus.UKJENT.also {
                 log.warn("Ukjent journalpoststatus $this")
             }
+        }
+
+    private fun String?.toUUID() : UUID? =
+        this?.let {
+            runCatching {
+                UUID.fromString(this)
+            }.getOrNull()
         }
 
     private fun String?.fnr(idType : IDTypeDTO?, kind : String) =

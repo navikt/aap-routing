@@ -16,15 +16,20 @@ object FordelingDTOs {
         val avsenderMottaker : AvsenderMottakerDTO?,
         val kanal : Kanal,
         val dokumenter : Set<DokumentInfoDTO>,
+        val eksternReferanseId : String?,
         val tilleggsopplysninger : Set<TilleggsopplysningDTO> = emptySet()) {
 
-        enum class Kanal { NAV_NO, EESSI, NAV_NO_CHAT, EKST_OPPS, SKAN_IM, @JsonEnumDefaultValue
-        UKJENT
+        enum class Kanal { NAV_NO, EESSI, NAV_NO_CHAT, EKST_OPPS, SKAN_IM,
+
+            @JsonEnumDefaultValue
+            UKJENT
         }
 
         data class TilleggsopplysningDTO(val nokkel : String, val verdi : String)
-        enum class JournalStatusDTO { MOTTATT, JOURNALFOERT, @JsonEnumDefaultValue
-        UKJENT
+        enum class JournalStatusDTO { MOTTATT, JOURNALFOERT,
+
+            @JsonEnumDefaultValue
+            UKJENT
         }
 
         data class OppdateringDataDTO(

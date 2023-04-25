@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.mockito.Mockito.*
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import sun.jvm.hotspot.oops.CellTypeState.value
 import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.utenEnhet

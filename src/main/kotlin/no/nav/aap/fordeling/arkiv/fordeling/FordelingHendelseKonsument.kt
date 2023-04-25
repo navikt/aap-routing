@@ -32,7 +32,7 @@ import no.nav.aap.fordeling.util.MetrikkKonstanter.FORDELINGTS
 import no.nav.aap.fordeling.util.MetrikkKonstanter.KANAL
 import no.nav.aap.util.CallIdGenerator
 import no.nav.aap.util.LoggerUtil.getLogger
-import no.nav.aap.util.MDCUtil
+import no.nav.aap.util.LoggerUtil.kibanaURL
 import no.nav.aap.util.MDCUtil.NAV_CALL_ID
 import no.nav.aap.util.MDCUtil.toMDC
 import no.nav.aap.util.Metrikker.inc
@@ -62,6 +62,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
         runCatching {
             log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}").also {
+                log.trace("Metadata {}", it.tilleggsopplysninger)
                 toMDC(NAV_CALL_ID, "${it?.eksternReferanseId}", CallIdGenerator.create())
             }
 
@@ -116,17 +117,6 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
             log.warn("$this (${t.javaClass.simpleName})", t)
             slack.feil("$this. (${t.message})", DEV_GCP)
             throw t
-        }
-
-    private fun kibanaURL() =
-        buildString {
-            append("<https://logs.adeo.no/s/nav-logs-legacy/app/discover#/")
-            append("?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),")
-            append("time:(from:now-15m,to:now))")
-            append("&_a=(columns:!(level,message,envclass,component,application),")
-            append("filters:!(),interval:auto,")
-            append("query:(language:kuery,query:%22${MDCUtil.callId()}%22),")
-            append("sort:!(!('@timestamp',desc)))|Kibana logs>")
         }
 
     private fun Epoch?.asDate() = this?.let { ofEpochMilli(it).atZone(of("Europe/Oslo")).toLocalDateTime() }

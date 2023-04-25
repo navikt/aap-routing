@@ -62,7 +62,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
         runCatching {
             log.info("Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}").also {
-                log.trace("Metadata {}", it.tilleggsopplysninger)
+                log.trace("Metadata {}", it?.tilleggsopplysninger)
                 toMDC(NAV_CALL_ID, "${it?.eksternReferanseId}", CallIdGenerator.create())
             }
 

@@ -22,6 +22,7 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Tilleggsopplysning
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.VIKAFOSSEN
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.ExtensionUtils.mapToSet
 
@@ -45,7 +46,12 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 kanal,
                 eksternReferanseId.toUUID(),
                 dokumenter.toDomain(),
-                tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) })
+                tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) }).let {
+                if (it.tilVikafossen) {
+                    it.copy(enhet = VIKAFOSSEN)
+                }
+                else it
+            }
         }
 
     private fun JournalStatusDTO.toDomain() =

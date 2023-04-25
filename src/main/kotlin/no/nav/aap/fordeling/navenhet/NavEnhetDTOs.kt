@@ -20,6 +20,7 @@ data class NAVEnhet(val enhetNr : String) {
         const val AUTO_ENHET = "9999"
         val AUTOMATISK_JOURNALFØRING_ENHET = NAVEnhet(AUTO_ENHET)
         val FORDELINGSENHET = NAVEnhet(FORDELINGKONTOR)
+        val VIKAFOSSEN = NAVEnhet("2103")
     }
 
     data class NavEnhetDTO(val journalfoerendeEnhet : String)

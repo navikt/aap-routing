@@ -54,6 +54,9 @@ data class Journalpost(val id : String, val status : JournalpostStatus, val enhe
 
     val versjon = tilleggsopplysninger.find { it.nokkel == "versjon" }?.verdi
 
+    @JsonIgnore
+    val tilVikafossen = tilleggsopplysninger.find { it.nokkel == "routing" }?.verdi.toBoolean()
+
     fun metrikker(type : FordelingType, topic : String) =
         Metrikker.inc(FORDELINGTS, listOf(
             Pair(TEMA, tema),

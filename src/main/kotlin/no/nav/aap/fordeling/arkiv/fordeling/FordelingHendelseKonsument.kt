@@ -51,11 +51,8 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
-        sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
-        exclude = [IrrecoverableIntegrationException::class],
-        dltStrategy = FAIL_ON_ERROR,
-        autoStartDltHandler = "true",
-        autoCreateTopics = "false")
+        sameIntervalTopicReuseStrategy = SINGLE_TOPIC, exclude = [IrrecoverableIntegrationException::class],
+        dltStrategy = FAIL_ON_ERROR, autoStartDltHandler = "true", autoCreateTopics = "false")
 
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
                @Header(RECEIVED_TOPIC) topic : String) {
@@ -76,22 +73,15 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
                 KELVIN -> throw NotImplementedError("Fordeling til Kelvin ikke implementert")
 
-                INGEN_DESTINASJON -> {
-                    log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
-                    return
-                }
+                INGEN_DESTINASJON -> log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
 
-                GOSYS -> {
-                    fordeler.fordelManuelt(jp, FORDELINGSENHET)
+                GOSYS -> fordeler.fordelManuelt(jp, FORDELINGSENHET).also {
                     jp.metrikker(DIREKTE_MANUELL, topic)
-                    return
+
                 }
 
-                ARENA -> {
-                    log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
-                    fordel(jp).also {
-                        jp.metrikker(it.fordelingstype, topic)
-                    }
+                ARENA -> fordel(jp).also {
+                    jp.metrikker(it.fordelingstype, topic)
                 }
             }
         }.onFailure {
@@ -108,7 +98,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr}, ${kibanaURL()}", DEV_GCP)
+            slack.rocket("$it (${jp.fnr}, ${kibanaURL("asc")}", DEV_GCP)
             log.info("$it")
         }
 

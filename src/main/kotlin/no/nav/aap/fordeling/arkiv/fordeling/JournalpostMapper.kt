@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.fordeling
 
-import java.util.UUID
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
@@ -22,8 +21,10 @@ import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.Tilleggsopplysning
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
+import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.VIKAFOSSEN
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.ExtensionUtils.mapToSet
+import no.nav.aap.util.StringExtensions.toUUID
 
 @Component
 class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsattClient) {
@@ -45,7 +46,12 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
                 kanal,
                 eksternReferanseId.toUUID(),
                 dokumenter.toDomain(),
-                tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) })
+                tilleggsopplysninger.mapToSet { (k, v) -> Tilleggsopplysning(k, v) }).let {
+                if (it.tilVikafossen) {
+                    it.copy(enhet = VIKAFOSSEN)
+                }
+                else it
+            }
         }
 
     private fun JournalStatusDTO.toDomain() =
@@ -55,13 +61,6 @@ class JournalpostMapper(private val pdl : PDLClient, private val egen : EgenAnsa
             else -> JournalpostStatus.UKJENT.also {
                 log.warn("Ukjent journalpoststatus $this")
             }
-        }
-
-    private fun String?.toUUID() : UUID? =
-        this?.let {
-            runCatching {
-                UUID.fromString(this)
-            }.getOrNull()
         }
 
     private fun String?.fnr(idType : IDTypeDTO?, kind : String) =

@@ -73,15 +73,11 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
                 KELVIN -> throw NotImplementedError("Fordeling til Kelvin ikke implementert")
 
-                INGEN_DESTINASJON -> {
-                    log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
-                    return
-                }
+                INGEN_DESTINASJON -> log.info("Ingen fordeling av journalpost ${jp.id}, forutsetninger for fordeling ikke oppfylt")
 
-                GOSYS -> {
-                    fordeler.fordelManuelt(jp, FORDELINGSENHET)
+                GOSYS -> fordeler.fordelManuelt(jp, FORDELINGSENHET).also {
                     jp.metrikker(DIREKTE_MANUELL, topic)
-                    return
+
                 }
 
                 ARENA -> {

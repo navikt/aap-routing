@@ -51,11 +51,8 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     @KafkaListener(topics = ["#{'\${fordeling.topics.main}'}"], containerFactory = FORDELING)
     @RetryableTopic(attempts = "#{'\${fordeling.topics.retries}'}", backoff = Backoff(delayExpression = "#{'\${fordeling.topics.backoff}'}"),
-        sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
-        exclude = [IrrecoverableIntegrationException::class],
-        dltStrategy = FAIL_ON_ERROR,
-        autoStartDltHandler = "true",
-        autoCreateTopics = "false")
+        sameIntervalTopicReuseStrategy = SINGLE_TOPIC, exclude = [IrrecoverableIntegrationException::class],
+        dltStrategy = FAIL_ON_ERROR, autoStartDltHandler = "true", autoCreateTopics = "false")
 
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
                @Header(RECEIVED_TOPIC) topic : String) {

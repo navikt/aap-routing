@@ -17,7 +17,7 @@ import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class PDLClientBeanConfig {
 
     @Bean

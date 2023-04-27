@@ -14,11 +14,11 @@ data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
     fun navEnhet(jp : Journalpost) =
         jp.enhet?.let {
             if (enhet.erAktiv(it, enhet.aktiveEnheter())) {
-                log.info("$enhet ER aktiv")
+                log.info("$it ER aktiv")
                 it
             }
             else {
-                log.info("$enhet er IKKE aktiv")
+                log.info("$it er IKKE aktiv")
                 enhetFor(jp)
             }
         } ?: enhetFor(jp)?.let {

@@ -14,7 +14,10 @@ interface Fordeler {
         val FIKTIVTFNR = Fødselsnummer("19897599387")  // Fiktivt i tilfelle du lurte
     }
 
-    data class FordelingResultat(val fordelingstype : FordelingType, val msg : String, val brevkode : String, val journalpostId : String = "0") {
+    data class FordelingResultat(val fordelingstype : FordelingType, val msg : String,
+                                 val brevkode : String, val journalpostId : String = "0",
+                                 val enhet : NAVEnhet? = null) {
+
         enum class FordelingType {
             AUTOMATISK,
             MANUELL_JOURNALFØRING,

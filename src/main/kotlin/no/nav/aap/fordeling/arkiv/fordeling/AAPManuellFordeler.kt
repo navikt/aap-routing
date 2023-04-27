@@ -22,7 +22,7 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
             with(jp) {
                 if (oppgave.harOppgave(id)) {
                     log.info("Det finnes allerede en journalføringsoppgave for journalpost ${jp.id}")
-                    FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, id)
+                    FordelingResultat(ALLEREDE_OPPGAVE, "Det finnes allerede en journalføringsoppgave, oppretter ingen ny", hovedDokumentBrevkode, id, enhet)
                 }
                 else {
                     runCatching {
@@ -38,15 +38,14 @@ class AAPManuellFordeler(private val oppgave : OppgaveClient) : ManuellFordeler 
     private fun opprettJournalføringsOppgave(jp : Journalpost, enhet : NAVEnhet) =
         with(jp) {
             opprettJournalføring(this, enhet)
-            FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, id)
+            FordelingResultat(MANUELL_JOURNALFØRING, "Journalføringsoppgave opprettet", hovedDokumentBrevkode, id, enhet)
         }
 
     private fun opprettFordelingsOppgave(jp : Journalpost) =
         with(jp) {
             runCatching {
                 opprettFordeling(this)
-                FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, id).also {
-                }
+                FordelingResultat(MANUELL_FORDELING, "Fordelingsoppgave opprettet", hovedDokumentBrevkode, id)
             }.getOrElse {
                 with("Feil ved opprettelse av en manuell fordelingsoppgave for journalpost $id") {
                     log.warn(this)

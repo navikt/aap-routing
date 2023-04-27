@@ -80,11 +80,8 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
                 }
 
-                ARENA -> {
-                    log.info("Begynner fordeling av ${jp.id} (behandlingstema='${jp.behandlingstema}', tittel='${jp.tittel}', brevkode='${jp.hovedDokumentBrevkode}', status='${jp.status}')")
-                    fordel(jp).also {
-                        jp.metrikker(it.fordelingstype, topic)
-                    }
+                ARENA -> fordel(jp).also {
+                    jp.metrikker(it.fordelingstype, topic)
                 }
             }
         }.onFailure {

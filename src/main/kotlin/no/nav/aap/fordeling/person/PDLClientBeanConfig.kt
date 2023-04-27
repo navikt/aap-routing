@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.rest.AbstractWebClientAdapter.Companion.behandlingFilterFunction
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.temaFilterFunction
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -24,6 +25,7 @@ class PDLClientBeanConfig {
     fun pdlWebClient(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlFlow : ExchangeFilterFunction) =
         b.baseUrl("${cfg.baseUri}")
             .filter(temaFilterFunction())
+            .filter(behandlingFilterFunction())
             .filter(pdlFlow)
             .build()
 

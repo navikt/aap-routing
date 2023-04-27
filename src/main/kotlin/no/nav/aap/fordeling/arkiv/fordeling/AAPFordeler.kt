@@ -40,13 +40,16 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                     }
                 }
             }.getOrElse {
-                if (it !is ManuellFordelingException) {
-                    log.warn("Kunne ikke automatisk fordele journalpost ${jp.id} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
-                    manuell.fordel(jp, e)
-                }
-                else {
-                    log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
-                    throw it
+                when (it) {
+                    !is ManuellFordelingException -> {
+                        log.warn("Kunne ikke automatisk fordele journalpost ${jp.id} (${jp.hovedDokumentBrevkode}), forsøker manuelt", it)
+                        manuell.fordel(jp, e)
+                    }
+
+                    else -> {
+                        log.info("Gjør ikke umiddelbart nytt forsøk på manuelt oppave siden manuelt forsøk akkurat feilet (${it.message})", it)
+                        throw it
+                    }
                 }
             }
         } ?: manuell.fordel(jp)

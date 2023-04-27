@@ -30,7 +30,7 @@ class AAPFordeler(private val arena : ArenaClient, private val arkiv : ArkivClie
                     }
 
                     STANDARD_ETTERSENDING.kode -> {
-                        log.info("Automatisk journalføring av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
+                        log.info("Automatisk journalføring av ettersending av journalpost ${jp.id} med brevkode '${jp.hovedDokumentBrevkode}'")
                         fordelEttersending(jp, e)
                     }
 

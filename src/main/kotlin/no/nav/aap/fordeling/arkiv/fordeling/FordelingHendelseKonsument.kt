@@ -98,7 +98,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
 
     private fun fordel(jp : Journalpost) =
         fordeler.fordel(jp, enhet.navEnhet(jp)).also {
-            slack.rocket("$it (${jp.fnr}, ${kibanaURL()}", DEV_GCP)
+            slack.rocket("$it (${jp.fnr}, ${kibanaURL("asc")}", DEV_GCP)
             log.info("$it")
         }
 

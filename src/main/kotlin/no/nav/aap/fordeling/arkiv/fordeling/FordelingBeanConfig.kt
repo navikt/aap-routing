@@ -41,6 +41,7 @@ class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopi
     @Bean(FORDELING)
     fun fordelingListenerContainerFactory(p : KafkaProperties, filter : FordelingFilter) =
         ConcurrentKafkaListenerContainerFactory<String, JournalfoeringHendelseRecord>().apply {
+            containerProperties.isObservationEnabled = true
             containerProperties.ackMode = RECORD
             consumerFactory = DefaultKafkaConsumerFactory(p.buildConsumerProperties().apply {
                 setRecordFilterStrategy {
@@ -55,7 +56,9 @@ class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopi
             .apply {
                 put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
                 put(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-            }))
+            })).apply {
+            setObservationEnabled(true)
+        }
 
     override fun configureCustomizers(c : CustomizersConfigurer) {
         c.customizeErrorHandler {

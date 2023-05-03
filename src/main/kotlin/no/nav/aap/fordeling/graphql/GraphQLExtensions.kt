@@ -26,7 +26,11 @@ object GraphQLExtensions {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
-    fun FieldAccessException.oversett() = oversett(this.response.errors.firstOrNull()?.extensions?.get("code")?.toString(), message ?: "Ukjent feil")
+    fun FieldAccessException.oversett() = oversett(response.errors.firstOrNull()?.extensions?.get("code")?.toString(), message ?: "Ukjent feil").also {
+        log.warn("GraphQL oppslag returnerte ${response.errors.size} feil. ${response.errors}, oversatte feilkode til ${it.javaClass.simpleName}",
+            this)
+    }
+
     fun GraphQLErrorsException.oversett() = oversett(code(), message ?: "Ukjent feil").also {
         log.warn("GraphQL oppslag returnerte ${errors.size} feil. ${errors}, oversatte feilkode til ${it.javaClass.simpleName}",
             this)

@@ -3,6 +3,7 @@ package no.nav.aap.fordeling.person
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.graphql.client.GraphQlClient
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.AktørId
@@ -12,7 +13,8 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) val graphQL : GraphQLWebClient, cfg : PDLConfig)
+class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) val graphQL : GraphQLWebClient,
+                          @Qualifier(PDL) val springGraphQL : GraphQlClient, cfg : PDLConfig)
     : AbstractGraphQLAdapter(client, cfg) {
 
     @Retry(name = PDL)
@@ -23,6 +25,8 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
 
     @Retry(name = PDL)
     fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
+
+    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(springGraphQL, GT_QUERY, "hentGeografiskTilknytning", fnr.asIdent())?.gt()
 
     override fun toString() = "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg, ${super.toString()}]"
 

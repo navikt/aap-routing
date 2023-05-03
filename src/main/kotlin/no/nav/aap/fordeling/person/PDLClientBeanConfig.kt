@@ -5,6 +5,7 @@ import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
@@ -31,12 +32,16 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
+    fun springGraphQLClient(@Qualifier(PDL) client : WebClient) = HttpGraphQlClient.create(client)
+
+    @Bean
+    @Qualifier(PDL)
     fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, PDL)
 
     @Bean
     @Qualifier(PDL)
-    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+    fun pdlGraphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         GraphQLWebClient.newInstance(client, mapper)
 
     @Bean

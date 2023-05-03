@@ -21,7 +21,7 @@ abstract class AbstractGraphQLAdapter(client : WebClient, cfg : AbstractRestConf
             handler.handle(t, query)
         }
 
-    protected inline fun <reified T> query(graphQL : GraphQlClient, path : String, query : String, args : Map<String, String>, info : String? = null) =
+    protected inline fun <reified T> query(graphQL : GraphQlClient, query : String, path : String, args : Map<String, String>, info : String? = null) =
         runCatching {
             graphQL.documentName(query).variables(args).retrieve(path).toEntity(T::class.java).block().also {
                 log.trace("Slo opp {} {}", T::class.java.simpleName, it)

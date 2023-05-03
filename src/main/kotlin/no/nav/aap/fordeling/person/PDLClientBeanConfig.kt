@@ -31,8 +31,17 @@ class PDLClientBeanConfig {
             .build()
 
     @Bean
+    @Qualifier(PDL + "1")
+    fun pdlWebClient1(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlFlow : ExchangeFilterFunction) =
+        b.baseUrl("${cfg.baseUri}")
+            .filter(temaFilterFunction())
+            .filter(behandlingFilterFunction())
+            // .filter(pdlFlow)
+            .build()
+
+    @Bean
     @Qualifier(PDL)
-    fun springGraphQLClient(@Qualifier(PDL) client : WebClient) = HttpGraphQlClient.create(client)
+    fun springGraphQLClient(@Qualifier(PDL + "1") client : WebClient) = HttpGraphQlClient.builder(client).build()
 
     @Bean
     @Qualifier(PDL)

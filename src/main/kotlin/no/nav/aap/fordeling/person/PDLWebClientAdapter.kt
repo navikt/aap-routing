@@ -30,7 +30,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
     companion object {
 
         private fun Fødselsnummer.asIdent() = mapOf(ID to fnr)
-        private fun AktørId.asIdent() = mapOf(IDENT to id)
+        private fun AktørId.asIdent() = mapOf(ID to id)
         private const val ID = "ident"
         private const val BESKYTTELSE = "query-beskyttelse"
         private const val BESKYTTELSE_PATH = "hentPerson"

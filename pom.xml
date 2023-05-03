@@ -145,11 +145,6 @@
             <version>${confluent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.graphql-java-kickstart</groupId>
-            <artifactId>graphql-webclient-spring-boot-starter</artifactId>
-            <version>${graphql.version}</version>
-        </dependency>
-        <dependency>
             <groupId>no.nav.teamdokumenthandtering</groupId>
             <artifactId>teamdokumenthandtering-avro-schemas</artifactId>
             <version>${dokumenthåndtering.version}</version>

@@ -35,9 +35,6 @@ class TestController(
 
     private val log = getLogger(javaClass)
 
-    @GetMapping("safjournalpost")
-    fun safjournalpost(@RequestParam journalpostId : String) = safAdapter.hentJournalpostRAW(journalpostId)
-
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =
         arkivAdapter.ferdigstillJournalpost(journalpostId)

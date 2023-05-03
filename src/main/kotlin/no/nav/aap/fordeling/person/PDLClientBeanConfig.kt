@@ -1,7 +1,5 @@
 package no.nav.aap.fordeling.person
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,27 +29,13 @@ class PDLClientBeanConfig {
             .build()
 
     @Bean
-    @Qualifier(PDL + "1")
-    fun pdlWebClient1(b : Builder, cfg : PDLConfig, @Qualifier(PDL) pdlFlow : ExchangeFilterFunction) =
-        b.baseUrl("${cfg.baseUri}")
-            .filter(temaFilterFunction())
-            .filter(behandlingFilterFunction())
-            // .filter(pdlFlow)
-            .build()
-
-    @Bean
     @Qualifier(PDL)
-    fun springGraphQLClient(@Qualifier(PDL + "1") client : WebClient) = HttpGraphQlClient.builder(client).build()
+    fun graphQLClient(@Qualifier(PDL) client : WebClient) = HttpGraphQlClient.builder(client).build()
 
     @Bean
     @Qualifier(PDL)
     fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
         cfg.clientCredentialFlow(service, PDL)
-
-    @Bean
-    @Qualifier(PDL)
-    fun pdlGraphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
-        GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @ConditionalOnGCP

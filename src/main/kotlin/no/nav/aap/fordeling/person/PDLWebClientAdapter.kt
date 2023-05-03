@@ -26,7 +26,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
     @Retry(name = PDL)
     fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT_QUERY, fnr.asIdent())?.gt()
 
-    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(springGraphQL, GT_QUERY, "hentGeografiskTilknytning", fnr.asIdent())?.gt()
+    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(springGraphQL, GT, "hentGeografiskTilknytning", fnr.asIdent())?.gt()
 
     override fun toString() = "${javaClass.simpleName} [graphQL=$graphQL,webClient=$client, cfg=$cfg, ${super.toString()}]"
 
@@ -37,6 +37,7 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
         private const val IDENT = "ident"
         private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
         private const val GT_QUERY = "query-gt.graphql"
+        private const val GT = "query-gt"
         private const val IDENT_QUERY = "query-ident.graphql"
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.person
 
 import io.micrometer.observation.annotation.Observed
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
@@ -9,9 +10,25 @@ import no.nav.aap.api.felles.Fødselsnummer
 @Observed(contextualName = "PDL")
 class PDLClient(private val a : PDLWebClientAdapter) {
 
-    fun geoTilknytning(fnr : Fødselsnummer) = a.geoTilknytning(fnr)
+    private val log = LoggerFactory.getLogger(PDLClient::class.java)
+    fun geoTilknytning(fnr : Fødselsnummer) = runCatching {
+        a.geoTilknytning1(fnr)
+    }.getOrElse {
+        log.warn("spring graphql geo feil", it)
+        a.geoTilknytning(fnr)
+    }
 
-    fun diskresjonskode(fnr : Fødselsnummer) = a.diskresjonskode(fnr)
+    fun diskresjonskode(fnr : Fødselsnummer) = runCatching {
+        a.diskresjonskode1(fnr)
+    }.getOrElse {
+        log.warn("spring graphql diskresjon feil", it)
+        a.diskresjonskode(fnr)
+    }
 
-    fun fnr(id : AktørId) = a.fnr(id)
+    fun fnr(id : AktørId) = runCatching {
+        a.fnr1(id)
+    }.getOrElse {
+        log.warn("spring graphql fnr feil", it)
+        a.fnr(id)
+    }
 }

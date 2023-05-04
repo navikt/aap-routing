@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.person
 
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.graphql.client.GraphQlClient
@@ -12,7 +13,8 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) graphQL : GraphQlClient, cfg : PDLConfig)
+class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) graphQL : GraphQlClient, @Qualifier(PDL) val graphQL1 : GraphQLWebClient,
+                          cfg : PDLConfig)
     : AbstractGraphQLAdapter(client, graphQL, cfg) {
 
     @Retry(name = PDL)
@@ -24,6 +26,15 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
 
     @Retry(name = PDL)
     fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent())?.gt()
+
+    @Retry(name = PDL)
+    fun fnr1(aktørId : AktørId) = query<Identer>(graphQL1, IDENT_QUERY, aktørId.asIdent())?.fnr()
+
+    @Retry(name = PDL)
+    fun diskresjonskode1(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL1, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
+
+    @Retry(name = PDL)
+    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL1, GT_QUERY, fnr.asIdent())?.gt()
 
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 
@@ -37,6 +48,9 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
         private const val GT = "query-gt"
         private const val GT_PATH = "hentGeografiskTilknytning"
         private const val IDENT = "query-ident"
+        private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
+        private const val GT_QUERY = "query-gt.graphql"
+        private const val IDENT_QUERY = "query-ident.graphql"
         private const val IDENT_PATH = "hentIdenter"
     }
 }

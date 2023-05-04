@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.person
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -34,6 +35,11 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         HttpGraphQlClient.builder(client).codecConfigurer { c -> c.customCodecs().registerWithDefaultConfig(Jackson2JsonDecoder(mapper)) }.build()
+
+    @Bean
+    @Qualifier(PDL)
+    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+        GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(PDL)

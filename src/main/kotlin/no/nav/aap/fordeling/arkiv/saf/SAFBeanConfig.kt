@@ -1,6 +1,7 @@
 package no.nav.aap.fordeling.arkiv.saf
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import java.util.*
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -35,6 +36,10 @@ class SAFBeanConfig {
             .baseUrl("${cfg.baseUri}")
             .filter(safFlow)
             .build()
+
+    @Bean
+    @Qualifier(SAF)
+    fun safGraphQLClient1(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) = GraphQLWebClient.newInstance(client, mapper)
 
     @Bean
     @Qualifier(SAF)

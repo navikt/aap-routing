@@ -38,7 +38,7 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
-    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+    fun graphQLClient1(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         GraphQLWebClient.newInstance(client, mapper)
 
     @Bean

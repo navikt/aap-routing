@@ -11,11 +11,11 @@ abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL 
                                       val handler : GraphQLErrorHandler = GraphQLDefaultErrorHandler()) :
     AbstractWebClientAdapter(client, cfg) {
 
-    protected inline fun <reified T> query(query : String, path : String, args : Map<String, String>, info : String? = null) =
+    protected inline fun <reified T> query(query : String, path : String, vars : Map<String, String>, info : String? = null) =
         runCatching {
             graphQL
                 .documentName(query)
-                .variables(args)
+                .variables(vars)
                 .retrieve(path)
                 .toEntity(T::class.java)
                 .block().also {

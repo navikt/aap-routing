@@ -38,8 +38,8 @@ class SAFBeanConfig {
 
     @Bean
     @Qualifier(SAF)
-
-    fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) = HttpGraphQlClient.builder(client).build()
+    fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) =
+        HttpGraphQlClient.builder(client).build()
 
     @Bean
     @Qualifier(SAF)

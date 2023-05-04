@@ -18,9 +18,8 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     fun hentJournalpost(jp : String) = runCatching {
         saf.hentJournalpost1(jp).also {
-            log.info("spring graphql ok")
+            log.info("spring graphql jp ok")
         }
-
     }.getOrElse {
         log.warn("spring graphql jp feil", it)
         saf.hentJournalpost(jp)

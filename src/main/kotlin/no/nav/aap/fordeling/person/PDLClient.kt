@@ -12,33 +12,17 @@ class PDLClient(private val a : PDLWebClientAdapter) {
 
     private val log = LoggerFactory.getLogger(PDLClient::class.java)
     fun geoTilknytning(fnr : Fødselsnummer) = //runCatching {
-        a.geoTilknytning1(fnr).also {
+        a.geoTilknytning(fnr).also {
             log.info("spring graphql geo ok")
         }
-    /*
-    }.getOrElse {
-        log.warn("spring graphql geo feil", it)
-        a.geoTilknytning(fnr)
-    }*/
 
     fun diskresjonskode(fnr : Fødselsnummer) = // runCatching {
-        a.diskresjonskode1(fnr).also {
+        a.diskresjonskode(fnr).also {
             log.info("spring graphql diskresjon ok")
         }
-    /*
-    }.getOrElse {
-        log.warn("spring graphql diskresjon feil", it)
-        a.diskresjonskode(fnr)
-    }*/
 
     fun fnr(id : AktørId) = //runCatching {
-        a.fnr1(id).also {
+        a.fnr(id).also {
             log.info("spring graphql fnr ok")
         }
-    /*
-    }.getOrElse {
-        log.warn("spring graphql fnr feil", it)
-        a.fnr(id)
-    }
-     */
 }

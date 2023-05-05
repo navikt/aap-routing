@@ -17,29 +17,15 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
     : AbstractGraphQLAdapter(client, graphQL, cfg) {
 
     @Retry(name = PDL)
-    fun fnr1(aktørId : AktørId) = query<Identer>(IDENT, IDENT_PATH, aktørId.asIdent())?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(IDENT, IDENT_PATH, aktørId.asIdent())?.fnr()
 
     @Retry(name = PDL)
-    fun diskresjonskode1(fnr : Fødselsnummer) =
+    fun diskresjonskode(fnr : Fødselsnummer) =
         query<PDLAdressebeskyttelse>(BESKYTTELSE, BESKYTTELSE_PATH, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = PDL)
-    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent())?.gt()
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent())?.gt()
 
-    /*
-    @Retry(name = PDL)
-    fun fnr(aktørId : AktørId) = query<Identer>(graphQL1, IDENT_QUERY, aktørId.asIdent())?.fnr()
-
-     */
-
-    /*
-    @Retry(name = PDL)
-    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL1, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
-    */
-    /*
-    @Retry(name = PDL)
-    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL1, GT_QUERY, fnr.asIdent())?.gt()
-     */
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 
     companion object {
@@ -52,9 +38,6 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
         private const val GT = "query-gt"
         private const val GT_PATH = "hentGeografiskTilknytning"
         private const val IDENT = "query-ident"
-        private const val BESKYTTELSE_QUERY = "query-beskyttelse.graphql"
-        private const val GT_QUERY = "query-gt.graphql"
-        private const val IDENT_QUERY = "query-ident.graphql"
         private const val IDENT_PATH = "hentIdenter"
     }
 }

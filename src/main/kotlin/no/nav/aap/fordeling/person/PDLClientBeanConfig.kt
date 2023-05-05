@@ -34,14 +34,10 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         HttpGraphQlClient.builder(client)
-            .codecConfigurer { c -> c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper)) }.build()
+            .codecConfigurer { c ->
+                c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
+            }.build()
 
-    /*
-     @Bean
-     @Qualifier(PDL)
-     fun graphQLClient1(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
-         GraphQLWebClient.newInstance(client, mapper)
- */
     @Bean
     @Qualifier(PDL)
     fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =

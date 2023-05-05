@@ -15,7 +15,6 @@ class GraphQLDefaultErrorHandler : GraphQLErrorHandler {
     override fun handle(e : Throwable, query : String) : Nothing {
         when (e) {
             is MismatchedInputException -> throw UnexpectedResponseGraphQLException(BAD_REQUEST, "Ikke-håndtert respons for  $query")
-            //   is GraphQLErrorsException -> throw e.oversett()
             is FieldAccessException -> throw e.oversett()
             else -> throw UnhandledGraphQLException(INTERNAL_SERVER_ERROR, "GraphQL oppslag $query feilet", e)
         }

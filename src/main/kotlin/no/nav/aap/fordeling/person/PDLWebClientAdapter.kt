@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.person
 
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.graphql.client.GraphQlClient
@@ -13,29 +12,34 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) graphQL : GraphQlClient, @Qualifier(PDL) val graphQL1 : GraphQLWebClient,
+class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) graphQL : GraphQlClient/* @Qualifier(PDL) val graphQL1 : GraphQLWebClient*/,
                           cfg : PDLConfig)
     : AbstractGraphQLAdapter(client, graphQL, cfg) {
 
     @Retry(name = PDL)
-    fun fnr(aktørId : AktørId) = query<Identer>(IDENT, IDENT_PATH, aktørId.asIdent())?.fnr()
+    fun fnr1(aktørId : AktørId) = query<Identer>(IDENT, IDENT_PATH, aktørId.asIdent())?.fnr()
 
     @Retry(name = PDL)
-    fun diskresjonskode(fnr : Fødselsnummer) =
+    fun diskresjonskode1(fnr : Fødselsnummer) =
         query<PDLAdressebeskyttelse>(BESKYTTELSE, BESKYTTELSE_PATH, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = PDL)
-    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent())?.gt()
+    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent())?.gt()
 
+    /*
     @Retry(name = PDL)
-    fun fnr1(aktørId : AktørId) = query<Identer>(graphQL1, IDENT_QUERY, aktørId.asIdent())?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(graphQL1, IDENT_QUERY, aktørId.asIdent())?.fnr()
 
+     */
+
+    /*
     @Retry(name = PDL)
-    fun diskresjonskode1(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL1, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
-
+    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL1, BESKYTTELSE_QUERY, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
+    */
+    /*
     @Retry(name = PDL)
-    fun geoTilknytning1(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL1, GT_QUERY, fnr.asIdent())?.gt()
-
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL1, GT_QUERY, fnr.asIdent())?.gt()
+     */
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 
     companion object {

@@ -33,7 +33,8 @@ class PDLClientBeanConfig {
     @Bean
     @Qualifier(PDL)
     fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
-        HttpGraphQlClient.builder(client).codecConfigurer { c -> c.customCodecs().registerWithDefaultConfig(Jackson2JsonDecoder(mapper)) }.build()
+        HttpGraphQlClient.builder(client)
+            .codecConfigurer { c -> c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper)) }.build()
 
     /*
      @Bean

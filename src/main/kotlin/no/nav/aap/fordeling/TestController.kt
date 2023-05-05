@@ -11,32 +11,27 @@ import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
-import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 import no.nav.aap.fordeling.person.Diskresjonskode
-import no.nav.aap.fordeling.person.PDLWebClientAdapter
+import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.security.token.support.spring.UnprotectedRestController
 
 @UnprotectedRestController(value = ["/dev"])
 class TestController(
-    private val pdlAdapter : PDLWebClientAdapter,
+    private val pdlClient : PDLClient,
     private val egenClient : EgenAnsattClient,
     private val arkivAdapter : DokarkivWebClientAdapter,
     private val arkivClient : ArkivClient,
     private val oppgaveClient : OppgaveClient,
     private val arenaAdapter : ArenaWebClientAdapter,
-    private val safAdapter : SAFGraphQLAdapter,
     private val orgClient : NavEnhetClient) {
 
     private val log = getLogger(javaClass)
-
-    @GetMapping("safjournalpost")
-    fun safjournalpost(@RequestParam journalpostId : String) = safAdapter.hentJournalpostRAW(journalpostId)
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =
@@ -65,13 +60,13 @@ class TestController(
         orgClient.navEnhet(område, skjermet, diskresjonekode, AAP.uppercase())
 
     @GetMapping("diskresjonskode")
-    fun diskresjonskode(@RequestParam fnr : Fødselsnummer) = pdlAdapter.diskresjonskode(fnr)
+    fun diskresjonskode(@RequestParam fnr : Fødselsnummer) = pdlClient.diskresjonskode(fnr)
 
     @GetMapping("gt")
-    fun gt(@RequestParam fnr : Fødselsnummer) = pdlAdapter.geoTilknytning(fnr)
+    fun gt(@RequestParam fnr : Fødselsnummer) = pdlClient.geoTilknytning(fnr)
 
     @GetMapping("fnr")
-    fun fnr(@RequestParam aktørId : AktørId) = pdlAdapter.fnr(aktørId)
+    fun fnr(@RequestParam aktørId : AktørId) = pdlClient.fnr(aktørId)
 
     @PostMapping("opprettarenaoppgave")
     fun arenaOpprettOppgave(@RequestBody jp : Journalpost) = arenaAdapter.opprettArenaOppgave(jp, "666")

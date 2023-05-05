@@ -1,10 +1,11 @@
 package no.nav.aap.fordeling.person
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.graphql.client.HttpGraphQlClient
+import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
@@ -31,13 +32,16 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
-    fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
-        cfg.clientCredentialFlow(service, PDL)
+    fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
+        HttpGraphQlClient.builder(client)
+            .codecConfigurer { c ->
+                c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
+            }.build()
 
     @Bean
     @Qualifier(PDL)
-    fun pdlFlow(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
-        GraphQLWebClient.newInstance(client, mapper)
+    fun pdlClientFlow(cfg : ClientConfigurationProperties, service : OAuth2AccessTokenService) =
+        cfg.clientCredentialFlow(service, PDL)
 
     @Bean
     @ConditionalOnGCP

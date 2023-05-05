@@ -17,8 +17,10 @@ data class Identer(val identer : List<Ident>) {
 
 data class PDLGeoTilknytning(val gtType : PDLGeoType, val gtKommune : String?, val gtBydel : String?, val gtLand : String?) {
 
-    enum class PDLGeoType { KOMMUNE, BYDEL, UTLAND, @JsonEnumDefaultValue
-    UDEFINERT
+    enum class PDLGeoType { KOMMUNE, BYDEL, UTLAND,
+
+        @JsonEnumDefaultValue
+        UDEFINERT
     }
 
     fun gt() = when (gtType) {
@@ -31,7 +33,7 @@ data class PDLGeoTilknytning(val gtType : PDLGeoType, val gtKommune : String?, v
 
 enum class Diskresjonskode { SPFO, SPSF, ANY }
 
-data class PDLAdressebeskyttelse(val adressebeskyttelse : List<PDLGradering>) {
+data class PDLAdressebeskyttelse(val adressebeskyttelse : List<PDLGradering> = emptyList()) {
 
     fun tilDiskresjonskode() = adressebeskyttelse.firstOrNull()?.tilDiskresjonskode() ?: ANY
 

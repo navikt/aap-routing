@@ -13,7 +13,7 @@ class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val s
 
     fun hentSøknad(jp : Journalpost) = safdok.originalDokument(jp)
 
-    fun hentJournalpost(jp : String) = saf.hentJournalpost1(jp)
+    fun hentJournalpost(jp : String) = saf.hentJournalpost(jp)
 
     fun oppdaterOgFerdigstillJournalpost(jp : Journalpost, sakNr : String) =
         dokarkiv.oppdaterOgFerdigstillJournalpost(jp, sakNr)

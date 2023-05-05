@@ -18,8 +18,8 @@ class SAFGraphQLAdapter(@Qualifier(SAF) graphQL : GraphQlClient,
                         cf : SAFConfig) : AbstractGraphQLAdapter(webClient, graphQL, cf) {
 
     @Retry(name = SAF)
-    fun hentJournalpost(journalpostId : String) =
-        query<JournalpostDTO>(JP, JP_PATH, journalpostId.asIdent(), "Journalpost $journalpostId")?.let {
+    fun hentJournalpost(id : String) =
+        query<JournalpostDTO>(JP, JP_PATH, id.asIdent(), "Journalpost $id")?.let {
             mapper.tilJournalpost(it)
         }
 

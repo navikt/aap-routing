@@ -48,10 +48,10 @@ class GraphQLInterceptor : GraphQlClientInterceptor {
     private val log = LoggerFactory.getLogger(GraphQLInterceptor::class.java)
 
     override fun intercept(request : ClientGraphQlRequest, chain : Chain) = chain.next(request).also {
-        log.info("Intercepted $request OK")
+        log.trace("Intercepted {} OK", request)
     }
 
     override fun interceptSubscription(request : ClientGraphQlRequest, chain : SubscriptionChain) = chain.next(request).also {
-        log.info("Intercepted subscription $request OK")
+        log.trace("Intercepted subscription {} OK", request)
     }
 }

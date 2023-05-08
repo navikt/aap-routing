@@ -34,11 +34,6 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         HttpGraphQlClient.builder(client)
-            /*       .codecConfigurer { c ->
-                       c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
-                   }
-
-             */
             .interceptor(GraphQLInterceptor())
             .build()
 

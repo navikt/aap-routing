@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.graphql.client.HttpGraphQlClient
-import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
+import no.nav.aap.fordeling.graphql.GraphQLInterceptor
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.behandlingFilterFunction
@@ -34,9 +34,13 @@ class PDLClientBeanConfig {
     @Qualifier(PDL)
     fun graphQLClient(@Qualifier(PDL) client : WebClient, mapper : ObjectMapper) =
         HttpGraphQlClient.builder(client)
-            .codecConfigurer { c ->
-                c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
-            }.build()
+            /*       .codecConfigurer { c ->
+                       c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
+                   }
+
+             */
+            .interceptor(GraphQLInterceptor())
+            .build()
 
     @Bean
     @Qualifier(PDL)

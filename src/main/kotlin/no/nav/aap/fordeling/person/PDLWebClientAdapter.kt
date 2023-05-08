@@ -12,19 +12,17 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL) graphQL : GraphQlClient/* @Qualifier(PDL) val graphQL1 : GraphQLWebClient*/,
-                          cfg : PDLConfig)
-    : AbstractGraphQLAdapter(client, graphQL, cfg) {
+class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL) graphQL : GraphQlClient, cfg : PDLConfig) : AbstractGraphQLAdapter(webClient,
+    graphQL, cfg) {
 
     @Retry(name = PDL)
-    fun fnr(aktørId : AktørId) = query<Identer>(IDENT, IDENT_PATH, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(IDENT, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
 
     @Retry(name = PDL)
-    fun diskresjonskode(fnr : Fødselsnummer) =
-        query<PDLAdressebeskyttelse>(BESKYTTELSE, BESKYTTELSE_PATH, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
+    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(BESKYTTELSE, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = PDL)
-    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, GT_PATH, fnr.asIdent(), "Fnr $fnr")?.gt()
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, fnr.asIdent(), "Fnr $fnr")?.gt()
 
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 
@@ -33,11 +31,8 @@ class PDLWebClientAdapter(@Qualifier(PDL) val client : WebClient, @Qualifier(PDL
         private fun Fødselsnummer.asIdent() = mapOf(ID to fnr)
         private fun AktørId.asIdent() = mapOf(ID to id)
         private const val ID = "ident"
-        private const val BESKYTTELSE = "query-beskyttelse"
-        private const val BESKYTTELSE_PATH = "hentPerson"
-        private const val GT = "query-gt"
-        private const val GT_PATH = "hentGeografiskTilknytning"
-        private const val IDENT = "query-ident"
-        private const val IDENT_PATH = "hentIdenter"
+        private val BESKYTTELSE = Pair("query-beskyttelse", "hentPerson")
+        private val GT = Pair("query-gt", "hentGeografiskTilknytning")
+        private val IDENT = Pair("query-ident", "hentIdenter")
     }
 }

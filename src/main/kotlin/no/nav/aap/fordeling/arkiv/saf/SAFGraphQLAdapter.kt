@@ -18,18 +18,16 @@ class SAFGraphQLAdapter(@Qualifier(SAF) graphQL : GraphQlClient,
                         cf : SAFConfig) : AbstractGraphQLAdapter(webClient, graphQL, cf) {
 
     @Retry(name = SAF)
-    fun hentJournalpost(id : String) =
-        query<JournalpostDTO>(JP, JP_PATH, id.asIdent(), "Journalpost $id")?.let {
-            mapper.tilJournalpost(it)
-        }
+    fun hentJournalpost(id : String) = query<JournalpostDTO>(JP, id.asIdent(), "Journalpost $id")?.let {
+        mapper.tilJournalpost(it)
+    }
 
     override fun toString() = "SAFGraphQLAdapter(mapper=$mapper, ${super.toString()})"
 
     companion object {
 
         private fun String.asIdent() = mapOf(ID to this)
-        private const val JP = "query-journalpost"
-        private const val JP_PATH = "journalpost"
+        private val JP = Pair("query-journalpost", "journalpost")
         private const val ID = "journalpostId"
     }
 }

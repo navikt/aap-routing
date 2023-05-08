@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.graphql.client.HttpGraphQlClient
-import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
+import no.nav.aap.fordeling.graphql.GraphQLInterceptor
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -40,9 +40,14 @@ class SAFBeanConfig {
     @Bean
     @Qualifier(SAF)
     fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) =
-        HttpGraphQlClient.builder(client).codecConfigurer { c ->
-            c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
-        }.build()
+        HttpGraphQlClient.builder(client)
+            /*.codecConfigurer { c ->
+                c.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(mapper))
+            }
+           
+             */
+            .interceptor(GraphQLInterceptor())
+            .build()
 
     @Bean
     @Qualifier(SAF)

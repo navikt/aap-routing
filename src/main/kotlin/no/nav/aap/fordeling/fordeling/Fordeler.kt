@@ -1,6 +1,7 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import no.nav.aap.api.felles.Fødselsnummer
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 
 interface Fordeler {

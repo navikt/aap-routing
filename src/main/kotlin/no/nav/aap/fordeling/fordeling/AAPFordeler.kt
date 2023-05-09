@@ -1,12 +1,13 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.SkjemaType.STANDARD
 import no.nav.aap.api.felles.SkjemaType.STANDARD_ETTERSENDING
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.util.LoggerUtil.getLogger
 import no.nav.boot.conditionals.Cluster.Companion.isProd

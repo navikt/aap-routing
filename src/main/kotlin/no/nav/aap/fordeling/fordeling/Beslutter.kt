@@ -1,8 +1,9 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.ARENA
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.ARENA
 
 interface Beslutter {
 

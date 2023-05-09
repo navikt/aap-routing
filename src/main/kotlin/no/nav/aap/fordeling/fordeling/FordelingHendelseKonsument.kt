@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import java.time.Instant.*
 import java.time.ZoneId.*
@@ -16,14 +16,15 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.retry.annotation.Backoff
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingFilter.Companion.status
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.ARENA
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.GOSYS
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.KELVIN
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
+import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.fordeling.FordelingFilter.Companion.status
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.ARENA
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.GOSYS
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.KELVIN
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.SlackOperations
@@ -44,8 +45,9 @@ typealias Epoch = Long
 
 @ConditionalOnGCP
 class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
-                                 private val utvelger : JournalpostDestinasjonUtvelger, private val slack : SlackOperations,
-                                 private val cfg : FordelingConfig) {
+                                 private val utvelger : FordelingAvOppgaveUtvelger, private val slack : SlackOperations,
+                                 private val cfg : FordelingConfig
+) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 

@@ -1,19 +1,20 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.GOSYS
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_JOURNALFØRT
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.RACE
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus.JOURNALFØRT
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.GOSYS
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
 import no.nav.aap.util.LoggerUtil
 
 @Component
-class JournalpostDestinasjonUtvelger(private val beslutter : Beslutter, private val cfg : FordelingConfig = FordelingConfig()) {
+class FordelingAvOppgaveUtvelger(private val beslutter : Beslutter, private val cfg : FordelingConfig = FordelingConfig()) {
 
-    private val log = LoggerUtil.getLogger(JournalpostDestinasjonUtvelger::class.java)
+    private val log = LoggerUtil.getLogger(FordelingAvOppgaveUtvelger::class.java)
 
     enum class FordelingsBeslutning { KELVIN, ARENA, INGEN_DESTINASJON, GOSYS }
 

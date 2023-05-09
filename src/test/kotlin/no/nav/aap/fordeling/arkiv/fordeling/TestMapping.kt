@@ -9,10 +9,11 @@ import org.mockito.Mockito.*
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.AKTØR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.DTO
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
+import no.nav.aap.fordeling.arkiv.journalpost.JournalpostMapper
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLClient
 

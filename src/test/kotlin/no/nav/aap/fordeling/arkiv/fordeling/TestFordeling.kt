@@ -14,16 +14,18 @@ import org.mockito.kotlin.whenever
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arena.ArenaClient
 import no.nav.aap.fordeling.arkiv.ArkivClient
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_OPPGAVE
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
+import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.ALLEREDE_OPPGAVE
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.AUTOMATISK
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_FORDELING
+import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.MANUELL_JOURNALFØRING
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.ARENASAK
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JPES
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.OPPRETTET
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.UTLAND
+import no.nav.aap.fordeling.fordeling.AAPFordeler
+import no.nav.aap.fordeling.fordeling.AAPManuellFordeler
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.fordeling.oppgave.OppgaveClient
 

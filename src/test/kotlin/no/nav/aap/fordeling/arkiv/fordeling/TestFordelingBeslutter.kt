@@ -2,21 +2,24 @@ package no.nav.aap.fordeling.arkiv.fordeling
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.JOURNALFØRT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.MOTTATT
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.ARENA
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.GOSYS
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostDestinasjonUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus.JOURNALFØRT
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus.MOTTATT
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.ARENA
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.GOSYS
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.medStatus
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.somMeldekort
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.utenBruker
+import no.nav.aap.fordeling.fordeling.ArenaBeslutter
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
+import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger
 
 class TestFordelingBeslutter {
 
-    private val beslutter = JournalpostDestinasjonUtvelger(ArenaBeslutter())
+    private val beslutter = FordelingAvOppgaveUtvelger(ArenaBeslutter())
 
     @Test
     fun testBeslutter() {

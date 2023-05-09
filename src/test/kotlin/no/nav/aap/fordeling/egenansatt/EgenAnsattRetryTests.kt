@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus.*
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IntegrationException
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.fordeling.arkiv.fordeling.Fordeler.Companion.FIKTIVTFNR
+import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.utils.MockWebServerExtensions.expect
 import no.nav.aap.util.AccessorUtil
 import no.nav.aap.util.LoggerUtil

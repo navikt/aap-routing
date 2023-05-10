@@ -23,6 +23,7 @@ abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL 
                 .variables(vars)
                 .retrieve(query.second)
                 .toEntity(T::class.java)
+                .contextCapture()
                 .block().also {
                     log.trace("Slo opp {} {}", T::class.java.simpleName, it)
                 }
@@ -38,6 +39,7 @@ abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL 
             .accept(APPLICATION_JSON, TEXT_PLAIN)
             .retrieve()
             .toBodilessEntity()
+            .contextCapture()
             .block().run { emptyMap<String, String>() }
 
     override fun toString() = "handler=$handler,graphQL=$graphQL"

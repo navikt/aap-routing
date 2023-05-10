@@ -10,7 +10,6 @@ import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
-import no.nav.boot.conditionals.EnvUtil.CONFIDENTIAL
 
 abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL : GraphQlClient, cfg : AbstractRestConfig,
                                       val handler : GraphQLErrorHandler = GraphQLDefaultErrorHandler()) :
@@ -49,7 +48,7 @@ class LoggingGraphQLInterceptor : GraphQlClientInterceptor {
 
     private val log = LoggerFactory.getLogger(LoggingGraphQLInterceptor::class.java)
 
-    override fun intercept(request : ClientGraphQlRequest, chain : Chain) = chain.next(request).also {
-        log.trace(CONFIDENTIAL, "Intercepted {} OK", request)
+    override fun intercept(req : ClientGraphQlRequest, chain : Chain) = chain.next(req).also {
+        log.trace("Eksekverer query {} {}", req.operationName, req.document)
     }
 }

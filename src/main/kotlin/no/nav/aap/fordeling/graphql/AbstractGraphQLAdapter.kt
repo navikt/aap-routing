@@ -5,12 +5,12 @@ import org.springframework.graphql.client.ClientGraphQlRequest
 import org.springframework.graphql.client.GraphQlClient
 import org.springframework.graphql.client.GraphQlClientInterceptor
 import org.springframework.graphql.client.GraphQlClientInterceptor.Chain
-import org.springframework.graphql.client.GraphQlClientInterceptor.SubscriptionChain
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
+import no.nav.boot.conditionals.EnvUtil.CONFIDENTIAL
 
 abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL : GraphQlClient, cfg : AbstractRestConfig,
                                       val handler : GraphQLErrorHandler = GraphQLDefaultErrorHandler()) :
@@ -45,15 +45,11 @@ abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL 
     override fun toString() = "handler=$handler,graphQL=$graphQL"
 }
 
-class GraphQLInterceptor : GraphQlClientInterceptor {
+class LoggingGraphQLInterceptor : GraphQlClientInterceptor {
 
-    private val log = LoggerFactory.getLogger(GraphQLInterceptor::class.java)
+    private val log = LoggerFactory.getLogger(LoggingGraphQLInterceptor::class.java)
 
     override fun intercept(request : ClientGraphQlRequest, chain : Chain) = chain.next(request).also {
-        log.trace("Intercepted {} OK", request)
-    }
-
-    override fun interceptSubscription(request : ClientGraphQlRequest, chain : SubscriptionChain) = chain.next(request).also {
-        log.trace("Intercepted subscription {} OK", request)
+        log.trace(CONFIDENTIAL, "Intercepted {} OK", request)
     }
 }

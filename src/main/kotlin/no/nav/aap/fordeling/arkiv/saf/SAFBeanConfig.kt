@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
-import no.nav.aap.fordeling.graphql.GraphQLInterceptor
+import no.nav.aap.fordeling.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
@@ -41,7 +41,7 @@ class SAFBeanConfig {
     @Qualifier(SAF)
     fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) =
         HttpGraphQlClient.builder(client)
-            .interceptor(GraphQLInterceptor())
+            .interceptor(LoggingGraphQLInterceptor())
             .build()
 
     @Bean

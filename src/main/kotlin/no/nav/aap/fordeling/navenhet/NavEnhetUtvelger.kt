@@ -1,7 +1,7 @@
 package no.nav.aap.fordeling.navenhet
 
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.ExtensionUtils.whenNull
 import no.nav.aap.util.LoggerUtil.getLogger

@@ -10,7 +10,7 @@ import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.fordeling.arena.ArenaWebClientAdapter
 import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NavEnhetClient

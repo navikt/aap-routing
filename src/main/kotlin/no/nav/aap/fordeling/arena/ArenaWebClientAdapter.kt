@@ -12,7 +12,7 @@ import no.nav.aap.fordeling.arena.ArenaConfig.Companion.ARENA
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettOppgaveData
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave
 import no.nav.aap.fordeling.arena.ArenaDTOs.ArenaOpprettetOppgave.Companion.EMPTY
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.WebClientExtensions.response

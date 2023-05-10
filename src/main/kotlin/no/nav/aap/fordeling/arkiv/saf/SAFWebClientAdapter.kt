@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.WebClientExtensions.response

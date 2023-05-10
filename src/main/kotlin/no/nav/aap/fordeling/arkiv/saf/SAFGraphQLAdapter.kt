@@ -6,8 +6,8 @@ import org.springframework.graphql.client.GraphQlClient
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO
-import no.nav.aap.fordeling.arkiv.fordeling.JournalpostMapper
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO
+import no.nav.aap.fordeling.arkiv.journalpost.JournalpostMapper
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
 

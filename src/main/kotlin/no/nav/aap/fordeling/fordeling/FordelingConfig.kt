@@ -1,8 +1,8 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaConfig
 
 @ConfigurationProperties(FORDELING)
@@ -12,7 +12,8 @@ data class FordelingConfig(@NestedConfigurationProperty val topics : FordelingTo
     override fun topics() = topics.all
 
     data class FordelingTopics(val main : String = DEFAULT_MAIN, val retry : String = RETRY_TOPIC,
-                               val dlt : String = DLT_TOPIC, val backoff : Int = DEFAULT_BACKOFF, val retries : Int = DEFAULT_RETRIES) {
+                               val dlt : String = DLT_TOPIC, val backoff : Int = DEFAULT_BACKOFF, val retries : Int = DEFAULT_RETRIES
+    ) {
 
         val all = listOf(main, retry, dlt)
     }

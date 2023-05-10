@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
@@ -19,7 +19,7 @@ import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP

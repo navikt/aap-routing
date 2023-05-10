@@ -1,13 +1,13 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import org.springframework.stereotype.Component
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost.JournalpostStatus.MOTTATT
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.Kanal
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EESSI
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.Kanal.EKST_OPPS
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.Kanal.NAV_NO_CHAT
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.Kanal.UKJENT
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus.MOTTATT
 import no.nav.aap.util.Constants.AAP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 

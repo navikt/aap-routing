@@ -1,4 +1,4 @@
-package no.nav.aap.fordeling.arkiv.fordeling
+package no.nav.aap.fordeling.fordeling
 
 import org.springframework.kafka.retrytopic.DestinationTopic.Properties
 import org.springframework.kafka.retrytopic.RetryTopicNamesProviderFactory

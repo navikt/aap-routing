@@ -3,7 +3,7 @@ package no.nav.aap.fordeling.arkiv.saf
 import java.net.URI
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.util.UriBuilder
-import no.nav.aap.fordeling.arkiv.fordeling.FordelingDTOs.DokumentVariant.VariantFormat
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.DokumentVariant.VariantFormat
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractRestConfig.RetryConfig.Companion.DEFAULT

@@ -5,7 +5,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.fordeling.arkiv.fordeling.Journalpost
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.oppgave.OppgaveConfig.Companion.OPPGAVE
 import no.nav.aap.fordeling.oppgave.OppgaveDTOs.OppgaveRespons
 import no.nav.aap.rest.AbstractWebClientAdapter

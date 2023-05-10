@@ -5,6 +5,11 @@ import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.Bruker
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.DokumentInfo
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.Tilleggsopplysning
+import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
 import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.BrukerDTO
@@ -15,12 +20,6 @@ import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.IDTypeDTO.FNR
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.JOURNALFOERT
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.JournalStatusDTO.MOTTATT
-import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.Bruker
-import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.DokumentInfo
-import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.JournalpostStatus
-import no.nav.aap.fordeling.arkiv.journalpost.Journalpost.Tilleggsopplysning
-import no.nav.aap.fordeling.egenansatt.EgenAnsattClient
-import no.nav.aap.fordeling.fordeling.AvsenderMottaker
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.VIKAFOSSEN
 import no.nav.aap.fordeling.person.PDLClient

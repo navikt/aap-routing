@@ -14,7 +14,7 @@ class DokarkivConfig(baseUri : URI, enabled : Boolean = false, pingPath : String
 
     fun ferdigstillUri(b : UriBuilder, id : String) = b.path(ferdigstillPath).build(id)
 
-    fun oppdaterJournlpostUri(b : UriBuilder, id : String) = b.path(oppdaterPath).build(id)
+    fun oppdaterJournalpostUri(b : UriBuilder, id : String) = b.path(oppdaterPath).build(id)
 
     override fun toString() = "DokarkivConfig(ferdigstillPath='$ferdigstillPath', oppdaterPath='$oppdaterPath')"
 

@@ -24,14 +24,14 @@
         <dokumenthåndtering.version>08271806</dokumenthåndtering.version>
         <jib.version>3.3.1</jib.version>
         <java.version>17</java.version>
-        <kotlin.version>1.8.20</kotlin.version>
+        <kotlin.version>1.8.21</kotlin.version>
         <kotlin.mockito.version>4.1.0</kotlin.mockito.version>
         <logstash.version>7.3</logstash.version>
         <resilience4j.version>2.0.2</resilience4j.version>
         <slack.version>1.28.0</slack.version>
         <springdoc.version>2.1.0</springdoc.version>
         <testcontainers.version>1.17.6</testcontainers.version>
-        <tokensupport.version>3.0.9</tokensupport.version>
+        <tokensupport.version>3.0.12</tokensupport.version>
     </properties>
     <repositories>
         <repository>

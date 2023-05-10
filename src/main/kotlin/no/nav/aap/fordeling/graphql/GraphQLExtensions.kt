@@ -1,6 +1,6 @@
 package no.nav.aap.fordeling.graphql
 
-import graphql.kickstart.spring.webclient.boot.GraphQLErrorsException
+import org.springframework.graphql.client.FieldAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.FORBIDDEN
@@ -25,13 +25,11 @@ object GraphQLExtensions {
 
     private val log = LoggerUtil.getLogger(javaClass)
 
-    fun GraphQLErrorsException.oversett() = oversett(code(), message ?: "Ukjent feil").also {
-        log.warn("GraphQL oppslag returnerte ${errors.size} feil. ${errors}, oversatte feilkode til ${it.javaClass.simpleName}",
+    fun FieldAccessException.oversett() = oversett(response.errors.firstOrNull()?.extensions?.get("code")?.toString(), message ?: "Ukjent feil").also { e ->
+        log.warn("GraphQL oppslag returnerte ${response.errors.size} feil. ${response.errors}, oversatte feilkode til ${e.javaClass.simpleName}",
             this)
     }
-
-    private fun GraphQLErrorsException.code() = errors.firstOrNull()?.extensions?.get("code")?.toString()
-
+    
     private fun oversett(kode : String?, msg : String) =
         when (kode) {
             NOTAUTHORIZED -> UnauthorizedGraphQLException(UNAUTHORIZED, msg)

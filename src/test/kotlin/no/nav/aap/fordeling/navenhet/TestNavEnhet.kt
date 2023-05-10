@@ -1,5 +1,7 @@
 package no.nav.aap.fordeling.navenhet
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -13,6 +15,7 @@ import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.JP
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.utenEnhet
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
+import no.nav.aap.fordeling.person.PDLAdressebeskyttelse
 import no.nav.aap.fordeling.person.PDLClient
 
 @TestInstance(PER_CLASS)
@@ -24,6 +27,17 @@ class TestNavEnhet {
     @BeforeEach
     fun resetMocks() {
         reset(enhet, pdl)
+    }
+
+    @Test
+    fun ser() {
+        val m = jacksonObjectMapper()
+
+        val json = """ {"adressebeskyttelse":[]}
+        """.trimIndent()
+
+        val a : PDLAdressebeskyttelse = m.readValue(json)
+        println(a)
     }
 
     @Test

@@ -29,11 +29,6 @@ spring:
         name: routing
     main:
         banner-mode: off
-    cloud:
-        discovery:
-            client:
-                health-indicator:
-                    enabled: false
     jackson:
         default-property-inclusion: non_empty
         mapper:
@@ -58,7 +53,6 @@ management:
         configprops:
             show-values: always
         env:
-            additional-keys-to-sanitize: "client-jwk,jwk,jwks"
             show-values: always
     info:
         os:

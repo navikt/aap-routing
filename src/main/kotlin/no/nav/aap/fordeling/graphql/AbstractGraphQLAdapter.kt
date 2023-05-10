@@ -1,34 +1,34 @@
 package no.nav.aap.fordeling.graphql
 
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClient
+import org.slf4j.LoggerFactory
+import org.springframework.graphql.client.ClientGraphQlRequest
+import org.springframework.graphql.client.GraphQlClient
+import org.springframework.graphql.client.GraphQlClientInterceptor
+import org.springframework.graphql.client.GraphQlClientInterceptor.Chain
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.rest.AbstractRestConfig
 import no.nav.aap.rest.AbstractWebClientAdapter
 
-abstract class AbstractGraphQLAdapter(client : WebClient, cfg : AbstractRestConfig, val handler : GraphQLErrorHandler = GraphQLDefaultErrorHandler()) :
+abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL : GraphQlClient, cfg : AbstractRestConfig,
+                                      val handler : GraphQLErrorHandler = GraphQLDefaultErrorHandler()) :
     AbstractWebClientAdapter(client, cfg) {
 
-    protected inline fun <reified T> query(graphQL : GraphQLWebClient, query : String, args : Map<String, String>, info : String? = null) =
+    protected inline fun <reified T> query(query : Pair<String, String>, vars : Map<String, String>, info : String) =
         runCatching {
-            graphQL.post(query, args, T::class.java).block().also {
-                log.trace("Slo opp {} {}", T::class.java.simpleName, it)
-            }
-        }.getOrElse { t ->
-            log.warn("Query $query feilet. ${info?.let { " ($it)" } ?: ""}", t)
-            handler.handle(t, query)
-        }
-
-    protected inline fun <reified T> query(graphQL : GraphQLWebClient, query : String, args : Map<String, List<String>>, info : String? = null) =
-        runCatching {
-            graphQL.flux(query, args, T::class.java)
-                .collectList().block()?.toList().also {
+            graphQL
+                .documentName(query.first)
+                .variables(vars)
+                .retrieve(query.second)
+                .toEntity(T::class.java)
+                .contextCapture()
+                .block().also {
                     log.trace("Slo opp {} {}", T::class.java.simpleName, it)
-                } ?: emptyList()
-        }.getOrElse {
-            log.warn("SAF bulk query $query feilet. ${info?.let { " ($it)" } ?: ""}", it)
-            handler.handle(it, query)
+                }
+        }.getOrElse { t ->
+            log.warn("Query $query feilet. $info", t)
+            handler.handle(t, query.first)
         }
 
     override fun ping() =
@@ -38,7 +38,17 @@ abstract class AbstractGraphQLAdapter(client : WebClient, cfg : AbstractRestConf
             .accept(APPLICATION_JSON, TEXT_PLAIN)
             .retrieve()
             .toBodilessEntity()
+            .contextCapture()
             .block().run { emptyMap<String, String>() }
 
-    override fun toString() = "handler=$handler"
+    override fun toString() = "handler=$handler,graphQL=$graphQL"
+}
+
+class LoggingGraphQLInterceptor : GraphQlClientInterceptor {
+
+    private val log = LoggerFactory.getLogger(LoggingGraphQLInterceptor::class.java)
+
+    override fun intercept(req : ClientGraphQlRequest, chain : Chain) = chain.next(req).also {
+        log.trace("Eksekverer query {} {}", req.operationName, req.document)
+    }
 }

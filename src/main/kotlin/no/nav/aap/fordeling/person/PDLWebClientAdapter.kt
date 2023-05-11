@@ -7,22 +7,23 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
-import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
+import no.nav.aap.api.felles.graphql.AbstractGraphQLAdapter
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL) graphQL : GraphQlClient, cfg : PDLConfig) : AbstractGraphQLAdapter(webClient,
-    graphQL, cfg) {
+class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL) private val graphQL : GraphQlClient, cfg : PDLConfig) : AbstractGraphQLAdapter(
+    webClient,
+    cfg) {
 
     @Retry(name = PDL)
-    fun fnr(aktørId : AktørId) = query<Identer>(IDENT, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
 
     @Retry(name = PDL)
-    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(BESKYTTELSE, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
+    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
 
     @Retry(name = PDL)
-    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(GT, fnr.asIdent(), "Fnr $fnr")?.gt()
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT, fnr.asIdent(), "Fnr $fnr")?.gt()
 
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 

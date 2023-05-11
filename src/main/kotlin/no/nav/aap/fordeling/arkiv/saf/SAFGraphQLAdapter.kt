@@ -6,19 +6,19 @@ import org.springframework.graphql.client.GraphQlClient
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO
+import no.nav.aap.api.felles.graphql.AbstractGraphQLAdapter
 import no.nav.aap.fordeling.arkiv.journalpost.JournalpostMapper
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAF
-import no.nav.aap.fordeling.graphql.AbstractGraphQLAdapter
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO
 
 @Component
-class SAFGraphQLAdapter(@Qualifier(SAF) graphQL : GraphQlClient,
+class SAFGraphQLAdapter(@Qualifier(SAF) private val graphQL : GraphQlClient,
                         @Qualifier(SAF) webClient : WebClient,
                         private val mapper : JournalpostMapper,
-                        cf : SAFConfig) : AbstractGraphQLAdapter(webClient, graphQL, cf) {
+                        cf : SAFConfig) : AbstractGraphQLAdapter(webClient, cf) {
 
     @Retry(name = SAF)
-    fun hentJournalpost(id : String) = query<JournalpostDTO>(JP, id.asIdent(), "Journalpost $id")?.let {
+    fun hentJournalpost(id : String) = query<JournalpostDTO>(graphQL, JP, id.asIdent(), "Journalpost $id")?.let {
         mapper.tilJournalpost(it)
     }
 

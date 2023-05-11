@@ -8,8 +8,8 @@ import org.springframework.graphql.client.HttpGraphQlClient
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClient.Builder
+import no.nav.aap.api.felles.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.fordeling.config.GlobalBeanConfig.Companion.clientCredentialFlow
-import no.nav.aap.fordeling.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.behandlingFilterFunction

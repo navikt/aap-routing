@@ -1,10 +1,6 @@
 package no.nav.aap.fordeling.graphql
 
-import org.slf4j.LoggerFactory
-import org.springframework.graphql.client.ClientGraphQlRequest
 import org.springframework.graphql.client.GraphQlClient
-import org.springframework.graphql.client.GraphQlClientInterceptor
-import org.springframework.graphql.client.GraphQlClientInterceptor.Chain
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_PLAIN
 import org.springframework.web.reactive.function.client.WebClient
@@ -44,13 +40,4 @@ abstract class AbstractGraphQLAdapter(client : WebClient, protected val graphQL 
             .block().run { emptyMap<String, String>() }
 
     override fun toString() = "handler=$handler,graphQL=$graphQL"
-}
-
-class LoggingGraphQLInterceptor : GraphQlClientInterceptor {
-
-    private val log = LoggerFactory.getLogger(LoggingGraphQLInterceptor::class.java)
-
-    override fun intercept(req : ClientGraphQlRequest, chain : Chain) = chain.next(req).also {
-        log.trace("Eksekverer query {} {}", req.operationName, req.document)
-    }
 }

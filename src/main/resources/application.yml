@@ -2,24 +2,6 @@ server:
     error:
         whitelabel:
             enabled: false
-
-resilience4j:
-    retry:
-        instances:
-            saf:
-                max-attempts: 10
-                waitDuration: 1s
-                retryExceptions:
-                    - no.nav.aap.api.felles.error.RecoverableGraphQLException
-                ignoreExceptions:
-                    - no.nav.aap.api.felles.error.IrrecoverableGraphQLException
-            pdl:
-                max-attempts: 10
-                waitDuration: 1s
-                retryExceptions:
-                    - no.nav.aap.api.felles.error.RecoverableGraphQLException
-                ignoreExceptions:
-                    - no.nav.aap.api.felles.error.IrrecoverableGraphQLException
 spring:
     cache:
         cache-names: navorg

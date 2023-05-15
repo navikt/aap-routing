@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.person
 
-import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.graphql.client.GraphQlClient
 import org.springframework.stereotype.Component
@@ -16,13 +15,10 @@ class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL)
     webClient,
     cfg) {
 
-    @Retry(name = PDL)
     fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
 
-    @Retry(name = PDL)
     fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
 
-    @Retry(name = PDL)
     fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT, fnr.asIdent(), "Fnr $fnr")?.gt()
 
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"

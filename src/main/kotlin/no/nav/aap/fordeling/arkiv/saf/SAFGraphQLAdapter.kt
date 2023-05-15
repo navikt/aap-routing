@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.saf
 
-import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.graphql.client.GraphQlClient
 import org.springframework.http.MediaType.*
@@ -17,7 +16,6 @@ class SAFGraphQLAdapter(@Qualifier(SAF) private val graphQL : GraphQlClient,
                         private val mapper : JournalpostMapper,
                         cf : SAFConfig) : AbstractGraphQLAdapter(webClient, cf) {
 
-    @Retry(name = SAF)
     fun hentJournalpost(id : String) = query<JournalpostDTO>(graphQL, JP, id.asIdent(), "Journalpost $id")?.let {
         mapper.tilJournalpost(it)
     }

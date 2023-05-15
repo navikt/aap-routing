@@ -15,11 +15,11 @@ class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL)
     webClient,
     cfg) {
 
-    fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT, aktørId.asIdent(), "Aktørid $aktørId")?.fnr()
+    fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT, aktørId.asIdent())?.fnr()
 
-    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE, fnr.asIdent(), "Fnr $fnr")?.tilDiskresjonskode() ?: ANY
+    fun diskresjonskode(fnr : Fødselsnummer) = query<PDLAdressebeskyttelse>(graphQL, BESKYTTELSE, fnr.asIdent())?.tilDiskresjonskode() ?: ANY
 
-    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT, fnr.asIdent(), "Fnr $fnr")?.gt()
+    fun geoTilknytning(fnr : Fødselsnummer) = query<PDLGeoTilknytning>(graphQL, GT, fnr.asIdent())?.gt()
 
     override fun toString() = "${javaClass.simpleName} [cfg=$cfg, ${super.toString()}]"
 

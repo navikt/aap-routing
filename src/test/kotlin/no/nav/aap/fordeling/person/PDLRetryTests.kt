@@ -59,7 +59,7 @@ class PDLRetryTests {
 
     @Test
     fun pdlRetryFail() {
-        pdl.expect(ERROR, ERROR, ERROR, ERROR)
+        pdl.expect(4, ERROR)
         assertThrows<UnhandledGraphQLException> { pdlClient.diskresjonskode(FIKTIVTFNR) }
         assertThat(pdl.requestCount).isEqualTo(4)
     }
@@ -119,6 +119,10 @@ class PDLRetryTests {
 }
 
 object MockWebServerExtensions {
+
+    fun MockWebServer.expect(times : Int, body : String) {
+        for (i in 1..times) expect(body)
+    }
 
     fun MockWebServer.expect(vararg bodies : String) =
         bodies.iterator().forEach {

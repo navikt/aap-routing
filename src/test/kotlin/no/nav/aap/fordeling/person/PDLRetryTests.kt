@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.graphql.client.HttpGraphQlClient
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableGraphQLException.NotFoundGraphQLException
 import no.nav.aap.api.felles.error.RecoverableGraphQLException.UnhandledGraphQLException
@@ -37,6 +38,7 @@ class PDLRetryTests {
         with(PDLConfig(pdl.url("/graphql").toUri())) {
             val webClient = WebClient.builder()
                 .baseUrl("$baseUri")
+                .defaultHeader(AUTHORIZATION, "42")
                 .filter(correlatingFilterFunction("test"))
                 .build()
             pdlClient = PDLClient(PDLWebClientAdapter(webClient, HttpGraphQlClient
@@ -51,6 +53,7 @@ class PDLRetryTests {
         pdl.expect(ERROR, OK)
         assertThat(pdlClient.diskresjonskode(FIKTIVTFNR)).isEqualTo(ANY)
         assertThat(pdl.requestCount).isEqualTo(2)
+        assertThat(pdl.takeRequest().getHeader(AUTHORIZATION)).isEqualTo("42")
     }
 
     @Test

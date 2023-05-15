@@ -1,22 +1,18 @@
 package no.nav.aap.fordeling.person
 
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.graphql.client.HttpGraphQlClient
-import org.springframework.http.HttpHeaders.CONTENT_TYPE
-import org.springframework.http.HttpStatus.OK
-import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableGraphQLException.NotFoundGraphQLException
 import no.nav.aap.api.felles.error.RecoverableGraphQLException.UnhandledGraphQLException
 import no.nav.aap.api.felles.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
-import no.nav.aap.fordeling.person.MockWebServerExtensions.expect
+import no.nav.aap.fordeling.utils.MockWebServerExtensions.expect
 import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.AccessorUtil
 import no.nav.aap.util.LoggerUtil
@@ -116,19 +112,4 @@ class PDLRetryTests {
        }
         """
     }
-}
-
-object MockWebServerExtensions {
-
-    fun MockWebServer.expect(times : Int, body : String) {
-        for (i in 1..times) expect(body)
-    }
-
-    fun MockWebServer.expect(vararg bodies : String) =
-        bodies.iterator().forEach {
-            enqueue(MockResponse().setResponseCode(OK.value()).apply {
-                setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                setBody(it)
-            })
-        }
 }

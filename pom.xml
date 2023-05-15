@@ -15,6 +15,7 @@
     <name>routing</name>
     <description>KRUT erstatning</description>
     <properties>
+        <maven.plugin.validation>VERBOSE</maven.plugin.validation>
         <sonar.organization>navikt</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <bekk-nocommons.version>0.15.0</bekk-nocommons.version>

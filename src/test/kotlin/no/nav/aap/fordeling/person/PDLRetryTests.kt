@@ -36,11 +36,12 @@ class PDLRetryTests {
     @BeforeEach
     fun beforeEach() {
         pdl = MockWebServer()
-        val cfg = PDLConfig(pdl.url("/").toUri())
-        pdlClient = PDLClient(PDLWebClientAdapter(WebClient.builder().baseUrl("${cfg.baseUri}").build(),
-            HttpGraphQlClient.builder(WebClient.builder().baseUrl("${cfg.baseUri}").build())
-                .interceptor(LoggingGraphQLInterceptor())
-                .build(), cfg))
+        with(PDLConfig(pdl.url("/").toUri())) {
+            pdlClient = PDLClient(PDLWebClientAdapter(WebClient.builder().baseUrl("$baseUri").build(),
+                HttpGraphQlClient.builder(WebClient.builder().baseUrl("$baseUri").build())
+                    .interceptor(LoggingGraphQLInterceptor())
+                    .build(), this))
+        }
     }
 
     @Test

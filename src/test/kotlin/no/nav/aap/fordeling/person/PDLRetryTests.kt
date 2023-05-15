@@ -17,6 +17,7 @@ import no.nav.aap.api.felles.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.MockWebServerExtensions.expect
+import no.nav.aap.rest.AbstractWebClientAdapter.Companion.correlatingFilterFunction
 import no.nav.aap.util.AccessorUtil
 import no.nav.aap.util.LoggerUtil
 import no.nav.aap.util.MDCUtil
@@ -35,18 +36,22 @@ class PDLRetryTests {
 
     @BeforeEach
     fun beforeEach() {
+        log.info("Main thread")
         pdl = MockWebServer()
-        with(PDLConfig(pdl.url("/").toUri())) {
-            pdlClient = PDLClient(PDLWebClientAdapter(WebClient.builder().baseUrl("$baseUri").build(),
-                HttpGraphQlClient.builder(WebClient.builder().baseUrl("$baseUri").build())
-                    .interceptor(LoggingGraphQLInterceptor())
-                    .build(), this))
+        with(PDLConfig(pdl.url("/graphql").toUri())) {
+            val webClient = WebClient.builder()
+                .baseUrl("$baseUri")
+                .filter(correlatingFilterFunction("test"))
+                .build()
+            pdlClient = PDLClient(PDLWebClientAdapter(webClient, HttpGraphQlClient
+                .builder(webClient)
+                .interceptor(LoggingGraphQLInterceptor())
+                .build(), this))
         }
     }
 
     @Test
     fun pdlRetryOK() {
-        log.info("Main thread")
         pdl.expect(ERROR, OK)
         assertThat(pdlClient.diskresjonskode(FIKTIVTFNR)).isEqualTo(ANY)
         assertThat(pdl.requestCount).isEqualTo(2)
@@ -54,7 +59,6 @@ class PDLRetryTests {
 
     @Test
     fun pdlRetryFail() {
-        log.info("Main thread")
         pdl.expect(ERROR, ERROR, ERROR, ERROR)
         assertThrows<UnhandledGraphQLException> { pdlClient.diskresjonskode(FIKTIVTFNR) }
         assertThat(pdl.requestCount).isEqualTo(4)
@@ -62,7 +66,6 @@ class PDLRetryTests {
 
     @Test
     fun pdlNotFoundIngenRetry() {
-        log.info("Main thread")
         pdl.expect(NOT_FOUND)
         assertThrows<NotFoundGraphQLException> { pdlClient.diskresjonskode(FIKTIVTFNR) }
         assertThat(pdl.requestCount).isEqualTo(1)

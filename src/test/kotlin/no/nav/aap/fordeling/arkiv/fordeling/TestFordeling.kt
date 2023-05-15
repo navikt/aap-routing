@@ -49,6 +49,7 @@ class TestFordeling {
     fun beforeEach() {
         reset(arena, arkiv, oppgave)
         whenever(arena.opprettOppgave(JP, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
+        whenever(arena.opprettOppgave(JP_VIKAFOSSEN, AUTOMATISK_JOURNALFØRING_ENHET)).thenReturn(OPPRETTET)
     }
 
     @Test

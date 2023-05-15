@@ -5,8 +5,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.kotlin.mock
+import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import no.nav.aap.fordeling.arkiv.fordeling.TestData.AKTØR
@@ -18,10 +20,14 @@ import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLClient
 
 @TestInstance(PER_CLASS)
+@ExtendWith(MockitoExtension::class)
 class TestMapping {
 
-    val pdl : PDLClient = mock()
-    val egen : EgenAnsattClient = mock()
+    @Mock
+    lateinit var pdl : PDLClient
+
+    @Mock
+    lateinit var egen : EgenAnsattClient
 
     @Test
     @DisplayName("Mapper skal veksle inn aktørId, sette egen ansatt")

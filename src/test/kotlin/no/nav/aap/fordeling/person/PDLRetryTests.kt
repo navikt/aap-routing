@@ -23,7 +23,7 @@ class PDLRetryTests {
 
     private val log = LoggerUtil.getLogger(PDLRetryTests::class.java)
 
-    lateinit var pdl : MockWebServer
+    lateinit var pdlServer : MockWebServer
     lateinit var pdlClient : PDLClient
 
     init {
@@ -34,8 +34,8 @@ class PDLRetryTests {
     @BeforeEach
     fun beforeEach() {
         log.info("Main thread")
-        pdl = MockWebServer()
-        with(PDLConfig(pdl.url("/graphql").toUri())) {
+        pdlServer = MockWebServer()
+        with(PDLConfig(pdlServer.url("/graphql").toUri())) {
             val webClient = WebClient.builder()
                 .baseUrl("$baseUri")
                 .defaultHeader(AUTHORIZATION, "42")
@@ -50,24 +50,24 @@ class PDLRetryTests {
 
     @Test
     fun pdlRetryOK() {
-        pdl.expect(ERROR, OK)
+        pdlServer.expect(ERROR, OK)
         assertThat(pdlClient.diskresjonskode(FIKTIVTFNR)).isEqualTo(ANY)
-        assertThat(pdl.requestCount).isEqualTo(2)
-        assertThat(pdl.takeRequest().getHeader(AUTHORIZATION)).isEqualTo("42")
+        assertThat(pdlServer.requestCount).isEqualTo(2)
+        assertThat(pdlServer.takeRequest().getHeader(AUTHORIZATION)).isEqualTo("42")
     }
 
     @Test
     fun pdlRetryFail() {
-        pdl.expect(4, ERROR)
+        pdlServer.expect(4, ERROR)
         assertThrows<UnhandledGraphQLException> { pdlClient.diskresjonskode(FIKTIVTFNR) }
-        assertThat(pdl.requestCount).isEqualTo(4)
+        assertThat(pdlServer.requestCount).isEqualTo(4)
     }
 
     @Test
     fun pdlNotFoundIngenRetry() {
-        pdl.expect(NOT_FOUND)
+        pdlServer.expect(NOT_FOUND)
         assertThrows<NotFoundGraphQLException> { pdlClient.diskresjonskode(FIKTIVTFNR) }
-        assertThat(pdl.requestCount).isEqualTo(1)
+        assertThat(pdlServer.requestCount).isEqualTo(1)
     }
 
     companion object {

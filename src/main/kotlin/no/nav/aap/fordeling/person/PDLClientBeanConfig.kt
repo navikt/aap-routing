@@ -31,7 +31,7 @@ class PDLClientBeanConfig {
 
     @Bean
     @Qualifier(PDL)
-    fun graphQLClient(@Qualifier(PDL) client : WebClient) =
+    fun pdlGraphQLClient(@Qualifier(PDL) client : WebClient) =
         HttpGraphQlClient.builder(client)
             .interceptor(LoggingGraphQLInterceptor())
             .build()

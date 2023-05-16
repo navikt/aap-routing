@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.*
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import no.nav.aap.fordeling.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
 import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.arkiv.saf.SAFConfig.Companion.SAFDOK
+import no.nav.aap.fordeling.fordeling.FordelingDTOs.DokumentVariant.VariantFormat.ORIGINAL
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.WebClientExtensions.response
 
@@ -21,7 +21,7 @@ class SAFWebClientAdapter(@Qualifier(SAFDOK) webClient : WebClient, private val 
         webClient.get()
             .uri { cf.dokUri(it, id, dokumentId, ORIGINAL) }
             .accept(APPLICATION_JSON)
-            .exchangeToMono { it.response<ByteArray>(log) }
+            .exchangeToMono { it.response<ByteArray>() }
             .retryWhen(cf.retrySpec(log, cf.dokPath))
             .doOnError { log.warn("Arkivoppslag feilet for  $id/$dokumentId/${ORIGINAL.name}", it) }
             .doOnSuccess { log.info("Arkivoppslag $id/$dokumentId/${ORIGINAL.name} returnerte ${it.size} bytes") }

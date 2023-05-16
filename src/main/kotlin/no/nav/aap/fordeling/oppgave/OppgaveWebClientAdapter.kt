@@ -22,7 +22,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
         if (cf.oppslagEnabled) {
             webClient.get()
                 .uri { cf.oppgaveUri(it, journalpostId) }
-                .exchangeToMono { it.response<OppgaveRespons>(log) }
+                .exchangeToMono { it.response<OppgaveRespons>() }
                 .retryWhen(cf.retrySpec(log, object {}.javaClass.enclosingMethod.name.lowercase()))
                 .doOnSuccess { log.trace("Oppgave oppslag journalpost  {} OK. Respons {}", journalpostId, it) }
                 .doOnError { log.warn("Oppgave oppslag journalpost  $journalpostId feilet (${it.message})", it) }
@@ -42,7 +42,7 @@ class OppgaveWebClientAdapter(@Qualifier(OPPGAVE) webClient : WebClient, val cf 
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(jp.opprettOppgaveData(oppgaveType, enhetNr))
-                .exchangeToMono { it.response<Any>(log) }
+                .exchangeToMono { it.response<Any>() }
                 .retryWhen(cf.retrySpec(log, object {}.javaClass.enclosingMethod.name.lowercase()))
                 .doOnSuccess { log.trace("Opprett oppgave fra {} OK. Respons {}", oppgaveType, it) }
                 .doOnError { log.warn("Opprett oppgave fra $oppgaveType feilet (${it.message})", it) }

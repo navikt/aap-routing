@@ -33,6 +33,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
+import no.nav.aap.api.felles.graphql.GraphQLErrorHandler
 import no.nav.aap.fordeling.util.MetrikkKonstanter.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkKonstanter.INNLOGGET_TITTEL
 import no.nav.aap.fordeling.util.MetrikkKonstanter.KORRIGERT_MELDEKORT
@@ -60,6 +61,9 @@ import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPro
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+    @Bean
+    fun graphQLErrorHandler() = object : GraphQLErrorHandler {}
 
     @Bean
     fun observedAspect(reg : ObservationRegistry) = ObservedAspect(reg)
@@ -150,7 +154,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                     .uri(tokenEndpointUrl)
                     .headers { it.putAll(oAuth2HttpHeaders.headers()) }
                     .bodyValue(LinkedMultiValueMap<String, String>().apply { setAll(formParameters) })
-                    .exchangeToMono { it.response<OAuth2AccessTokenResponse>(log) }
+                    .exchangeToMono { it.response<OAuth2AccessTokenResponse>() }
                     .retryWhen(retry())
                     .onErrorMap { e ->
                         e as? OAuth2ClientException

@@ -23,7 +23,7 @@ class EgenAnsattWebClientAdapter(@Qualifier(EGENANSATT) webClient : WebClient, v
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(fnr.toIdent())
-                .exchangeToMono { it.response<Boolean>(log) }
+                .exchangeToMono { it.response<Boolean>() }
                 .retryWhen(cf.retrySpec(log, cf.path))
                 .doOnSuccess { log.trace("Egen ansatt oppslag OK. Respons $it") }
                 .doOnError { log.warn("Egen ansatt oppslag feilet", it) }

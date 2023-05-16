@@ -7,13 +7,13 @@ import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.AktørId
 import no.nav.aap.api.felles.Fødselsnummer
 import no.nav.aap.api.felles.graphql.AbstractGraphQLAdapter
+import no.nav.aap.api.felles.graphql.GraphQLErrorHandler
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
 import no.nav.aap.fordeling.person.PDLConfig.Companion.PDL
 
 @Component
-class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL) private val graphQL : GraphQlClient, cfg : PDLConfig) : AbstractGraphQLAdapter(
-    webClient,
-    cfg) {
+class PDLWebClientAdapter(@Qualifier(PDL) webClient : WebClient, @Qualifier(PDL) private val graphQL : GraphQlClient, cfg : PDLConfig,
+                          errorHandler : GraphQLErrorHandler) : AbstractGraphQLAdapter(webClient, cfg, errorHandler) {
 
     fun fnr(aktørId : AktørId) = query<Identer>(graphQL, IDENT, aktørId.asIdent())?.fnr()
 

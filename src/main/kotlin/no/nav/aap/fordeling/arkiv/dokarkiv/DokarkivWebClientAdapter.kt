@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivConfig.Companion.DOKARKIV
+import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
+import no.nav.aap.fordeling.arkiv.journalpost.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.OppdateringDataDTO.SakDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO
 import no.nav.aap.fordeling.fordeling.FordelingDTOs.JournalpostDTO.OppdateringResponsDTO.Companion.EMPTY
-import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
-import no.nav.aap.fordeling.arkiv.journalpost.JournalpostMapper.Companion.toDTO
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.AUTOMATISK_JOURNALFØRING_ENHET
 import no.nav.aap.rest.AbstractWebClientAdapter
 import no.nav.aap.util.LoggerUtil
@@ -38,7 +38,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(jp.oppdateringsData(saksNr))
-                .exchangeToMono { it.response<OppdateringResponsDTO>(log) }
+                .exchangeToMono { it.response<OppdateringResponsDTO>() }
                 .retryWhen(cf.retrySpec(log, cf.oppdaterPath))
                 .doOnSuccess { log.info("Oppdatering av journalpost ${jp.id} OK. Respons $it") }
                 .contextCapture()
@@ -57,7 +57,7 @@ class DokarkivWebClientAdapter(@Qualifier(DOKARKIV) webClient : WebClient, val c
                 .contentType(APPLICATION_JSON)
                 .accept(TEXT_PLAIN)
                 .bodyValue(AUTOMATISK_JOURNALFØRING_ENHET.toDTO())
-                .exchangeToMono { it.response<String>(log) }
+                .exchangeToMono { it.response<String>() }
                 .retryWhen(cf.retrySpec(log, cf.ferdigstillPath))
                 .doOnSuccess { log.info("Ferdigstilling av journalpost OK. Respons $it") }
                 .doOnError { t -> log.warn("Ferdigstilling av journalpost $journalpostId feilet", t) }

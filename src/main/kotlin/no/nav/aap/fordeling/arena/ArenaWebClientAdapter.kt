@@ -27,7 +27,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
             webClient.get()
                 .uri { cf.nyesteSakUri(it, fnr) }
                 .accept(APPLICATION_JSON)
-                .exchangeToMono { it.response<String>(log) }
+                .exchangeToMono { it.response<String>() }
                 .retryWhen(cf.retrySpec(log, cf.nyesteSakPath))
                 .doOnSuccess { log.trace("Oppslag av nyeste oppgave fra Arena OK. Respons $it") }
                 .doOnError { log.warn("Oppslag av nyeste oppgave fra Arena feilet (${it.message})", it) }
@@ -46,7 +46,7 @@ class ArenaWebClientAdapter(@Qualifier(ARENA) webClient : WebClient, val cf : Ar
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .bodyValue(jp.opprettArenaOppgaveData(enhetNr))
-                .exchangeToMono { it.response<ArenaOpprettetOppgave>(log) }
+                .exchangeToMono { it.response<ArenaOpprettetOppgave>() }
                 .retryWhen(cf.retrySpec(log, cf.oppgavePath))
                 .doOnSuccess { log.trace("Arena opprettet oppgave for journalpost {} OK. Respons {}", jp.id, it) }
                 .doOnError { log.warn("Arena opprett oppgave feilet  (${it.message})", it) }

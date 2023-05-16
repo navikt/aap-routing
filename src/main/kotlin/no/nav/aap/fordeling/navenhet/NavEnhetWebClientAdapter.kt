@@ -21,7 +21,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         .contentType(APPLICATION_JSON)
         .accept(APPLICATION_JSON)
         .bodyValue(kriterium)
-        .exchangeToMono { it.response<List<Map<String, String>>>(log) }
+        .exchangeToMono { it.response<List<Map<String, String>>>() }
         .retryWhen(cf.retrySpec(log, cf.enhet))
         .doOnSuccess { log.info("Nav enhet oppslag mot NORG2 OK for kriteria $kriterium.") }
         .doOnError { log.warn("Nav enhet oppslag med $kriterium mot NORG2 feilet", it) }
@@ -33,7 +33,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)
-        .exchangeToMono { it.response<List<Map<String, Any>>>(log) }
+        .exchangeToMono { it.response<List<Map<String, Any>>>() }
         .retryWhen(cf.retrySpec(log, cf.aktive))
         .doOnSuccess { log.trace("Aktive enheter oppslag NORG2 OK. Respons med ${it.size} innslag") }
         .doOnError { log.warn("Aktive enheter oppslag feilet", it) }

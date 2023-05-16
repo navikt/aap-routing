@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.reactive.function.client.WebClient
 import no.nav.aap.api.felles.error.IrrecoverableGraphQLException.NotFoundGraphQLException
 import no.nav.aap.api.felles.error.RecoverableGraphQLException.UnhandledGraphQLException
+import no.nav.aap.api.felles.graphql.GraphQLErrorHandler
 import no.nav.aap.api.felles.graphql.LoggingGraphQLInterceptor
 import no.nav.aap.fordeling.fordeling.Fordeler.Companion.FIKTIVTFNR
 import no.nav.aap.fordeling.person.Diskresjonskode.ANY
@@ -44,7 +45,7 @@ class PDLRetryTests {
             pdlClient = PDLClient(PDLWebClientAdapter(webClient, HttpGraphQlClient
                 .builder(webClient)
                 .interceptor(LoggingGraphQLInterceptor())
-                .build(), this))
+                .build(), this, object : GraphQLErrorHandler {}))
         }
     }
 

@@ -2,8 +2,8 @@
 ___
 
 Denne applikasjonen tar seg av opprettelse av oppgaver for saksbehandlere tilknyttet:
-* Arkivsjournaler på tema AAP
-* Automatisk og manuelle journalføring av dokumenter sendt in på vegne av borger i Norge.
+* Arkivjournaler på tema AAP
+* Automatisk og manuell journalføring av dokumenter sendt in på vegne av borger i Norge.
 
 ## Dokumentasjon
 * [Systemdokumentasjon](https://aap-team-innbygger.intern.nav.no/docs/Systemdokumentasjon/systemdok/)
@@ -11,7 +11,7 @@ Denne applikasjonen tar seg av opprettelse av oppgaver for saksbehandlere tilkny
 
 ## Kom i gang med utvikling
 ___
-ygger på JAVA 17 og maven.
+Bygger på JAVA 17 og maven.
 
 - Se nødvendig oppsett under [Backend for teamet](https://aap-team-innbygger.intern.nav.no/docs/Komme%20i%20gang/komme-i-gang-med-utvikling)
 

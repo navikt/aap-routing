@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv.saf
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import java.util.*
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -39,7 +38,7 @@ class SAFBeanConfig {
 
     @Bean
     @Qualifier(SAF)
-    fun safGraphQLClient(@Qualifier(SAF) client : WebClient, mapper : ObjectMapper) =
+    fun safGraphQLClient(@Qualifier(SAF) client : WebClient) =
         HttpGraphQlClient.builder(client)
             .interceptor(LoggingGraphQLInterceptor())
             .build()

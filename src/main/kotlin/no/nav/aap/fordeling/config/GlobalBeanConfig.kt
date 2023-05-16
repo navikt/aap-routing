@@ -9,6 +9,7 @@ import io.micrometer.observation.ObservationRegistry
 import io.micrometer.observation.aop.ObservedAspect
 import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.TRACE
+import io.netty.handler.timeout.ReadTimeoutHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit.SECONDS
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.ApplicationContext
@@ -104,10 +106,24 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
                  )
     }
 
+    @ConfigurationProperties(TiMEOUT)
+    data class HttpTimeouts(val readTimeout : Duration = DEFAULT_TIMEOUT, val writeTimeout : Duration = DEFAULT_TIMEOUT,
+                            val responsTimeout : Duration = DEFAULT_TIMEOUT, val connectTimeout : Duration = DEFAULT_CONNECT_TIMEOUT)
+
+    private fun httpClient(cfg : HttpTimeouts) = with(cfg) {
+        HttpClient.create()
+            .doOnConnected {
+                it.addHandlerFirst(ReadTimeoutHandler(readTimeout.toSeconds(), SECONDS))
+                it.addHandlerFirst(WriteTimeoutHandler(writeTimeout.toSeconds(), SECONDS))
+            }
+            .responseTimeout(readTimeout)
+            .option(CONNECT_TIMEOUT_MILLIS, connectTimeout.toMillis().toInt())
+    }
+
     @Bean
     fun webClientCustomizer(client : HttpClient) =
-        WebClientCustomizer { b ->
-            b.clientConnector(ReactorClientHttpConnector(client))
+        WebClientCustomizer {
+            it.clientConnector(ReactorClientHttpConnector(client))
                 .filter(correlatingFilterFunction(applicationName))
         }
 
@@ -124,16 +140,11 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @ConditionalOnNotProd
     @Bean
-    fun notProdHttpClient() = HttpClient.create().wiretap(javaClass.name, TRACE, TEXTUAL)
-        .doOnConnected {
-            it.addHandlerFirst(WriteTimeoutHandler(90, SECONDS))
-        }
-        .responseTimeout(ofSeconds(90))
-        .option(CONNECT_TIMEOUT_MILLIS, SECONDS.toMillis(10).toInt())
+    fun notProdHttpClient(cfg : HttpTimeouts) = httpClient(cfg).wiretap(javaClass.name, TRACE, TEXTUAL)
 
     @ConditionalOnProd
     @Bean
-    fun prodHttpClient() = HttpClient.create()//.wiretap(javaClass.name, TRACE, TEXTUAL)
+    fun prodHttpClient(cfg : HttpTimeouts) = httpClient(cfg)
 
     @Bean
     fun configMatcher() = object : ClientConfigurationPropertiesMatcher {}
@@ -180,6 +191,9 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     companion object {
 
+        private const val TiMEOUT = "timeout"
+        private val DEFAULT_TIMEOUT = ofSeconds(30)
+        private val DEFAULT_CONNECT_TIMEOUT = ofSeconds(10)
         fun ClientConfigurationProperties.clientCredentialFlow(service : OAuth2AccessTokenService, key : String) =
             ExchangeFilterFunction { req, next ->
                 next.exchange(ClientRequest.from(req)

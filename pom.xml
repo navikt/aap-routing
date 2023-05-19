@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.1.0</version>
         <relativePath/>
     </parent>
     <groupId>no.nav.aap</groupId>
@@ -20,8 +20,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <bekk-nocommons.version>0.15.0</bekk-nocommons.version>
         <confluent.version>7.3.1</confluent.version>
-        <conditionals.version>5.0.6</conditionals.version>
-        <domain.version>2.0.72</domain.version>
+        <domain.version>2.0.73</domain.version>
         <dokumenthåndtering.version>08271806</dokumenthåndtering.version>
         <jib.version>3.3.1</jib.version>
         <java.version>17</java.version>
@@ -31,7 +30,7 @@
         <slack.version>1.28.0</slack.version>
         <springdoc.version>2.1.0</springdoc.version>
         <testcontainers.version>1.17.6</testcontainers.version>
-        <tokensupport.version>3.0.9</tokensupport.version>
+        <tokensupport.version>3.1.0</tokensupport.version>
     </properties>
     <repositories>
         <repository>
@@ -72,11 +71,6 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.boot</groupId>
-            <artifactId>boot-conditionals</artifactId>
-            <version>${conditionals.version}</version>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>

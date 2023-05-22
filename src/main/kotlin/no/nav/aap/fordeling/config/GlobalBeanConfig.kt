@@ -110,15 +110,16 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
     data class HttpTimeouts(val readTimeout : Duration = DEFAULT_TIMEOUT, val writeTimeout : Duration = DEFAULT_TIMEOUT,
                             val responsTimeout : Duration = DEFAULT_TIMEOUT, val connectTimeout : Duration = DEFAULT_CONNECT_TIMEOUT)
 
-    private fun httpClient(cfg : HttpTimeouts) = with(cfg) {
-        HttpClient.create()
-            .doOnConnected {
-                it.addHandlerFirst(ReadTimeoutHandler(readTimeout.toSeconds(), SECONDS))
-                it.addHandlerFirst(WriteTimeoutHandler(writeTimeout.toSeconds(), SECONDS))
-            }
-            .responseTimeout(readTimeout)
-            .option(CONNECT_TIMEOUT_MILLIS, connectTimeout.toMillis().toInt())
-    }
+    private fun httpClient(cfg : HttpTimeouts) =
+        with(cfg) {
+            HttpClient.create()
+                .doOnConnected {
+                    it.addHandlerFirst(ReadTimeoutHandler(readTimeout.toSeconds(), SECONDS))
+                    it.addHandlerFirst(WriteTimeoutHandler(writeTimeout.toSeconds(), SECONDS))
+                }
+                .responseTimeout(readTimeout)
+                .option(CONNECT_TIMEOUT_MILLIS, connectTimeout.toMillis().toInt())
+        }
 
     @Bean
     fun webClientCustomizer(client : HttpClient) =

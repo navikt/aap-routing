@@ -20,7 +20,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <bekk-nocommons.version>0.15.0</bekk-nocommons.version>
         <confluent.version>7.3.1</confluent.version>
-        <domain.version>2.0.73</domain.version>
+        <domain.version>2.0.75</domain.version>
         <dokumenthåndtering.version>08271806</dokumenthåndtering.version>
         <jib.version>3.3.1</jib.version>
         <java.version>17</java.version>
@@ -51,10 +51,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>

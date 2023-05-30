@@ -11,6 +11,7 @@ import io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS
 import io.netty.handler.logging.LogLevel.TRACE
 import io.netty.handler.timeout.ReadTimeoutHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
+import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
@@ -63,6 +64,9 @@ import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPro
 class GlobalBeanConfig(@Value("\${spring.application.name}") private val applicationName : String) {
 
     private val log = getLogger(GlobalBeanConfig::class.java)
+
+    @Bean
+    fun grpcSpanExporter() = OtlpGrpcSpanExporter.builder().setEndpoint("http://tempo-distributor.nais-system:4317").build()
 
     @Bean
     fun graphQLErrorHandler() = object : GraphQLErrorHandler {}

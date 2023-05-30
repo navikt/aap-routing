@@ -16,6 +16,8 @@ spec:
             rules:
                 -   application: skjermede-personer-pip
                     namespace: nom
+                -   application: tempo-distributor
+                    namespace: nais-system
             external:
                 -   host: unleash.nais.io
                 -   host: nav-it.slack.com

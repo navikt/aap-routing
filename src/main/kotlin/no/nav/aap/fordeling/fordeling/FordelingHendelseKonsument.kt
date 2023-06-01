@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.fordeling
 
+import io.micrometer.observation.annotation.Observed
 import java.time.Instant.*
 import java.time.ZoneId.*
 import org.springframework.kafka.annotation.DltHandler
@@ -19,12 +20,12 @@ import no.nav.aap.fordeling.arkiv.ArkivClient
 import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.DIREKTE_MANUELL
 import no.nav.aap.fordeling.fordeling.Fordeler.FordelingResultat.FordelingType.INGEN_JOURNALPOST
-import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
-import no.nav.aap.fordeling.fordeling.FordelingFilter.Companion.status
 import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.ARENA
 import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.GOSYS
 import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.INGEN_DESTINASJON
 import no.nav.aap.fordeling.fordeling.FordelingAvOppgaveUtvelger.FordelingsBeslutning.KELVIN
+import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
+import no.nav.aap.fordeling.fordeling.FordelingFilter.Companion.status
 import no.nav.aap.fordeling.navenhet.NAVEnhet.Companion.FORDELINGSENHET
 import no.nav.aap.fordeling.navenhet.NavEnhetUtvelger
 import no.nav.aap.fordeling.slack.SlackOperations
@@ -44,10 +45,11 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 typealias Epoch = Long
 
 @ConditionalOnGCP
+@Observed
 class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
                                  private val utvelger : FordelingAvOppgaveUtvelger, private val slack : SlackOperations,
                                  private val cfg : FordelingConfig
-) {
+                                ) {
 
     private val log = getLogger(FordelingHendelseKonsument::class.java)
 

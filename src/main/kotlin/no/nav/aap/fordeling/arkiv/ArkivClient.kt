@@ -8,7 +8,7 @@ import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 
 @Component
-@Observed(contextualName = "Arkiv")
+@Observed
 class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val safdok : SAFWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     fun hentSøknad(jp : Journalpost) = safdok.originalDokument(jp)

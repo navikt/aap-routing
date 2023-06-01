@@ -19,8 +19,8 @@ import org.springframework.retry.annotation.EnableRetry
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.stereotype.Component
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
-import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.fordeling.config.KafkaPingable
+import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.health.AbstractPingableHealthIndicator
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
@@ -31,8 +31,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
 
     @Component
-    class FordelingPingable(admin : KafkaAdmin, p : KafkaProperties, cfg : FordelingConfig) :
-        KafkaPingable(admin, p.bootstrapServers, cfg)
+    class FordelingPingable(admin : KafkaAdmin, p : KafkaProperties, cfg : FordelingConfig) : KafkaPingable(admin, p.bootstrapServers, cfg)
 
     @Bean
     @ConditionalOnGCP

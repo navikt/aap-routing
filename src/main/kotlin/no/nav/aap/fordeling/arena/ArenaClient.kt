@@ -7,7 +7,7 @@ import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
 import no.nav.aap.fordeling.navenhet.NAVEnhet
 
 @Component
-@Observed(contextualName = "Arena")
+@Observed
 class ArenaClient(private val adapter : ArenaWebClientAdapter) {
 
     fun harAktivSak(fnr : Fødselsnummer) = nyesteAktiveSak(fnr) != null

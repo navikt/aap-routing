@@ -14,6 +14,7 @@ import org.springframework.kafka.support.KafkaHeaders.ORIGINAL_TIMESTAMP
 import org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC
 import org.springframework.kafka.support.KafkaHeaders.TOPIC
 import org.springframework.messaging.handler.annotation.Header
+import org.springframework.messaging.handler.annotation.Headers
 import org.springframework.retry.annotation.Backoff
 import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.arkiv.ArkivClient
@@ -58,9 +59,9 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
         dltStrategy = FAIL_ON_ERROR, autoStartDltHandler = "true", autoCreateTopics = "false")
 
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
-               @Header(RECEIVED_TOPIC) topic : String) {
+               @Header(RECEIVED_TOPIC) topic : String, @Headers headers : Map<Any, Any>) {
         runCatching {
-            log.info("${MDC.getCopyOfContextMap()} Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("${MDC.getCopyOfContextMap()} $headers Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}").also {
                 toMDC(NAV_CALL_ID, "${it?.eksternReferanseId}", CallIdGenerator.create())
             }

@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.fordeling
 
-import io.micrometer.observation.annotation.Observed
 import java.time.Instant.*
 import java.time.ZoneId.*
 import org.springframework.kafka.annotation.DltHandler
@@ -45,7 +44,6 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 typealias Epoch = Long
 
 @ConditionalOnGCP
-@Observed
 class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val arkiv : ArkivClient, private val enhet : NavEnhetUtvelger,
                                  private val utvelger : FordelingAvOppgaveUtvelger, private val slack : SlackOperations,
                                  private val cfg : FordelingConfig

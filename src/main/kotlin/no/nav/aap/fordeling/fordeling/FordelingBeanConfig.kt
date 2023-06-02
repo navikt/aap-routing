@@ -7,13 +7,11 @@ import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.event.EventListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.event.ConsumerStoppedEvent
 import org.springframework.kafka.listener.ContainerProperties.AckMode.RECORD
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
@@ -41,11 +39,6 @@ class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopi
     @Bean
     @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter : FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
-
-    @EventListener
-    fun eventHandler(event : ConsumerStoppedEvent) {
-        log.info("stopped event fired " + event)
-    }
 
     @Bean(FORDELING)
     fun fordelingListenerContainerFactory(p : KafkaProperties, filter : FordelingFilter) =

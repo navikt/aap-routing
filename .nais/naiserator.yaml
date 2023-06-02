@@ -64,3 +64,23 @@ spec:
             value: {{suffix}}
     envFrom:
         -   secret: slack
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: routing-tempo-test
+    namespace: aap
+spec:
+    egress:
+        -   to:
+                -   namespaceSelector:
+                        matchLabels:
+                            name: nais-system
+                    podSelector:
+                        matchLabels:
+                            app.kubernetes.io/instance: tempo
+    podSelector:
+        matchLabels:
+            app: routing
+    policyTypes:
+        - Egress

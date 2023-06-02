@@ -41,7 +41,7 @@ class EgenAnsattRetryTests {
         log.info("Main thread")
         egenServer.expect("false")
         assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
-        assertThat(egenServer.requestCount).isEqualTo(1);
+        assertThat(egenServer.requestCount).isEqualTo(1)
     }
 
     @Test
@@ -49,7 +49,7 @@ class EgenAnsattRetryTests {
     fun retryFunker() {
         egenServer.expect("false", BAD_GATEWAY, BAD_GATEWAY, OK)
         assertThat(client.erEgenAnsatt(FIKTIVTFNR)).isFalse
-        assertThat(egenServer.requestCount).isEqualTo(3);
+        assertThat(egenServer.requestCount).isEqualTo(3)
     }
 
     @Test
@@ -57,7 +57,7 @@ class EgenAnsattRetryTests {
     fun retryGirOpp() {
         egenServer.expect(4, BAD_GATEWAY)
         assertThrows<IntegrationException> { client.erEgenAnsatt(FIKTIVTFNR) }
-        assertThat(egenServer.requestCount).isEqualTo(4);
+        assertThat(egenServer.requestCount).isEqualTo(4)
     }
 
     @Test
@@ -65,6 +65,6 @@ class EgenAnsattRetryTests {
     fun ingenRetry400() {
         egenServer.expect("false", BAD_REQUEST)
         assertThrows<IrrecoverableIntegrationException> { client.erEgenAnsatt(FIKTIVTFNR) }
-        assertThat(egenServer.requestCount).isEqualTo(1);
+        assertThat(egenServer.requestCount).isEqualTo(1)
     }
 }

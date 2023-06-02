@@ -7,11 +7,13 @@ import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.EventListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.event.ConsumerStoppedEvent
 import org.springframework.kafka.listener.ContainerProperties.AckMode.RECORD
 import org.springframework.kafka.retrytopic.RetryTopicComponentFactory
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationSupport
@@ -22,6 +24,7 @@ import no.nav.aap.api.felles.error.IrrecoverableIntegrationException
 import no.nav.aap.fordeling.config.KafkaPingable
 import no.nav.aap.fordeling.fordeling.FordelingConfig.Companion.FORDELING
 import no.nav.aap.health.AbstractPingableHealthIndicator
+import no.nav.aap.util.LoggerUtil
 import no.nav.boot.conditionals.ConditionalOnGCP
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 
@@ -30,12 +33,19 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 @EnableRetry
 class FordelingBeanConfig(private val namingProviderFactory : FordelingRetryTopicNamingProviderFactory) : RetryTopicConfigurationSupport() {
 
+    private val log = LoggerUtil.getLogger(FordelingBeanConfig::class.java)
+
     @Component
     class FordelingPingable(admin : KafkaAdmin, p : KafkaProperties, cfg : FordelingConfig) : KafkaPingable(admin, p.bootstrapServers, cfg)
 
     @Bean
     @ConditionalOnGCP
     fun fordelerHealthIndicator(adapter : FordelingPingable) = object : AbstractPingableHealthIndicator(adapter) {}
+
+    @EventListener
+    fun eventHandler(event : ConsumerStoppedEvent) {
+        log.info("stopped event fired " + event)
+    }
 
     @Bean(FORDELING)
     fun fordelingListenerContainerFactory(p : KafkaProperties, filter : FordelingFilter) =

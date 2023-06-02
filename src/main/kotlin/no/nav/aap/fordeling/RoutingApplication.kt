@@ -3,7 +3,6 @@ package no.nav.aap.fordeling
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
-import no.nav.aap.util.AccessorUtil
 import no.nav.boot.conditionals.Cluster.Companion.profiler
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
@@ -16,7 +15,7 @@ class RoutingApplication
 
 fun main(args : Array<String>) {
     runApplication<RoutingApplication>(*args) {
-        AccessorUtil.init()
+        // AccessorUtil.init()
         setAdditionalProfiles(*profiler())
     }
 }

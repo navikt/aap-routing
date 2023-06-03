@@ -22,7 +22,7 @@ fun main(args : Array<String>) {
     runApplication<RoutingApplication>(*args) {
         enableAutomaticContextPropagation()
         ContextRegistry.getInstance().apply {
-            registerThreadLocalAccessor(RequestAttributesAccessor())
+            // registerThreadLocalAccessor(RequestAttributesAccessor())
         }
         setAdditionalProfiles(*profiler())
     }

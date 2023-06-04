@@ -60,7 +60,7 @@ class FordelingHendelseKonsument(private val fordeler : AAPFordeler, private val
     fun listen(hendelse : JournalfoeringHendelseRecord, @Header(DEFAULT_HEADER_ATTEMPTS, required = false) antallForsøk : Int?,
                @Header(RECEIVED_TOPIC) topic : String) {
         runCatching {
-            log.info("${MDC.getCopyOfContextMap()}  Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
+            log.info("${Thread.currentThread()} ${MDC.getCopyOfContextMap()}  Mottatt hendelse for journalpost ${hendelse.journalpostId}, tema ${hendelse.temaNytt} og status ${hendelse.journalpostStatus} på $topic for ${antallForsøk?.let { "$it." } ?: "1."} gang.")
             val jp = arkiv.hentJournalpost("${hendelse.journalpostId}").also {
                 toMDC(NAV_CALL_ID, "${it?.eksternReferanseId}", CallIdGenerator.create())
             }

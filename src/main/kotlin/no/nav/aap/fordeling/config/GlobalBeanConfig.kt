@@ -71,7 +71,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     @Bean
     fun grpcSpanExporter(@Value("otel.exporter.otlp.endpoint") endpoint : String) =
-        OtlpGrpcSpanExporter.builder().setEndpoint(endpoint).build()
+        OtlpGrpcSpanExporter.builder().setEndpoint("http://$endpoint").build()
 
     @Bean
     fun graphQLErrorHandler() = object : GraphQLErrorHandler {}

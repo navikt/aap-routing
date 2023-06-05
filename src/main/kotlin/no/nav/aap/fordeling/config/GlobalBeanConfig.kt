@@ -37,7 +37,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import reactor.util.retry.Retry.fixedDelay
-import sun.jvm.hotspot.oops.CellTypeState.value
 import no.nav.aap.api.felles.graphql.GraphQLErrorHandler
 import no.nav.aap.fordeling.util.MetrikkKonstanter.BREVKODE
 import no.nav.aap.fordeling.util.MetrikkKonstanter.INNLOGGET_TITTEL

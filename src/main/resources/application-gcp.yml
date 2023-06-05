@@ -2,6 +2,9 @@ chaos:
     monkey:
         enabled: false
 management:
+    tracing:
+        sampling:
+            probability: 1.0
     endpoint:
         chaosmonkey:
             enabled: false

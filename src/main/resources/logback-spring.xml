@@ -23,7 +23,7 @@
     <springProfile name="dev">
         <logger name="reactor.netty.http.client" level="info"/>
         <logger name="no.nav.aap" level="trace"/>
-        <logger name="io.micrometer" level="trace"/>
+        <logger name="io.micrometer" level="info"/>
         <logger name="org.apache.kafka.clients.producer.ProducerConfig" level="warn"/>
         <logger name="io.confluent.kafka.serializers.KafkaAvroSerializerConfig" level="warn"/>
         <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="warn"/>

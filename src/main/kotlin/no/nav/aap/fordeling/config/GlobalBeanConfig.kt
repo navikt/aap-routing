@@ -66,7 +66,7 @@ class GlobalBeanConfig(@Value("\${spring.application.name}") private val applica
 
     private val log = getLogger(GlobalBeanConfig::class.java)
 
-    @Bean
+    //@Bean
     fun observationTextPublisher() = ObservationTextPublisher(log::info)
 
     @Bean

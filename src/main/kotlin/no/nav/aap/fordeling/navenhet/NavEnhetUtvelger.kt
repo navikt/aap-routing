@@ -27,7 +27,7 @@ data class NavEnhetUtvelger(val pdl : PDLClient, val enhet : NavEnhetClient) {
         }
 
     private fun enhetFor(jp : Journalpost) =
-        enhet.navEnhet(pdl.geoTilknytning(jp.fnr), jp.egenAnsatt, jp.diskresjonskode, jp.tema, enheter = enhet.aktiveEnheter()).whenNull {
+        enhet.navEnhet(pdl.geoTilknytning(jp.fnr), jp.egenAnsatt, jp.diskresjonskode, jp.tema).whenNull {
             log.warn("Ingen enhet for journalpost ${jp.id}")
         }
 }

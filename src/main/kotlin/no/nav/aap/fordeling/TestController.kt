@@ -57,7 +57,7 @@ class TestController(
 
     @GetMapping("enhet")
     fun enhet(@RequestParam område : String, @RequestParam skjermet : Boolean, @RequestParam diskresjonekode : Diskresjonskode) =
-        orgClient.navEnhet(område, skjermet, diskresjonekode, AAP.uppercase(), orgClient.aktiveEnheter())
+        orgClient.navEnhet(område, skjermet, diskresjonekode, AAP.uppercase())
 
     @GetMapping("diskresjonskode")
     fun diskresjonskode(@RequestParam fnr : Fødselsnummer) = pdlClient.diskresjonskode(fnr)

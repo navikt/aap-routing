@@ -8,8 +8,8 @@ import no.nav.aap.fordeling.person.Diskresjonskode
 @Component
 class NavEnhetClient(private val a : NavEnhetWebClientAdapter) {
 
-    fun navEnhet(område : String?, skjermet : Boolean, diskresjonskode : Diskresjonskode, tema : String, enheter : List<NAVEnhet>) =
-        a.navEnhet(EnhetsKriteria(område, skjermet, tema.uppercase(), diskresjonskode), enheter)
+    fun navEnhet(område : String?, skjermet : Boolean, diskresjonskode : Diskresjonskode, tema : String) =
+        a.navEnhet(EnhetsKriteria(område, skjermet, tema.uppercase(), diskresjonskode), a.aktiveEnheter())
 
     @Cacheable(NAVENHET)
     fun aktiveEnheter() = a.aktiveEnheter()

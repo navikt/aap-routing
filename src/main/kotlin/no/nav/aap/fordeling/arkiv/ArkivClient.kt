@@ -1,6 +1,5 @@
 package no.nav.aap.fordeling.arkiv
 
-import io.micrometer.observation.annotation.Observed
 import org.springframework.stereotype.Component
 import no.nav.aap.fordeling.arkiv.dokarkiv.DokarkivWebClientAdapter
 import no.nav.aap.fordeling.arkiv.journalpost.Journalpost
@@ -8,7 +7,6 @@ import no.nav.aap.fordeling.arkiv.saf.SAFGraphQLAdapter
 import no.nav.aap.fordeling.arkiv.saf.SAFWebClientAdapter
 
 @Component
-@Observed
 class ArkivClient(private val dokarkiv : DokarkivWebClientAdapter, private val safdok : SAFWebClientAdapter, private val saf : SAFGraphQLAdapter) {
 
     fun hentSøknad(jp : Journalpost) = safdok.originalDokument(jp)

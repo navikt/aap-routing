@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling.navenhet
 
+import io.micrometer.observation.annotation.Observed
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
@@ -30,6 +31,7 @@ class NavEnhetWebClientAdapter(@Qualifier(NAVENHET) webClient : WebClient, val c
         ?.map { NAVEnhet(it["enhetNr"]!!) }
         ?.firstOrNull { it in enheter }
 
+    @Observed
     fun aktiveEnheter() = webClient.get()
         .uri(cf::aktiveEnheterUri)
         .accept(APPLICATION_JSON)

@@ -68,6 +68,7 @@ jobs:
                 run: |
                     echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
                     ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}  -Drevision=${TAG} sonar:sonar -Dsonar.projectKey=navikt_aap-routing package jib:build 
+                     echo "digest=$(cat target/jib-image.digest)" >> $GITHUB_ENV
 
             -   name: "Attest and sign"
                 uses: 'nais/attest-sign@v1.0.0'

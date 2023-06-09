@@ -66,7 +66,7 @@ jobs:
             -   name: Kompilerer, bygger  og pusher image
                 id: kompiler
                 run: |
-                    echo "image=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
+                    echo "image=${{ env.IMAGE }}:${{ env.TAG }}" >> $GITHUB_OUTPUT
                     ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} -Djib.to.tags=${TAG} -Drevision=${TAG} sonar:sonar -Dsonar.projectKey=navikt_aap-routing package jib:build 
                      echo "DIGEST=$(cat target/jib-image.digest)" >> $GITHUB_ENV
 

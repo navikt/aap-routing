@@ -49,7 +49,7 @@ jobs:
                 run: echo "TAG=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
             -   name: Setter image-navn
-                run: echo "IMAGE=$(echo $IMAGE_BASE)-$(echo $TAG)" >> $GITHUB_ENV
+                run: echo "IMAGE=$(echo $IMAGE_BASE)" >> $GITHUB_ENV
 
             -   name: Login GAR
                 uses: nais/login@v0
@@ -67,8 +67,8 @@ jobs:
                 id: kompiler
                 run: |
                     echo "image=${{ env.IMAGE }}:${{ env.TAG }}" >> $GITHUB_OUTPUT
-                    ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} -Djib.to.tags=${TAG} -Drevision=${TAG} sonar:sonar -Dsonar.projectKey=navikt_aap-routing package jib:build 
-                     echo "DIGEST=$(cat target/jib-image.digest)" >> $GITHUB_ENV
+                    ./mvnw --settings .github/.m2/settings.xml -DGAR_TOKEN=${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} -Djib.to.tags=latest,${TAG} -Drevision=${TAG} sonar:sonar -Dsonar.projectKey=navikt_aap-routing package jib:build 
+                    echo "DIGEST=$(cat target/jib-image.digest)" >> $GITHUB_ENV
 
             -   name: Attest and sign
                 uses: nais/attest-sign@v1.0.0

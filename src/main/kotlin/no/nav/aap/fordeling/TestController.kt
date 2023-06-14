@@ -19,6 +19,7 @@ import no.nav.aap.fordeling.person.Diskresjonskode
 import no.nav.aap.fordeling.person.PDLClient
 import no.nav.aap.util.Constants.AAP
 import no.nav.aap.util.LoggerUtil.getLogger
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.spring.UnprotectedRestController
 
 @UnprotectedRestController(value = ["/dev"])
@@ -32,6 +33,10 @@ class TestController(
     private val orgClient : NavEnhetClient) {
 
     private val log = getLogger(javaClass)
+
+    @ProtectedWithClaims(issuer = "aad")
+    @GetMapping("test")
+    fun test() = "OK"
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =

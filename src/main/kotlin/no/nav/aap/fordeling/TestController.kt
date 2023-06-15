@@ -1,5 +1,6 @@
 package no.nav.aap.fordeling
 
+import java.time.LocalDateTime
 import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -36,7 +37,7 @@ class TestController(
 
     @ProtectedWithClaims(issuer = "aad")
     @GetMapping("test")
-    fun test() = "OK fra routing"
+    fun test() = "OK fra routing ${LocalDateTime.now()}"
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =

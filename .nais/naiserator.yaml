@@ -22,6 +22,8 @@ spec:
         outbound:
             rules:
                 -   application: demo
+                    namespace: helseopplysninger
+                -   application: demo
                 -   application: skjermede-personer-pip
                     namespace: nom
                 -   application: tempo-distributor

@@ -36,7 +36,7 @@ class TestController(
 
     @ProtectedWithClaims(issuer = "aad")
     @GetMapping("test")
-    fun test() = "OK"
+    fun test() = "OK fra routing"
 
     @PostMapping("ferdigstilljournalpost", produces = [TEXT_PLAIN_VALUE])
     fun ferdigstillJournalpost(@RequestParam journalpostId : String) =

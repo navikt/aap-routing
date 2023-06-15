@@ -18,6 +18,7 @@ spec:
         inbound:
             rules:
                 -   application: demo
+                    namespace: helseopplysninger
         outbound:
             rules:
                 -   application: demo

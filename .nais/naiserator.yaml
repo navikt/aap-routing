@@ -15,15 +15,8 @@ spec:
         tracing:
             enabled: true
     accessPolicy:
-        inbound:
-            rules:
-                -   application: client-helse
-                    namespace: helseopplysninger
         outbound:
             rules:
-                -   application: client-helse
-                    namespace: helseopplysninger
-                -   application: demo
                 -   application: skjermede-personer-pip
                     namespace: nom
                 -   application: tempo-distributor

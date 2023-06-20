@@ -17,11 +17,11 @@ spec:
     accessPolicy:
         inbound:
             rules:
-                -   application: demo
+                -   application: client-helse
                     namespace: helseopplysninger
         outbound:
             rules:
-                -   application: demo
+                -   application: client-helse
                     namespace: helseopplysninger
                 -   application: demo
                 -   application: skjermede-personer-pip
